@@ -1,0 +1,8 @@
+name: svvc
+channels:
+- conda-forge
+- bioconda
+- defaults
+dependencies:
+- samtools
+

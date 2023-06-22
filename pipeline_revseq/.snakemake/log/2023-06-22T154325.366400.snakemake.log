@@ -1,0 +1,4 @@
+NameError in file /Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/workflow/rules/dehuman.smk, line 101:
+name 'cachepath' is not defined
+  File "/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/workflow/Snakefile", line 16, in <module>
+  File "/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/workflow/rules/dehuman.smk", line 101, in <module>

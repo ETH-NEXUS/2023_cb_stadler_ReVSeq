@@ -1,0 +1,14 @@
+name: svvc
+channels:
+- conda-forge
+- bioconda
+- defaults
+dependencies:
+- python==3.6*
+- pip
+- pip:
+  - numpy
+  - matplotlib
+  - seaborn
+  - pandas
+  - biopython

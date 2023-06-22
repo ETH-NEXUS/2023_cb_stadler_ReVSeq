@@ -1,0 +1,3 @@
+SyntaxError in file /Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/workflow/rules/svvc_basic.smk, line 21:
+invalid syntax. Perhaps you forgot a comma?
+  File "/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/workflow/Snakefile", line 15, in <module>

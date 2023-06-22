@@ -1,0 +1,47 @@
+from snakemake.utils import min_version
+from snakemake.utils import validate
+
+# do not allow subdirectories as part of `sample` or `i` wildcards
+wildcard_constraints:
+    sample="[^/]+",
+
+# Define minimum Snakemake version
+min_version("6.12.1")
+
+# Include Config file
+configfile: "config/config.yaml"
+
+# Include rules
+include: "rules/svvc_basic.smk"
+include: "rules/dehuman.smk"
+
+functions = cachepath(
+    "scripts/functions.sh",
+    executable=True,
+    localsource=True,
+)
+
+
+# include local rules
+localrules:
+    all,
+
+# final rule of pipeline
+# defines output
+rule all:
+    input:
+        expand("results/fetch_primers/primers.tsv"),
+        expand("results/bwa_index/{ref_fa}.bwt", ref_fa = references_fasta),
+        expand("results/{sample}/trim_galore/trimmed_1.fq.gz", sample = sample_ids),
+        expand("results/{sample}/trim_galore/trimmed_2.fq.gz", sample = sample_ids),
+        expand("results/{sample}/{ref_org}/bwa/mapped_reads.bam", sample = sample_ids, ref_org = references_org),
+        expand("{ref_fa}_primer_regions.fasta", ref_fa = references_fasta),
+        expand("results/{sample}/{ref_org}/pileup/allele_counts.npz", sample = sample_ids, ref_org = references_org),
+        expand("results/{sample}/{ref_org}/pair_freqs/pair_counts.pkl.gz", sample = sample_ids, ref_org = references_org),
+        expand("results/{sample}/{ref_org}/consensus/consensus.fasta", sample = sample_ids, ref_org = references_org),
+        # expanding dehuman rule
+        expand("results/{sample}/{ref_org}/dehuman/dehuman.cram", sample = sample_ids, ref_org = references_org)
+
+
+
+

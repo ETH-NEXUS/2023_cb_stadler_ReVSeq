@@ -1,0 +1,8 @@
+#!/bin/bash
+#### add checks and checkpoints to avoid to upload incomplete stuff
+
+#revseq syncviollier --recent
+#revseq runpipeline
+#revseq uploadviollier
+#revseq uploadspsp
+
