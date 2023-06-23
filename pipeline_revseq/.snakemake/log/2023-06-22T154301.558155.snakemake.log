@@ -1,3 +1,0 @@
-SyntaxError in file /Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/workflow/rules/dehuman.smk, line 102:
-invalid syntax. Maybe you meant '==' or ':=' instead of '='?
-  File "/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/workflow/Snakefile", line 16, in <module>

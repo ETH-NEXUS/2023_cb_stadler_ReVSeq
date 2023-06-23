@@ -1,1 +1,4 @@
 revseq/secrets
+pipe_revseq/.snakemake/
+pipe_revseq/logs
+pipe_revseq/workflow/results/

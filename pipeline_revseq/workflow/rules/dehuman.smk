@@ -3,10 +3,6 @@
 from functools import partial
 
 
-localrules:
-    download_host_ref,
-
-
 rule dh_reuse_alignreject:
     # "rely on aligner's output".
     # this rule re-use the rejected reads in align.smk (e.g. ngshmmalign's /alignments/rejects.sam)
@@ -27,7 +23,7 @@ rule dh_reuse_alignreject:
         disk_mb=1250,
         #mem_mb=config.bwa_align["mem"],
         #runtime=config.bwa_align["time"],
-    #threads: config.bwa_align["threads"]
+    threads: config["tools"]["bwa_align"]["threads"]
     shell:
         """
         echo "Keep reject  -----------------------------------------------------"
@@ -67,18 +63,16 @@ rule dh_hostalign:
         config["tools"]["dehuman"]["conda"]
     benchmark:
         "results/{sample}/dh_hostalignhost_aln.benchmark"
-    group:
-        "dehuman"
     resources:
         disk_mb=1250,
         #mem_mb=config.dehuman["mem"],
         #runtime=config.dehuman["time"],
-    #threads: config.dehuman["threads"]
+    threads: config["tools"]["dehuman"]["threads"]
     shell:
         """
         echo "Checking rejects against host's genome  --------------------------"
 
-        {params.BWA} mem -t {threads} \
+        bwa mem -t {threads} \
                          -o {output.host_aln}\
                          {input.host_ref} {input.reject_1} {input.reject_2} \
                          > {log.outfile} 2> >(tee {log.errfile} >&2)
@@ -90,17 +84,15 @@ rule dh_hostalign:
 rule dh_filter:
     input:
         host_aln=rules.dh_hostalign.output.host_aln,
-        R1=config["inputOutput"]["input_fastqs"] + "/{sample}/{sample}_1.fastq.gz",
-        R2=config["inputOutput"]["input_fastqs"] + "/{sample}/{sample}_2.fastq.gz",
+        R1=config["inputOutput"]["input_fastqs"] + "/{sample}/{sample}_R1.fastq.gz",
+        R2=config["inputOutput"]["input_fastqs"] + "/{sample}/{sample}_R2.fastq.gz",
     output:
         filter_count="results/{sample}/dh_filter/dehuman.count",
         filter_list=temp("results/{sample}/dh_filter/dehuman.filter"),
         filtered_1=temp("results/{sample}/dh_filter/filtered_1.fastq.gz"),
         filtered_2=temp("results/{sample}/dh_filter/filtered_2.fastq.gz"),
     params:
-        remove_reads_script=cachepath(
-            "../scripts/remove_reads_list.pl", executable=True, localsource=True
-        ),
+        remove_reads_script="../scripts/remove_reads_list.pl",
         keep_host=int(config["tools"]["dehuman"]["keep_host"]),
         sort_tmp=temp("results/{sample}/dh_filter/host_sort.tmp"),
         host_aln_cram="results/{sample}/dh_filter/host_aln.cram",
@@ -114,9 +106,9 @@ rule dh_filter:
         "results/{sample}/dh_filter/dehuman_filter.benchmark"
     resources:
         disk_mb=1250,
-        mem_mb=config.dehuman["mem"],
-        runtime=config.dehuman["time"],
-    threads: config.dehuman["threads"]
+        #mem_mb=config.dehuman["mem"],
+        #runtime=config.dehuman["time"],
+    threads: config["tools"]["dehuman"]["threads"]
     shell:
         """
         # using zcat FILENAME.gz causes issues on Mac, see
@@ -173,7 +165,7 @@ rule dh_filter:
                 # than the contaminant reads)
                 rm -f '{params.sort_tmp}'.[0-9]*.bam
                 FMT=cram,no_ref,use_bzip2,use_lzma,level=9,seqs_per_slice=1000000
-                {params.SAMTOOLS} view -@ {threads} \
+                samtools view -@ {threads} \
                                       -h -f 2 \
                                       {input.host_aln} \
                     | samtools sort -@ {threads} \
@@ -205,7 +197,7 @@ rule dh_filter:
 rule dehuman:
     input:
         global_ref=config["resources"]["reference"],
-        ref_index=input.global_ref + '.bwt',
+        ref_index=config["resources"]["reference"] + '.bwt',
         filtered_1=rules.dh_filter.output.filtered_1,  # =temp_prefix("{dataset}/raw_uploads/filtered_1.fastq.gz"),
         filtered_2=rules.dh_filter.output.filtered_2,  # =temp_prefix("{dataset}/raw_uploads/filtered_2.fastq.gz"),
     output:
@@ -222,13 +214,11 @@ rule dehuman:
         config["tools"]["dehuman"]["conda"]
     benchmark:
         "results/{sample}/dehuman/dehuman.benchmark"
-    group:
-        "dehuman"
     resources:
         disk_mb=1250,
-        mem_mb=config.dehuman["mem"],
-        runtime=config.dehuman["time"],
-    threads: config.dehuman["threads"]
+        #mem_mb=config.dehuman["mem"],
+        #runtime=config.dehuman["time"],
+    threads: config["tools"]["dehuman"]["threads"]
     shell:
         """
         echo "Compress filtered sequences --------------------------------------"
@@ -250,7 +240,7 @@ rule dehuman:
 
         rm -f '{params.sort_tmp}'.[0-9]*.bam
         perl -p -e ${{REGEXP}} {output.cram_sam} \
-              | {params.SAMTOOLS} sort -@ {threads} \
+              | samtools sort -@ {threads} \
                                        -T {params.sort_tmp} \
                                        -M \
                                        --reference {input.global_ref} \

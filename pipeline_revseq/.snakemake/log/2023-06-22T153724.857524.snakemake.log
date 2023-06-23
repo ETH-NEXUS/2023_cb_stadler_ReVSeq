@@ -1,4 +1,0 @@
-KeyError in file /Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/workflow/rules/svvc_basic.smk, line 6:
-'primerout'
-  File "/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/workflow/Snakefile", line 15, in <module>
-  File "/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/workflow/rules/svvc_basic.smk", line 6, in <module>
