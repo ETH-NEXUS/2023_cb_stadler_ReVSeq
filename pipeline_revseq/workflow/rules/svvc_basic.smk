@@ -12,7 +12,8 @@ rule fetch_primers:
     conda:
         "../envs/fetch_primers.yaml"
     shell:
-        "python3 workflow/scripts/fetch_primers.py --input {input.primerfile} --reference {input.reference} --output {output.primerout}"
+        "bedtools getfasta -name -tab -fi {input.reference} -bed {input.primerfile} -fo {output.primerout}"
+        #"python workflow/scripts/fetch_primers.py --primerfile {input.primerfile} --reference {input.reference} --output {output.primerout}"
 
 
 rule bwa_index:
@@ -40,7 +41,7 @@ rule trim_galore:
         r2 = "results/{sample}/trim_galore/trimmed_r2.fq.gz",
     params:
         base_name = "data/{sample}",
-        outdir = 'reuslts/{sample}/trim_galore',
+        outdir = 'results/{sample}/trim_galore',
         min_length = config["tools"]["trim_galore"]["min_length"],
         min_length_single = config["tools"]["trim_galore"]["min_length_single"],
     log:
@@ -52,8 +53,8 @@ rule trim_galore:
         "../envs/trim_galore.yaml"
     shell:
         'trim_galore --length {params.min_length} --output "{params.outdir}" --retain_unpaired --paired -r1 {params.min_length_single} -r2 {params.min_length_single} {input.r1} {input.r2} ; '
-        "mv {params.outdir}/{wildcards.sample}_1_val_1.fq.gz  {output.r1} ; "
-        "mv {params.outdir}/{wildcards.sample}_2_val_2.fq.gz  {output.r2}"
+        "mv {params.outdir}/{wildcards.sample}_R1_val_1.fq.gz  {output.r1} ; "
+        "mv {params.outdir}/{wildcards.sample}_R2_val_2.fq.gz  {output.r2}"
 
 
 rule bwa:
@@ -74,13 +75,29 @@ rule bwa:
         "bwa mem {input.ref} {input.reads} |samtools view -Sb - > {output.outfile}"
 
 
+rule sort:
+    input:
+        bwa = rules.bwa.output.outfile
+    output:
+        outfile = "results/{sample}/sort/sorted_reads.bam"
+    log:
+        outfile="logs/{sample}/sort/sort.out.log",
+        errfile="logs/{sample}/sort/sort.err.log",
+    benchmark:
+        "logs/benchmark/sort/{sample}.benchmark"
+    conda:
+        "../envs/bwa.yaml"
+    threads: config["threads"]
+    shell:
+        "samtools sort -@ {threads} --output-fmt=BAM -o {output.outfile} {input.bwa}"
+
+
+
 rule fasta_index:
     input:
         ref = config["resources"]["reference"],
-        primer_file = config["tools"]["fetch_primers"]["primerout"]
     output:
-        outfile = "primers_regions.fasta",
-        outindex = "primers_regions.fasta.faidx"
+        outindex = config["resources"]["reference_dir"] + "primers_regions.fasta.faidx"
     log:
         outfile="logs/fasta_index/fasta_index.out.log",
         errfile="logs/fasta_index/fasta_index.err.log",
@@ -89,14 +106,14 @@ rule fasta_index:
     conda:
         "../envs/samtools.yaml"
     shell:
-        "samtools faidx {input.ref} - o {output.outfile} --fai-idx {output.outindex}"
+        "samtools faidx {input.ref} --fai-idx {output.outindex}"
 
 
 rule pileup:
     input:
-        bam = rules.bwa.output.outfile,
-        fasta = rules.fasta_index.output.outfile,
-        primers = rules.fetch_primers.output.primerout
+        bam = rules.sort.output.outfile,
+        fasta = config["resources"]["reference"],
+        primers = config["resources"]["primer_file"],
     output:
         outpile = "results/{sample}/pileup/allele_counts.npz"
     log:
@@ -107,7 +124,7 @@ rule pileup:
     conda:
         "../envs/samtools.yaml"
     shell:
-        "samtools mpileup -b {input.bam} -f {input.fasta} -l {input.primers} -o {output.outpile}"
+        "samtools mpileup -f {input.fasta} -l {input.primers} -o {output.outpile} {input.bam}"
 
 
 rule pair_frequencies:
@@ -125,7 +142,7 @@ rule pair_frequencies:
     conda:
         "../envs/pair_frequencies.yaml"
     shell:
-        "python3 workflow/scripts/pair_statistics.py --bam_file {input.alignment} --out_dir {params.out_dir}"
+        "python workflow/scripts/pair_statistics.py --bam_file {input.alignment} --out_dir {params.out_dir}"
 
 
 rule consensus:
@@ -149,7 +166,7 @@ rule consensus:
         "../envs/consensus.yaml"
     shell:
         """
-        python3 workflow/scripts/coverage_consensus_diversity.py --sample {params.out_dir} --out_dir {params.out_dir} &
-        python3 workflow/scripts/minor_variant.py --sample {params.out_dir} --out_dir {params.out_dir} --min_freq {params.min_freq} --min_cov {params.min_cov}
+        python workflow/scripts/coverage_consensus_diversity.py --sample {params.out_dir} --out_dir {params.out_dir} &
+        python workflow/scripts/minor_variant.py --sample {params.out_dir} --out_dir {params.out_dir} --min_freq {params.min_freq} --min_cov {params.min_cov}
         """
 

@@ -1,4 +1,5 @@
 revseq/secrets
-pipe_revseq/.snakemake/
-pipe_revseq/logs
-pipe_revseq/workflow/results/
+pipeline_revseq/.snakemake/
+pipeline_revseq/logs
+pipeline_revseq/results/
+.DS_Store

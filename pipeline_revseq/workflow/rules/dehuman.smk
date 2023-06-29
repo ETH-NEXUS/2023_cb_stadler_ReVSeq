@@ -23,7 +23,7 @@ rule dh_reuse_alignreject:
         disk_mb=1250,
         #mem_mb=config.bwa_align["mem"],
         #runtime=config.bwa_align["time"],
-    threads: config["tools"]["bwa_align"]["threads"]
+    threads: config["threads"]
     shell:
         """
         echo "Keep reject  -----------------------------------------------------"
@@ -67,7 +67,7 @@ rule dh_hostalign:
         disk_mb=1250,
         #mem_mb=config.dehuman["mem"],
         #runtime=config.dehuman["time"],
-    threads: config["tools"]["dehuman"]["threads"]
+    threads: config["threads"]
     shell:
         """
         echo "Checking rejects against host's genome  --------------------------"
@@ -108,7 +108,7 @@ rule dh_filter:
         disk_mb=1250,
         #mem_mb=config.dehuman["mem"],
         #runtime=config.dehuman["time"],
-    threads: config["tools"]["dehuman"]["threads"]
+    threads: config["threads"]
     shell:
         """
         # using zcat FILENAME.gz causes issues on Mac, see
@@ -218,7 +218,7 @@ rule dehuman:
         disk_mb=1250,
         #mem_mb=config.dehuman["mem"],
         #runtime=config.dehuman["time"],
-    threads: config["tools"]["dehuman"]["threads"]
+    threads: config["threads"]
     shell:
         """
         echo "Compress filtered sequences --------------------------------------"

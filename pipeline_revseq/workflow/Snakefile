@@ -16,6 +16,7 @@ configfile: "config/config.yaml"
 include: "rules/misc_snake.smk"
 include: "rules/svvc_basic.smk"
 include: "rules/dehuman.smk"
+include: "rules/qc.smk"
 
 # include local rules
 localrules:
@@ -28,11 +29,16 @@ rule all:
         #expand("results/{sample}/trim_galore/trimmed_1.fq.gz", sample = sample_ids),
         #expand("results/{sample}/trim_galore/trimmed_2.fq.gz", sample = sample_ids),
         expand("results/{sample}/bwa/mapped_reads.bam", sample = sample_ids),
+        expand("results/{sample}/sort/sorted_reads.bam", sample = sample_ids),
         expand("results/{sample}/pileup/allele_counts.npz", sample = sample_ids),
         expand("results/{sample}/pair_freqs/pair_counts.pkl.gz", sample = sample_ids),
         expand("results/{sample}/consensus/consensus.fasta", sample = sample_ids),
         # expanding dehuman rule
         expand("results/{sample}/dehuman/dehuman.cram", sample = sample_ids),
+        expand("results/{sample}/fastqc/{sample}_R1_fastqc.zip", sample = sample_ids),
+        expand("results/{sample}/bamqc/samtools_stats.txt", sample=sample_ids),
+        expand("results/{sample}/bamqc/samtools_flagstats.txt", sample=sample_ids),
+        "results/multiqc/multiqc_report.html",
     output:
         "results/complete.txt",
     shell:
