@@ -1,6 +1,6 @@
 inputOutput:
   # full path to directory with input files
-  input_fastqs: "/Users/mcarrara/repos/revseq/raw_data"
+  input_fastqs: "/Users/mcarrara/repos/revseq/anondata"
   sample_map: "config/sample_map.tsv"
 
 resources:
@@ -18,11 +18,9 @@ tools:
   consensus:
     min_freq: 0.05
     min_cov: 100
-  dehuman:
-    conda: "../envs/dehuman.yaml"
-    keep_host: 0
-    checksum: md5
-  fetch_primers:
-    primerout: "results/fetch_primers/primers.tsv"
+  #dehuman:
+  #  conda: "../envs/dehuman.yaml"
+  #  keep_host: 0
+  #  checksum: md5
 
   

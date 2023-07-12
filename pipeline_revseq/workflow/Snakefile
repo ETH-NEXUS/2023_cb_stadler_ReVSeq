@@ -14,8 +14,9 @@ configfile: "config/config.yaml"
 
 # Include rules
 include: "rules/misc_snake.smk"
-include: "rules/svvc_basic.smk"
+include: "rules/preprocessing.smk"
 include: "rules/dehuman.smk"
+include: "rules/revseq_basic.smk"
 include: "rules/qc.smk"
 
 # include local rules
@@ -26,19 +27,18 @@ localrules:
 # defines output
 rule all:
     input:
-        #expand("results/{sample}/trim_galore/trimmed_1.fq.gz", sample = sample_ids),
-        #expand("results/{sample}/trim_galore/trimmed_2.fq.gz", sample = sample_ids),
-        expand("results/{sample}/bwa/mapped_reads.bam", sample = sample_ids),
-        expand("results/{sample}/sort/sorted_reads.bam", sample = sample_ids),
-        expand("results/{sample}/pileup/allele_counts.npz", sample = sample_ids),
-        expand("results/{sample}/pair_freqs/pair_counts.pkl.gz", sample = sample_ids),
-        expand("results/{sample}/consensus/consensus.fasta", sample = sample_ids),
-        # expanding dehuman rule
-        expand("results/{sample}/dehuman/dehuman.cram", sample = sample_ids),
-        expand("results/{sample}/fastqc/{sample}_R1_fastqc.zip", sample = sample_ids),
-        expand("results/{sample}/bamqc/samtools_stats.txt", sample=sample_ids),
-        expand("results/{sample}/bamqc/samtools_flagstats.txt", sample=sample_ids),
-        "results/multiqc/multiqc_report.html",
+        expand("results/{sample}/merge_lanes/merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
+        expand("results/{sample}/merge_lanes/merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
+        #expand("results/{sample}/bwa/mapped_reads.bam", sample = sample_ids),
+        #expand("results/{sample}/sort/sorted_reads.bam", sample = sample_ids),
+        expand("results/{sample}/pileup/pileup.txt", sample = sample_ids),
+        #expand("results/{sample}/pair_freqs/pair_counts.pkl.gz", sample = sample_ids),
+        #expand("results/{sample}/consensus/consensus.fasta", sample = sample_ids),
+        expand("results/{sample}/filter_host_reads/{sample}_dehuman.cram", sample = sample_ids),
+        expand("results/{sample}/fastqc/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),#, lane = lane_ids),
+        expand("results/{sample}/samtoolsstats/samtools_stats.txt", sample=sample_ids),
+        expand("results/{sample}/rseqc/{sample}.clip_profile.R1.pdf", sample=sample_ids),
+        #results/multiqc/multiqc_report.html",
     output:
         "results/complete.txt",
     shell:

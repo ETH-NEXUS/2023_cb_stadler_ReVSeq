@@ -1,5 +1,0 @@
-Module	Section	Sample Name	Source
-Cutadapt	all_sections	680000_2023_05_30_9124_R1	/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/SVVC/results/680000_2023_05_30_9124/trim_galore/680000_2023_05_30_9124_R1.fastq.gz_trimming_report.txt
-Cutadapt	all_sections	680000_2023_05_30_9124_R2	/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/SVVC/results/680000_2023_05_30_9124/trim_galore/680000_2023_05_30_9124_R2.fastq.gz_trimming_report.txt
-FastQC	all_sections	680000_2023_05_30_9124_R2	/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/SVVC/results/680000_2023_05_30_9124/fastqc/680000_2023_05_30_9124_R2_fastqc.zip
-FastQC	all_sections	680000_2023_05_30_9124_R1	/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/SVVC/results/680000_2023_05_30_9124/fastqc/680000_2023_05_30_9124_R1_fastqc.zip

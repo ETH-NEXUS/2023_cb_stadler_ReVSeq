@@ -200,6 +200,9 @@ case "$1" in
                 ${scriptdir}/purge_sftp -r "${recent}" -c viollier.conf "${param[@]}"
                 conda deactivate
         ;;
+        anonymize_samples)
+                ${scriptdir}/anonymize_sample_names
+        ;;
         runpipeline)
 
         ;;

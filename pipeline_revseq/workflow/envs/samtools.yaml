@@ -1,4 +1,4 @@
-name: svvc
+name: samtools
 channels:
 - conda-forge
 - bioconda
