@@ -16,7 +16,8 @@ rule fasta_index:
 
 rule bwa:
     input:
-        ref = rules.merge_refs.output.outref,
+        ref = config["resources"]["reference"],
+        #ref = rules.merge_refs.output.outref,
         index = rules.bwa_index.output.referenceout,
         reads = rules.trim_galore.output
     output:
@@ -30,6 +31,22 @@ rule bwa:
         "../envs/bwa.yaml"
     shell:
         "bwa mem {input.ref} {input.reads} |samtools view -Sb - > {output.bam}"
+
+
+rule samtools_index:
+    input:
+        bam = rules.bwa.output.bam
+    output:
+        index = rules.bwa.output.bam + '.bai'
+    log:
+        outfile="logs/{sample}/bwa/samtools_index.out.log",
+        errfile="logs/{sample}/bwa/samtools_index.err.log",
+    benchmark:
+        "logs/benchmark/bwa/{sample}_samtools_index.benchmark"
+    conda:
+        "../envs/samtools.yaml"
+    shell:
+        "samtools index {input.bam}"
 
 
 rule filter_host_reads:

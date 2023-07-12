@@ -37,7 +37,7 @@ rule all:
         expand("results/{sample}/filter_host_reads/{sample}_dehuman.cram", sample = sample_ids),
         expand("results/{sample}/fastqc/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),#, lane = lane_ids),
         expand("results/{sample}/samtoolsstats/samtools_stats.txt", sample=sample_ids),
-        expand("results/{sample}/rseqc/{sample}.clip_profile.R1.pdf", sample=sample_ids),
+        expand("results/{sample}/rseqc/{sample}.clipping_profile.R1.pdf", sample=sample_ids),
         #results/multiqc/multiqc_report.html",
     output:
         "results/complete.txt",

@@ -1,0 +1,26 @@
+inputOutput:
+  # full path to directory with input files
+  input_fastqs: "/path/to/anonymised/fastqs"
+  sample_map: "config/sample_map.tsv"
+
+resources:
+  primer_file: "/path/to/primer_file"
+  host_ref: "/path/to/host/reference.fasta"
+  reference: "/path/to/viral/reference/multifasta"
+  reference_dir: "/path/to/dir/containing/reference/multifasta"
+
+threads: 4
+
+tools:
+  trim_galore:
+    min_length: 80
+    min_length_single: 90
+  consensus:
+    min_freq: 0.05
+    min_cov: 100
+  #dehuman:
+  #  conda: "../envs/dehuman.yaml"
+  #  keep_host: 0
+  #  checksum: md5
+
+  

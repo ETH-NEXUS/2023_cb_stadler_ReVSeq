@@ -4,6 +4,7 @@ import argparse
 import uuid
 import base64
 import unittest
+import gzip
 
 class ethidGenerator(unittest.TestCase):
     @staticmethod
@@ -19,6 +20,11 @@ class ethidGenerator(unittest.TestCase):
         print(eth_id)
         self.assertEqual(uuid4, EthIdTestCase.decode_base32(eth_id))
 
+def verify_sample(samplename,):
+	with gzip.open(sample, 'rb') as f:
+    	for i, l in enumerate(f):
+        	pass
+print("File {1} contain {0} lines".format(i + 1, myfile))
 
 def generate_new_ethids(anon_df, all_samples):
 	if len(anon) == 0:

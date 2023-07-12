@@ -18,7 +18,8 @@
 rule pileup:
     input:
         bam = rules.filter_host_reads.output.bam,
-        fasta = rules.merge_refs.output.outref,
+        fasta = config["resources"]["reference"]
+        #fasta = rules.merge_refs.output.outref,
         #primers = config["resources"]["primer_file"],
     output:
         outpile = "results/{sample}/pileup/pileup.txt"

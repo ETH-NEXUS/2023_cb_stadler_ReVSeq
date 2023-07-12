@@ -13,8 +13,8 @@ threads: 4
 
 tools:
   trim_galore:
-    min_length: 80
-    min_length_single: 90
+    min_length: 20
+    min_length_single: 30
   consensus:
     min_freq: 0.05
     min_cov: 100

@@ -36,29 +36,30 @@ rule merge_lanes:
         "gzcat {input.r1} | gzip > {output.r1} && gzcat {input.r2} | gzip > {output.r2}"
 
 
-rule merge_refs:
-    input:
-        refs = config["resources"]["reference"],
-        host_ref = config["resources"]["host_ref"],
-    output:
-        outref = "results/merge_refs/ref.fa",
-    log:
-        outfile="logs/merge_refs/merge_refs.out.log",
-        errfile="logs/merge_refs/merge_refs.err.log",
-    benchmark:
-        "logs/benchmark/merge_refs/merge_refs.benchmark"
-    conda:
-        "../envs/consensus.yaml"
-    shell:
-        "python workflow/scripts/merge_refs.py --refs {input.refs} --host_ref {input.host_ref} --output {output.outref}"
+#rule merge_refs:
+#    input:
+#        refs = config["resources"]["reference"],
+#        host_ref = config["resources"]["host_ref"],
+#    output:
+#        outref = "results/merge_refs/ref.fa",
+#    log:
+#        outfile="logs/merge_refs/merge_refs.out.log",
+#        errfile="logs/merge_refs/merge_refs.err.log",
+#    benchmark:
+#        "logs/benchmark/merge_refs/merge_refs.benchmark"
+#    conda:
+#        "../envs/consensus.yaml"
+#    shell:
+#        "python workflow/scripts/merge_refs.py --refs {input.refs} --host_ref {input.host_ref} --output {output.outref}"
 
 
 rule bwa_index:
     input:
-        #reference = config["resources"]["reference"]
-        reference = rules.merge_refs.output.outref
+        reference = config["resources"]["reference"]
+        #reference = rules.merge_refs.output.outref
     output:
-        referenceout = rules.merge_refs.output.outref + '.bwt'
+        referenceout = config["resources"]["reference"] + '.bwt'
+        #referenceout = rules.merge_refs.output.outref + '.bwt'
     log:
         outfile="logs/bwa_index/bwa_index.out.log",
         errfile="logs/bwa_index/bwa_index.err.log",
@@ -75,8 +76,8 @@ rule trim_galore:
         r1 = rules.merge_lanes.output.r1,
         r2 = rules.merge_lanes.output.r2,
     output:
-        r1 = "results/{sample}/trim_galore/trimmed_r1.fq.gz",
-        r2 = "results/{sample}/trim_galore/trimmed_r2.fq.gz",
+        r1 = "results/{sample}/trim_galore/merged_R1_val_1.fq.gz",
+        r2 = "results/{sample}/trim_galore/merged_R2_val_2.fq.gz",
     params:
         base_name = "data/{sample}",
         outdir = 'results/{sample}/trim_galore',
@@ -90,7 +91,5 @@ rule trim_galore:
     conda:
         "../envs/trim_galore.yaml"
     shell:
-        'trim_galore --length {params.min_length} --output "{params.outdir}" --retain_unpaired --paired -r1 {params.min_length_single} -r2 {params.min_length_single} {input.r1} {input.r2} ; '
-        "mv {params.outdir}/merged_R1_val_1.fq.gz  {output.r1} ; "
-        "mv {params.outdir}/merged_R2_val_2.fq.gz  {output.r2}"
+        'trim_galore --length {params.min_length} --output "{params.outdir}" --retain_unpaired --paired -r1 {params.min_length_single} -r2 {params.min_length_single} {input.r1} {input.r2}'
 

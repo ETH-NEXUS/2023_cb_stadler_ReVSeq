@@ -23,7 +23,8 @@ rule fastqc:
 
 rule samtoolsstats:
     input:
-        bam = rules.filter_host_reads.output.bam
+        #bam = rules.filter_host_reads.output.bam
+        bam = rules.bwa.output.bam
     output:
         stats = "results/{sample}/samtoolsstats/samtools_stats.txt",
         flagstats = "results/{sample}/samtoolsstats/samtools_flagstats.txt",
@@ -41,11 +42,12 @@ rule samtoolsstats:
 
 rule rseqc:
     input:
-        bam = "results/{sample}/bwa/mapped_reads.bam"
+        bam = rules.bwa.output.bam,
+        index = rules.samtools_index.output.index
     output:
         stats = "results/{sample}/rseqc/bam_stat.txt",
-        clipr1 = "results/{sample}/rseqc/{sample}.clip_profile.R1.pdf",
-        clipr2 = "results/{sample}/rseqc/{sample}.clip_profile.R2.pdf",
+        clipr1 = "results/{sample}/rseqc/{sample}.clipping_profile.R1.pdf",
+        clipr2 = "results/{sample}/rseqc/{sample}.clippping_profile.R2.pdf",
     params:
         clipprefix = "results/{sample}/rseqc/{sample}"
     log:
