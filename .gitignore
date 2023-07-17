@@ -3,3 +3,5 @@ pipeline_revseq/.snakemake/
 pipeline_revseq/logs
 pipeline_revseq/results/
 .DS_Store
+pipeline_revseq/multiqc_flat/
+pipeline_revseq/multiqc_interactive/

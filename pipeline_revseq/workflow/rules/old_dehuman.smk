@@ -1,4 +1,4 @@
-## Coutesy of V-pipe: https://github.com/cbg-ethz/V-pipe/tree/master
+## Based on code from V-pipe: https://github.com/cbg-ethz/V-pipe/tree/master
 
 from functools import partial
 
@@ -8,17 +8,17 @@ rule dh_reuse_alignreject:
     # this rule re-use the rejected reads in align.smk (e.g. ngshmmalign's /alignments/rejects.sam)
     # (useful when in parallel with the main processing)
     input:
-        reject_aln=rules.bwa.output.outfile
+        reject_aln=rules.bwa.output.bam
     output:
-        reject_1=("results/{sample}/align_reject/reject_R1.fastq.gz"),
-        reject_2=("results/{sample}/align_reject/reject_R2.fastq.gz"),
+        reject_1=("config["inputOutput"]["output_dir"]/{sample}/align_reject/reject_R1.fastq.gz"),
+        reject_2=("config["inputOutput"]["output_dir"]/{sample}/align_reject/reject_R2.fastq.gz"),
     log:
-        outfile="logs/{sample}/align_reject/reject.out.log",
-        errfile="logs/{sample}/align_reject/reject.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/align_reject/reject.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/align_reject/reject.err.log",
     conda:
         config["tools"]["dehuman"]["conda"]
     benchmark:
-        "results/{sample}/align_reject/reject.benchmark"
+        "config["inputOutput"]["output_dir"]/{sample}/align_reject/reject.benchmark"
     resources:
         disk_mb=1250,
         #mem_mb=config.bwa_align["mem"],
@@ -57,14 +57,14 @@ rule dh_hostalign:
         reject_1=rules.dh_reuse_alignreject.output.reject_1,
         reject_2=rules.dh_reuse_alignreject.output.reject_2,
     output:
-        host_aln=("results/{sample}/dh_hostalign/host_aln.sam"),
+        host_al("config["inputOutput"]["output_dir"]/{sample}/dh_hostalign/host_aln.sam"),
     log:
-        outfile="logs/{sample}/dh_hostalign/host_aln.out.log",
-        errfile="logs/{sample}/dh_hostalign/host_aln.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/dh_hostalign/host_aln.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/dh_hostalign/host_aln.err.log",
     conda:
         config["tools"]["dehuman"]["conda"]
     benchmark:
-        "results/{sample}/dh_hostalignhost_aln.benchmark"
+        "config["inputOutput"]["output_dir"]/{sample}/dh_hostalignhost_aln.benchmark"
     resources:
         disk_mb=1250,
         #mem_mb=config.dehuman["mem"],
@@ -91,23 +91,23 @@ rule dh_filter:
         R1=rules.merge_lanes.output.r1,
         R2=rules.merge_lanes.output.r2,
     output:
-        filter_count="results/{sample}/dh_filter/dehuman.count",
-        filter_list=("results/{sample}/dh_filter/dehuman.filter"),
-        filtered_1=("results/{sample}/dh_filter/filtered_1.fastq.gz"),
-        filtered_2=("results/{sample}/dh_filter/filtered_2.fastq.gz"),
+        filter_count="config["inputOutput"]["output_dir"]/{sample}/dh_filter/dehuman.count",
+        filter_list=("config["inputOutput"]["output_dir"]/{sample}/dh_filter/dehuman.filter"),
+        filtered_1=("config["inputOutput"]["output_dir"]/{sample}/dh_filter/filtered_1.fastq.gz"),
+        filtered_2=("config["inputOutput"]["output_dir"]/{sample}/dh_filter/filtered_2.fastq.gz"),
     params:
         remove_reads_script="../scripts/remove_reads_list.pl",
         keep_host=int(config["tools"]["dehuman"]["keep_host"]),
-        sort_tmp=temp("results/{sample}/dh_filter/host_sort.tmp"),
-        host_aln_cram="results/{sample}/dh_filter/host_aln.cram",
+        sort_tmp=temp("config["inputOutput"]["output_dir"]/{sample}/dh_filter/host_sort.tmp"),
+        host_aln_cram="config["inputOutput"]["output_dir"]/{sample}/dh_filter/host_aln.cram",
         F=2,
     log:
-        outfile="logs/{sample}/dh_filter/dehuman_filter.out.log",
-        errfile="logs/{sample}/dh_filter/dehuman_filter.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/dh_filter/dehuman_filter.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/dh_filter/dehuman_filter.err.log",
     conda:
         config["tools"]["dehuman"]["conda"]
     benchmark:
-        "results/{sample}/dh_filter/dehuman_filter.benchmark"
+        "config["inputOutput"]["output_dir"]/{sample}/dh_filter/dehuman_filter.benchmark"
     resources:
         disk_mb=1250,
         #mem_mb=config.dehuman["mem"],
@@ -205,19 +205,19 @@ rule dehuman:
         filtered_1=rules.dh_filter.output.filtered_1,  # =temp_prefix("{dataset}/raw_uploads/filtered_1.fastq.gz"),
         filtered_2=rules.dh_filter.output.filtered_2,  # =temp_prefix("{dataset}/raw_uploads/filtered_2.fastq.gz"),
     output:
-        cram_sam=temp("results/{sample}/dehuman/dehuman.sam"),
-        final_cram="results/{sample}/dehuman/dehuman.cram",
-        checksum="results/{sample}/dehuman/dehuman.cram.%s" % config["tools"]["dehuman"]["checksum"],
+        cram_sam=temp("config["inputOutput"]["output_dir"]/{sample}/dehuman/dehuman.sam"),
+        final_cram="config["inputOutput"]["output_dir"]/{sample}/dehuman/dehuman.cram",
+        checksum="config["inputOutput"]["output_dir"]/{sample}/dehuman/dehuman.cram.%s" % config["tools"]["dehuman"]["checksum"],
     params:
         checksum_type=config["tools"]["dehuman"]["checksum"],
-        sort_tmp=temp("results/{sample}/dehuman/dehuman.tmp"),
+        sort_tmp=temp("config["inputOutput"]["output_dir"]/{sample}/dehuman/dehuman.tmp"),
     log:
-        outfile="logs/{sample}/dehuman/dehuman.out.log",
-        errfile="logs/{sample}/dehuman/dehuman.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/dehuman/dehuman.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/dehuman/dehuman.err.log",
     conda:
         config["tools"]["dehuman"]["conda"]
     benchmark:
-        "results/{sample}/dehuman/dehuman.benchmark"
+        "config["inputOutput"]["output_dir"]/{sample}/dehuman/dehuman.benchmark"
     resources:
         disk_mb=1250,
         #mem_mb=config.dehuman["mem"],

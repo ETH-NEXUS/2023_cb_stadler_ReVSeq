@@ -2,6 +2,7 @@ inputOutput:
   # full path to directory with input files
   input_fastqs: "/Users/mcarrara/repos/revseq/anondata"
   sample_map: "config/sample_map.tsv"
+  output_dir: "/Users/mcarrara/repos/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/results"
 
 resources:
   primer_file: "/Users/mcarrara/repos/revseq/RespiratoryVirus.20200409.bed"
@@ -18,9 +19,9 @@ tools:
   consensus:
     min_freq: 0.05
     min_cov: 100
-  #dehuman:
-  #  conda: "../envs/dehuman.yaml"
-  #  keep_host: 0
-  #  checksum: md5
+  dehuman:
+    conda: "../envs/dehuman.yaml"
+    keep_host: 0
+    checksum: md5
 
   

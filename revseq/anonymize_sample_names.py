@@ -20,11 +20,17 @@ class ethidGenerator(unittest.TestCase):
         print(eth_id)
         self.assertEqual(uuid4, EthIdTestCase.decode_base32(eth_id))
 
-def verify_sample(samplename,):
-	with gzip.open(sample, 'rb') as f:
-    	for i, l in enumerate(f):
-        	pass
-print("File {1} contain {0} lines".format(i + 1, myfile))
+def detect_empty_sample(samplename, anondir):
+	# samples with 0 reads crash the pipeline and should be 
+	# these samples will not be added to the samplemap to avoid crashing the procedure
+	with gzip.open(anondir + "/" + samplename + "/" + samplename + "_L001_R1_001.fastq.gz", 'rb') as f:
+		data = f.read(1)
+	if len(data) == 0:
+		print("Empty sample " + samplename + " will be excluded from the analysis")
+		return [ samplename, "empty" ]
+	else:
+		return [ samplename, "not_empty" ]
+
 
 def generate_new_ethids(anon_df, all_samples):
 	if len(anon) == 0:
@@ -62,10 +68,9 @@ def link_anonimised_names(samplename, ethid, sampledir, anonymizeddir):
 	return [samplename, ethid, 0]
 
 
-def create_sample_map(processed, anondir):
-	ethids = [ str(id[1]) for id in processed]
+def create_sample_map(samples, anondir):
 	lanes = []
-	for id in ethids:
+	for id in samples:
 		rawfiles = os.scandir(anondir + "/" + id)
 		lanes_partial = []
 		for file in rawfiles:
@@ -88,6 +93,7 @@ if __name__ == '__main__':
 	parser.add_argument('--sampledir', required=True, type=str, help='the directory containing all raw data samples, one folder per sample')
 	parser.add_argument('--samplemapfile', required=True, type=str, help='the path and filename to the samplemap used by the pipeline')
 	parser.add_argument('--anonymizeddir', required=True, type=str, help='the directory containing all anonymized samples, as links to the original data')
+	parser.add_argument('--emptyfile', required=True, type=str, help='the path and filename to the file that contains all empty samples to report')
 
 	args = parser.parse_args()
     
@@ -104,7 +110,14 @@ if __name__ == '__main__':
 	except:
 		sys.exit("Error: could not write the anonymization table. All directories have been created and need to be deleted for the procedure to move forward\nTo know what directories to delete, check in the anonymized directory the ethids that are not included in the anonymised table and delete all of them")
 	
-	samplemap = create_sample_map(processed, args.anonymizeddir)
+	all_samples_status = [ detect_empty_sample(sample[1], args.anonymizeddir) for sample in processed ]
+	empty_samples = [ sample[0] for sample in all_samples_status if sample[1] == "empty"]
+	with open(args.emptyfile, 'w') as f:
+		f.write("\n".join(empty_samples))
+
+	not_empty_samples = [ sample[0] for sample in all_samples_status if sample[1] == "not_empty"]
+
+	samplemap = create_sample_map(non_empty, args.anonymizeddir)
 	try:
 		samplemap.to_csv(args.samplemapfile, sep="\t", mode="a", header=None, index=None)
 	except:

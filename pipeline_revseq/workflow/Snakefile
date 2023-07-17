@@ -16,6 +16,7 @@ configfile: "config/config.yaml"
 include: "rules/misc_snake.smk"
 include: "rules/preprocessing.smk"
 include: "rules/dehuman.smk"
+include: "rules/old_dehuman.smk"
 include: "rules/revseq_basic.smk"
 include: "rules/qc.smk"
 
@@ -27,18 +28,19 @@ localrules:
 # defines output
 rule all:
     input:
-        expand("results/{sample}/merge_lanes/merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
-        expand("results/{sample}/merge_lanes/merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
+        expand("results/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
+        expand("results/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
         #expand("results/{sample}/bwa/mapped_reads.bam", sample = sample_ids),
         #expand("results/{sample}/sort/sorted_reads.bam", sample = sample_ids),
         expand("results/{sample}/pileup/pileup.txt", sample = sample_ids),
         #expand("results/{sample}/pair_freqs/pair_counts.pkl.gz", sample = sample_ids),
         #expand("results/{sample}/consensus/consensus.fasta", sample = sample_ids),
+        expand("results/{sample}/dehuman/dehuman.cram", sample = sample_ids),
         expand("results/{sample}/filter_host_reads/{sample}_dehuman.cram", sample = sample_ids),
         expand("results/{sample}/fastqc/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),#, lane = lane_ids),
-        expand("results/{sample}/samtoolsstats/samtools_stats.txt", sample=sample_ids),
-        expand("results/{sample}/rseqc/{sample}.clipping_profile.R1.pdf", sample=sample_ids),
-        #results/multiqc/multiqc_report.html",
+        expand("results/{sample}/samtoolsstats/{sample}_samtools_stats.txt", sample=sample_ids),
+        expand("results/{sample}/rseqc/{sample}_bam_stat.txt", sample=sample_ids),
+        #"results/multiqc/multiqc_report.html",
     output:
         "results/complete.txt",
     shell:

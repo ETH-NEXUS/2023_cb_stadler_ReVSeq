@@ -25,13 +25,13 @@ rule merge_lanes:
         #r1 = expand(config["inputOutput"]["input_fastqs"]+"/{{sample}}/{{sample}}_{lane}_R1_001.fastq.gz", zip, lane=lane_ids, sample = sample_ids),
         #r2 = expand(config["inputOutput"]["input_fastqs"]+"/{{sample}}/{{sample}}_{lane}_R2_001.fastq.gz", zip, lane=lane_ids, sample = sample_ids)
     output:
-        r1 = "results/{sample}/merge_lanes/merged_R1.fastq.gz",
-        r2 = "results/{sample}/merge_lanes/merged_R2.fastq.gz",
+        r1 = ("config["inputOutput"]["output_dir"]/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz"),
+        r2 = ("config["inputOutput"]["output_dir"]/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz"),
     log:
-        outfile="logs/{sample}/merge_lanes/merge_lanes.out.log",
-        errfile="logs/{sample}/merge_lanes/merge_lanes.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/merge_lanes/merge_lanes.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/merge_lanes/merge_lanes.err.log",
     benchmark:
-        "logs/benchmark/{sample}/merge_lanes/merge_lanes.benchmark"
+        "config["inputOutput"]["output_dir"]/logs/benchmark/{sample}/merge_lanes/merge_lanes.benchmark"
     shell:
         "gzcat {input.r1} | gzip > {output.r1} && gzcat {input.r2} | gzip > {output.r2}"
 
@@ -41,12 +41,12 @@ rule merge_lanes:
 #        refs = config["resources"]["reference"],
 #        host_ref = config["resources"]["host_ref"],
 #    output:
-#        outref = "results/merge_refs/ref.fa",
+#        outref = "config["inputOutput"]["output_dir"]/merge_refs/ref.fa",
 #    log:
-#        outfile="logs/merge_refs/merge_refs.out.log",
-#        errfile="logs/merge_refs/merge_refs.err.log",
+#        outfile="config["inputOutput"]["output_dir"]/logs/merge_refs/merge_refs.out.log",
+#        errfile="config["inputOutput"]["output_dir"]/logs/merge_refs/merge_refs.err.log",
 #    benchmark:
-#        "logs/benchmark/merge_refs/merge_refs.benchmark"
+#        "config["inputOutput"]["output_dir"]/logs/benchmark/merge_refs/merge_refs.benchmark"
 #    conda:
 #        "../envs/consensus.yaml"
 #    shell:
@@ -61,10 +61,10 @@ rule bwa_index:
         referenceout = config["resources"]["reference"] + '.bwt'
         #referenceout = rules.merge_refs.output.outref + '.bwt'
     log:
-        outfile="logs/bwa_index/bwa_index.out.log",
-        errfile="logs/bwa_index/bwa_index.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/bwa_index/bwa_index.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/bwa_index/bwa_index.err.log",
     benchmark:
-        "logs/benchmark/bwa_index/bwa_index.benchmark"
+        "config["inputOutput"]["output_dir"]/logs/benchmark/bwa_index/bwa_index.benchmark"
     conda:
         "../envs/bwa.yaml"
     shell:
@@ -76,18 +76,18 @@ rule trim_galore:
         r1 = rules.merge_lanes.output.r1,
         r2 = rules.merge_lanes.output.r2,
     output:
-        r1 = "results/{sample}/trim_galore/merged_R1_val_1.fq.gz",
-        r2 = "results/{sample}/trim_galore/merged_R2_val_2.fq.gz",
+        r1 = "config["inputOutput"]["output_dir"]/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz",
+        r2 = "config["inputOutput"]["output_dir"]/{sample}/trim_galore/{sample}_merged_R2_val_2.fq.gz",
     params:
         base_name = "data/{sample}",
-        outdir = 'results/{sample}/trim_galore',
+        outdir = 'config["inputOutput"]["output_dir"]/{sample}/trim_galore',
         min_length = config["tools"]["trim_galore"]["min_length"],
         min_length_single = config["tools"]["trim_galore"]["min_length_single"],
     log:
-        outfile="logs/{sample}/trim_galore/trim_galore.out.log",
-        errfile="logs/{sample}/trim_galore/trim_galore.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/trim_galore/{sample}_trim_galore.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/trim_galore/{sample}_trim_galore.err.log",
     benchmark:
-        "logs/benchmark/trim_galore/{sample}.benchmark"
+        "config["inputOutput"]["output_dir"]/logs/benchmark/trim_galore/{sample}.benchmark"
     conda:
         "../envs/trim_galore.yaml"
     shell:

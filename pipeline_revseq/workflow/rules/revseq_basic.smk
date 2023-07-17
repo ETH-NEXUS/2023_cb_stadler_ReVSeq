@@ -1,20 +1,3 @@
-#rule sort:
-#    input:
-#        bwa = rules.filter_host_reads.output.outbam
-#    output:
-#        outfile = tmp("results/{sample}/filter_host_reads/sorted_reads.bam")
-#    log:
-#        outfile="logs/{sample}/sort/sort.out.log",
-#        errfile="logs/{sample}/sort/sort.err.log",
-#    benchmark:
-#        "logs/benchmark/sort/{sample}.benchmark"
-#    conda:
-#        "../envs/bwa.yaml"
-#    threads: config["threads"]
-#    shell:
-#        "samtools sort -@ {threads} --output-fmt=BAM -o {output.outfile} {input.bwa}"
-
-
 rule pileup:
     input:
         bam = rules.filter_host_reads.output.bam,
@@ -22,14 +5,14 @@ rule pileup:
         #fasta = rules.merge_refs.output.outref,
         #primers = config["resources"]["primer_file"],
     output:
-        outpile = "results/{sample}/pileup/pileup.txt"
+        outpile = "config["inputOutput"]["output_dir"]/{sample}/pileup/pileup.txt"
     params:
-        sort_tmp=temp("results/{sample}/pileup/sort.tmp"),
+        sort_tmp=("config["inputOutput"]["output_dir"]/{sample}/pileup/sort.tmp"),
     log:
-        outfile="logs/{sample}/pileup/pileup.out.log",
-        errfile="logs/{sample}/pileup/pileup.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/pileup/pileup.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/pileup/pileup.err.log",
     benchmark:
-        "logs/benchmark/pileup/{sample}.benchmark"
+        "config["inputOutput"]["output_dir"]/logs/benchmark/pileup/{sample}.benchmark"
     conda:
         "../envs/samtools.yaml"
     shell:
@@ -45,14 +28,14 @@ rule pair_frequencies:
     input:
         alignment = rules.bwa.output.bam
     output:
-        outcounts = "results/{sample}/pair_freqs/pair_counts.pkl.gz"
+        outcounts = "config["inputOutput"]["output_dir"]/{sample}/pair_freqs/pair_counts.pkl.gz"
     params:
-        out_dir = "results/{sample}/pair_freqs"
+        out_dir = "config["inputOutput"]["output_dir"]/{sample}/pair_freqs"
     log:
-        outfile="logs/{sample}/pair_freqs/pair_freqs.out.log",
-        errfile="logs/{sample}/pair_freqs/pair_freqs.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/pair_freqs/pair_freqs.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/pair_freqs/pair_freqs.err.log",
     benchmark:
-        "logs/benchmark/pair_frequencies/{sample}.benchmark"
+        "config["inputOutput"]["output_dir"]/logs/benchmark/pair_frequencies/{sample}.benchmark"
     conda:
         "../envs/pair_frequencies.yaml"
     shell:
@@ -63,19 +46,19 @@ rule consensus:
     input:
         counts = rules.pileup.output.outpile
     output:
-        "results/{sample}/consensus/consensus.fasta",
-        "results/{sample}/consensus/figures/coverage.png",
-        "results/{sample}/consensus/figures/diversity.png",
-        "results/{sample}/consensus/minor.fasta"
+        "config["inputOutput"]["output_dir"]/{sample}/consensus/consensus.fasta",
+        "config["inputOutput"]["output_dir"]/{sample}/consensus/figures/coverage.png",
+        "config["inputOutput"]["output_dir"]/{sample}/consensus/figures/diversity.png",
+        "config["inputOutput"]["output_dir"]/{sample}/consensus/minor.fasta"
     params:
-        out_dir = "results/{sample}/consensus",
+        out_dir = "config["inputOutput"]["output_dir"]/{sample}/consensus",
         min_freq = config["tools"]["consensus"]["min_freq"],
         min_cov = config["tools"]["consensus"]["min_cov"],
     log:
-        outfile="logs/{sample}/consensus/consensus.out.log",
-        errfile="logs/{sample}/consensus/consensus.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/consensus/consensus.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/consensus/consensus.err.log",
     benchmark:
-        "logs/benchmark/consensus/{sample}.benchmark"
+        "config["inputOutput"]["output_dir"]/logs/benchmark/consensus/{sample}.benchmark"
     conda:
         "../envs/consensus.yaml"
     shell:

@@ -12,16 +12,16 @@ rule anonymize_samples:
         r1 = expand(config["inputOutput"]["input_fastqs"]+"/{{sample}}/{{sample}}_{lane}_R1.fastq.gz", lane=lane_ids, sample = sample_ids),
         r2 = expand(config["inputOutput"]["input_fastqs"]+"/{{sample}}/{{sample}}_{lane}_R2.fastq.gz", lane=lane_ids, sample = sample_ids)
     output:
-        outr1 = "results/{sample}/anonymize_samples/{ethid}_{lane}_R1.fastq.gz",
-        outr2 = "results/{sample}/anonymize_samples/{ethid}_{lane}_R1.fastq.gz"
-        outtable = "results/anonymize_samples/anonymization_table.tsv"
+        outr1 = "config["inputOutput"]["output_dir"]/{sample}/anonymize_samples/{ethid}_{lane}_R1.fastq.gz",
+        outr2 = "config["inputOutput"]["output_dir"]/{sample}/anonymize_samples/{ethid}_{lane}_R1.fastq.gz"
+        outtable = "config["inputOutput"]["output_dir"]/anonymize_samples/anonymization_table.tsv"
     params:
-        sort_tmp=temp("results/{sample}/pileup/sort.tmp"),
+        sort_tmp=temp("config["inputOutput"]["output_dir"]/{sample}/pileup/sort.tmp"),
     log:
-        outfile="logs/{sample}/pileup/pileup.out.log",
-        errfile="logs/{sample}/pileup/pileup.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/pileup/pileup.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/pileup/pileup.err.log",
     benchmark:
-        "logs/benchmark/pileup/{sample}.benchmark"
+        "config["inputOutput"]["output_dir"]/logs/benchmark/pileup/{sample}.benchmark"
     conda:
         "../envs/samtools.yaml"
     shell:
@@ -35,14 +35,14 @@ rule anonymize_samples:
         fasta = rules.merge_refs.output.outref,
         #primers = config["resources"]["primer_file"],
     output:
-        outpile = "results/{sample}/pileup/pileup.txt"
+        outpile = "config["inputOutput"]["output_dir"]/{sample}/pileup/pileup.txt"
     params:
-        sort_tmp=temp("results/{sample}/pileup/sort.tmp"),
+        sort_tmp=temp("config["inputOutput"]["output_dir"]/{sample}/pileup/sort.tmp"),
     log:
-        outfile="logs/{sample}/pileup/pileup.out.log",
-        errfile="logs/{sample}/pileup/pileup.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/pileup/pileup.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/pileup/pileup.err.log",
     benchmark:
-        "logs/benchmark/pileup/{sample}.benchmark"
+        "config["inputOutput"]["output_dir"]/logs/benchmark/pileup/{sample}.benchmark"
     conda:
         "../envs/samtools.yaml"
     shell:
@@ -59,14 +59,14 @@ rule validate_anonimization:
         fasta = rules.merge_refs.output.outref,
         #primers = config["resources"]["primer_file"],
     output:
-        outpile = "results/{sample}/pileup/pileup.txt"
+        outpile = "config["inputOutput"]["output_dir"]/{sample}/pileup/pileup.txt"
     params:
-        sort_tmp=temp("results/{sample}/pileup/sort.tmp"),
+        sort_tmp=temp("config["inputOutput"]["output_dir"]/{sample}/pileup/sort.tmp"),
     log:
-        outfile="logs/{sample}/pileup/pileup.out.log",
-        errfile="logs/{sample}/pileup/pileup.err.log",
+        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/pileup/pileup.out.log",
+        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/pileup/pileup.err.log",
     benchmark:
-        "logs/benchmark/pileup/{sample}.benchmark"
+        "config["inputOutput"]["output_dir"]/logs/benchmark/pileup/{sample}.benchmark"
     conda:
         "../envs/samtools.yaml"
     shell:
