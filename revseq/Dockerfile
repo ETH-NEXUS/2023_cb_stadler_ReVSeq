@@ -10,8 +10,14 @@ WORKDIR /app
 
 COPY revseq sync_sftp secrets viollier.conf run_revseq snakemake.yaml /app/
 RUN mkdir /home/appuser/.ssh
-COPY ../../secrets/config /home/appuser/.ssh/
-COPY ../../secrets/id_rsa_belfry* /home/appuser/.ssh/
+
+RUN --mount=type=secret,id=CONFIG \
+    cat /run/secrets/CONFIG > /home/appuser/.ssh/config
+RUN --mount=type=secret,id=PRKEY \
+    cat /run/secrets/PRKEY > /home/appuser/.ssh/id_rsa_belfry
+RUN --mount=type=secret,id=PUKEY \
+    cat /run/secrets/PUKEY > /home/appuser/.ssh/id_rsa_belfry.pub
+
 RUN ["chmod", "+x", "/app/run_revseq"]
 
 RUN apk update

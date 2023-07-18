@@ -1,0 +1,1 @@
+DOCKER_BUILDKIT=1 docker build --secret id=CONFIG,src=<PATH_TO_CONFIG> --secret id=PRKEY,src=<PATH_TO_PRIVATE_KEY> --secret id=PUKEY,src=<PATH_TO_PUBLIC_KEY> -t revseq .
