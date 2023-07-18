@@ -9,6 +9,9 @@ USER appuser
 WORKDIR /app
 
 COPY revseq sync_sftp secrets viollier.conf run_revseq snakemake.yaml /app/
+RUN mkdir /home/appuser/.ssh
+COPY ../../secrets/config /home/appuser/.ssh/
+COPY ../../secrets/id_rsa_belfry* /home/appuser/.ssh/
 RUN ["chmod", "+x", "/app/run_revseq"]
 
 RUN apk update
@@ -25,4 +28,4 @@ ARG PATH="/home/appuser/miniconda3/bin:${PATH}"
 RUN conda env create -f snakemake.yaml
 
 ENTRYPOINT [ "sleep", "10d" ]
-#ENTRYPOINT [ "run_pipeline.sh" ]
+#ENTRYPOINT [ "run_revseq" ]
