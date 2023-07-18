@@ -187,50 +187,15 @@ case "$1" in
                 ${scriptdir}/upload_sftp -c viollier.conf "${param[@]}"
                 conda deactivate
         ;;
-        purgeviollier)
-                if  (( ! ${lab[viollier]} )); then
-                        echo "Viollier disabled; no purging"
-                        exit 0
-                fi
-                echo "Purge Viollier"
-                . $baseconda/miniconda3/bin/activate ""
-                param=( 'raw_sequences' )
-                recent=$(date --date='2 week ago' '+%Y%m%d')
-
-                ${scriptdir}/purge_sftp -r "${recent}" -c viollier.conf "${param[@]}"
-                conda deactivate
-        ;;
         anonymize_samples)
-                ${scriptdir}/anonymize_sample_names
+                python ${scriptdir}/anonymize_sample_names.py
         ;;
         runpipeline)
-
+                snakemake --use-conda -c3 --configfile /app/data/config/config.yaml
         ;;
-        uploadspsp)
-
-        ;;
-        garbage)
-                validateBatchName "$2"
-
-                for f in ${basedir}/${sampleset}/*/${2}; do
-                        garbage=$(dirname "${f//${basedir}\/${sampleset}/garbage}")
-                        mkdir ${mode:+--mode=${mode}} -p "${garbage}"
-                        mv -v "${f%/}" "${basedir}/${garbage}/"
-                done
-                for f in ${basedir}/${working}/samples/*/${2}/; do
-                        garbage="${f//${basedir}\/${working}\/samples/garbage}"
-                        mkdir ${mode:+--mode=${mode}} -p "${garbage%/}/"{raw_data,extracted_data}/
-                        mv -vf "${f%/}/raw_data/"* "${garbage%/}/raw_data/"
-                        rm "${f%/}/raw_data/"*.fa*
-                        rmdir "${f%/}/raw_data/"
-                        #mv -vf "${f%/}/extracted_data/"* "${garbage%/}/extracted_data/"
-                        #rm "${f%/}/extracted_data/"*_fastqc.html
-                        #rmdir "${f%/}/extracted_data/"
-                        mv -vf "${f%/}/"* "${garbage%/}/"
-                        rmdir "${f%/}"
-                done
-                mv "${basedir}/${sampleset}/batch.${2}.yaml" "${basedir}/${sampleset}/samples.${2}.tsv" "${basedir}/${sampleset}/missing.${2}.txt" "${basedir}/${sampleset}/projects.${2}.tsv" ${basedir}/garbage/
-        ;;
+        #packagedata)
+        #
+        #;;
         *)
                 echo "Unkown sub-command ${1}" > /dev/stderr
                 exit 2

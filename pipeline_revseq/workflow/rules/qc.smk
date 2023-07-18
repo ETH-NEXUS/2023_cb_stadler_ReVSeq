@@ -4,15 +4,15 @@ rule fastqc:
     #    r1 = expand(config["inputOutput"]["input_fastqs"]+"/{{sample}}/{{sample}}_L00*_R1_001.fastq.gz", lane=lane_ids, sample = sample_ids),
     #    r2 = expand(config["inputOutput"]["input_fastqs"]+"/{{sample}}/{{sample}}_L00*_R2_001.fastq.gz", lane=lane_ids, sample = sample_ids)
     output:
-        zip1 = "config["inputOutput"]["output_dir"]/{sample}/fastqc/{sample}_L001_R1_001_fastqc.zip",
-        zip2 = "config["inputOutput"]["output_dir"]/{sample}/fastqc/{sample}_L001_R2_001_fastqc.zip"
+        zip1 = config["inputOutput"]["output_dir"]+"/{sample}/fastqc/{sample}_L001_R1_001_fastqc.zip",
+        zip2 = config["inputOutput"]["output_dir"]+"/{sample}/fastqc/{sample}_L001_R2_001_fastqc.zip"
     params:
-        outdir = "config["inputOutput"]["output_dir"]/{sample}/fastqc"
+        outdir = config["inputOutput"]["output_dir"]+"/{sample}/fastqc"
     log:
-        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/fastqc/fastqc.out.log",
-        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/fastqc/fastqc.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/fastqc/fastqc.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/fastqc/fastqc.err.log",
     benchmark:
-        "config["inputOutput"]["output_dir"]/logs/benchmark/{sample}/fastqc/fastqc.benchmark"
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/{sample}/fastqc/fastqc.benchmark"
     conda:
         "../envs/qc.yaml"
     threads: config["threads"]
@@ -26,13 +26,13 @@ rule samtoolsstats:
         #bam = rules.filter_host_reads.output.bam
         bam = rules.sort.output.outfile
     output:
-        stats = "config["inputOutput"]["output_dir"]/{sample}/samtoolsstats/{sample}_samtools_stats.txt",
-        flagstats = "config["inputOutput"]["output_dir"]/{sample}/samtoolsstats/{sample}_samtools_flagstats.txt",
+        stats = config["inputOutput"]["output_dir"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt",
+        flagstats = config["inputOutput"]["output_dir"]+"/{sample}/samtoolsstats/{sample}_samtools_flagstats.txt",
     log:
-        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/bamtools/bamtools.out.log",
-        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/bamtools/bamtools.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bamtools/bamtools.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bamtools/bamtools.err.log",
     benchmark:
-        "config["inputOutput"]["output_dir"]/logs/benchmark/{sample}/bamtools/bamtools.benchmark"
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/{sample}/bamtools/bamtools.benchmark"
     conda:
         "../envs/samtools.yaml"
     threads: config["threads"]
@@ -45,14 +45,14 @@ rule rseqc:
         bam = rules.sort.output.outfile,
         index = rules.samtools_index.output.index
     output:
-        stats = "config["inputOutput"]["output_dir"]/{sample}/rseqc/{sample}_bam_stat.txt",
+        stats = config["inputOutput"]["output_dir"]+"/{sample}/rseqc/{sample}_bam_stat.txt",
     params:
-        clipprefix = "config["inputOutput"]["output_dir"]/{sample}/rseqc/{sample}"
+        clipprefix = config["inputOutput"]["output_dir"]+"/{sample}/rseqc/{sample}"
     log:
-        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/rseqc/rseqc.out.log",
-        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/rseqc/rseqc.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/rseqc/rseqc.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/rseqc/rseqc.err.log",
     benchmark:
-        "config["inputOutput"]["output_dir"]/logs/benchmark/{sample}/rseqc/rseqc.benchmark"
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/{sample}/rseqc/rseqc.benchmark"
     conda:
         "../envs/qc.yaml"
     shell:
@@ -69,15 +69,16 @@ rule multiqc:
         flagstats = expand(rules.samtoolsstats.output.flagstats, sample=sample_ids),
         rseqcstats = expand(rules.rseqc.output.stats, sample=sample_ids),
     output:
-        outfile = "config["inputOutput"]["output_dir"]/multiqc/multiqc_report.html"
+        outfile = config["inputOutput"]["output_dir"]+"/multiqc/multiqc_report.html"
     params:
-        outdir = "config["inputOutput"]["output_dir"]/multiqc"
+        outdir = config["inputOutput"]["output_dir"]+"/multiqc",
+        inputdir = config["inputOutput"]["output_dir"]
     log:
-        outfile="config["inputOutput"]["output_dir"]/logs/multiqc/multiqc.out.log",
-        errfile="config["inputOutput"]["output_dir"]/logs/multiqc/multiqc.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/logs/multiqc/multiqc.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/multiqc/multiqc.err.log",
     benchmark:
-        "config["inputOutput"]["output_dir"]/logs/benchmark/multiqc/multiqc.benchmark"
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/multiqc/multiqc.benchmark"
     conda:
         "../envs/qc.yaml"
     shell:
-        "multiqc config["inputOutput"]["output_dir"] -o {params.outdir}"
+        "multiqc {params.inputdir} -o {params.outdir}"

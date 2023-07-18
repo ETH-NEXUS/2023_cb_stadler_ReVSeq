@@ -1,8 +1,10 @@
 #!/bin/bash
 #### add checks and checkpoints to avoid to upload incomplete stuff
 
-#revseq syncviollier --recent
-#revseq runpipeline
+revseq syncviollier --recent
+revseq anonymize_samples
+revseq runpipeline
+# The last points are fully manual and should be run after checking that everything worked as intended
+#revseq packagedata
 #revseq uploadviollier
-#revseq uploadspsp
 

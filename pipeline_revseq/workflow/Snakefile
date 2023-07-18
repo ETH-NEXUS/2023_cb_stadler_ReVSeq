@@ -28,21 +28,21 @@ localrules:
 # defines output
 rule all:
     input:
-        expand("results/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
-        expand("results/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
-        #expand("results/{sample}/bwa/mapped_reads.bam", sample = sample_ids),
-        #expand("results/{sample}/sort/sorted_reads.bam", sample = sample_ids),
-        expand("results/{sample}/pileup/pileup.txt", sample = sample_ids),
-        #expand("results/{sample}/pair_freqs/pair_counts.pkl.gz", sample = sample_ids),
-        #expand("results/{sample}/consensus/consensus.fasta", sample = sample_ids),
-        expand("results/{sample}/dehuman/dehuman.cram", sample = sample_ids),
-        expand("results/{sample}/filter_host_reads/{sample}_dehuman.cram", sample = sample_ids),
-        expand("results/{sample}/fastqc/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),#, lane = lane_ids),
-        expand("results/{sample}/samtoolsstats/{sample}_samtools_stats.txt", sample=sample_ids),
-        expand("results/{sample}/rseqc/{sample}_bam_stat.txt", sample=sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/{sample}/bwa/mapped_reads.bam", sample = sample_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/{sample}/sort/sorted_reads.bam", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/pileup/pileup.txt", sample = sample_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/{sample}/pair_freqs/pair_counts.pkl.gz", sample = sample_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/{sample}/consensus/consensus.fasta", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/dehuman/dehuman.cram", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.cram", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/fastqc/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),#, lane = lane_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt", sample=sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/rseqc/{sample}_bam_stat.txt", sample=sample_ids),
         #"results/multiqc/multiqc_report.html",
     output:
-        "results/complete.txt",
+        config["inputOutput"]["output_dir"]+"/complete.txt",
     shell:
         "date > {output}"
 

@@ -4,10 +4,10 @@ rule fasta_index:
     output:
         outindex = config["resources"]["reference"] + ".faidx"
     log:
-        outfile="config["inputOutput"]["output_dir"]/logs/fasta_index/fasta_index.out.log",
-        errfile="config["inputOutput"]["output_dir"]/logs/fasta_index/fasta_index.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/logs/fasta_index/fasta_index.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/fasta_index/fasta_index.err.log",
     benchmark:
-        "config["inputOutput"]["output_dir"]/logs/benchmark/fasta_index/fasta_index.benchmark"
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/fasta_index/fasta_index.benchmark"
     conda:
         "../envs/samtools.yaml"
     shell:
@@ -21,12 +21,12 @@ rule bwa:
         index = rules.bwa_index.output.referenceout,
         reads = rules.trim_galore.output
     output:
-        bam = "config["inputOutput"]["output_dir"]/{sample}/bwa/mapped_reads.bam"
+        bam = config["inputOutput"]["output_dir"]+"/{sample}/bwa/mapped_reads.bam"
     log:
-        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/bwa/bwa.out.log",
-        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/bwa/bwa.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bwa/bwa.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bwa/bwa.err.log",
     benchmark:
-        "config["inputOutput"]["output_dir"]/logs/benchmark/bwa/{sample}.benchmark"
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/bwa/{sample}.benchmark"
     conda:
         "../envs/bwa.yaml"
     shell:
@@ -36,12 +36,12 @@ rule sort:
     input:
         bwa = rules.bwa.output.bam
     output:
-        outfile = "config["inputOutput"]["output_dir"]/{sample}/sort/sorted_reads.bam"
+        outfile = config["inputOutput"]["output_dir"]+"/{sample}/sort/sorted_reads.bam"
     log:
-        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/sort/sort.out.log",
-        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/sort/sort.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/sort/sort.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/sort/sort.err.log",
     benchmark:
-        "config["inputOutput"]["output_dir"]/logs/benchmark/sort/{sample}.benchmark"
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/sort/{sample}.benchmark"
     conda:
         "../envs/samtools.yaml"
     threads: config["threads"]
@@ -55,10 +55,10 @@ rule samtools_index:
     output:
         index = rules.sort.output.outfile + '.bai'
     log:
-        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/sort/samtools_index.out.log",
-        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/sort/samtools_index.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/sort/samtools_index.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/sort/samtools_index.err.log",
     benchmark:
-        "config["inputOutput"]["output_dir"]/logs/benchmark/{sample}/sort/samtools_index.benchmark"
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/{sample}/sort/samtools_index.benchmark"
     conda:
         "../envs/samtools.yaml"
     shell:
@@ -70,17 +70,17 @@ rule filter_host_reads:
         bam = rules.bwa.output.bam,
         refindex = rules.fasta_index.output.outindex,
     output:
-        bam = ("config["inputOutput"]["output_dir"]/{sample}/filter_host_reads/{sample}_dehuman.bam"),
-        cram = "config["inputOutput"]["output_dir"]/{sample}/filter_host_reads/{sample}_dehuman.cram",
-        checksum = "config["inputOutput"]["output_dir"]/{sample}/filter_host_reads/{sample}_dehuman.cram.md5",
+        bam = (config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.bam"),
+        cram = config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.cram",
+        checksum = config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.cram.md5",
     params:
-        sort_tmp=("config["inputOutput"]["output_dir"]/{sample}/filter_host_reads/sort.tmp"),
+        sort_tmp=(config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/sort.tmp"),
         ref = config["resources"]["reference"],
     log:
-        outfile="config["inputOutput"]["output_dir"]/logs/{sample}/filter_host_reads/filter_host_reads.out.log",
-        errfile="config["inputOutput"]["output_dir"]/logs/{sample}/filter_host_reads/filter_host_reads.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/filter_host_reads/filter_host_reads.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/filter_host_reads/filter_host_reads.err.log",
     benchmark:
-        "config["inputOutput"]["output_dir"]/logs/benchmark/filter_host_reads/{sample}.benchmark"
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/filter_host_reads/{sample}.benchmark"
     conda:
         "../envs/samtools.yaml"
     threads: config["threads"]
