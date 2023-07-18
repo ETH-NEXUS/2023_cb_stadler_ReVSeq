@@ -8,7 +8,7 @@ USER appuser
 
 WORKDIR /app
 
-COPY revseq sync_sftp secrets viollier.conf run_revseq snakemake.yaml /app/
+COPY revseq sync_sftp viollier.conf run_revseq snakemake.yaml /app/
 RUN mkdir /home/appuser/.ssh
 
 RUN --mount=type=secret,id=CONFIG \
