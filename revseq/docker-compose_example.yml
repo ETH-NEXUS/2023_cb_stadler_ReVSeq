@@ -1,0 +1,20 @@
+services:
+    revseq:
+        build: .
+        volumes:
+            - Path/To/Raw/Data:/data/raw_data
+            - Path/To/Config:/data/config
+            - Path/To/Results:/data/results
+            - Path/To/Pipeline:/data/pipeline
+        secrets:
+            - CONFIG
+            - PRKEY
+            - PUKEY
+secrets:
+   CONFIG:
+     file: Path/To/Ssh/config
+   PRKEY:
+     file: Path/To/Private/Key/For/Sftp
+   PUKEY:
+     file: Path/To/Public/Key/For/Sftp
+

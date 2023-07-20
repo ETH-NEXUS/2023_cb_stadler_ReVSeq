@@ -117,7 +117,7 @@ if __name__ == '__main__':
 
 	not_empty_samples = [ sample[0] for sample in all_samples_status if sample[1] == "not_empty"]
 
-	samplemap = create_sample_map(non_empty, args.anonymizeddir)
+	samplemap = create_sample_map(not_empty_samples, args.anonymizeddir)
 	try:
 		samplemap.to_csv(args.samplemapfile, sep="\t", mode="a", header=None, index=None)
 	except:

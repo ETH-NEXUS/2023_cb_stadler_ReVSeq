@@ -1,7 +1,9 @@
 name: snakemake
 channels:
-- conda-forge
-- bioconda
-- defaults
+  - conda-forge
+  - bioconda
+  - defaults
 dependencies:
-- snakemake=7.30.1
+  - snakemake=7.30.1
+  - pandas
+  - gzip

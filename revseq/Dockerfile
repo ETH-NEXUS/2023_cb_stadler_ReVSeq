@@ -1,37 +1,33 @@
 # Docker image for deployment in production
 
-FROM alpine
+#Official miniconda Ubuntu
+FROM continuumio/miniconda3:23.5.2-0
 
-RUN groupadd -g 999 appuser && \
-    useradd -r -u 999 -g appuser appuser
-USER appuser
+RUN addgroup --gid 6666 appgroup && adduser --ingroup appgroup --uid 6666 appuser
 
-WORKDIR /app
+WORKDIR /root
 
-COPY revseq sync_sftp viollier.conf run_revseq snakemake.yaml /app/
 RUN mkdir /home/appuser/.ssh
 
-RUN --mount=type=secret,id=CONFIG \
-    cat /run/secrets/CONFIG > /home/appuser/.ssh/config
-RUN --mount=type=secret,id=PRKEY \
-    cat /run/secrets/PRKEY > /home/appuser/.ssh/id_rsa_belfry
-RUN --mount=type=secret,id=PUKEY \
-    cat /run/secrets/PUKEY > /home/appuser/.ssh/id_rsa_belfry.pub
+#RUN --mount=type=secret,required,id=config && cat /run/secrets/config > /home/appuser/.ssh/config
+#RUN --mount=type=secret,required,id=prkey && cat /run/secrets/prkey > /home/appuser/.ssh/id_rsa_belfry
+#RUN --mount=type=secret,required,id=pukey && cat /run/secrets/pukey > /home/appuser/.ssh/id_rsa_belfry.pub
+#RUN --mount=type=secret,required,id=khost && cat /run/secrets/khost > /home/appuser/.ssh/known_hosts
 
-RUN ["chmod", "+x", "/app/run_revseq"]
+RUN chown -R appuser:appgroup /home/appuser/.ssh
 
-RUN apk update
-RUN apk add --no-cache bash openssh lftp wget
+RUN apt-get update
+RUN apt-get install -y ssh lftp wget
 
-RUN wget \
-    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && mkdir /home/appuser/.conda \
-    && bash Miniconda3-latest-Linux-x86_64.sh -b \
-    && rm -f Miniconda3-latest-Linux-x86_64.sh 
-RUN conda --version
-ENV PATH="/home/appuser/miniconda3/bin:${PATH}"
-ARG PATH="/home/appuser/miniconda3/bin:${PATH}"
-RUN conda env create -f snakemake.yaml
+WORKDIR /data/revseq
 
-ENTRYPOINT [ "sleep", "10d" ]
-#ENTRYPOINT [ "run_revseq" ]
+USER appuser
+
+RUN export PATH=/data/revseq/:$PATH
+
+COPY snakemake.yaml /app/
+
+RUN conda env create -f /app/snakemake.yaml
+
+#ENTRYPOINT [ "sleep", "10d" ]
+ENTRYPOINT [ "conda", "run", "-n", "snakemake", "/data/revseq/run_revseq" ]

@@ -6,151 +6,151 @@
 #upload_spsp
 #upload_viollier
 
-cluster_user="${USER%%@*}"
+#cluster_user="${USER%%@*}"
 scriptdir="$(dirname $(which $0))"
-
-declare -A lab
-. ${scriptdir}/server.conf
-
-: ${basedir:?}
-: ${download:?}
-: ${sampleset:=sampleset}
-: ${working:=working}
-: ${releasedir:?}
-: ${storgrp:?}
-: ${parallel:=16}
-: ${parallelpull:=${parallel}}
-: ${contimeout:=300}
-: ${retries:=10}
-: ${iotimeout:=300}
-: ${protocolyaml:=/references/primers.yaml}
-: ${remotedir:?}
-: ${remote_user:?}
-
-if [[ $(realpath $scriptdir) != $(realpath $basedir) ]]; then
-        echo "$scriptdir vs $basedir"
-fi
-
-if [[ ! $mode =~ ^[0-7]{,4}$ ]]; then
-        echo "Invalid characters <${mode//[0-7]/}> in <${mode}>"
-        echo 'mode should be an octal chmod value, see `mkdir --help` for informations'
-        mode=
-fi
-
-
-cd ${basedir}
-
-umask 0002
-
-statusdir="${basedir}/status"
-mkdir ${mode:+--mode=${mode}} -p ${statusdir}
-
-baseconda=$HOME/
-timeoutforeground=
-#--foreground
-
-now=$(date '+%Y%m%d')
-lastmonth=$(date '+%Y%m' --date='-1 month')
-thismonth=$(date '+%Y%m')
-twoweeksago=$(date '+%Y%m%d' --date='-2 weeks')
-
 #
-# Input validator
+#declare -A lab
+. ${scriptdir}/revseq.conf
 #
-validateBatchDate() {
-        if [[ "$1" =~ ^(20[0-9][0-9][0-1][0-9][0-3][0-9])$ ]]; then
-                return;
-        else
-                echo "bad batchdate ${1}"
-                exit 1;
-        fi
-}
-
-validateBatchName() {
-        if [[ "$1" =~ ^(20[0-9][0-9][0-1][0-9][0-3][0-9]_[[:alnum:]-]{4,})$ ]]; then
-                return;
-        else
-                echo "bad batchname ${1}"
-                exit 1;
-        fi
-}
-
-
+#: ${basedir:?}
+#: ${download:?}
+#: ${sampleset:=sampleset}
+#: ${working:=working}
+#: ${releasedir:?}
+#: ${storgrp:?}
+#: ${parallel:=16}
+#: ${parallelpull:=${parallel}}
+#: ${contimeout:=300}
+#: ${retries:=10}
+#: ${iotimeout:=300}
+#: ${protocolyaml:=/references/primers.yaml}
+#: ${remotedir:?}
+#: ${remote_user:?}
 #
-# rsync parallel helpers
+#if [[ $(realpath $scriptdir) != $(realpath $basedir) ]]; then
+#        echo "$scriptdir vs $basedir"
+#fi
 #
-callpushrsync() {
-        . server.conf
-
-        local arglist=( )
-        if (( ${#@} )); then
-                arglist=( "${@/#/${basedir}/${sampleset}/}" )
-        else
-                #arglist=( "${basedir}/${sampleset}/" )
-                echo "rsync job didn't receive list"
-                exit 1;
-        fi
-        exec    timeout ${timeoutforeground} --signal=INT --kill-after=5 $((rsynctimeout+contimeout+5)) \
-                rsync   --timeout=${iotimeout}  \
-                --password-file ~/rsync.pass.euler      \
-                -e "ssh -i ${HOME}/.ssh/id_ed25519_belfry -l ${cluster_user}  -oConnectTimeout=${contimeout}"   \
-                -izrltH --fuzzy --fuzzy --inplace       \
-                -p --chmod=Dg+s,ug+rw,o-rwx,Fa-x        \
-                -g --chown=:'bsse-covid19-pangolin-euler'       \
-                "${arglist[@]}" \
-                belfry@euler.ethz.ch::${sampleset}/
-}
-export -f callpushrsync
-
-callpullrsync() {
-        . server.conf
-
-        local arglist=( )
-        if (( ${#@} )); then
-                arglist=( "${@/#/belfry@euler.ethz.ch::${working}/samples/}" )
-        else
-                #arglist=( "belfry@euler.ethz.ch::${working}/samples/" )
-                echo "rsync job didn't receive list"
-                exit 1;
-        fi
-        exec    timeout ${timeoutforeground} --signal=INT --kill-after=5 $((rsynctimeout+contimeout+5)) \
-                rsync   --timeout=${iotimeout}  \
-                --password-file ~/rsync.pass.euler      \
-                -e "ssh -i ${HOME}/.ssh/id_ed25519_belfry -l ${cluster_user}  -oConnectTimeout=${contimeout}"   \
-                -izrltH --fuzzy --fuzzy --inplace       \
-                --link-dest=${basedir}/${sampleset}/    \
-                "${arglist[@]}" \
-                --exclude='uploads/*'   \
-                --exclude='raw_uploads/*.tmp.*' \
-                --exclude='raw_data/*_R[12].fastq.gz'   \
-                --exclude='extracted_data/R[12]_fastqc.html'    \
-                --exclude='variants/SNVs/REGION_*/reads.fas'    \
-                --exclude='variants/SNVs/REGION_*/w-*.reads.fas'        \
-                --exclude='variants/SNVs/REGION_*/raw_reads/w-*.reads.fas.gz'   \
-                --exclude='*.out.log'   \
-                --exclude='*.err.log'   \
-                --exclude='*.benchmark' \
-                ${basedir}/${working}/samples/
-}
-export -f callpullrsync
-
+#if [[ ! $mode =~ ^[0-7]{,4}$ ]]; then
+#        echo "Invalid characters <${mode//[0-7]/}> in <${mode}>"
+#        echo 'mode should be an octal chmod value, see `mkdir --help` for informations'
+#        mode=
+#fi
 #
-# sync helper
 #
-checksyncoutput() {
-        local new="${statusdir}/sync${1}_new"
-        local last="${statusdir}/sync${1}_last"
-
-        if [[ "${2}" =~ Total:\ +([[:digit:]]+)\ +directories,\ +([[:digit:]]+)\ +files,.*?New:\ +([[:digit:]]+)\ +files, ]]; then
-                echo "Newfiles downloaded"
-                echo -e "${BASH_REMATCH[2]}\n${BASH_REMATCH[1]}" > ${last}
-                flock -x -o ${last} -c "sleep 1"
-                echo "${BASH_REMATCH[3]}" > ${new}
-        else
-                echo "Same old shit"
-                touch ${last}
-        fi 2>&1
-}
+#cd ${basedir}
+#
+#umask 0002
+#
+#statusdir="${basedir}/status"
+#mkdir ${mode:+--mode=${mode}} -p ${statusdir}
+#
+#baseconda=$HOME/
+#timeoutforeground=
+##--foreground
+#
+#now=$(date '+%Y%m%d')
+#lastmonth=$(date '+%Y%m' --date='-1 month')
+#thismonth=$(date '+%Y%m')
+#twoweeksago=$(date '+%Y%m%d' --date='-2 weeks')
+#
+##
+## Input validator
+##
+#validateBatchDate() {
+#        if [[ "$1" =~ ^(20[0-9][0-9][0-1][0-9][0-3][0-9])$ ]]; then
+#                return;
+#        else
+#                echo "bad batchdate ${1}"
+#                exit 1;
+#        fi
+#}
+#
+#validateBatchName() {
+#        if [[ "$1" =~ ^(20[0-9][0-9][0-1][0-9][0-3][0-9]_[[:alnum:]-]{4,})$ ]]; then
+#                return;
+#        else
+#                echo "bad batchname ${1}"
+#                exit 1;
+#        fi
+#}
+#
+#
+##
+## rsync parallel helpers
+##
+#callpushrsync() {
+#        . server.conf
+#
+#        local arglist=( )
+#        if (( ${#@} )); then
+#                arglist=( "${@/#/${basedir}/${sampleset}/}" )
+#        else
+#                #arglist=( "${basedir}/${sampleset}/" )
+#                echo "rsync job didn't receive list"
+#                exit 1;
+#        fi
+#        exec    timeout ${timeoutforeground} --signal=INT --kill-after=5 $((rsynctimeout+contimeout+5)) \
+#                rsync   --timeout=${iotimeout}  \
+#                --password-file ~/rsync.pass.euler      \
+#                -e "ssh -i ${HOME}/.ssh/id_ed25519_belfry -l ${cluster_user}  -oConnectTimeout=${contimeout}"   \
+#                -izrltH --fuzzy --fuzzy --inplace       \
+#                -p --chmod=Dg+s,ug+rw,o-rwx,Fa-x        \
+#                -g --chown=:'bsse-covid19-pangolin-euler'       \
+#                "${arglist[@]}" \
+#                belfry@euler.ethz.ch::${sampleset}/
+#}
+#export -f callpushrsync
+#
+#callpullrsync() {
+#        . server.conf
+#
+#        local arglist=( )
+#        if (( ${#@} )); then
+#                arglist=( "${@/#/belfry@euler.ethz.ch::${working}/samples/}" )
+#        else
+#                #arglist=( "belfry@euler.ethz.ch::${working}/samples/" )
+#                echo "rsync job didn't receive list"
+#                exit 1;
+#        fi
+#        exec    timeout ${timeoutforeground} --signal=INT --kill-after=5 $((rsynctimeout+contimeout+5)) \
+#                rsync   --timeout=${iotimeout}  \
+#                --password-file ~/rsync.pass.euler      \
+#                -e "ssh -i ${HOME}/.ssh/id_ed25519_belfry -l ${cluster_user}  -oConnectTimeout=${contimeout}"   \
+#                -izrltH --fuzzy --fuzzy --inplace       \
+#                --link-dest=${basedir}/${sampleset}/    \
+#                "${arglist[@]}" \
+#                --exclude='uploads/*'   \
+#                --exclude='raw_uploads/*.tmp.*' \
+#                --exclude='raw_data/*_R[12].fastq.gz'   \
+#                --exclude='extracted_data/R[12]_fastqc.html'    \
+#                --exclude='variants/SNVs/REGION_*/reads.fas'    \
+#                --exclude='variants/SNVs/REGION_*/w-*.reads.fas'        \
+#                --exclude='variants/SNVs/REGION_*/raw_reads/w-*.reads.fas.gz'   \
+#                --exclude='*.out.log'   \
+#                --exclude='*.err.log'   \
+#                --exclude='*.benchmark' \
+#                ${basedir}/${working}/samples/
+#}
+#export -f callpullrsync
+#
+##
+## sync helper
+##
+#checksyncoutput() {
+#        local new="${statusdir}/sync${1}_new"
+#        local last="${statusdir}/sync${1}_last"
+#
+#        if [[ "${2}" =~ Total:\ +([[:digit:]]+)\ +directories,\ +([[:digit:]]+)\ +files,.*?New:\ +([[:digit:]]+)\ +files, ]]; then
+#                echo "Newfiles downloaded"
+#                echo -e "${BASH_REMATCH[2]}\n${BASH_REMATCH[1]}" > ${last}
+#                flock -x -o ${last} -c "sleep 1"
+#                echo "${BASH_REMATCH[3]}" > ${new}
+#        else
+#                echo "Same old shit"
+#                touch ${last}
+#        fi 2>&1
+#}
 
 
 #
@@ -158,40 +158,45 @@ checksyncoutput() {
 #
 
 case "$1" in
-        syncviollier)
-                echo "Sync Viollier"
-                . $baseconda/miniconda3/bin/activate ""
-                param=( 'sample_metadata' )
-                if [[ "${2}" = "--recent" ]]; then
-                        param+=( "raw_sequences/${lastmonth}*" "raw_sequences/${thismonth}*" )
-                        echo "syncing recent: ${param[*]}"
-                        echo "NOT SUPPORTED"
-                        exit 1
-                else
-                        param+=( 'raw_sequences' )
-                        echo "syncing all: ${param[*]}"
-                fi
-                # HACK delete previous partial downloads
-                . <(grep '^download=' viollier.conf)
-                echo "Removing partial files from:" "${param[@]/#/${download}/}"
-                find "${param[@]/#/${download}/}" -type f -name '*.filepart' -print0 | xargs -r -0 rm -v
-                syncoutput="$(/usr/bin/time ${scriptdir}/sync_sftp -c viollier.conf "${param[@]}"|tee /dev/stderr)"
-                checksyncoutput "viollier" "$syncoutput"
-                conda deactivate
-        ;;
-        uploadviollier)
-                echo "Uploading Viollier"
-                . $baseconda/miniconda3/bin/activate ""
-                param=( 'consensus_sequences' 'raw_othercenters' )
+        #syncviollier)
+        #        echo "Sync Viollier"
+        #        . $baseconda/miniconda3/bin/activate ""
+        #        param=( 'sample_metadata' )
+        #        if [[ "${2}" = "--recent" ]]; then
+        #                param+=( "raw_sequences/${lastmonth}*" "raw_sequences/${thismonth}*" )
+        #                echo "syncing recent: ${param[*]}"
+        #                echo "NOT SUPPORTED"
+        #                exit 1
+        #        else
+        #                param+=( 'raw_sequences' )
+        #                echo "syncing all: ${param[*]}"
+        #        fi
+        #        # HACK delete previous partial downloads
+        #        . <(grep '^download=' viollier.conf)
+        #        echo "Removing partial files from:" "${param[@]/#/${download}/}"
+        #        find "${param[@]/#/${download}/}" -type f -name '*.filepart' -print0 | xargs -r -0 rm -v
+        #        syncoutput="$(/usr/bin/time ${scriptdir}/sync_sftp -c viollier.conf "${param[@]}"|tee /dev/stderr)"
+        #        checksyncoutput "viollier" "$syncoutput"
+        #        conda deactivate
+        #;;
+        #uploadviollier)
+        #        echo "Uploading Viollier"
+        #        . $baseconda/miniconda3/bin/activate ""
+        #        param=( 'consensus_sequences' 'raw_othercenters' )
 
-                ${scriptdir}/upload_sftp -c viollier.conf "${param[@]}"
-                conda deactivate
-        ;;
+        #        ${scriptdir}/upload_sftp -c viollier.conf "${param[@]}"
+        #        conda deactivate
+        #;;
         anonymize_samples)
-                python ${scriptdir}/anonymize_sample_names.py
+                python ${scriptdir}/anonymize_sample_names.py --anontable ${anontable} --sampledir ${sampledir} --samplemapfile ${samplemapfile} --anonymizeddir ${anonymizeddir} --emptyfile ${emptyfile}
+        ;;
+        dryrun)
+		cd ${pipelinedir}
+		snakemake --use-conda -c3 --configfile /data/config/config.yaml -n
         ;;
         runpipeline)
-                snakemake --use-conda -c3 --configfile /app/data/config/config.yaml
+		cd ${pipelinedir}
+                snakemake --use-conda -c3 --configfile /data/config/config.yaml
         ;;
         #packagedata)
         #

@@ -5,3 +5,4 @@ pipeline_revseq/results/
 .DS_Store
 pipeline_revseq/multiqc_flat/
 pipeline_revseq/multiqc_interactive/
+revseq/docker-compose.yml
