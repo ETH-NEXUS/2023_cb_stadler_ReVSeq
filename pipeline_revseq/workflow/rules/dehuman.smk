@@ -65,42 +65,42 @@ rule samtools_index:
         "samtools index {input.bam}"
 
 
-rule filter_host_reads:
-    input:
-        bam = rules.bwa.output.bam,
-        refindex = rules.fasta_index.output.outindex,
-    output:
-        bam = (config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.bam"),
-        cram = config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.cram",
-        checksum = config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.cram.md5",
-    params:
-        sort_tmp=(config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/sort.tmp"),
-        ref = config["resources"]["reference"],
-    log:
-        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/filter_host_reads/filter_host_reads.out.log",
-        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/filter_host_reads/filter_host_reads.err.log",
-    benchmark:
-        config["inputOutput"]["output_dir"]+"/logs/benchmark/filter_host_reads/{sample}.benchmark"
-    conda:
-        "../envs/samtools.yaml"
-    threads: config["threads"]
-    shell:
-        """
-        samtools view -@ {threads} \
-                    -h {input.bam} \
-            | grep -v "_host"
-            | samtools view -@ {threads} \
-                    -bh -o {output.bam}
-
-        samtools view -@ {threads} \
-                    -h {input.bam} \
-            | grep -v "_host" \
-            | samtools sort -@ {threads} \
-                    -T {params.sort_tmp} \
-                    --reference {params.ref} \
-                    -O cram \
-                    -o {output.cram} \ 
-                    2> >(tee -a {log.errfile} >&2)
-
-        md5sum {output.cram} > {output.checksum} 2> >(tee -a {log.errfile} >&2)
-        """
+#rule filter_host_reads:
+#    input:
+#        bam = rules.bwa.output.bam,
+#        refindex = rules.fasta_index.output.outindex,
+#    output:
+#        bam = (config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.bam"),
+#        cram = config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.cram",
+#        checksum = config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.cram.md5",
+#    params:
+#        sort_tmp=(config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/sort.tmp"),
+#        ref = config["resources"]["reference"],
+#    log:
+#        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/filter_host_reads/filter_host_reads.out.log",
+#        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/filter_host_reads/filter_host_reads.err.log",
+#    benchmark:
+#        config["inputOutput"]["output_dir"]+"/logs/benchmark/filter_host_reads/{sample}.benchmark"
+#    conda:
+#        "../envs/samtools.yaml"
+#    threads: config["threads"]
+#    shell:
+#        """
+#        samtools view -@ {threads} \
+#                    -h {input.bam} \
+#            | grep -v "_host"
+#            | samtools view -@ {threads} \
+#                    -bh -o {output.bam}
+#
+#        samtools view -@ {threads} \
+#                    -h {input.bam} \
+#            | grep -v "_host" \
+#            | samtools sort -@ {threads} \
+#                    -T {params.sort_tmp} \
+#                    --reference {params.ref} \
+#                    -O cram \
+#                    -o {output.cram} \ 
+#                    2> >(tee -a {log.errfile} >&2)
+#
+#        md5sum {output.cram} > {output.checksum} 2> >(tee -a {log.errfile} >&2)
+#        """

@@ -35,7 +35,7 @@ rule all:
         expand(config["inputOutput"]["output_dir"]+"/{sample}/pileup/pileup.txt", sample = sample_ids),
         #expand(config["inputOutput"]["output_dir"]+"/{sample}/pair_freqs/pair_counts.pkl.gz", sample = sample_ids),
         #expand(config["inputOutput"]["output_dir"]+"/{sample}/consensus/consensus.fasta", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/dehuman/dehuman.cram", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/dehuman/dehuman.cram", sample = sample_ids),
         #expand(config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.cram", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/{sample}/fastqc/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),#, lane = lane_ids),
         expand(config["inputOutput"]["output_dir"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt", sample=sample_ids),

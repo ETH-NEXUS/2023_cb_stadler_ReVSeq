@@ -1,6 +1,6 @@
 rule pileup:
     input:
-        bam = rules.filter_host_reads.output.bam,
+        bam = rules.bwa.output.bam,
         fasta = config["resources"]["reference"]
         #fasta = rules.merge_refs.output.outref,
         #primers = config["resources"]["primer_file"],
