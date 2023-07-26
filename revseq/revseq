@@ -1,12 +1,5 @@
 #!/bin/bash
 
-### I need the following commands
-#sync viollier - to be run auto
-#analyse
-#upload_spsp
-#upload_viollier
-
-#cluster_user="${USER%%@*}"
 scriptdir="$(dirname $(which $0))"
 #
 #declare -A lab
@@ -158,35 +151,21 @@ scriptdir="$(dirname $(which $0))"
 #
 
 case "$1" in
-        #syncviollier)
-        #        echo "Sync Viollier"
-        #        . $baseconda/miniconda3/bin/activate ""
-        #        param=( 'sample_metadata' )
-        #        if [[ "${2}" = "--recent" ]]; then
-        #                param+=( "raw_sequences/${lastmonth}*" "raw_sequences/${thismonth}*" )
-        #                echo "syncing recent: ${param[*]}"
-        #                echo "NOT SUPPORTED"
-        #                exit 1
-        #        else
-        #                param+=( 'raw_sequences' )
-        #                echo "syncing all: ${param[*]}"
-        #        fi
-        #        # HACK delete previous partial downloads
-        #        . <(grep '^download=' viollier.conf)
-        #        echo "Removing partial files from:" "${param[@]/#/${download}/}"
-        #        find "${param[@]/#/${download}/}" -type f -name '*.filepart' -print0 | xargs -r -0 rm -v
-        #        syncoutput="$(/usr/bin/time ${scriptdir}/sync_sftp -c viollier.conf "${param[@]}"|tee /dev/stderr)"
-        #        checksyncoutput "viollier" "$syncoutput"
-        #        conda deactivate
-        #;;
-        #uploadviollier)
-        #        echo "Uploading Viollier"
-        #        . $baseconda/miniconda3/bin/activate ""
-        #        param=( 'consensus_sequences' 'raw_othercenters' )
-
-        #        ${scriptdir}/upload_sftp -c viollier.conf "${param[@]}"
-        #        conda deactivate
-        #;;
+        syncviollier)
+                echo "Sync Viollier"
+                # HACK delete previous partial downloads
+                . <(grep '^download=' viollier.conf)
+                echo "Removing partial files from:" "${param[@]/#/${download}/}"
+                find "${param[@]/#/${download}/}" -type f -name '*.filepart' -print0 | xargs -r -0 rm -v
+		exec lftp -c "set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${username:+${username}@}${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${basedir}/${download} ${source} ${newerthan:+ --newer-than="'${newerthan}'"}${exrxfile:+ --exclude-rx-from="'${exrxfile}'"}"
+                syncoutput="$(/usr/bin/time ${scriptdir}/sync_sftp -c viollier.conf "${param[@]}"|tee /dev/stderr)"
+                checksyncoutput "viollier" "$syncoutput"
+        ;;
+        uploadviollier)
+                echo "Uploading Viollier"
+                param=( 'consensus_sequences' 'raw_othercenters' )
+                ${scriptdir}/upload_sftp -c viollier.conf "${param[@]}"
+        ;;
         anonymize_samples)
                 python ${scriptdir}/anonymize_sample_names.py --anontable ${anontable} --sampledir ${sampledir} --samplemapfile ${samplemapfile} --anonymizeddir ${anonymizeddir} --emptyfile ${emptyfile}
         ;;

@@ -91,7 +91,7 @@ rule multiqc:
         outfile = config["inputOutput"]["output_dir"]+"/multiqc/multiqc_report.html"
     params:
         outdir = config["inputOutput"]["output_dir"]+"/multiqc",
-        inputdir = config["inputOutput"]["output_dir"]",
+        inputdir = config["inputOutput"]["output_dir"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/logs/multiqc/multiqc.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/logs/multiqc/multiqc.err.log",

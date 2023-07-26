@@ -30,7 +30,7 @@ rule remove_multimappers:
     conda:
         "../envs/samtools.yaml"
     shell:
-        "samtools view -bh -F 256 {input.bam} -o {output}.bam 2> >(tee {log.errfile} >&2)"
+        "samtools view -bh -F 256 {input.bam} -o {output.bam} 2> >(tee {log.errfile} >&2)"
 
 
 rule remove_duplicates:
@@ -47,7 +47,7 @@ rule remove_duplicates:
     conda:
         "../envs/picard.yaml"
     shell:
-        "java jvm-args -jar picard.jar MarkDuplicates I={input.bam} O={output.bam} M={output.metrics} REMOVE_DUPLICATES=true 2> >(tee {log.errfile} >&2)"
+        "picard MarkDuplicates I={input.bam} O={output.bam} M={output.metrics} REMOVE_DUPLICATES=true 2> >(tee {log.errfile} >&2)"
 
 
 rule sort:

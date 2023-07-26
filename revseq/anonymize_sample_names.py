@@ -40,7 +40,7 @@ def generate_new_ethids(anon_df, all_samples):
 		print("Warning: empty anonymization table. This is just a notice, not an error.")
 	newsamples = []
 	for samplename in all_samples:
-		if len(anon_df > 0):
+		if len(anon_df) > 0:
 			if samplename in anon_df["sample_name"]:
 				continue
 			else:

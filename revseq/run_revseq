@@ -1,9 +1,8 @@
 #!/bin/bash
 #### add checks and checkpoints to avoid to upload incomplete stuff
-conda activate snakemake
 
 #revseq syncviollier --recent
-#revseq anonymize_samples
+./revseq anonymize_samples
 ./revseq runpipeline
 # The last points are fully manual and should be run after checking that everything worked as intended
 #revseq packagedata
