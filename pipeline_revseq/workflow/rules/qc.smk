@@ -91,7 +91,7 @@ rule multiqc:
         outfile = config["inputOutput"]["output_dir"]+"/multiqc/multiqc_report.html"
     params:
         outdir = config["inputOutput"]["output_dir"]+"/multiqc",
-        inputdir = config["inputOutput"]["output_dir"] + "/multiqc/links",
+        inputdir = config["inputOutput"]["output_dir"]",
     log:
         outfile=config["inputOutput"]["output_dir"]+"/logs/multiqc/multiqc.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/logs/multiqc/multiqc.err.log",
@@ -101,15 +101,6 @@ rule multiqc:
         "../envs/qc.yaml"
     shell:
         """
-        mkdir {params.inputdir}
-        ln -s {input.fastqcresult1} {params.outdir}/links
-        ln -s {input.fastqcresult2} {params.outdir}/links
-        ln -s {input.trimresult1} {params.outdir}/links
-        ln -s {input.trimresult2} {params.outdir}/links
-        ln -s {input.stats} {params.outdir}/links
-        ln -s {input.flagstats} {params.outdir}/links
-        ln -s {input.rseqcstats} {params.outdir}/links
-        ln -s {input.qualimap} {params.outdir}/links
         multiqc {params.inputdir} -o {params.outdir}  2> >(tee {log.errfile} >&2)
         """
 
@@ -118,6 +109,7 @@ rule fastqc_dehuman:
     input:
         inputr1 = rules.dh_filter.output.filtered_1,
         inputr2 = rules.dh_filter.output.filtered_2,
+        multiqc_over = rules.multiqc.output.outfile,
     output:
         zip1 = config["inputOutput"]["output_dir"]+"/{sample}/fastqc_dehuman/{sample}_dehuman_1.fastqc.zip",
         zip2 = config["inputOutput"]["output_dir"]+"/{sample}/fastqc_dehuman/{sample}_dehuman_2.fastqc.zip"
@@ -133,5 +125,4 @@ rule fastqc_dehuman:
         "../envs/qc.yaml"
     threads: config["threads"]
     shell:
-        #"fastqc {input.r1} {input.r2} -t {threads} -o {params.outdir}"
         "fastqc {params.inputdir}/filtered_*.fastq.gz -t {threads} -o {params.outdir}"
