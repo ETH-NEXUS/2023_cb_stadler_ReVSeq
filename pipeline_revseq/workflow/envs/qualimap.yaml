@@ -1,10 +1,7 @@
-name: qc
+name: qualimap
 channels:
 - conda-forge
 - bioconda
 - defaults
 dependencies:
-- fastqc
-- multiqc
-- rseqc
 - qualimap

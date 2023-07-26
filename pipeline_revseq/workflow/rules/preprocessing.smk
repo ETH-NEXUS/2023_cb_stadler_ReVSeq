@@ -1,3 +1,4 @@
+## Helper functions
 def find_input_fastq_lanes_r1(wildcards):
     "return a list of all input fastq files available for one sample. Handles multi-lane data"
     sample = wildcards.sample
@@ -18,39 +19,21 @@ def find_input_fastq_lanes_r2(wildcards):
         fastq_files_r2.append(config["inputOutput"]["input_fastqs"]+ "/" + sample + "/" + sample + "_" + lane + "_R2_001.fastq.gz")
     return fastq_files_r2
 
+## Rules
 rule merge_lanes:
     input:
         r1 = find_input_fastq_lanes_r1,
         r2 = find_input_fastq_lanes_r2,
-        #r1 = expand(config["inputOutput"]["input_fastqs"]+"/{{sample}}/{{sample}}_{lane}_R1_001.fastq.gz", zip, lane=lane_ids, sample = sample_ids),
-        #r2 = expand(config["inputOutput"]["input_fastqs"]+"/{{sample}}/{{sample}}_{lane}_R2_001.fastq.gz", zip, lane=lane_ids, sample = sample_ids)
     output:
-        r1 = (config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz"),
-        r2 = (config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz"),
+        r1 = temp(config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz"),
+        r2 = temp(config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz"),
     log:
         outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_lanes/merge_lanes.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_lanes/merge_lanes.err.log",
     benchmark:
         config["inputOutput"]["output_dir"]+"/logs/benchmark/{sample}/merge_lanes/merge_lanes.benchmark"
     shell:
-        "gzcat {input.r1} | gzip > {output.r1} && gzcat {input.r2} | gzip > {output.r2}"
-
-
-#rule merge_refs:
-#    input:
-#        refs = config["resources"]["reference"],
-#        host_ref = config["resources"]["host_ref"],
-#    output:
-#        outref = "config["inputOutput"]["output_dir"]/merge_refs/ref.fa",
-#    log:
-#        outfile="config["inputOutput"]["output_dir"]/logs/merge_refs/merge_refs.out.log",
-#        errfile="config["inputOutput"]["output_dir"]/logs/merge_refs/merge_refs.err.log",
-#    benchmark:
-#        "config["inputOutput"]["output_dir"]/logs/benchmark/merge_refs/merge_refs.benchmark"
-#    conda:
-#        "../envs/consensus.yaml"
-#    shell:
-#        "python workflow/scripts/merge_refs.py --refs {input.refs} --host_ref {input.host_ref} --output {output.outref}"
+        "zcat {input.r1} | gzip > {output.r1} && zcat {input.r2} | gzip > {output.r2} 2> >(tee {log.errfile} >&2)"
 
 
 rule bwa_index:
@@ -68,7 +51,7 @@ rule bwa_index:
     conda:
         "../envs/bwa.yaml"
     shell:
-        "bwa index {input.reference}"
+        "bwa index {input.reference} 2> >(tee {log.errfile} >&2)"
 
 
 rule trim_galore:
@@ -76,8 +59,8 @@ rule trim_galore:
         r1 = rules.merge_lanes.output.r1,
         r2 = rules.merge_lanes.output.r2,
     output:
-        r1 = config["inputOutput"]["output_dir"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz",
-        r2 = config["inputOutput"]["output_dir"]+"/{sample}/trim_galore/{sample}_merged_R2_val_2.fq.gz",
+        r1 = temp(config["inputOutput"]["output_dir"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz"),
+        r2 = temp(config["inputOutput"]["output_dir"]+"/{sample}/trim_galore/{sample}_merged_R2_val_2.fq.gz"),
     params:
         base_name = "data/{sample}",
         outdir = config["inputOutput"]["output_dir"]+"/{sample}/trim_galore",
@@ -91,5 +74,15 @@ rule trim_galore:
     conda:
         "../envs/trim_galore.yaml"
     shell:
-        'trim_galore --length {params.min_length} --output "{params.outdir}" --retain_unpaired --paired -r1 {params.min_length_single} -r2 {params.min_length_single} {input.r1} {input.r2}'
+        """
+        trim_galore \
+        --length {params.min_length} \
+        --output "{params.outdir}" \
+        --retain_unpaired \
+        --paired \
+        -r1 {params.min_length_single} \
+        -r2 {params.min_length_single} \
+        {input.r1} \
+        {input.r2} 2> >(tee {log.errfile} >&2)
+        """
 

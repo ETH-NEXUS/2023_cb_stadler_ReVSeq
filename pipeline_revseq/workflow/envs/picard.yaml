@@ -1,10 +1,7 @@
-name: qc
+name: remove_duplicates
 channels:
 - conda-forge
 - bioconda
 - defaults
 dependencies:
-- fastqc
-- multiqc
-- rseqc
-- qualimap
+- picard-slim

@@ -6,19 +6,22 @@ import base64
 import unittest
 import gzip
 
-class ethidGenerator(unittest.TestCase):
-    @staticmethod
-    def encode_base32(uuid4):
-        base32uuid = base64.b32encode(uuid4.bytes)
-        return base32uuid.decode().replace('=', '')
-    @staticmethod
-    def decode_base32(ethid):
-        return uuid.UUID(bytes=base64.b32decode(ethid + ('=' * (-len(ethid) % 8))))
-    def test_eth_id(self):
-        uuid4 = uuid.uuid4()
-        eth_id = EthIdTestCase.encode_base32(uuid4)
-        print(eth_id)
-        self.assertEqual(uuid4, EthIdTestCase.decode_base32(eth_id))
+def truncated_uuid4():
+    return str(uuid.uuid4())[:6]
+
+#class ethidGenerator(unittest.TestCase):
+#    @staticmethod
+#    def encode_base32(uuid4):
+#        base32uuid = base64.b32encode(uuid4.bytes)
+#        return base32uuid.decode().replace('=', '')
+#    @staticmethod
+#    def decode_base32(ethid):
+#        return uuid.UUID(bytes=base64.b32decode(ethid + ('=' * (-len(ethid) % 8))))
+#    def test_eth_id(self):
+#        uuid4 = uuid.uuid4()
+#        eth_id = EthIdTestCase.encode_base32(uuid4)
+#        print(eth_id)
+#        self.assertEqual(uuid4, EthIdTestCase.decode_base32(eth_id))
 
 def detect_empty_sample(samplename, anondir):
 	# samples with 0 reads crash the pipeline and should be 
@@ -33,14 +36,22 @@ def detect_empty_sample(samplename, anondir):
 
 
 def generate_new_ethids(anon_df, all_samples):
-	if len(anon) == 0:
+	if len(anon_df) == 0:
 		print("Warning: empty anonymization table. This is just a notice, not an error.")
 	newsamples = []
 	for samplename in all_samples:
-		if samplename not in anon_df["sample_name"]:
-			newethid = ethidGenerator.encode_base32(uuid.uuid4())
-			while newethid in anon_df["ethid"]:
-				newethid = ethidGenerator.encode_base32(uuid.uuid4())
+		if len(anon_df > 0):
+			if samplename in anon_df["sample_name"]:
+				continue
+			else:
+				newethid = truncated_uuid4()
+				while (newethid in anon_df["ethid"]) and any(newethid == sublist[1] for sublist in newsamples):
+					newethid = truncated_uuid4()
+				newsamples.append( [samplename.name, newethid] )
+		else:
+			newethid = truncated_uuid4()
+			while any(newethid == sublist[1] for sublist in newsamples):
+				newethid = truncated_uuid4()
 			newsamples.append( [samplename.name, newethid] )
 	newsamples = pd.DataFrame(newsamples)
 	return newsamples

@@ -11,13 +11,11 @@ min_version("6.12.1")
 # Include Config file
 configfile: "config/config.yaml"
 
-
 # Include rules
 include: "rules/misc_snake.smk"
 include: "rules/preprocessing.smk"
-include: "rules/dehuman.smk"
-include: "rules/old_dehuman.smk"
 include: "rules/revseq_basic.smk"
+include: "rules/dehuman.smk"
 include: "rules/qc.smk"
 
 # include local rules
@@ -28,18 +26,24 @@ localrules:
 # defines output
 rule all:
     input:
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
+        #preprocessing. Optional if running also revseq_basic.smk
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz", sample = sample_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
+        config["resources"]["reference"] + '.bwt',
+        #pipeline
         #expand(config["inputOutput"]["output_dir"]+"/{sample}/bwa/mapped_reads.bam", sample = sample_ids),
         #expand(config["inputOutput"]["output_dir"]+"/{sample}/sort/sorted_reads.bam", sample = sample_ids),
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/pileup/pileup.txt", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/pair_freqs/pair_counts.pkl.gz", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/consensus/consensus.fasta", sample = sample_ids),
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/dehuman/dehuman.cram", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/filter_host_reads/{sample}_dehuman.cram", sample = sample_ids),
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/fastqc/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),#, lane = lane_ids),
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt", sample=sample_ids),
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/rseqc/{sample}_bam_stat.txt", sample=sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/pileup/{sample}_pileup.txt", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/validate_assignment/{sample}_validation.txt", sample = sample_ids),
+        #dehuman
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/dehuman/{sample}_dehuman.cram", sample = sample_ids),
+        #qc
+        expand(config["inputOutput"]["output_dir"]+"/{sample}/fastqc_dehuman/{sample}_dehuman_1.fastqc.zip", sample = sample_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt", sample=sample_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/{sample}/rseqc/{sample}_bam_stat.txt", sample=sample_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/{sample}/idxstats/{sample}_idxstats.txt", sample=sample_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/{sample}/assign_virus/{sample}_count_table.tsv", sample=sample_ids),
         config["inputOutput"]["output_dir"]+"/multiqc/multiqc_report.html",
     output:
         config["inputOutput"]["output_dir"]+"/complete.txt",
