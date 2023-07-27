@@ -162,16 +162,14 @@ case "$1" in
                 lftp -c "set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${source}"
 		# Mirroring metadata
 		lftp -c "set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
-                syncoutput="$(/usr/bin/time ${scriptdir}/sync_sftp -c viollier.conf "${param[@]}"|tee /dev/stderr)"
 	;;
 	link_samples)
 		echo "Restructuring the synced samples using softlinks"
+		python ${scriptdir}/link_restructure.py --mirror ${mirror} --sampledir {$sampledir}
 	;;
-        uploadviollier)
-                echo "Uploading Viollier"
-                param=( 'consensus_sequences' 'raw_othercenters' )
-                ${scriptdir}/upload_sftp -c viollier.conf "${param[@]}"
-        ;;
+        #uploadviollier)
+        #        echo "Uploading Viollier"
+        #;;
         anonymize_samples)
                 python ${scriptdir}/anonymize_sample_names.py --anontable ${anontable} --sampledir ${sampledir} --samplemapfile ${samplemapfile} --anonymizeddir ${anonymizeddir} --emptyfile ${emptyfile}
         ;;

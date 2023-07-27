@@ -21,6 +21,8 @@ services:
             - Path/To/Revseq:/data/revseq
             ## Path/To/Viollier/Mirror must point to the folder where Viollier will be mirrored
             - Path/To/Viollier/Mirror:/data/viollier_mirror
+            ## Path/To/Links must point to the folder where the mirror will be restructured using softlinks
+            - Path/To/Links:/data/links
         secrets:
             - config
             - prkey
