@@ -1,3 +1,13 @@
+######
+## Script name: validate_assignment.py
+## Date: July 2023
+## Author: Matteo Carrara (NEXUS Personalized Health Technologies)
+##
+## Description: Part of the Revseq pipeline. Loads the metadata table from Viollier and
+##        adds to the assignment table which viruses are positive according to the
+##        clinical tests for comparison with the in-silico assignment
+######
+
 import pandas as pd
 import argparse, os, glob, math, sys
 
@@ -28,6 +38,7 @@ if __name__ == '__main__':
     positive = []
     for key,value in metadata.items():
         value = value[0]
+        # Current metadata has an empty cell, nan or "deleted" for missing values; 0 or -1 for negatives; 4 or a positive integer >4 for positives
         if (type(value) == str) or (math.isnan(value) or (value <= 0) or (key == 'Sample number')):
             continue
         elif value > 0:

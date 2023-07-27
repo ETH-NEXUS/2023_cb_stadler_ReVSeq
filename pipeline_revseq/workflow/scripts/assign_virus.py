@@ -1,11 +1,17 @@
+######
+## Script name: assign_virus.py
+## Date: July 2023
+## Author: Matteo Carrara (NEXUS Personalized Health Technologies)
+##
+## Description: Part of the Revseq pipeline. Loads the counts and length of
+##        the viral sequences computed by the pipeline, calculates RPKM,
+##        detects outliers and reports the outliers in a dedicated table
+######
+
 import pandas as pd
 import numpy as np
 import argparse
 
-def get_highest_alignment(aggregated, coinfection):
-    maxalign = max(aggregated['aligned'])
-    to_consider = aggregated [ aggregated['aligned'] >= (maxalign - (maxalign * coinfection / 100 )) ]
-    return to_consider
 
 def get_outliers(aggregated, percentile):
     perc90 = np.quantile(aggregated['rpkm_proportions'], percentile)
@@ -44,7 +50,7 @@ if __name__ == '__main__':
     aggregated_stats = get_outliers(aggregated_stats, args.outlier_percentile)
     aggregated_stats.to_csv(args.out_prefix + "count_table.tsv")
 
-
+    
     temp = pd.DataFrame({'aligned': pd.Series(dtype='int'), 'length': pd.Series(dtype='int')})
     for virus in args.collapse:
         all_virus = aggregated_stats[[virus in s for s in aggregated_stats.index]]
@@ -53,6 +59,8 @@ if __name__ == '__main__':
 
     temp = pd.concat([temp, aggregated_stats[['aligned', 'length']]])
     
+    ## Exception for rhinovirus and enterovirus which are supposed to be collapsed
+    ##    in a single entry because of the structure of the clinical panels
     if args.aggregate_rhino_entero == 1:
         all_rhino_entero = pd.DataFrame({'aligned': pd.Series(dtype='int'), 'length': pd.Series(dtype='int')})
         rhino_entero_counts = int(temp[['rhinovirus' in s for s in temp.index]]['aligned'].iloc[0]) + int(temp[['enterovirus' in s for s in temp.index]]['aligned'].iloc[0])

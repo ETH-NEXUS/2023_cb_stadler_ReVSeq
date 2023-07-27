@@ -1,26 +1,46 @@
+# Snakemake config file
 inputOutput:
-  # full path to directory with input files
+  # Full path to directory with input fastq files. Input raw data can be gzip-compressed
   input_fastqs: "/path/to/anonymised/fastqs"
-  sample_map: "config/sample_map.tsv"
+  # Full path to the tsv file containing the full sample map.
+  # The file is expected with columns "sample" and "lane".
+  sample_map: "/path/to/sample/map/sample_map.tsv"
+  # Full path to directory where the output must be written
+  output_dir: "path/to/output/dir"
 
 resources:
-  primer_file: "/path/to/primer_file"
+  # Full path to the BED file listing the virus references
+  reference_table: "/path/to/reference_table"
+  # Full path to the host reference sequence in FASTA format
   host_ref: "/path/to/host/reference.fasta"
+  # Full path to the viral reference sequences in multi-fasta format
   reference: "/path/to/viral/reference/multifasta"
+  # Full path to the directory containing the multi-fasta reference file
   reference_dir: "/path/to/dir/containing/reference/multifasta"
 
+# Number of threads to use as default
 threads: 4
 
 tools:
   trim_galore:
+    # Read length filtering threshold
     min_length: 80
+    # Read length filtering threshold for singletons
     min_length_single: 90
-  consensus:
-    min_freq: 0.05
-    min_cov: 100
-  #dehuman:
-  #  conda: "../envs/dehuman.yaml"
-  #  keep_host: 0
-  #  checksum: md5
+  dehuman:
+    conda: "../envs/dehuman.yaml"
+    # Flag. If set to 1 the dehumanization step will keep host reads
+    keep_host: 0
+    # Checksum method for validating the dehumanization results
+    checksum: md5
+  assign_virus:
+    # Upper percentile limit to use to find viral sequences with outlier RPKM values
+    outlier_percentile: 0.9
+    # Upper percentile limit to use to find viral sequences with outlier RPKM values
+    # Used only after collapsing strains
+    outlier_percentile_collapsed: 0.95
+    # List of strains to collapse. Any strain containing the listed string will be collapsed in a single entry
+    # The list must be provided as in the example
+    collapse: '"Influenza A" "Influenza B" "adenovirus" "rhinovirus" "enterovirus", "Respiratory syncytial virus", "parechovirus", "bocavirus", "polyomavirus"'
 
   

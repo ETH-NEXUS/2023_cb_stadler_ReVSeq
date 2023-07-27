@@ -1,20 +1,43 @@
+# Modify all host paths to match your configuration
+version: "3.1"
 services:
     revseq:
-        build: .
+        build: 
+          ## Path/to/revseq/docker must point to the folder `revseq`
+          context: Path/to/revseq/docker
+          args:
+            DOCKER_BUILDKIT: 1
+
         volumes:
+            ## Path/To/Raw/Data must point to the folder where the raw data will be linked
             - Path/To/Raw/Data:/data/raw_data
+            ## Path/To/Config must point to the folder containing all config files and tables
             - Path/To/Config:/data/config
+            ## Path/To/Results must point to the folder where all results will be written
             - Path/To/Results:/data/results
+            ## Path/To/Pipeline must point to the folder `pipeline_revseq`
             - Path/To/Pipeline:/data/pipeline
+            ## Path/To/Revseq must point to the folder `revseq`
+            - Path/To/Revseq:/data/revseq
+            ## Path/To/Viollier/Mirror must point to the folder where Viollier will be mirrored
+            - Path/To/Viollier/Mirror:/data/viollier_mirror
         secrets:
-            - CONFIG
-            - PRKEY
-            - PUKEY
+            - config
+            - prkey
+            - pukey
+            - khost
 secrets:
    CONFIG:
+     ## Path/To/Ssh/config must point to the ssh config file with the configuration to log to Viollier
      file: Path/To/Ssh/config
    PRKEY:
+     ## Path/To/Private/Key/For/Sftp must point to the private key used to connect to Viollier
      file: Path/To/Private/Key/For/Sftp
    PUKEY:
+     ## Path/To/Public/Key/For/Sftp must point to the public key shared with Viollier
      file: Path/To/Public/Key/For/Sftp
+   khost:
+     ## Path/To/Known/Hosts must point to the `known_hosts` file containing the public key of Viollier's server
+     file: Path/To/Known/Hosts
+
 

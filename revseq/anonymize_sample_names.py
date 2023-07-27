@@ -1,3 +1,17 @@
+######
+## Script name: anonymize_sample_names.py
+## Date: July 2023
+## Author: Matteo Carrara (NEXUS Personalized Health Technologies)
+##
+## Description: Part of the Revseq command that controls the revseq workflow.
+##      Generates random, unique 6-characters IDs used to anonymize the sample
+##      names provided by the sequencing lab.
+##	    Replicates the raw data directory structure in a new directory using softlinks.
+##      Creates the anonymization table with the matches between original IDs and anonymized IDs.
+##      Creates the sample map file for the pipeline with the list of lanes available for each sample.
+######
+
+
 import pandas as pd
 import sys, os
 import argparse
@@ -9,19 +23,6 @@ import gzip
 def truncated_uuid4():
     return str(uuid.uuid4())[:6]
 
-#class ethidGenerator(unittest.TestCase):
-#    @staticmethod
-#    def encode_base32(uuid4):
-#        base32uuid = base64.b32encode(uuid4.bytes)
-#        return base32uuid.decode().replace('=', '')
-#    @staticmethod
-#    def decode_base32(ethid):
-#        return uuid.UUID(bytes=base64.b32decode(ethid + ('=' * (-len(ethid) % 8))))
-#    def test_eth_id(self):
-#        uuid4 = uuid.uuid4()
-#        eth_id = EthIdTestCase.encode_base32(uuid4)
-#        print(eth_id)
-#        self.assertEqual(uuid4, EthIdTestCase.decode_base32(eth_id))
 
 def detect_empty_sample(samplename, anondir):
     # samples with 0 reads crash the pipeline and should be 
