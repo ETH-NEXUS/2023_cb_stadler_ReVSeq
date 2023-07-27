@@ -20,8 +20,7 @@ rule fastqc:
 
 rule samtoolsstats:
     input:
-        #bam = rules.filter_host_reads.output.bam
-        bam = rules.sort.output.sorted
+        bam = rules.remove_duplicates.output.bam,
     output:
         stats = config["inputOutput"]["output_dir"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt",
         flagstats = config["inputOutput"]["output_dir"]+"/{sample}/samtoolsstats/{sample}_samtools_flagstats.txt",
@@ -39,7 +38,7 @@ rule samtoolsstats:
 
 rule rseqc:
     input:
-        bam = rules.sort.output.sorted,
+        bam = rules.remove_duplicates.output.bam,
         index = rules.samtools_index.output.index
     output:
         stats = config["inputOutput"]["output_dir"]+"/{sample}/rseqc/{sample}_bam_stat.txt",
@@ -58,7 +57,7 @@ rule rseqc:
 
 rule qualimap:
     input:
-        bam = rules.sort.output.sorted
+        bam = rules.remove_duplicates.output.bam,
     output:
         report = config["inputOutput"]["output_dir"]+"/qualimap/{sample}_qualimap.html"
     params:

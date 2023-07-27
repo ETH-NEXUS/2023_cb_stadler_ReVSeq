@@ -32,10 +32,26 @@ rule remove_multimappers:
     shell:
         "samtools view -bh -F 256 {input.bam} -o {output.bam} 2> >(tee {log.errfile} >&2)"
 
+rule sort:
+    input:
+        bwa = rules.remove_multimappers.output.bam
+    output:
+        sorted = config["inputOutput"]["output_dir"]+"/{sample}/sort/{sample}_sorted_reads.bam",
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/sort/sort.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/sort/sort.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/sort/{sample}.benchmark"
+    conda:
+        "../envs/samtools.yaml"
+    threads: config["threads"]
+    shell:
+        "samtools sort -@ {threads} --output-fmt=BAM -o {output.sorted} {input.bwa} 2> >(tee {log.errfile} >&2)"
+
 
 rule remove_duplicates:
     input:
-        bam = rules.remove_multimappers.output.bam
+        bam = rules.sort.output.sorted
     output:
         bam = temp(config["inputOutput"]["output_dir"]+"/{sample}/remove_duplicates/{sample}_remove_duplicates.bam"),
         metrics = config["inputOutput"]["output_dir"]+"/{sample}/remove_duplicates/{sample}_metrics.txt"
@@ -50,29 +66,12 @@ rule remove_duplicates:
         "picard MarkDuplicates I={input.bam} O={output.bam} M={output.metrics} REMOVE_DUPLICATES=true 2> >(tee {log.errfile} >&2)"
 
 
-rule sort:
-    input:
-        bwa = rules.remove_duplicates.output.bam
-    output:
-        sorted = config["inputOutput"]["output_dir"]+"/{sample}/sort/{sample}_sorted_reads.bam",
-        counts = config["inputOutput"]["output_dir"]+"/{sample}/sort/{sample}_counts.txt"
-    log:
-        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/sort/sort.out.log",
-        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/sort/sort.err.log",
-    benchmark:
-        config["inputOutput"]["output_dir"]+"/logs/benchmark/sort/{sample}.benchmark"
-    conda:
-        "../envs/samtools.yaml"
-    threads: config["threads"]
-    shell:
-        "samtools sort -@ {threads} --output-fmt=BAM -o {output.sorted} {input.bwa} 2> >(tee {log.errfile} >&2)"
-
 
 rule samtools_index:
     input:
-        bam = rules.sort.output.sorted
+        bam = rules.remove_duplicates.output.bam
     output:
-        index = rules.sort.output.sorted + '.bai'
+        index = rules.remove_duplicates.output.bam + '.bai'
     log:
         outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/sort/samtools_index.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/sort/samtools_index.err.log",
@@ -86,14 +85,12 @@ rule samtools_index:
 
 rule pileup:
     input:
-        bam = rules.sort.output.sorted,
+        bam = rules.remove_duplicates.output.bam,
         fasta = config["resources"]["reference"]
-        #fasta = rules.merge_refs.output.outref,
-        #primers = config["resources"]["primer_file"],
     output:
         outpile = config["inputOutput"]["output_dir"]+"/{sample}/pileup/{sample}_pileup.txt"
-    params:
-        sort_tmp=temp(config["inputOutput"]["output_dir"]+"/{sample}/pileup/sort.tmp"),
+    #params:
+    #    sort_tmp=temp(config["inputOutput"]["output_dir"]+"/{sample}/pileup/sort.tmp"),
     log:
         outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/pileup/pileup.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/pileup/pileup.err.log",
@@ -103,16 +100,13 @@ rule pileup:
         "../envs/samtools.yaml 2> >(tee {log.errfile} >&2)"
     shell:
         """
-        samtools sort -@ {threads} \
-                    -T {params.sort_tmp} \
-                    -O bam --verbosity 5 {input.bam} \
-                | samtools mpileup -f {input.fasta} - > {output.outpile}  2> >(tee {log.errfile} >&2)
+        samtools mpileup -f {input.fasta} {input.bam} > {output.outpile}  2> >(tee {log.errfile} >&2)
         """
 
 
 rule idxstats:
     input:
-        bam = rules.sort.output.sorted,
+        bam = rules.remove_duplicates.output.bam,
         index = rules.samtools_index.output.index
     output:
         idxstats = config["inputOutput"]["output_dir"]+"/{sample}/idxstats/{sample}_idxstats.txt",
@@ -134,8 +128,8 @@ rule idxstats:
 rule assign_virus:
     input:
         idxstats = rules.idxstats.output.idxstats,
-        sorted = rules.sort.output.sorted,
-        counts = rules.sort.output.counts
+        sorted = rules.remove_duplicates.output.bam,
+        counts = rules.idxstats.output.counts
     output:
         table = config["inputOutput"]["output_dir"]+"/{sample}/assign_virus/{sample}_count_table.tsv"
     params:
