@@ -10,8 +10,8 @@ WORKDIR /root
 RUN mkdir /home/appuser/.ssh
 
 #RUN --mount=type=secret,required,id=config && cat /run/secrets/config > /home/appuser/.ssh/config
-#RUN --mount=type=secret,required,id=prkey && cat /run/secrets/prkey > /home/appuser/.ssh/id_rsa_belfry
-#RUN --mount=type=secret,required,id=pukey && cat /run/secrets/pukey > /home/appuser/.ssh/id_rsa_belfry.pub
+#RUN --mount=type=secret,required,id=prkey && cat /run/secrets/prkey > /home/appuser/.ssh/id_rsa_revseq
+#RUN --mount=type=secret,required,id=pukey && cat /run/secrets/pukey > /home/appuser/.ssh/id_rsa_revseq.pub
 #RUN --mount=type=secret,required,id=khost && cat /run/secrets/khost > /home/appuser/.ssh/known_hosts
 
 RUN chown -R appuser:appgroup /home/appuser/.ssh
@@ -29,5 +29,5 @@ COPY snakemake.yaml /app/
 
 RUN conda env create -f /app/snakemake.yaml
 
-#ENTRYPOINT [ "sleep", "10d" ]
-ENTRYPOINT [ "conda", "run", "-n", "snakemake", "/data/revseq/run_revseq" ]
+ENTRYPOINT [ "sleep", "10d" ]
+#ENTRYPOINT [ "conda", "run", "-n", "snakemake", "/data/revseq/run_revseq" ]

@@ -153,14 +153,20 @@ scriptdir="$(dirname $(which $0))"
 case "$1" in
         syncviollier)
                 echo "Sync Viollier"
+		cd ${mirror}
                 # HACK delete previous partial downloads
-                . <(grep '^download=' viollier.conf)
-                echo "Removing partial files from:" "${param[@]/#/${download}/}"
-                find "${param[@]/#/${download}/}" -type f -name '*.filepart' -print0 | xargs -r -0 rm -v
-		exec lftp -c "set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${username:+${username}@}${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${basedir}/${download} ${source} ${newerthan:+ --newer-than="'${newerthan}'"}${exrxfile:+ --exclude-rx-from="'${exrxfile}'"}"
+                . <(grep '^mirror=' revseq.conf)
+                echo "Removing partial files from:" "${mirror}/"
+                find "${mirror}/" -type f -name '*.filepart' -print0 | xargs -r -0 rm -vi
+		# Mirroring samples
+                lftp -c "set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${source}"
+		# Mirroring metadata
+		lftp -c "set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
                 syncoutput="$(/usr/bin/time ${scriptdir}/sync_sftp -c viollier.conf "${param[@]}"|tee /dev/stderr)"
-                checksyncoutput "viollier" "$syncoutput"
-        ;;
+	;;
+	link_samples)
+		echo "Restructuring the synced samples using softlinks"
+	;;
         uploadviollier)
                 echo "Uploading Viollier"
                 param=( 'consensus_sequences' 'raw_othercenters' )
