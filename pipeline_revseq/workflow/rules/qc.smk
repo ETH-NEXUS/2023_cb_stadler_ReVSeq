@@ -59,7 +59,7 @@ rule qualimap:
     input:
         bam = rules.remove_duplicates.output.bam,
     output:
-        report = config["inputOutput"]["output_dir"]+"/qualimap/{sample}_qualimap.html"
+        report = config["inputOutput"]["output_dir"]+"/{sample}/qualimap/qualimapReport.html"
     params:
         regions = config["resources"]["reference_table"],
         outdir = config["inputOutput"]["output_dir"]+"/qualimap/",
