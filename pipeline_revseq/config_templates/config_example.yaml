@@ -42,5 +42,4 @@ tools:
     # List of strains to collapse. Any strain containing the listed string will be collapsed in a single entry
     # The list must be provided as in the example
     collapse: '"Influenza A" "Influenza B" "adenovirus" "rhinovirus" "enterovirus", "Respiratory syncytial virus", "parechovirus", "bocavirus", "polyomavirus"'
-
-  
+ 

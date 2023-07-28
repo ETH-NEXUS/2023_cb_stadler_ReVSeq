@@ -64,7 +64,7 @@ def link_anonimised_names(samplename, ethid, sampledir, anonymizeddir):
     sampledir = sampledir + "/" + str(samplename)
     anonymizeddir = anonymizeddir + "/" + str(ethid)
     if not os.path.exists(sampledir):
-        sys.exit("Error: there is no directory to be used as origin for the anonymized link for ethid " + str(ethid) + ". This should not happen. Please check if there are problems with the storage.\nPLEASE NOTE that all links for the previous ethids in this run have been already generated and need to be cleaned up before the next run. At this point, the anonymization matching table has not been updated yet")
+        sys.exit("Error: there is no raw data folder available for sample " + str(samplename) + ". This should not happen. Please check if there are problems with the storage.\nPLEASE NOTE that all links for the previous ethids in this run have been already generated and need to be cleaned up before the next run. At this point, the anonymization matching table has not been updated yet")
     try:
         os.mkdir(anonymizeddir)
         for file in os.scandir(sampledir):
@@ -76,7 +76,7 @@ def link_anonimised_names(samplename, ethid, sampledir, anonymizeddir):
         for anonfile in os.scandir(anonymizeddir):
             os.remove(anonymizeddir + "/" + anonfile)
         os.rmdir(anonymizeddir)
-        print("Warning: Failed to link the raw data to the anonymized folder for ethid " + str(ethid) + ". The sample will be skipped and not saved in the anonymization table")
+        print("Warning: Failed to create the anonymized directory structure for ethid " + str(ethid) + ". The sample will be skipped and not saved in the anonymization table. Future runs will try again.")
         return [samplename, ethid, 1]
     return [samplename, ethid, 0]
 
@@ -102,10 +102,10 @@ if __name__ == '__main__':
     # Parse input args
     parser = argparse.ArgumentParser(description='fetch the primers positions on the reference',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--anontable', required=True, type=str, help='the table containing the full anonymization list')
+    parser.add_argument('--anontable', required=True, type=str, help='the path and filename to the anonymization_table.tsv file')
     parser.add_argument('--sampledir', required=True, type=str, help='the directory containing all raw data samples, one folder per sample')
     parser.add_argument('--samplemapfile', required=True, type=str, help='the path and filename to the samplemap used by the pipeline')
-    parser.add_argument('--anonymizeddir', required=True, type=str, help='the directory containing all anonymized samples, as links to the original data')
+    parser.add_argument('--anonymizeddir', required=True, type=str, help='the path to the directory where the anonymized directory structure needs to be written')
     parser.add_argument('--emptyfile', required=True, type=str, help='the path and filename to the file that contains all empty samples to report')
 
     args = parser.parse_args()
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     try:
         pd.DataFrame(processed).to_csv(args.anontable, sep="\t", mode="a", header=None, index=None)
     except:
-        sys.exit("Error: could not write the anonymization table. All directories have been created and need to be deleted for the procedure to move forward\nTo know what directories to delete, check in the anonymized directory the ethids that are not included in the anonymised table and delete all of them")
+        sys.exit("Error: could not write the anonymization table. All directories have been created and need to be deleted for the procedure to move forward\nTo know what directories to delete, check in " + args.anonymizeddir + " the ethids that are not present in the anonymised table and delete all of them")
 
     all_samples_status = [ detect_empty_sample(sample[1], args.anonymizeddir) for sample in processed ]
     empty_samples = [ sample[0] for sample in all_samples_status if sample[1] == "empty"]
