@@ -62,7 +62,7 @@ rule qualimap:
         report = config["inputOutput"]["output_dir"]+"/{sample}/qualimap/qualimapReport.html"
     params:
         regions = config["resources"]["reference_table"],
-        outdir = config["inputOutput"]["output_dir"]+"/qualimap/",
+        outdir = config["inputOutput"]["output_dir"]+"/{sample}/qualimap/",
     log:
         outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/qualimap/qualimap.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/qualimap/qualimap.err.log",
