@@ -24,11 +24,12 @@ git clone git@github.com:ETH-NEXUS/2023_cb_stadler_ReVSeq.git
   - `metadata`
   - `anondata`
   - `viollier_mirror`
-- Create the anonymization table following the file `pipeline_revseq/config/anonymization_table_template.tsv` and place it in the newly created folder `config `
-- Create the sample map table following the file `pipeline_revseq/config/sample_map_template.tsv` and place it in the newly created folder `config`
-- Create the snakemake config file following the file `pipeline_revseq/config/config_example.yaml` and place it in the newly created folder `config`
-- Create an empty file called `empty_sample.tsv` and place it in the newly created folder `config`
-- Create a file called `revseq/docker-compose.yml` following the file `revseq/docker-compose_example.yml` to match your system. The file must be in folder `revseq` and is already included in the `.gitignore` to avoid accidental commits 
+- Create the following four files and place them into the newly created folder `config`:
+  - Create the anonymization table following the file `pipeline_revseq/config_templates/anonymization_table_template.tsv`. An example is provided in `pipeline_revseq/config_templates/anonymization_table_example.tsv`.
+  - Create the sample map table following the file `pipeline_revseq/config_templates/sample_map_template.tsv`. An example is provided in `pipeline_revseq/config_templates/sample_map_example.tsv`
+  - Create the snakemake config file following the file `pipeline_revseq/config_templates/config_example.yaml`.
+  - Create an empty file called `empty_sample.tsv`.
+- Create a file called `revseq/docker-compose.yml` following the file `revseq/docker-compose_example.yml` to match your system. The file must be in the git repository folder `revseq` and is already included in the `.gitignore` to avoid accidental commits 
 
 ### Running the workflow
 Run the container by navigating to folder `revseq` and running the command
@@ -42,7 +43,7 @@ The `revseq` command is the hub that controls all workflow steps. When the conta
 ### Available sub-commands
 - `syncviollier`: calls lftp to connect to Viollier's sftp server and mirror the directories where the data for the Revseq project are stored.
 - `links_amples`: The pipeline requires a specific raw data and metadata directory structure to function properly. This command uses the script `link_restructure.py` to take the samples in the Viollier mirror and create the necessary directory structure in the `links` folder by using softlinks
-- `uploadviollier`: Uploads back to Viollier the data the workflow is require to report back
+- `uploadviollier`: Uploads data  back to Viollier that the workflow is required to report back
 - `anonymize_samples`: Anonymizes sample names by running the script `anonymize_sample_names.py`. Sample names are assigned a random, unique 6-characters ETHID from an alphabet composed of lowercase letters and numbers
 - `dryrun`: Triggers a snakemake dry run of the bioinformatics pipeline. Useful for debugging and development
 - `runpipeline`: Triggers a run of the bioinformatics pipeline

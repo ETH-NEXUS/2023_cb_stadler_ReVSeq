@@ -25,7 +25,7 @@ def truncated_uuid4():
 
 
 def detect_empty_sample(samplename, anondir):
-    # samples with 0 reads crash the pipeline and should be 
+    # samples with 0 reads crash the pipeline and should be skipped
     # these samples will not be added to the samplemap to avoid crashing the procedure
     with gzip.open(anondir + "/" + samplename + "/" + samplename + "_L001_R1_001.fastq.gz", 'rb') as f:
         data = f.read(1)
