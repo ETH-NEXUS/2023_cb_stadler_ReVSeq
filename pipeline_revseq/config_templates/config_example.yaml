@@ -27,6 +27,12 @@ tools:
     min_length: 80
     # Read length filtering threshold for singletons
     min_length_single: 90
+  pileup:
+    # minimum mapping quality threshold. Passed to samtools view option -q
+    min_map_qual: 1
+  idxstats:
+    # minimum mapping quality threshold. Passed to samtools view option -q
+    min_map_qual: 1
   dehuman:
     conda: "../envs/dehuman.yaml"
     # Flag. If set to 1 the dehumanization step will keep host reads

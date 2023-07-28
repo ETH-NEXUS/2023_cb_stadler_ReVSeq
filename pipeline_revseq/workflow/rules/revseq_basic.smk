@@ -30,7 +30,8 @@ rule remove_multimappers:
     conda:
         "../envs/samtools.yaml"
     shell:
-        "samtools view -bh -F 256 {input.bam} -o {output.bam} 2> >(tee {log.errfile} >&2)"
+        # BWA marks any secondary alignment with the custom tag XA that can be used for filtering
+        "samtools view -bh -e '![XA]' {input.bam} -o {output.bam} 2> >(tee {log.errfile} >&2)"
 
 rule sort:
     input:
@@ -89,18 +90,18 @@ rule pileup:
         fasta = config["resources"]["reference"]
     output:
         outpile = config["inputOutput"]["output_dir"]+"/{sample}/pileup/{sample}_pileup.txt"
-    #params:
-    #    sort_tmp=temp(config["inputOutput"]["output_dir"]+"/{sample}/pileup/sort.tmp"),
+    params:
+        min_map_qual=config["tools"]["pileup"]["min_map_qual"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/pileup/pileup.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/pileup/pileup.err.log",
     benchmark:
         config["inputOutput"]["output_dir"]+"/logs/benchmark/pileup/{sample}.benchmark"
     conda:
-        "../envs/samtools.yaml 2> >(tee {log.errfile} >&2)"
+        "../envs/samtools.yaml"
     shell:
         """
-        samtools mpileup -f {input.fasta} {input.bam} > {output.outpile}  2> >(tee {log.errfile} >&2)
+        samtools mpileup -q {params.min_map_qual} -f {input.fasta} {input.bam} > {output.outpile}  2> >(tee {log.errfile} >&2)
         """
 
 
@@ -111,6 +112,8 @@ rule idxstats:
     output:
         idxstats = config["inputOutput"]["output_dir"]+"/{sample}/idxstats/{sample}_idxstats.txt",
         counts = config["inputOutput"]["output_dir"]+"/{sample}/idxstats/{sample}_counts.txt",
+    params:
+        min_map_qual=config["tools"]["idxstats"]["min_map_qual"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/idxstats/{sample}_idxstats.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/idxstats/{sample}_idxstats.err.log",
@@ -120,7 +123,7 @@ rule idxstats:
         "../envs/samtools.yaml"
     shell:
         """
-        samtools view -c -F 4 {input.bam} > {output.counts} 2> >(tee {log.errfile} >&2)
+        samtools view -c -q {params.min_map_qual} -F 4 {input.bam} > {output.counts} 2> >(tee {log.errfile} >&2)
         samtools idxstats {input.bam} > {output.idxstats}  2> >(tee {log.errfile} >&2)
         """
 
