@@ -9,13 +9,13 @@ echo "The tool will exit if a non-empty folder is provided."
 echo ""
 src_dir=$(dirname "$0")
 
-read -p "Please provide a the full path where to initialize the configuration (full path): "
-    if [[ $REPLY =~ ^[/] ]]
+read -p target_dir "Please provide a the full path where to initialize the configuration (full path): "
+    if [[ $target_dir =~ ^[/] ]]
     then
-        if [[ -e $REPLY ]]
+        if [[ -e $target_dir ]]
         then
-            echo "Provided path $REPLY exists"
-            if [[ ! -d $REPLY ]]
+            echo "Provided path $target_dir exists"
+            if [[ ! -d $target_dir ]]
             then
                 echo "but it's not a directory. Exiting.."
                 exit 200
@@ -23,44 +23,92 @@ read -p "Please provide a the full path where to initialize the configuration (f
             shopt -s nullglob
             shopt -s dotglob 
             # Check for empty files using arrays 
-            chk_files=(${REPLY}/*)
-            (( ${#chk_files[*]} )) && echo "Directory $REPLY is not empty. Exiting." &&
+            chk_files=(${target_dir}/*)
+            (( ${#chk_files[*]} )) && echo "Directory $target_dir is not empty. Exiting." &&
                     shopt -u nullglob && shopt -u dotglob && exit 201 ||
-                    echo "Directory $REPLY is empty."
+                    echo "Directory $target_dir is empty."
     	else
-            echo "Provided path $REPLY does not exist. Creating the folder"
-            mkdir -p $REPLY || exit 500
+            echo "Provided path $target_dir does not exist. Creating the folder"
+            mkdir -p $target_dir || exit 500
     	fi
         echo "Initializing configuration"
-    mkdir ${REPLY}/config ${REPLY}/raw_data ${REPLY}/metadata ${REPLY}/anondata ${REPLY}/viollier_mirror ${REPLY}/results || exit 301
-    cp ${src_dir}/../pipeline_revseq/config_templates/anonymization_table_template.tsv ${REPLY}/config/anonymization_table.tsv || exit 302
-    cp ${src_dir}/../pipeline_revseq/config_templates/sample_map_template.tsv ${REPLY}/config/sample_map.tsv || exit 303
-    cp ${src_dir}/../pipeline_revseq/config_templates/config_example.yaml ${REPLY}/config/config.yaml || exit 304
-    sed -i .bak "s*input_fastqs: \"/path/to/anonymised/fastqs\"*input_fastqs: \"${REPLY}/anondata\"*" ${REPLY}/config/config.yaml
-    sed -i .bak "s*sample_map: \"/path/to/sample/map/sample_map.tsv\"*sample_map: \"${REPLY}/config/sample_map.tsv\"*" ${REPLY}/config/config.yaml
-    sed -i .bak "s*output_dir: \"path/to/output/dir\"*output_dir: \"${REPLY}/results\"*" ${REPLY}/config/config.yaml
-    if [ -f ${REPLY}/config/config.yaml ]
+    mkdir ${target_dir}/pipeline_configuration ${target_dir}/raw_data ${target_dir}/anondata ${target_dir}/viollier_mirror ${target_dir}/results || exit 301
+    cp ${src_dir}/../pipeline_revseq/config_templates/anonymization_table_template.tsv ${target_dir}/pipeline_configuration/anonymization_table.tsv || exit 302
+    cp ${src_dir}/../pipeline_revseq/config_templates/sample_map_template.tsv ${target_dir}/pipeline_configuration/sample_map.tsv || exit 303
+    cp ${src_dir}/../pipeline_revseq/config_templates/config_example.yaml ${target_dir}/pipeline_configuration/config.yaml || exit 304
+    sed -i .bak "s*input_fastqs: \"/path/to/anonymised/fastqs\"*input_fastqs: \"${target_dir}/anondata\"*" ${target_dir}/pipeline_configuration/config.yaml
+    sed -i .bak "s*sample_map: \"/path/to/sample/map/sample_map.tsv\"*sample_map: \"${target_dir}/pipeline_configuration/sample_map.tsv\"*" ${target_dir}/pipeline_configuration/config.yaml
+    sed -i .bak "s*output_dir: \"path/to/output/dir\"*output_dir: \"${target_dir}/results\"*" ${target_dir}/pipeline_configuration/config.yaml
+    sed -i .bak "s*metadata_dir: \"/Path/to/mirror/subdir/with/viollier/metadata\"*output_dir: \"${target_dir}/viollier_mirror/revseq_data\"*" ${target_dir}/pipeline_configuration/config.yaml
+    sed -i .bak "s*anonymization_table: \"/Path/to/anonymization_table.tsv\"*anonymization_table: \"${target_dir}/pipeline_configuration/anonymization_table.tsv\"*" ${target_dir}/pipeline_configuration/config.yaml
+
+    echo "Extracting the host reference genome. This may take some time."
+    tar -xjf ${src_dir}/../resources/RespiratoryVirus_hg38.20200409.fa.tar.bz2 --directory ${src_dir}/../resources/ || exit 600
+    sed -i .bak "s*reference_table: \"/path/to/reference_table\"*reference_table: $(realpath ${src_dir}/../resources/RespiratoryVirus.20200409.bed)\"*" ${target_dir}/pipeline_configuration/config.yaml
+    sed -i .bak "s*host_ref: \"/path/to/host/reference.fasta\"*host_ref: $(realpath ${src_dir}/../resources/RespiratoryVirus_hg38.20200409.fa)\"*" ${target_dir}/pipeline_configuration/config.yaml
+    sed -i .bak "s*reference: \"/path/to/viral/reference/multifasta\"*reference: $(realpath ${src_dir}/../resources/RespiratoryVirus.20200409.fa)\"*" ${target_dir}/pipeline_configuration/config.yaml
+    sed -i .bak "s*reference_dir: \"/path/to/dir/containing/reference/multifasta\"*reference_dir: $(realpath ${src_dir}/../resources/)\"*" ${target_dir}/pipeline_configuration/config.yaml
+
+    if [ -f ${target_dir}/pipeline_configuration/config.yaml ]
     then
-        rm ${REPLY}/config/config.yaml.bak
+        rm ${target_dir}/pipeline_configuration/config.yaml.bak
     fi
-    touch ${REPLY}/config/empty_sample.tsv || exit 305
+    touch ${target_dir}/pipeline_configuration/empty_sample.tsv || exit 305
+
     cp ${src_dir}/../revseq/docker-compose_example.yml ${src_dir}/../revseq/docker-compose.yml || exit 306
     sed -i .bak "s*context: Path/to/revseq/docker*context: $(realpath ${src_dir}/../revseq)*" ${src_dir}/../revseq/docker-compose.yml
-    sed -i .bak "s*- Path/To/Raw/Data:/data/raw_data*- ${REPLY}/raw_data:/data/raw_data*" ${src_dir}/../revseq/docker-compose.yml
-    sed -i .bak "s*- Path/To/Config:/data/config*- ${REPLY}/config:/data/config*" ${src_dir}/../revseq/docker-compose.yml
-    sed -i .bak "s*- Path/To/Results:/data/results*- ${REPLY}/results:/data/results*" ${src_dir}/../revseq/docker-compose.yml
+    sed -i .bak "s*- Path/To/Raw/Data:/data/raw_data*- ${target_dir}/raw_data:/data/raw_data*" ${src_dir}/../revseq/docker-compose.yml
+    sed -i .bak "s*- Path/To/Config:/data/config*- ${target_dir}/pipeline_configuration:/data/config*" ${src_dir}/../revseq/docker-compose.yml
+    sed -i .bak "s*- Path/To/Results:/data/results*- ${target_dir}/results:/data/results*" ${src_dir}/../revseq/docker-compose.yml
     sed -i .bak "s*- Path/To/Pipeline:/data/pipeline*- $(realpath ${src_dir}/../pipeline_revseq/):/data/pipeline*" ${src_dir}/../revseq/docker-compose.yml
     sed -i .bak "s*- Path/To/Revseq:/data/reveq*- $(realpath ${src_dir}/../revseq):/data/revseq*" ${src_dir}/../revseq/docker-compose.yml
-    sed -i .bak "s*- Path/To/Viollier/Mirror:/data/viollier_mirror*- ${REPLY}/viollier_mirror:/data/viollier_mirror*" ${src_dir}/../revseq/docker-compose.yml 
+    sed -i .bak "s*- Path/To/Viollier/Mirror:/data/viollier_mirror*- ${target_dir}/viollier_mirror:/data/viollier_mirror*" ${src_dir}/../revseq/docker-compose.yml 
+
+    echo ""
+    echo "The docker container needs access to the secrets necessary to connect to the Viollier SFTP server."
+    read -p conf "Please provide the location of the ssh config file (full_path): "
+        if [[ $conf =~ ^[/] ]]
+        then
+            sed -i .bak "s*file: Path/To/Ssh/config*file: ${conf}*" ${src_dir}/../revseq/docker-compose.yml
+        else
+            echo "The provided string ${conf} does not appear to be an absolute path. Exiting."
+            exit 999
+        fi
+    read -p prkey "Please provide the location of the private key file (full_path): "
+        if [[ $prkey =~ ^[/] ]]
+        then
+            sed -i .bak "s*file: Path/To/Private/Key/For/Sftp*file: ${prkey}*" ${src_dir}/../revseq/docker-compose.yml
+        else
+            echo "The provided string ${prkey} does not appear to be an absolute path. Exiting."
+            exit 999
+        fi
+    read -p pukey "Please provide the location of the public key file (full_path): "
+        if [[ $pukey =~ ^[/] ]]
+        then
+            sed -i .bak "s*file: Path/To/Public/Key/For/Sftp*file: ${pukey}*" ${src_dir}/../revseq/docker-compose.yml
+        else
+            echo "The provided string ${pukey} does not appear to be an absolute path. Exiting."
+            exit 999
+        fi
+    read -p khost "Please provide the location of the ssh known_hosts file (full_path): "
+        if [[ $khost =~ ^[/] ]]
+        then
+        sed -i .bak "s*file: Path/To/Known/Hosts*file: ${khost}*" ${src_dir}/../revseq/docker-compose.yml
+        else
+            echo "The provided string ${khost} does not appear to be an absolute path. Exiting."
+            exit 999
+        fi
+
     if [ -f ${src_dir}/../revseq/docker-compose.yml ]
     then
         rm ${src_dir}/../revseq/docker-compose.yml.bak
     fi
 
-    echo "Created the necessary files and directories in ${REPLY}."
+    echo "\n\n"
+    echo "Created the necessary files and directories in ${target_dir}."
     echo "Please follow the rest of the installation instructions to customize the configuration to your specific system"
     exit 0
     else
-        echo "The provided string $REPLY does not appear to be an absolute path. Exiting."
+        echo "The provided string ${target_dir} does not appear to be an absolute path. Exiting."
         exit 999
     fi

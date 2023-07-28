@@ -17,6 +17,10 @@ resources:
   reference: "/path/to/viral/reference/multifasta"
   # Full path to the directory containing the multi-fasta reference file
   reference_dir: "/path/to/dir/containing/reference/multifasta"
+  # Full path to the directory containing the sample metadata from Viollier
+  metadata_dir: "/Path/to/mirror/subdir/with/viollier/metadata"
+  # Full path to the anonymization matching table
+  anonymization_table: "/Path/to/anonymization_table.tsv"
 
 # Number of threads to use as default
 threads: 4

@@ -6,3 +6,4 @@ pipeline_revseq/results/
 pipeline_revseq/multiqc_flat/
 pipeline_revseq/multiqc_interactive/
 revseq/docker-compose.yml
+resources/RespiratoryVirus_hg38.20200409.fa

@@ -10,7 +10,11 @@ The workflow is divided in two main sections:
 
 ## Installation
 ### Pre-requisites
-The workflow requires a working installation of docker. Please refer to the docker documentation for more information: https://docs.docker.com/engine/install/
+- The workflow requires a working installation of docker. Please refer to the docker documentation for more information: https://docs.docker.com/engine/install/
+- The worklow requires the configuration necessary to connect to the Viollier SFTP server. This includes
+  - `.ssh/config` file with a section dedicated to the connection to the SFTP server
+  - Private and public key pair to be used for connection. For the pair to be usable, the public key must be shared with Viollier
+  - `.ssh/known_hosts` file with a section dedicated to the Viollier SFTP server public key
 
 ### Installing and preparing the workflow
 
@@ -18,18 +22,16 @@ The workflow requires a working installation of docker. Please refer to the dock
 ```
 git clone git@github.com:ETH-NEXUS/2023_cb_stadler_ReVSeq.git
 ```
-- Create the folders necessary to store the external data. It is suggested to create these folders outside of the git repository to avoid accidental commit of sensitive data or exposing secrets. There is no restriction for name and location because they are going to be added to the configuration file in a following step. Four folders are necessary:
-  - `config`
-  - `raw_data`
-  - `metadata`
-  - `anondata`
-  - `viollier_mirror`
-- Create the following four files and place them into the newly created folder `config`:
-  - Create the anonymization table following the file `pipeline_revseq/config_templates/anonymization_table_template.tsv`. An example is provided in `pipeline_revseq/config_templates/anonymization_table_example.tsv`.
-  - Create the sample map table following the file `pipeline_revseq/config_templates/sample_map_template.tsv`. An example is provided in `pipeline_revseq/config_templates/sample_map_example.tsv`
-  - Create the snakemake config file following the file `pipeline_revseq/config_templates/config_example.yaml`.
-  - Create an empty file called `empty_sample.tsv`.
-- Create a file called `revseq/docker-compose.yml` following the file `revseq/docker-compose_example.yml` to match your system. The file must be in the git repository folder `revseq` and is already included in the `.gitignore` to avoid accidental commits 
+- The workflow works with data that may be sensitive, e.g. paths, internal sample names, metadata. It is good practice to leave this data outside of the git repository to avoid accidental commits. We provide a script to simplify the procedure
+  - Run the script `resoruces/initialize.sh` and follow the instructions
+    - The script creates and populates in the provided directory the following 5 sub-directories:
+      - `pipeline_configuration`: where the pipeline configuration is stored
+        - The file created in `pipeline_configuration` are already customized based on user input
+      - `viollier_mirror`: where raw data and metadata from the Viollier SFTP server will be mirrored
+      - `raw_data`: where the mirrored data will be re-organized to be more user- and pipeline-friendly
+      - `anondata`: where the samples will be anonymized. This will create a physical separation between non-anonymized and anonymized data
+      - `results`: where the bioinformatics pipeline analysis results will be written
+    - The script also creates and customizes the content of the file `revseq/docker-compose.yml` based on the user input
 
 ### Running the workflow
 Run the container by navigating to folder `revseq` and running the command
