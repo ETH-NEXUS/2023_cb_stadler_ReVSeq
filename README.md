@@ -43,7 +43,7 @@ The `revseq` command is the hub that controls all workflow steps. When the conta
 ### Available sub-commands
 - `syncviollier`: calls lftp to connect to Viollier's sftp server and mirror the directories where the data for the Revseq project are stored.
 - `links_amples`: The pipeline requires a specific raw data and metadata directory structure to function properly. This command uses the script `link_restructure.py` to take the samples in the Viollier mirror and create the necessary directory structure in the `links` folder by using softlinks
-- `uploadviollier`: Uploads back to Viollier the data the workflow is require to report back
+- `uploadviollier`: Uploads data  back to Viollier that the workflow is required to report back
 - `anonymize_samples`: Anonymizes sample names by running the script `anonymize_sample_names.py`. Sample names are assigned a random, unique 6-characters ETHID from an alphabet composed of lowercase letters and numbers
 - `dryrun`: Triggers a snakemake dry run of the bioinformatics pipeline. Useful for debugging and development
 - `runpipeline`: Triggers a run of the bioinformatics pipeline
