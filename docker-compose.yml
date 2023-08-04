@@ -1,0 +1,43 @@
+version: "3"
+volumes:
+  pg_data:
+  web_root:
+services:
+  ui:
+    build:
+      context: ui
+    volumes:
+      - ./ui/app:/app
+      - "web_root:/app/dist:z"
+    hostname: ui
+    restart: "no"
+    env_file: .env
+
+  api:
+    build:
+      context: api
+    hostname: api
+    restart: unless-stopped
+    entrypoint: sh -c '/app/entrypoint.sh'
+    volumes:
+      - ./api/app:/app
+      - ./api/backups:/vol/backups
+      - ./api/static:/vol/web/static:z
+      - ./api/media:/vol/web/media:z
+      - ./data:/data
+      - ./README.md:/app/README.md
+      - ./.git:/app/docs/.git
+    env_file: .env
+    environment:
+      - GIT_VERSION=${GIT_VERSION}
+      - GIT_BRANCH=${GIT_BRANCH}
+      - GIT_LASTCOMMITDATE=${GIT_LASTCOMMITDATE}
+    depends_on:
+      - db
+  db:
+    image: postgres:13.4-alpine
+    hostname: db
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data

@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  ui:
+    ports:
+      # We should use the same port internally and externally, otherwise the dev tools support
+      # of the browser is for almost nothing
+      - "8010:8010"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        yarn
+        yarn dev --host 0.0.0.0 --port 8010
+    # command: bash -c 'while true; do sleep 5; done'
+    restart: unless-stopped
+    depends_on:
+      - api
+  api:
+    environment:
+      - DJANGO_DEBUG=True
+    ports:
+      - "5010:5000"
+  db:
+    ports:
+      - "54398:5432"
