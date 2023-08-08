@@ -4,6 +4,7 @@
 module.exports = {
   plugins: [
     // https://github.com/postcss/autoprefixer
+    require('tailwindcss')('./tailwind.config.js'),
     require('autoprefixer')({
       overrideBrowserslist: [
         'last 4 Chrome versions',
