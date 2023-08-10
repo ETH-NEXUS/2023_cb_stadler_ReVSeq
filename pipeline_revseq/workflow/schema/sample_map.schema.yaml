@@ -4,6 +4,9 @@ properties:
     sample:
         type: string
         description: sample name/identifier
-
+    lane:
+        type: string
+        description: sequencing lane of the fastq file
 required:
     - sample
+    - lane

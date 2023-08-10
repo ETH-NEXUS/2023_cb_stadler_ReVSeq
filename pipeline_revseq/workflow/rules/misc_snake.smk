@@ -6,12 +6,13 @@ import pandas as pd
 from snakemake.utils import validate
 
 # import sample map and retrieve sample names
-sample_map = pd.read_table(config["inputOutput"]["sample_map"], header=0)
+sample_map = pd.read_table(config["sample_map"], header=0)
 samples = sample_map.set_index("sample", drop=False)
 sample_ids = sample_map["sample"].tolist()
 validate(samples, "../schema/sample_map.schema.yaml")
 lanes = sample_map.set_index("lane", drop=False)
 lane_ids = sample_map["lane"].tolist()
+validate(lanes, "../schema/sample_map.schema.yaml")
 
 
 #########################################

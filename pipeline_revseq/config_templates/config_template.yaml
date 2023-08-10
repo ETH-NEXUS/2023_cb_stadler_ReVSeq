@@ -1,0 +1,57 @@
+# Snakemake config file
+#
+# Note: all paths should refer to the directory structure within the docker container
+inputOutput:
+  # Full path to directory with input fastq files. Input raw data can be gzip-compressed
+  input_fastqs: "/data/results/anonymized"
+  # Full path to directory where the output must be written
+  output_dir: "/data/results"
+
+resources:
+  # Full path to the BED file listing the virus references
+  reference_table: "/data/config/RespiratoryVirus.20200409.bed"
+  # Full path to the host reference sequence in FASTA format
+  host_ref: "/data/config/RespiratoryVirus_hg38.20200409.fa"
+  # Full path to the viral reference sequences in multi-fasta format
+  reference: "/data/config/RespiratoryVirus.20200409.fa"
+  # Full path to the directory containing the multi-fasta reference file
+  reference_dir: "/data/config"
+  # Full path to the directory containing the sample metadata from Viollier
+  metadata_dir: "/data/viollier_mirror/revseq"
+  
+# Number of threads to use as default
+threads: 4
+
+tools:
+  dehuman:
+    # Full path to the bed file containing the human regions to filter out
+    human_regions: "/data/config/human_regions.bed"
+  trim_galore:
+    # Read length filtering threshold
+    min_length: 80
+    # Read length filtering threshold for singletons
+    min_length_single: 90
+  pileup:
+    # minimum mapping quality threshold. Passed to samtools option -q
+    # Used to create the pileup for visualization.
+    # Suggested value "20" equal to a probability of erroneous alignment of 1%
+    min_map_qual: 20
+  idxstats:
+    # minimum mapping quality threshold. Passed to samtools option -q
+        # Used to create the pileup for visualization.
+    # Suggested value "20" equal to a probability of erroneous alignment of 1%
+    min_map_qual: 20
+  assign_virus:
+    # Upper percentile limit to use to find viral sequences with outlier RPKM values
+    outlier_percentile: 0.95
+    # Upper percentile limit to use to find viral sequences with outlier RPKM values
+    # Used only after collapsing strains
+    outlier_percentile_collapsed: 0.95
+    # Lookup table with the matches between substrains and major strains
+    # It is used to collapse the substrains available for the bioinformatics analysis
+    # to the major strains available in the panel
+    lookup: "/data/config/strain_substrain_lookup.csv"
+  validate_assignment:
+    # Lookup table wit the matches between major strains and panel strains
+    # It is used to match the bioinformatics analysis results with the clinical panel results
+    match_table: "/data/config/panel_strain_lookup.csv"

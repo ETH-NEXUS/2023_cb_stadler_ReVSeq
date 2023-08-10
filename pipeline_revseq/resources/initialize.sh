@@ -32,28 +32,25 @@ read -p target_dir "Please provide a the full path where to initialize the confi
             mkdir -p $target_dir || exit 500
     	fi
         echo "Initializing configuration"
-    mkdir ${target_dir}/pipeline_configuration ${target_dir}/raw_data ${target_dir}/anondata ${target_dir}/viollier_mirror ${target_dir}/results || exit 301
-    cp ${src_dir}/../pipeline_revseq/config_templates/anonymization_table_template.tsv ${target_dir}/pipeline_configuration/anonymization_table.tsv || exit 302
-    cp ${src_dir}/../pipeline_revseq/config_templates/sample_map_template.tsv ${target_dir}/pipeline_configuration/sample_map.tsv || exit 303
-    cp ${src_dir}/../pipeline_revseq/config_templates/config_example.yaml ${target_dir}/pipeline_configuration/config.yaml || exit 304
+    mkdir ${target_dir}/pipeline_configuration ${target_dir}/raw_data ${target_dir}/viollier_mirror ${target_dir}/results ${target_dir}/results/pseudoanon_data || exit 301
+    cp ${src_dir}/../pipeline_revseq/config_template/config_template.yaml ${target_dir}/pipeline_configuration/config.yaml || exit 304
+    cp ${src_dir}/../pipeline_revseq/RespiratoryVirus.20200409.fa ${target_dir}/pipeline_configuration/RespiratoryVirus.20200409.fa ||exit 305
+
     sed -i .bak "s*input_fastqs: \"/path/to/anonymised/fastqs\"*input_fastqs: \"${target_dir}/anondata\"*" ${target_dir}/pipeline_configuration/config.yaml
-    sed -i .bak "s*sample_map: \"/path/to/sample/map/sample_map.tsv\"*sample_map: \"${target_dir}/pipeline_configuration/sample_map.tsv\"*" ${target_dir}/pipeline_configuration/config.yaml
     sed -i .bak "s*output_dir: \"path/to/output/dir\"*output_dir: \"${target_dir}/results\"*" ${target_dir}/pipeline_configuration/config.yaml
     sed -i .bak "s*metadata_dir: \"/Path/to/mirror/subdir/with/viollier/metadata\"*output_dir: \"${target_dir}/viollier_mirror/revseq_data\"*" ${target_dir}/pipeline_configuration/config.yaml
-    sed -i .bak "s*anonymization_table: \"/Path/to/anonymization_table.tsv\"*anonymization_table: \"${target_dir}/pipeline_configuration/anonymization_table.tsv\"*" ${target_dir}/pipeline_configuration/config.yaml
 
     echo "Extracting the host reference genome. This may take some time."
-    tar -xjf ${src_dir}/../resources/RespiratoryVirus_hg38.20200409.fa.tar.bz2 --directory ${src_dir}/../resources/ || exit 600
-    sed -i .bak "s*reference_table: \"/path/to/reference_table\"*reference_table: $(realpath ${src_dir}/../resources/RespiratoryVirus.20200409.bed)\"*" ${target_dir}/pipeline_configuration/config.yaml
-    sed -i .bak "s*host_ref: \"/path/to/host/reference.fasta\"*host_ref: $(realpath ${src_dir}/../resources/RespiratoryVirus_hg38.20200409.fa)\"*" ${target_dir}/pipeline_configuration/config.yaml
-    sed -i .bak "s*reference: \"/path/to/viral/reference/multifasta\"*reference: $(realpath ${src_dir}/../resources/RespiratoryVirus.20200409.fa)\"*" ${target_dir}/pipeline_configuration/config.yaml
-    sed -i .bak "s*reference_dir: \"/path/to/dir/containing/reference/multifasta\"*reference_dir: $(realpath ${src_dir}/../resources/)\"*" ${target_dir}/pipeline_configuration/config.yaml
+    tar -xjf ${src_dir}/../pipeline_revseq/resources/RespiratoryVirus_hg38.20200409.fa.tar.bz2 --directory ${target_dir}/pipeline_configuration/ || exit 600
+    sed -i .bak "s*reference_table: \"/path/to/reference_table\"*reference_table: $(realpath ${src_dir}/../pipeline_revseq/resources/RespiratoryVirus.20200409.bed)\"*" ${target_dir}/pipeline_configuration/config.yaml
+    sed -i .bak "s*host_ref: \"/path/to/host/reference.fasta\"*host_ref: $(realpath ${target_dir}/pipeline_configuration/RespiratoryVirus_hg38.20200409.fa)\"*" ${target_dir}/pipeline_configuration/config.yaml
+    sed -i .bak "s*reference: \"/path/to/viral/reference/multifasta\"*reference: $(realpath ${target_dir}/pipeline_configuration/RespiratoryVirus.20200409.fa)\"*" ${target_dir}/pipeline_configuration/config.yaml
+    sed -i .bak "s*reference_dir: \"/path/to/dir/containing/reference/multifasta\"*reference_dir: $(realpath ${target_dir}/pipeline_configuration/)\"*" ${target_dir}/pipeline_configuration/config.yaml
 
     if [ -f ${target_dir}/pipeline_configuration/config.yaml ]
     then
         rm ${target_dir}/pipeline_configuration/config.yaml.bak
     fi
-    touch ${target_dir}/pipeline_configuration/empty_sample.tsv || exit 305
 
     cp ${src_dir}/../revseq/docker-compose_example.yml ${src_dir}/../revseq/docker-compose.yml || exit 306
     sed -i .bak "s*context: Path/to/revseq/docker*context: $(realpath ${src_dir}/../revseq)*" ${src_dir}/../revseq/docker-compose.yml

@@ -1,5 +1,14 @@
 #!/bin/bash
 
+## Date: July 2023
+## Author: Matteo Carrara (NEXUS Personalized Health Technologies)
+##
+## Description: Main command interface for the revseq workflow.
+## The subcommands allow to trigger: sync raw data from Viollier SFTP server,
+## pseudoanonymize samples, start a snakemake dryrun or fullrun,
+## upload results back to Viollier
+## Commands "runpipeline" and "dryrun" require the plate on which to run as option
+
 scriptdir="$(dirname $(which $0))"
 . ${scriptdir}/revseq.conf
 
@@ -16,27 +25,32 @@ case "$1" in
 		# Mirroring metadata
 		lftp -c "set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
 	;;
-	link_samples)
-		echo "Restructuring the synced samples using softlinks"
-		python ${scriptdir}/link_restructure.py --mirror ${mirror} --sampledir {$sampledir}
-	;;
         #uploadviollier)
         #        echo "Uploading Viollier"
         #;;
-        anonymize_samples)
-                python ${scriptdir}/anonymize_sample_names.py --anontable ${anontable} --sampledir ${sampledir} --samplemapfile ${samplemapfile} --anonymizeddir ${anonymizeddir} --emptyfile ${emptyfile}
+        pseudoanonymize_samples)
+                python ${scriptdir}/pseudoanonymize_sample_names.py --mirrordir ${sampledir} --pseudoanondir ${anonymizeddir} --metadatadir ${metadatadir}
         ;;
         dryrun)
 		cd ${pipelinedir}
-		snakemake --use-conda -c3 --configfile /data/config/config.yaml -n
+                for plate in $(ls /data/results/anonymized)
+                do
+                        if [ ! -f "/data/results/anonymized/${plate}/complete.txt" ]
+                        then
+		                snakemake --use-conda -c3 --configfile ${snakemake_config} --config plate=${plate} sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv -n
+                        fi
+                done
         ;;
         runpipeline)
 		cd ${pipelinedir}
-                snakemake --use-conda -c3 --configfile /data/config/config.yaml
+                for plate in $(ls /data/results/anonymized)
+                do
+                        if [ ! -f "/data/results/anonymized/${plate}/complete.txt" ]
+                        then
+                                snakemake --use-conda -c3 --configfile ${snakemake_config} --config plate=${plate} sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv
+                        fi
+                done
         ;;
-        #packagedata)
-        #
-        #;;
         *)
                 echo "Unkown sub-command ${1}" > /dev/stderr
                 exit 2

@@ -14,37 +14,46 @@ configfile: "config/config.yaml"
 # Include rules
 include: "rules/misc_snake.smk"
 include: "rules/preprocessing.smk"
-include: "rules/revseq_basic.smk"
 include: "rules/dehuman.smk"
+include: "rules/revseq_basic.smk"
 include: "rules/qc.smk"
+include: "rules/package_results.smk"
 
 # include local rules
 localrules:
     all,
 
-# final rule of pipeline
+# final rules of pipeline
 # defines output
 rule all:
     input:
-        #preprocessing. Optional if running also revseq_basic.smk
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
-        config["resources"]["reference"] + '.bwt',
-        #pipeline
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/bwa/mapped_reads.bam", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/sort/sorted_reads.bam", sample = sample_ids),
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/pileup/{sample}_pileup.txt", sample = sample_ids),
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/validate_assignment/{sample}_validation.txt", sample = sample_ids),
-        #dehuman
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/dehuman/{sample}_dehuman.cram", sample = sample_ids),
-        #qc
-        expand(config["inputOutput"]["output_dir"]+"/{sample}/fastqc_dehuman/{sample}_dehuman_1.fastqc.zip", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt", sample=sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/rseqc/{sample}_bam_stat.txt", sample=sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/idxstats/{sample}_idxstats.txt", sample=sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/{sample}/assign_virus/{sample}_count_table.tsv", sample=sample_ids),
-        config["inputOutput"]["output_dir"]+"/multiqc/multiqc_report.html",
+        #####preprocessing
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz", sample = sample_ids),
+        config["resources"]["reference_dir"]+"/merged_virus_host_ref.fa.bwt",
+        #####dehuman
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_mapped_reads.bam", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/cram/{sample}.cram", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r1.fastq", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dh_fastqc/{sample}_bam_to_fastq_r1_fastqc.zip", sample = sample_ids),
+        #####pipeline
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/filter_alignment/{sample}_filter_alignment.bam", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/sort/{sample}_sorted_reads.bam", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/remove_duplicates/{sample}_remove_duplicates.bam", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/pileup/{sample}_pileup.txt", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/idxstats/{sample}_idxstats.txt", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_count_table.tsv", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/validate_assignment/{sample}_validation.txt", sample = sample_ids),
+        #####qc
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_merged/{sample}_merged_R1.fastqc.zip", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/rseqc/{sample}_bam_stat.txt", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/qualimapReport.html", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc/multiqc_report.html"),
+        #####Final
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/assign_virus/{sample}_count_table.tsv", sample = sample_ids)
     output:
         config["inputOutput"]["output_dir"]+"/complete.txt",
     shell:
