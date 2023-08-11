@@ -1,14 +1,56 @@
 import {defineStore} from 'pinia'
 import {api} from 'src/boot/axios'
 import {ref} from 'vue'
-import {SampleCount, Metadata, Plate, Substrain} from 'src/models/core'
+import {Metadata, Plate, SampleCount, Substrain} from 'src/models/core'
 
 export const useCoreStore = defineStore('core', () => {
   const sampleCounts = ref<SampleCount[]>([])
+  const tableData = ref<SampleCount[]>([])
+  const aggregate = ref<boolean>(false)
   const selected_barcode = ref<string | null>(null)
   const metadata = ref<Metadata[]>([])
   const plates = ref<Plate[]>([])
   const substrains = ref<Substrain[]>([])
+
+  const toggleAggregate = () => {
+    const mappedData = new Map()
+    if (aggregate.value) {
+      sampleCounts.value.forEach(item => {
+        const strain = item.substrain.strain.name
+        const substrain = item.substrain
+        const existingData = mappedData.get(strain) || {
+          aligned: 0,
+          length: 0,
+          rpkm: 0,
+          rpkm_proportions: 0,
+          normcounts: 0,
+          outlier: false,
+          plate: null,
+          substrain: null,
+        }
+
+        const newData = {
+          ...existingData,
+          aligned: existingData.aligned + item.aligned,
+          length: existingData.length + item.length,
+          rpkm: existingData.rpkm + item.rpkm,
+          rpkm_proportions: existingData.rpkm_proportions + item.rpkm_proportions,
+          normcounts: existingData.normcounts + item.normcounts,
+          outlier: item.outlier, // Update if needed
+          plate: item.plate.barcode,
+          substrain: substrain,
+        }
+
+        mappedData.set(strain, newData)
+      })
+      tableData.value = Array.from(mappedData.entries()).map(([key, value]) => ({
+        strain: key,
+        ...value,
+      }))
+    } else {
+      tableData.value = sampleCounts.value
+    }
+  }
 
   const getPlates = async () => {
     try {
@@ -42,6 +84,7 @@ export const useCoreStore = defineStore('core', () => {
       try {
         const res1 = await api.get(baseUrl)
         sampleCounts.value = res1.data
+        tableData.value = res1.data
         const res2 = await api.get(`/api/metadata/?barcode=${barcode}`)
         metadata.value = res2.data
       } catch (error) {
@@ -59,5 +102,8 @@ export const useCoreStore = defineStore('core', () => {
     plates,
     getSubstrains,
     substrains,
+    tableData,
+    aggregate,
+    toggleAggregate,
   }
 })

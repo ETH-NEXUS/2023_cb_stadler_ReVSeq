@@ -14,14 +14,6 @@ const toggleSideBar = () => {
   sideBarOpen.value = !sideBarOpen.value
 }
 
-const loginButtonClicked = async () => {
-  try {
-    await router.push({path: '/login'})
-  } catch (err) {
-    console.error(err)
-  }
-}
-
 const logoutButtonClicked = async () => {
   try {
     await userStore.sessionLogout()

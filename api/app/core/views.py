@@ -22,7 +22,6 @@ class SampleCountViewSet(viewsets.ModelViewSet):
         if barcode is not None:
             queryset = queryset.filter(plate__barcode=barcode)
         if substrain is not None:
-            print(substrain, "!!!!!!!!!!!!!!!!!!!!!!!!!!")
             queryset = queryset.filter(substrain__name=substrain)
         return queryset
 

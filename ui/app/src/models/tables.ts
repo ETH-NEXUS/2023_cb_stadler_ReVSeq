@@ -16,3 +16,11 @@ export interface TableDataMetadata {
   ent_date: string | Date
   treatment_type: string
 }
+
+export interface Column {
+  name: string
+  label: string
+  field: string
+  align: string
+  sortable: boolean
+}

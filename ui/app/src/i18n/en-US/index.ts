@@ -11,6 +11,8 @@ export default {
     password: 'Password',
     search_db: 'Search database',
     about: 'About',
+    aggregate: 'Aggregate by strains',
+    raw_data: 'Raw data',
   },
   message: {
     enter_username_password: 'Please enter your username and password',

@@ -28,14 +28,15 @@ export interface Substrain {
 }
 
 export interface SampleCount {
-  plate: Plate
   substrain: Substrain
+  plate: Plate
   aligned: number
   length: number
   rpkm: number
   rpkm_proportions: number
   normcounts: number
   outlier: boolean
+  strain?: string
 }
 
 export interface DataItem {

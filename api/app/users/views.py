@@ -36,9 +36,6 @@ class CsrfCookieView(View):
 class LoginView(View):
     def post(self, request: WSGIRequest, *args, **kwargs):
         logger.debug("Start login")
-        print(
-            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        )
         data = json.loads(request.body)
         username = data.get("username")
         password = data.get("password")
