@@ -1,42 +1,16 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
-  </q-page>
+  <section class="tw-pt-12 tw-pb-14">
+    <div class="tw-container tw-px-4 tw-mx-auto">
+      <div class="tw-max-w-3xl tw-mx-auto">
+        <img class="tw-block tw-w-full tw-rounded-md mb-2" src="../assets/virus2.png" alt="" />
+      </div>
+    </div>
+  </section>
 </template>
 
-<script setup lang="ts">
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
-import { ref } from 'vue';
-
-const todos = ref<Todo[]>([
-  {
-    id: 1,
-    content: 'ct1',
-  },
-  {
-    id: 2,
-    content: 'ct2',
-  },
-  {
-    id: 3,
-    content: 'ct3',
-  },
-  {
-    id: 4,
-    content: 'ct4',
-  },
-  {
-    id: 5,
-    content: 'ct5',
-  },
-]);
-const meta = ref<Meta>({
-  totalCount: 1200,
-});
-</script>
+<script setup lang="ts"></script>
+<style>
+@import 'tailwindcss/base.css';
+@import 'tailwindcss/components.css';
+@import 'tailwindcss/utilities.css';
+</style>

@@ -10,8 +10,10 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
 
-
 from rest_framework import viewsets
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -33,21 +35,25 @@ class CsrfCookieView(View):
 
 class LoginView(View):
     def post(self, request: WSGIRequest, *args, **kwargs):
+        logger.debug("Start login")
         data = json.loads(request.body)
         username = data.get("username")
         password = data.get("password")
+        print(username, password)
 
         if username is None or password is None:
             return JsonResponse(
                 {"detail": _("Please provide username and password.")}, status=400
             )
-
+        print("Before authenticate")
         user = authenticate(username=username, password=password)
 
         if user is None:
             return JsonResponse({"detail": _("Invalid credentials.")}, status=400)
-
+        print("After authenticate")
         login(request, user)
+        print("After login")
+        logger.debug("End login")
         return JsonResponse({"detail": _("Successfully logged in.")})
 
 
