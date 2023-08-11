@@ -17,15 +17,12 @@ resources:
   # Full path to the directory containing the multi-fasta reference file
   reference_dir: "/data/config"
   # Full path to the directory containing the sample metadata from Viollier
-  metadata_dir: "/data/viollier_mirror/revseq"
+  metadata_dir: "/data/viollier_mirror/revseq_data"
   
 # Number of threads to use as default
 threads: 4
 
 tools:
-  dehuman:
-    # Full path to the bed file containing the human regions to filter out
-    human_regions: "/data/config/human_regions.bed"
   trim_galore:
     # Read length filtering threshold
     min_length: 20

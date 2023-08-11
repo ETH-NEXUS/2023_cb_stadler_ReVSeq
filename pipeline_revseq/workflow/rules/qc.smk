@@ -23,8 +23,8 @@ rule fastqc_merged:
         r1 = rules.merge_lanes.output.r1,
         r2 = rules.merge_lanes.output.r2,
     output:
-        zip1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_merged/{sample}_merged_R1.fastqc.zip",
-        zip2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_merged/{sample}_merged_R2.fastqc.zip",
+        zip1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_merged/{sample}_merged_R1_fastqc.zip",
+        zip2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_merged/{sample}_merged_R2_fastqc.zip",
     params:
         outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_merged"
     log:

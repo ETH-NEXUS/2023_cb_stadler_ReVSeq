@@ -24,12 +24,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     anontable = pd.read_table(args.pseudoanon_table)
-    match_table = pd.read_csv(args.match_table,sep="\t", header=None)
+    match_table = pd.read_csv(args.match_table,sep=",", header=0)
     count_table = pd.read_csv(args.count_table,sep="\t")
     metadata_subdirs = [os.path.join(args.metadata_dir, file) for file in os.listdir(args.metadata_dir)]
     all_files = [ os.path.join(metaname, os.listdir(metaname)[0]) for metaname in metadata_subdirs ]
     metadata = pd.concat((pd.read_csv(f, sep=";") for f in all_files), ignore_index=True)
-    sample_name = anontable.loc[anontable['ethid'] == args.ethid]['sample_name'].astype(int)
+    sample_name = anontable.loc[anontable['ethid'] == args.ethid]['Sample number'].astype(int)
     sample_name = int(sample_name.iloc[0])
     metadata = metadata.loc[metadata['Sample number'] == sample_name]
     if len(metadata.index) == 0:
@@ -51,13 +51,13 @@ if __name__ == '__main__':
     for virus in positive:
         name = match_table.loc[(match_table['panel_name'] == virus),'strain_name']
         if len(name) == 0:
-            sys.exit("ERROR: no common virus name found for ", virus, " in the match table!")
+            sys.exit("ERROR: no common virus name found for "+virus+" in the match table!")
         name = name.to_string(index=False).strip()
         common_names.append(name)
     
     for name in common_names:
         if name not in count_table['name'].to_list():
-            print("ERROR: no common virus name found for ", name, " in the count table!")
+            sys.exit("ERROR: no common virus name found for "+name+" in the count table!")
 
     count_table['panel_positive'] = ""
     count_table['panel_positive'] = count_table[['outlier']].apply(lambda x: "*" if x['outlier']=="*" else "", axis=1)

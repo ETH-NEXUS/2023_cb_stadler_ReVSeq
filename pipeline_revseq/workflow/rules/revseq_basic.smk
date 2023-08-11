@@ -16,7 +16,7 @@ rule filter_alignment:
         # remove unpaired reads
         # https://github.com/samtools/samtools/issues/1668
         """
-        samtools view -bh -F 2304 -q 1 -e '![XA]' {input.bam} - | samtools collate -u -O {input.bam} - | samtools fixmate -u - | samtools view -f 1 -o out.bam
+        samtools view -bh -F 2304 -q 1 -e '![XA]' {input.bam} | samtools collate -u -O - | samtools fixmate -u - - | samtools view -f 1 -o {output.bam}
         """
 
 rule sort:
@@ -118,7 +118,10 @@ rule assign_virus:
         idxstats = rules.idxstats.output.idxstats,
         counts = rules.idxstats.output.counts
     output:
-        table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_count_table.tsv",
+        table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_substrain_count_table.tsv",
+        strain_table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_strain_count_table.tsv",
+        boxplot = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_substrain_proportions_boxplot.pdf",
+        strain_boxplot = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_strain_proportions_boxplot.pdf",
     params:
         ref_table = config["resources"]["reference_table"],
         prefix = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_",
@@ -147,12 +150,12 @@ rule assign_virus:
 
 rule validate_assignment:
     input:
-        assignment = rules.assign_virus.output.table,
+        assignment = rules.assign_virus.output.strain_table,
     output:
         validation = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/validate_assignment/{sample}_validation.txt",
     params:
         metadata_dir = config["resources"]["metadata_dir"],
-        pseudoanontable = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"_pseudoanon_table.tsv",
+        pseudoanontable = config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv",
         match_table = config["tools"]["validate_assignment"]["match_table"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/validate_assignment/{sample}_validation.out.log",
@@ -165,7 +168,9 @@ rule validate_assignment:
         """
         python workflow/scripts/validate_assignment.py \
         --metadata_dir {params.metadata_dir} \
-        --anonymization_table {params.pseudoanontable} \
+        --pseudoanon_table {params.pseudoanontable} \
+        --ethid {wildcards.sample} \
         --match_table {params.match_table} \
+        --count_table {input.assignment} \
         --output {output.validation}  2> >(tee {log.errfile} >&2)
         """

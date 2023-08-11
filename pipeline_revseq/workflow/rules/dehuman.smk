@@ -14,20 +14,36 @@ rule bwa:
         "../envs/bwa.yaml"
     threads: config["threads"]
     shell:
+       "bwa mem -t {threads} -M {input.ref} {input.reads} > {output.bam}"
+
+
+rule dh_postprocess:
+    input:
+        bam = rules.bwa.output.bam,
+    output:
+        bam = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dh_postprocess/{sample}.bam"),#temp
+        bai = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dh_postprocess/{sample}.bam.bai"),#temp
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/dh_postprocess/dh_postprocess.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/dh_postprocess/dh_postprocess.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/dh_postprocess/{sample}.benchmark"
+    conda:
+        "../envs/samtools.yaml"
+    threads: config["threads"]
+    shell:
         """
-        bwa mem -t {threads} -M {input.ref} {input.reads} |samtools view -Sb - > {output.bam} 2> >(tee {log.errfile} >&2)
+        samtools sort -@ {threads} --output-fmt=SAM {input.bam} | samtools view -Sb - > {output.bam} 2> >(tee {log.errfile} >&2)
         samtools index {output.bam}
         """
 
 
 rule dehuman:
     input:
-        bam = rules.bwa.output.bam,
+        bam = rules.dh_postprocess.output.bam,
     output:
         bam = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam"),#temp
-        only_human = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_only_human.bam"),#temp
-    params:
-        human_regions = config["tools"]["dehuman"]["human_regions"]
+        bai = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam.bai"),#temp
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/dehuman/dehuman.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/dehuman/dehuman.err.log",
@@ -36,7 +52,10 @@ rule dehuman:
     conda:
         "../envs/samtools.yaml"
     shell:
-        "samtools view -hb -U {output.bam} -o {output.only_human} {input.bam} {params.human_regions} 2> >(tee {log.errfile} >&2)"
+        """
+        samtools view -h {input.bam} | grep -v -e "chr" | samtools view -Sbh > {output.bam} 
+        samtools index {output.bam}
+        """
 
 
 rule cram:
