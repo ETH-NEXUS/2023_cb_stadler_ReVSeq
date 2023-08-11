@@ -27,8 +27,7 @@ const filterColumnNames = computed(() => {
 
 <template>
   <div class="q-pa-md" v-if="coreStore.sampleCounts.length > 0">
-    <h3 class="text-h4 text-center q-pb-md">Counts</h3>
-    <div class="tw-flex tw-flex-wrap tw-mb-20 tw-justify-center"></div>
+    <h3 class="text-h4 text-center q-pb-lg">Counts</h3>
 
     <div class="tw-mb-4">
       <q-btn

@@ -100,7 +100,7 @@ const onSubmit = async () => {
 
 <style scoped>
 .my-card {
-  max-width: 500px;
+  min-width: 550px;
   margin: auto;
 }
 </style>
