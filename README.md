@@ -60,33 +60,33 @@ The pipeline can be started at any moment using the command `./revseq/revseq run
 The pipeline is divided in the four major areas: `preprocessing`, `basic pipeline`, `dehumanization`, `qc`, with the following steps:
 -  `preprocessing`: prepare the raw data for the bioinformatics analysis
   - `merge_lanes`: merge the raw data from multiple lanes in a single fastq file
-  - `bwa_index`: index the virus reference sequences for use with BWA
-  - `trim_galore`: trim primers from the raw sequences and filter reads by quality and by read length
+  - `bwa_index`: index the merged host-virus reference sequences for use with BWA
+  - `trim_galore`: trim primers from the raw sequences and filter reads by quality (default) and by read length (minimum 80bp after trimming)
+- `dehumanization`: remove human reads from the dataset
+  - `bwa`: align the trimmed reads to the merged host-virus referenece sequences using BWA
+  - `dh_postprocess`: sort and index alignments
+  - `dehuman`: remove any read wit primary, secondary or multiple alignments on any host sequence
+  - `bam_to_fastq`: convert the dehumanized BAM into FASTQ for CRAM compression
+  - `cram`: compressed the dehumanized FASTQs in CRAM format
 - `basic pipeline`: process the samples to detect the virus(es) present
-  - `bwa`: align the trimmed reads to the virus refernce sequences using BWA
-  - `remove_multimappers`: remove reads mapping in multiple contigs (i.e. multiple viruses from the alignment results)
+  - `filter_alignment`: remove reads with secondary, multiple or split alignments. Remove reads with quality 0
   - `sort`: Sort the alignments by position
-  - `remove_duplicate`: remove PCR and optical duplicates from the alignment results
+  - `remove_duplicates`: remove PCR and optical duplicates from the alignment results
   - `samtools_index`: create the BAM index for the deduplicated alignments
   - `pileup`: compute coverage information on viral sequences with samtools mpileup for the deduplicated alignments
   - `idxstats`: compute and report index stats and aligned reads counts for the deduplicated alignments
   - `assign_virus`: assign the virus(es) more likely to be present in the sample. More details on the custom method available in the next paragraph
   - `validate_assignment`: compare the virus assignment with the results available from the screening panels and add the validation to the report
-- `dehumanization`: remove human reads from the raw data for publication
-  - `dh_reuse_alignreject`: extract the unaligned reads from the alignment results
-  - `dh_host_index`: index the host reference genome for use with BWA
-  - `dh_hostalign`: align to the host genome the reads that did not align to the virus sequences
-  - `dh_filter`: filter from the raw FASTQ files the reads that align on the host genome
-  - `dehuman`: package the filtered reads in cram format
 - `qc`: Quality control steps and report
-  - `fastqc`: qaulity control of raw reads using FastQC
+  - `fastq_raw`: quality control of raw reads using FastQC
+  - `fastqc_merged`: quality control of lane-merged reads using FastQC
+  - `dh_fastqc`: quality control of dehumanized reads using FastQC
   - `samtoolsstats`: quality control of the deduplicated alignments using samtoolsstats
   - `rseqc`: quality control of the deduplicated alignments using rseqc
   - `qualimap`: quality control of the deduplicated alignments using qualimap
   - `multiqc`: collecting and reporting all previous QC steps using multiQC
-  - `fastqc_dehuman`: quality control of the dehumanized FASTQ files using FastQC
-  - 
-A rulegraph showing how these steps are connected is available in `imagesrevseq_pipeline_dag.pdf`
+  
+A rulegraph showing how these steps are connected is available in `images/revseq_pipeline_rulegraph.pdf`
 
 #### Details - Virus assignment
 The virus assignment is computed by a custom python script that summarises the results in a dedicated table.
@@ -101,7 +101,3 @@ The results are saved in a dedicated table, where outliers are marked with a `*`
 If the user requested it, strains are then collapsed together (e.g. all strains referring to different sub-strains of Influenza A can be collapsed to a single cumulative values for Influenza A in general). RPKM, RPKM percentages and outliers are re-computed based on the new read counts and lengths.
 
 The collapsed results are then compared with the results available in the respiratory virus test panels run on the samples by the clinicians. Strains reported as positive in the test panels are reported with a `*`.
-
-# Acknowledgements
-- [SVVC - Neher Lab](https://github.com/neherlab/SVVC): for providing the base concept on which this method has been developed
-- [V-Pipe - ETHZ CBG](https://github.com/cbg-ethz/V-pipe): for providing the rules for dehumanization
