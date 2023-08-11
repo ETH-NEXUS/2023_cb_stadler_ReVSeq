@@ -31,7 +31,6 @@ rule all:
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz", sample = sample_ids),
-        config["resources"]["reference_dir"]+"/merged_virus_host_ref.fa.bwt",
         #####dehuman
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_mapped_reads.bam", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/cram/{sample}.cram", sample = sample_ids),

@@ -1,10 +1,10 @@
 rule bwa:
     input:
-        ref = rules.merge_refs.output.referenceout,
-        index = rules.bwa_index.output.index,
+        ref = config["resources"]["host_ref"],
+        ref_index = rules.bwa_index.output.ref_index,
         reads = rules.trim_galore.output
     output:
-        bam = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_mapped_reads.bam")
+        bam = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_mapped_reads.bam")#temp
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bwa/bwa.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bwa/bwa.err.log",
@@ -12,16 +12,20 @@ rule bwa:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/bwa/{sample}.benchmark"
     conda:
         "../envs/bwa.yaml"
+    threads: config["threads"]
     shell:
-        "bwa mem -M {input.ref} {input.reads} |samtools view -Sb - > {output.bam} 2> >(tee {log.errfile} >&2)"
+        """
+        bwa mem -t {threads} -M {input.ref} {input.reads} |samtools view -Sb - > {output.bam} 2> >(tee {log.errfile} >&2)
+        samtools index {output.bam}
+        """
 
 
 rule dehuman:
     input:
         bam = rules.bwa.output.bam,
     output:
-        bam = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam"),
-        only_human = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_only_human.bam"),
+        bam = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam"),#temp
+        only_human = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_only_human.bam"),#temp
     params:
         human_regions = config["tools"]["dehuman"]["human_regions"]
     log:
@@ -41,7 +45,7 @@ rule cram:
     output:
         cram = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/cram/{sample}.cram",
     params:
-        ref = rules.merge_refs.output.referenceout,
+        ref = config["resources"]["host_ref"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/cram/fastq_to_cram.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/cram/fastq_to_cram.err.log",
@@ -57,9 +61,9 @@ rule bam_to_fastq:
     input:
         bam = rules.dehuman.output.bam,
     output:
-        fq1 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r1.fastq"),
-        fq2 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r2.fastq"),
-        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/",
+        fq1 = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r1.fastq"),#temp
+        fq2 = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r2.fastq"),#temp
+        outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/"),
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bam_to_fastq/bam_to_fastq.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bam_to_fastq/bam_to_fastq.err.log",

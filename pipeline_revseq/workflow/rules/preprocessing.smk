@@ -56,11 +56,9 @@ rule merge_refs:
 
 rule bwa_index:
     input:
-        #reference = config["resources"]["reference"]
-        reference = rules.merge_refs.output.referenceout
+        reference = config["resources"]["host_ref"]
     output:
-        #referenceout = config["resources"]["reference"] + '.bwt'
-        index = rules.merge_refs.output.referenceout + '.bwt'
+        ref_index = config["resources"]["host_ref"] + '.bwt'
     log:
         outfile=config["inputOutput"]["output_dir"]+"/logs/bwa_index/bwa_index.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/logs/bwa_index/bwa_index.err.log",
@@ -77,8 +75,8 @@ rule trim_galore:
         r1 = rules.merge_lanes.output.r1,
         r2 = rules.merge_lanes.output.r2,
     output:
-        r1 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz"),
-        r2 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R2_val_2.fq.gz"),
+        r1 = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz"),#temp
+        r2 = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R2_val_2.fq.gz"),#temp
     params:
         base_name = "data/{sample}",
         outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore",

@@ -28,9 +28,9 @@ tools:
     human_regions: "/data/config/human_regions.bed"
   trim_galore:
     # Read length filtering threshold
-    min_length: 80
+    min_length: 20
     # Read length filtering threshold for singletons
-    min_length_single: 90
+    min_length_single: 30
   pileup:
     # minimum mapping quality threshold. Passed to samtools option -q
     # Used to create the pileup for visualization.
