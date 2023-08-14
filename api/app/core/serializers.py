@@ -59,11 +59,18 @@ class SubstrainSerializer(serializers.ModelSerializer):
 class SampleCountSerializers(serializers.ModelSerializer):
     plate = PlateSerializer(read_only=True)
     substrain = SubstrainSerializer(read_only=True)
+    sample = SampleSerializer(read_only=True)
+    strain = serializers.SerializerMethodField("get_strain")
+
+    def get_strain(self, obj):
+        return obj.substrain.strain.name
 
     class Meta:
         model = SampleCount
         fields = (
             "plate",
+            "sample",
+            "strain",
             "substrain",
             "aligned",
             "length",

@@ -88,7 +88,7 @@ const links = [
           class="tw-hidden xl:tw-flex tw-absolute tw-top-1/2 tw-left-1/2 tw-transform tw--translate-x-1/2 tw--translate-y-1/2">
           <li v-for="(link, index) in links" :key="link.name + index">
             <a
-              class="tw-text-lg tw-mr-10 2xl:tw-mr-16 tw-font-extrabold hover:tw-text-indigo-800"
+              class="cursor-pointer tw-text-lg tw-mr-10 2xl:tw-mr-16 tw-font-extrabold hover:tw-text-indigo-800"
               @click="link.function">
               {{ link.name }}
             </a>
@@ -113,8 +113,11 @@ const links = [
             {{ t('main_layout.title') }}
           </h2>
           <p class="tw-text-xl md:tw-text-2xl tw-font-extrabold tw-leading-8 tw-mb-12">
-            {{ t('main_layout.description') }}
+            {{ t('main_layout.short_description') }}
           </p>
+          <!--          <p class="tw-text-xl md:tw-text-2xl tw-font-extrabold tw-leading-8 tw-mb-12">-->
+          <!--            {{ t('main_layout.description') }}-->
+          <!--          </p>-->
           <div class="tw-flex tw-flex-wrap tw-mb-20 tw-justify-center">
             <a
               @click="navigateToSearch"
@@ -157,7 +160,7 @@ const links = [
             <ul class="tw-py-10">
               <li class="tw-mb-1" v-for="link in links" :key="link.name">
                 <a
-                  class="tw-block tw-p-4 tw-text-lg tw-font-extrabold hover:tw-bg-gray-50 rounded"
+                  class="cursor-pointer tw-block tw-p-4 tw-text-lg tw-font-extrabold hover:tw-bg-gray-50 rounded"
                   @click="link.function">
                   {{ link.name }}
                 </a>

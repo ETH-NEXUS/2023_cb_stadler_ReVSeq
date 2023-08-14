@@ -58,6 +58,7 @@ class Substrain(models.Model):
 
 class SampleCount(models.Model):
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True)
     substrain = models.ForeignKey(
         Substrain, on_delete=models.CASCADE, null=True
     )  # null=True because we first create the object by import and populate it later

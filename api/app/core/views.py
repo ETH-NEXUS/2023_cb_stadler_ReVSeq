@@ -9,33 +9,28 @@ from .serializers import (
 )
 from rest_framework import viewsets
 from rest_framework import generics
+from rest_framework import filters as drf_filters
 
 
 class SampleCountViewSet(viewsets.ModelViewSet):
     queryset = SampleCount.objects.all()
     serializer_class = SampleCountSerializers
-
-    def get_queryset(self):
-        queryset = SampleCount.objects.all()
-        barcode = self.request.query_params.get("barcode", None)
-        substrain = self.request.query_params.get("substrain", None)
-        if barcode is not None:
-            queryset = queryset.filter(plate__barcode=barcode)
-        if substrain is not None:
-            queryset = queryset.filter(substrain__name=substrain)
-        return queryset
+    filter_backends = (filters.DjangoFilterBackend, drf_filters.OrderingFilter)
+    filterset_fields = ("plate__barcode", "substrain__name", "substrain__strain__name")
 
 
 class MetadataViewSet(viewsets.ModelViewSet):
     queryset = Metadata.objects.all()
     serializer_class = MetadataSerializer
+    filter_backends = (filters.DjangoFilterBackend, drf_filters.OrderingFilter)
+    filterset_fields = ("plate__barcode",)
 
-    def get_queryset(self):
-        queryset = Metadata.objects.all()
-        barcode = self.request.query_params.get("barcode", None)
-        if barcode is not None:
-            queryset = queryset.filter(plate__barcode=barcode)
-        return queryset
+    # def get_queryset(self):
+    #     queryset = Metadata.objects.all()
+    #     barcode = self.request.query_params.get("barcode", None)
+    #     if barcode is not None:
+    #         queryset = queryset.filter(plate__barcode=barcode)
+    #     return queryset
 
 
 class PlateListView(generics.ListAPIView):
