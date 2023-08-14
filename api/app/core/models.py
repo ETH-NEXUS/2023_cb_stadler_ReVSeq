@@ -22,6 +22,7 @@ class Sample(models.Model):
     sample_number = models.TextField(unique=True)
     well = models.ForeignKey(Well, on_delete=models.CASCADE)
     pseudoanonymized_id = models.TextField(unique=True, null=True)
+    plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
 
 
 class SampleFile(models.Model):

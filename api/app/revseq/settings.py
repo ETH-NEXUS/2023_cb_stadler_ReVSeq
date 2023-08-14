@@ -111,7 +111,7 @@ WSGI_APPLICATION = "revseq.wsgi.application"
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": (
-        "core.custom_renderer.CustomBrowsableAPIRenderer",
+        "core.renderers.custom_renderer.CustomBrowsableAPIRenderer",
         "rest_framework.renderers.JSONRenderer",
     ),
 }

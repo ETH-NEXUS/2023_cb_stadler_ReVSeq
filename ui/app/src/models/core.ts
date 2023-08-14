@@ -8,9 +8,10 @@ export interface Well {
 }
 
 export interface Sample {
-  sample_number: string
   well: Well
   pseudoanonymized_id: string
+  plate: Plate
+  sample_number?: string
 }
 
 export interface Strain {
@@ -29,6 +30,7 @@ export interface Substrain {
 
 export interface SampleCount {
   substrain: Substrain
+  sample: Sample
   plate: Plate
   aligned: number
   length: number

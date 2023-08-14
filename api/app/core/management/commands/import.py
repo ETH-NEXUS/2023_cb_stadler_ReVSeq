@@ -87,6 +87,7 @@ class Command(BaseCommand):
                 well=well,
                 sample_number=item[columns.sample_number],
                 pseudoanonymized_id=item[columns.pseudoanonymized_id],
+                plate=plate,
             )
             self.create_metadata(item, plate, well, sample)
         return plate
@@ -97,27 +98,35 @@ class Command(BaseCommand):
         :param options: Command-line options including counts file path
         :return: None
         """
-        data = read_csv_file(options.get("counts_file"))
-        for item in data:
-            substrain_name = item[columns.name]
-            outlier = False
-            if item[columns.outlier] == "*":
-                outlier = True
-            try:
-                substrain = Substrain.objects.get(name=substrain_name)
-                sampleCount, _ = SampleCount.objects.update_or_create(
-                    plate=plate,
-                    substrain=substrain,
-                    aligned=int(item[columns.aligned]),
-                    length=int(item[columns.length]),
-                    rpkm=float(item[columns.rpkm]),
-                    rpkm_proportions=float(item[columns.rpkm_proportions]),
-                    normcounts=float(item[columns.normcounts]),
-                    outlier=outlier,
-                )
-            except Substrain.DoesNotExist:
-                logger.error(f"Substrain {substrain_name} does not exist")
-                raise ValueError(f"Substrain {substrain_name} does not exist")
+        file_name = options.get("counts_file")
+        data = read_csv_file(file_name)
+        sample_id = os.path.basename(file_name).split("_")[0]
+        try:
+            sample = Sample.objects.get(pseudoanonymized_id=sample_id)
+            for item in data:
+                substrain_name = item[columns.name]
+                outlier = False
+                if item[columns.outlier] == "*":
+                    outlier = True
+                try:
+                    substrain = Substrain.objects.get(name=substrain_name)
+                    sampleCount, _ = SampleCount.objects.update_or_create(
+                        plate=plate,
+                        sample=sample,
+                        substrain=substrain,
+                        aligned=int(item[columns.aligned]),
+                        length=int(item[columns.length]),
+                        rpkm=float(item[columns.rpkm]),
+                        rpkm_proportions=float(item[columns.rpkm_proportions]),
+                        normcounts=float(item[columns.normcounts]),
+                        outlier=outlier,
+                    )
+                except Substrain.DoesNotExist:
+                    logger.error(f"Substrain {substrain_name} does not exist")
+                    raise ValueError(f"Substrain {substrain_name} does not exist")
+        except Sample.DoesNotExist:
+            logger.error(f"Sample {sample_id} does not exist")
+            raise ValueError(f"Sample {sample_id} does not exist")
 
     def handle(self, *args, **options):
         try:
