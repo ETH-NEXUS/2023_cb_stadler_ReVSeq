@@ -1,5 +1,6 @@
 from snakemake.utils import min_version
 from snakemake.utils import validate
+import os
 
 # do not allow subdirectories as part of `sample` or `i` wildcards
 wildcard_constraints:
@@ -43,7 +44,9 @@ rule all:
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/pileup/{sample}_pileup.txt", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/idxstats/{sample}_idxstats.txt", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_strain_count_table.tsv", sample = sample_ids),
-        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/validate_assignment/{sample}_validation.txt", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/validate_assignment/{sample}_validation.tsv", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa", sample = sample_ids),
         #####qc
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_merged/{sample}_merged_R1_fastqc.zip", sample = sample_ids),
@@ -52,9 +55,9 @@ rule all:
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/qualimapReport.html", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc/multiqc_report.html"),
         #####Final
-        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/assign_virus/{sample}_count_table.tsv", sample = sample_ids)
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/"+config["plate"]+"/{sample}/{sample}_count_table.tsv", sample = sample_ids)
     output:
-        config["inputOutput"]["output_dir"]+"/complete.txt",
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/complete.txt",
     shell:
         "date > {output}"
 

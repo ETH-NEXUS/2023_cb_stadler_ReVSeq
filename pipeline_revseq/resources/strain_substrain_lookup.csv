@@ -1,0 +1,42 @@
+strain_name,substrain_name
+coronavirus OC43,Human coronavirus OC43
+coronavirus NL63,Human coronavirus NL63
+coronavirus HKU1,Human coronavirus HKU1
+coronavirus 229E,Human coronavirus 229E
+SARS-CoV-2,SARS-CoV-2
+Adenovirus,Human adenovirus B1
+Adenovirus,Human adenovirus C2
+Adenovirus,Human adenovirus E4
+Rhino- / Enterovirus,Human enterovirus C104 strain: AK11
+Rhino- / Enterovirus,Human enterovirus C109 isolate NICA08-4327
+Rhino- / Enterovirus,Human rhinovirus A89
+Rhino- / Enterovirus,Human rhinovirus B14
+Rhino- / Enterovirus,Human rhinovirus C (strain 024)
+Metapneumovirus,Human metapneumovirus (CAN97-83)
+Parainlfuenza 4,Human parainfluenza virus 4a
+Influenza B,Influenza B virus (B/Brisbane/60/2008)
+Influenza B,Influenza B virus (B/Colorado/06/2017)
+Influenza B,Influenza B virus (B/Lee/1940)
+Influenza B,Influenza B virus (B/Washington/02/2019)
+Influenza B,Influenza B virus (B/Wisconsin/01/2010)
+Influenza A,Influenza A virus  (A/Zhejiang/DTID-ZJU01/2013(H7N9))
+Influenza A,Influenza A virus (A/Hong Kong/1073/99(H9N2))
+Influenza A,Influenza A virus (A/Korea/426/1968(H2N2))
+Influenza A,Influenza A virus (A/Michigan/45/2015(H1N1))
+Influenza A,Influenza A virus (A/New York/392/2004(H3N2))
+Influenza A,Influenza A virus (A/Puerto Rico/8/1934(H1N1))
+Influenza A,Influenza A virus (A/Texas/50/2012(H3N2))
+Influenza A,Influenza A virus (A/goose/Guangdong/1/1996(H5N1))
+Parainlfuenza 3,Human parainfluenza virus 3
+Parainlfuenza 2,Human parainfluenza virus 2
+Parainlfuenza 1,Human parainfluenza virus 1
+RSV - A/B,Human Respiratory syncytial virus 9320 (type B)
+RSV - A/B,Respiratory syncytial virus (type A)
+Bocavirus,Human bocavirus 1 (Primate bocaparvovirus 1 isolate st2)
+Bocavirus,Human bocavirus 2c PK isolate PK-5510
+Bocavirus,Human bocavirus 3
+Bocavirus,Human bocavirus 4 NI strain HBoV4-NI-385
+Parechiovirus,Human parechovirus 6
+Parechiovirus,Human parechovirus type 1 PicoBank/HPeV1/a
+Polyomavirus,KI polyomavirus Stockholm 60
+Polyomavirus,WU Polyomavirus

@@ -48,6 +48,8 @@ tools:
     # It is used to collapse the substrains available for the bioinformatics analysis
     # to the major strains available in the panel
     lookup: "/data/config/strain_substrain_lookup.csv"
+    # Minimum average coverage allowed in the sample for the assignment to be reported
+    dp_threshold: 20
   validate_assignment:
     # Lookup table wit the matches between major strains and panel strains
     # It is used to match the bioinformatics analysis results with the clinical panel results

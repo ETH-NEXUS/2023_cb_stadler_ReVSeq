@@ -61,5 +61,5 @@ if __name__ == '__main__':
 
     count_table['panel_positive'] = ""
     count_table['panel_positive'] = count_table[['outlier']].apply(lambda x: "*" if x['outlier']=="*" else "", axis=1)
-    count_table.to_csv(args.output)
+    count_table.to_csv(args.output, sep="\t", float_format='%.2f')
 

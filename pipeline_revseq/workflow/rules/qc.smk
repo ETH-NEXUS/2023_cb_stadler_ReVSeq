@@ -79,27 +79,6 @@ rule rseqc:
         "bam_stat.py -i {input.bam} > {output.stats} 2> >(tee {log.errfile} >&2)"
 
 
-rule qualimap:
-    input:
-        bam = rules.remove_duplicates.output.bam,
-    output:
-        report = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/qualimapReport.html"
-    params:
-        regions = config["resources"]["reference_table"],
-        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/",
-    log:
-        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap/qualimap.out.log",
-        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap/qualimap.err.log",
-    benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/qualimap/qualimap.benchmark"
-    conda:
-        "../envs/qc.yaml"
-    shell:
-        """
-        unset DISPLAY
-        qualimap bamqc -outdir {params.outdir} -bam {input.bam} --feature-file {params.regions} -c 2> >(tee {log.errfile} >&2)
-        """
-
 rule multiqc:
     input:
         fastqcresult1 = expand(rules.fastqc_merged.output.zip1, sample=sample_ids),

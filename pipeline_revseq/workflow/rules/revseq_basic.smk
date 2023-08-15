@@ -53,6 +53,29 @@ rule remove_duplicates:
         "picard MarkDuplicates I={input.bam} O={output.bam} M={output.metrics} REMOVE_DUPLICATES=true 2> >(tee {log.errfile} >&2)"
 
 
+rule qualimap:
+    input:
+        bam = rules.remove_duplicates.output.bam,
+    output:
+        report = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/qualimapReport.html",
+        genome_res = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/genome_results.txt",
+    params:
+        regions = config["resources"]["reference_table"],
+        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/",
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap/qualimap.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap/qualimap.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/qualimap/qualimap.benchmark"
+    conda:
+        "../envs/qc.yaml"
+    shell:
+        """
+        unset DISPLAY
+        qualimap bamqc -outdir {params.outdir} -bam {input.bam} --feature-file {params.regions} -c 2> >(tee {log.errfile} >&2)
+        """
+
+
 rule samtools_index:
     input:
         bam = rules.remove_duplicates.output.bam
@@ -67,6 +90,7 @@ rule samtools_index:
         "../envs/samtools.yaml"
     shell:
         "samtools index {input.bam} 2> >(tee {log.errfile} >&2)"
+
 
 
 rule pileup:
@@ -116,7 +140,8 @@ rule idxstats:
 rule assign_virus:
     input:
         idxstats = rules.idxstats.output.idxstats,
-        counts = rules.idxstats.output.counts
+        counts = rules.idxstats.output.counts,
+        genome_res = rules.qualimap.output.genome_res,
     output:
         table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_substrain_count_table.tsv",
         strain_table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_strain_count_table.tsv",
@@ -128,6 +153,7 @@ rule assign_virus:
         outlier_percentile = config["tools"]["assign_virus"]["outlier_percentile"],
         outlier_percentile_collapsed = config["tools"]["assign_virus"]["outlier_percentile_collapsed"],
         lookup = config["tools"]["assign_virus"]["lookup"],
+        dp_threshold = config["tools"]["assign_virus"]["dp_threshold"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.err.log",
@@ -144,7 +170,9 @@ rule assign_virus:
         --out_prefix {params.prefix} \
         --outlier_percentile {params.outlier_percentile} \
         --outlier_percentile_collapsed {params.outlier_percentile_collapsed} \
-        --lookup {params.lookup}  2> >(tee {log.errfile} >&2)
+        --lookup {params.lookup}  \
+        --genome_res {input.genome_res} \
+        --dp_threshold {params.dp_threshold} 2> >(tee {log.errfile} >&2)
         """
 
 
@@ -152,7 +180,7 @@ rule validate_assignment:
     input:
         assignment = rules.assign_virus.output.strain_table,
     output:
-        validation = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/validate_assignment/{sample}_validation.txt",
+        validation = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/validate_assignment/{sample}_validation.tsv",
     params:
         metadata_dir = config["resources"]["metadata_dir"],
         pseudoanontable = config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv",
@@ -173,4 +201,64 @@ rule validate_assignment:
         --match_table {params.match_table} \
         --count_table {input.assignment} \
         --output {output.validation}  2> >(tee {log.errfile} >&2)
+        """
+
+
+rule consensus:
+    input:
+        bam = rules.remove_duplicates.output.bam,
+    output:
+        vcf = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls.vcf.gz",
+        calls_norm = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm.bcf",
+        calls_norm_filt_indels = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm_filt_indel.bcf",
+        all_consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa",
+    params:
+        ref = config["resources"]["reference"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus/{sample}_consensus.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus/{sample}_consensus.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/consensus/{sample}_consensus.benchmark"
+    conda:
+        "../envs/bcftools.yaml"
+    shell:
+        """
+        bcftools mpileup -Ou -f {params.ref} {input.bam} | bcftools call -mv -Oz -o {output.vcf}
+        bcftools index {output.vcf}
+
+        # normalize indels
+        bcftools norm -f {params.ref} {output.vcf} -Ob -o {output.calls_norm}
+
+        # filter adjacent indels within 5bp
+        bcftools filter --IndelGap 5 {output.calls_norm} -Ob -o {output.calls_norm_filt_indels}
+        bcftools index {output.calls_norm_filt_indels}
+
+        # apply variants to create consensus sequence
+        cat {params.ref} | bcftools consensus {output.calls_norm_filt_indels} > {output.all_consensus}
+        """
+
+
+rule postprocess_consensus:
+    input:
+        all_consensus = rules.consensus.output.all_consensus,
+        assignment = rules.assign_virus.output.strain_table,
+    output:
+        consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa",
+    params:
+        ref = config["resources"]["reference_table"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/postprocess_consensus/{sample}_consensus.benchmark"
+    conda:
+        "../envs/python.yaml"
+    shell:
+        """
+        # Fetch only the consensus in the regions of the most represented virus
+        python workflow/scripts/filter_consensus.py \
+        --ref_table {params.ref} \
+        --assignment {input.assignment} \
+        --consensus {input.all_consensus} \
+        --output {output.consensus}  2> >(tee {log.errfile} >&2)
         """
