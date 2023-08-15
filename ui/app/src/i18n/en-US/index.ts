@@ -21,7 +21,8 @@ export default {
   main_layout: {
     eth: 'ETH Zurich',
     title: 'ReVSeq',
+    short_description: 'Respiratory Virus Sequencing',
     description:
-      'Respiratory Virus Sequencing. The interface of the ReVSeq project that aims at providing an overview on the genetic diversity of respiratory viruses in Switzerland.',
+      ' The interface of the ReVSeq project that aims at providing an overview on the genetic diversity of respiratory viruses in Switzerland.',
   },
 }

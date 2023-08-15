@@ -74,18 +74,18 @@ export const useCoreStore = defineStore('core', () => {
     let baseUrl = '/api/samplecounts/'
 
     if (barcode) {
-      baseUrl += `?barcode=${barcode}`
+      baseUrl += `?plate__barcode=${barcode}`
       selected_barcode.value = barcode
 
       if (substrain) {
-        baseUrl += `&substrain=${substrain}`
+        baseUrl += `&substrain__name=${substrain}`
       }
 
       try {
         const res1 = await api.get(baseUrl)
         sampleCounts.value = res1.data
         tableData.value = res1.data
-        const res2 = await api.get(`/api/metadata/?barcode=${barcode}`)
+        const res2 = await api.get(`/api/metadata/?plate__barcode=${barcode}`)
         metadata.value = res2.data
       } catch (error) {
         console.error(error)

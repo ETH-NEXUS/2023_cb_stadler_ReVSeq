@@ -22,6 +22,7 @@ class Sample(models.Model):
     sample_number = models.TextField(unique=True)
     well = models.ForeignKey(Well, on_delete=models.CASCADE)
     pseudoanonymized_id = models.TextField(unique=True, null=True)
+    plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
 
 
 class SampleFile(models.Model):
@@ -58,6 +59,7 @@ class Substrain(models.Model):
 
 class SampleCount(models.Model):
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True)
     substrain = models.ForeignKey(
         Substrain, on_delete=models.CASCADE, null=True
     )  # null=True because we first create the object by import and populate it later

@@ -15,6 +15,7 @@ from os import environ
 from corsheaders.defaults import default_headers
 import ldap
 from django_auth_ldap.config import LDAPSearch
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -93,7 +94,7 @@ ROOT_URLCONF = "revseq.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -107,6 +108,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "revseq.wsgi.application"
+
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": (
+        "core.renderers.custom_renderer.CustomBrowsableAPIRenderer",
+        "rest_framework.renderers.JSONRenderer",
+    ),
+}
 
 
 # Database

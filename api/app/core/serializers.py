@@ -28,10 +28,11 @@ class WellSerializer(serializers.ModelSerializer):
 
 class SampleSerializer(serializers.ModelSerializer):
     well = WellSerializer(read_only=True)
+    plate = PlateSerializer(read_only=True)
 
     class Meta:
         model = Sample
-        fields = ("well", "pseudoanonymized_id")
+        fields = ("well", "pseudoanonymized_id", "plate")
 
 
 class StrainSerializer(serializers.ModelSerializer):
@@ -59,11 +60,18 @@ class SubstrainSerializer(serializers.ModelSerializer):
 class SampleCountSerializers(serializers.ModelSerializer):
     plate = PlateSerializer(read_only=True)
     substrain = SubstrainSerializer(read_only=True)
+    sample = SampleSerializer(read_only=True)
+    strain = serializers.SerializerMethodField("get_strain")
+
+    def get_strain(self, obj):
+        return obj.substrain.strain.name
 
     class Meta:
         model = SampleCount
         fields = (
             "plate",
+            "sample",
+            "strain",
             "substrain",
             "aligned",
             "length",
@@ -91,3 +99,30 @@ class MetadataSerializer(serializers.ModelSerializer):
             "treatment_type",
             "data",
         )
+
+
+class StrainCountsSerializer(serializers.Serializer):
+    aligned = serializers.IntegerField()
+    length = serializers.IntegerField()
+    rpkm = serializers.FloatField()
+    rpkm_proportions = serializers.FloatField()
+    normcounts = serializers.FloatField()
+    outlier = serializers.BooleanField()
+    strain = serializers.CharField()
+
+
+class SimpleSampleSerializer(serializers.Serializer):
+    sample_id = serializers.CharField()
+    plate = serializers.CharField()
+
+    class Meta:
+        model = Sample
+        fields = "pseudoanonymized_id"
+
+
+class AggregatedCountSerializer(serializers.Serializer):
+    sample = SimpleSampleSerializer(many=False)
+    strains = StrainCountsSerializer(many=True)
+
+    class Meta:
+        fields = ("sample", "strains")
