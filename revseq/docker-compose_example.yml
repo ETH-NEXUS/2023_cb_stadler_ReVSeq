@@ -27,13 +27,13 @@ services:
             - pukey
             - khost
 secrets:
-   CONFIG:
+   config:
      ## Path/To/Ssh/config must point to the ssh config file with the configuration to log to Viollier
      file: Path/To/Ssh/config
-   PRKEY:
+   prkey:
      ## Path/To/Private/Key/For/Sftp must point to the private key used to connect to Viollier
      file: Path/To/Private/Key/For/Sftp
-   PUKEY:
+   pukey:
      ## Path/To/Public/Key/For/Sftp must point to the public key shared with Viollier
      file: Path/To/Public/Key/For/Sftp
    khost:

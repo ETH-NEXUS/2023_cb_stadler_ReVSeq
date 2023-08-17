@@ -90,7 +90,8 @@ rule multiqc:
         rseqcstats = expand(rules.rseqc.output.stats, sample=sample_ids),
         qualimap = expand(rules.qualimap.output.report, sample=sample_ids),
     output:
-        outfile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc/multiqc_report.html"
+        outfile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc/multiqc_report.html",
+        outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc")
     params:
         outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc",
         inputdir = config["inputOutput"]["output_dir"],

@@ -23,9 +23,9 @@ rule package_results:
         metadata = config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
         multiqcdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc",
         empty_samples = config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/"+config["plate"]+"_empty_samples.txt",
-        metadata_out = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/"+config["plate"]+"_metadata.csv",
-        multiqc_out = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/multiqc",
-        empty_samples_out = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/"+config["plate"]+"_empty_samples.txt",
+        metadata_out = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
+        multiqc_out = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/"+config["plate"]+"/multiqc",
+        empty_samples_out = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/"+config["plate"]+"/"+config["plate"]+"_empty_samples.txt",
         plate = config["plate"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/package_results/{sample}package_results.out.log",

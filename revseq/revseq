@@ -21,9 +21,9 @@ case "$1" in
                 echo "Removing partial files from:" "${mirror}/"
                 find "${mirror}/" -type f -name '*.filepart' -print0 | xargs -r -0 rm -vi
 		# Mirroring samples
-                lftp -c "set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${source}"
+                lftp -c "set debug; set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${source}"
 		# Mirroring metadata
-		lftp -c "set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
+		lftp -c "set debug; set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
 	;;
         #uploadviollier)
         #        echo "Uploading Viollier"

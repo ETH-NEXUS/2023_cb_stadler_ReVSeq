@@ -3,13 +3,13 @@
 # Note: all paths should refer to the directory structure within the docker container
 inputOutput:
   # Full path to directory with input fastq files. Input raw data can be gzip-compressed
-  input_fastqs: "/data/results/anonymized"
+  input_fastqs: "/data/results/pseudoanon_data"
   # Full path to directory where the output must be written
   output_dir: "/data/results"
 
 resources:
   # Full path to the BED file listing the virus references
-  reference_table: "/data/config/RespiratoryVirus.20200409.bed"
+  reference_table: "/data/pipeline/resources/RespiratoryVirus.20200409.bed"
   # Full path to the host reference sequence in FASTA format
   host_ref: "/data/config/RespiratoryVirus_hg38.20200409.fa"
   # Full path to the viral reference sequences in multi-fasta format
@@ -47,10 +47,10 @@ tools:
     # Lookup table with the matches between substrains and major strains
     # It is used to collapse the substrains available for the bioinformatics analysis
     # to the major strains available in the panel
-    lookup: "/data/config/strain_substrain_lookup.csv"
+    lookup: "/data/pipeline/resources/strain_substrain_lookup.csv"
     # Minimum average coverage allowed in the sample for the assignment to be reported
     dp_threshold: 20
   validate_assignment:
     # Lookup table wit the matches between major strains and panel strains
     # It is used to match the bioinformatics analysis results with the clinical panel results
-    match_table: "/data/config/panel_strain_lookup.csv"
+    match_table: "/data/pipeline/resources/panel_strain_lookup.csv"
