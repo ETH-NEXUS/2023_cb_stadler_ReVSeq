@@ -44,15 +44,16 @@ rule fastqc_merged:
 
 rule samtoolsstats:
     input:
-        bam = rules.remove_duplicates.output.bam,
+        #bam = rules.bwa.output.bam,
+        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam"
     output:
         stats = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt",
         flagstats = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/samtoolsstats/{sample}_samtools_flagstats.txt",
     log:
-        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bamtools/bamtools.out.log",
-        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bamtools/bamtools.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/samtoolsstats/samtoolsstats.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/samtoolsstats/samtoolsstats.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/bamtools/bamtools.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/samtoolsstats/samtoolsstats.benchmark"
     conda:
         "../envs/samtools.yaml"
     threads: config["threads"]
@@ -62,8 +63,10 @@ rule samtoolsstats:
 
 rule rseqc:
     input:
-        bam = rules.remove_duplicates.output.bam,
-        index = rules.samtools_index.output.index
+        #bam = rules.bwa.output.bam,
+        #index = rules.bwa.output.bai
+        bam =config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam",
+        index = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam.bai"
     output:
         stats = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/rseqc/{sample}_bam_stat.txt",
     params:
@@ -77,6 +80,30 @@ rule rseqc:
         "../envs/qc.yaml"
     shell:
         "bam_stat.py -i {input.bam} > {output.stats} 2> >(tee {log.errfile} >&2)"
+
+
+rule qualimap:
+    input:
+        #bam = rules.bwa.output.bam,
+        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam"
+    output:
+        report = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/qualimapReport.html",
+        genome_res = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/genome_results.txt",
+    params:
+        regions = config["resources"]["reference_table"],
+        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/",
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap/qualimap.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap/qualimap.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/qualimap/qualimap.benchmark"
+    conda:
+        "../envs/qc.yaml"
+    shell:
+        """
+        unset DISPLAY
+        qualimap bamqc -outdir {params.outdir} -bam {input.bam} --feature-file {params.regions} -c 2> >(tee {log.errfile} >&2)
+        """
 
 
 rule multiqc:
@@ -104,5 +131,80 @@ rule multiqc:
         "../envs/qc.yaml"
     shell:
         """
-        multiqc {params.inputdir} --ignore "{params.inputdir}/*/fastqc_raw" --ignore "{params.inputdir}/*/dh_fastqc" -o {params.outdir}  2> >(tee {log.errfile} >&2)
+        multiqc {params.inputdir} \
+        --ignore "{params.inputdir}/*/fastqc_raw" \
+        --ignore "{params.inputdir}/*/dh_fastqc" \
+        --ignore "{params.inputdir}/*/qualimap_filtered" \
+        --ignore "{params.inputdir}/*/rseqc_filtered" \
+        --ignore "{params.inputdir}/*/samtoolsstats_filtered" \
+        -o {params.outdir}  2> >(tee {log.errfile} >&2)
+        """
+
+
+rule samtoolsstats_filtered:
+    input:
+        bam = rules.remove_duplicates.output.bam,
+    output:
+        stats = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/samtoolsstats_filtered/{sample}_samtools_stats.txt",
+        flagstats = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/samtoolsstats_filtered/{sample}_samtools_flagstats.txt",
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/samtoolsstats_filtered/samtoolsstats.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/samtoolsstats_filtered/samtoolsstats.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/samtoolsstats_filtered/samtoolsstats.benchmark"
+    conda:
+        "../envs/samtools.yaml"
+    threads: config["threads"]
+    shell:
+        "samtools stats -@ {threads} {input.bam} > {output.stats} && samtools flagstats {input.bam} > {output.flagstats} 2> >(tee {log.errfile} >&2)"
+
+
+rule rseqc_filtered:
+    input:
+        bam = rules.remove_duplicates.output.bam,
+        index = rules.samtools_index.output.index
+    output:
+        stats = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/rseqc_filtered/{sample}_bam_stat.txt",
+    params:
+        clipprefix = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/rseqc_filtered/{sample}"
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/rseqc_filtered/rseqc.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/rseqc_filtered/rseqc.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/rseqc_filtered/rseqc.benchmark"
+    conda:
+        "../envs/qc.yaml"
+    shell:
+        "bam_stat.py -i {input.bam} > {output.stats} 2> >(tee {log.errfile} >&2)"
+
+
+rule multiqc_filtered:
+    input:
+        stats = expand(rules.samtoolsstats_filtered.output.stats, sample=sample_ids),
+        flagstats = expand(rules.samtoolsstats_filtered.output.flagstats, sample=sample_ids),
+        rseqcstats = expand(rules.rseqc_filtered.output.stats, sample=sample_ids),
+        qualimap = expand(rules.qualimap_filtered.output.report, sample=sample_ids),
+    output:
+        outfile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered/multiqc_report.html",
+        outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered")
+    params:
+        inputdir = config["inputOutput"]["output_dir"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/multiqc_filtered/multiqc.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/multiqc_filtered/multiqc.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/multiqc_filtered/multiqc.benchmark"
+    conda:
+        "../envs/qc.yaml"
+    shell:
+        """
+        multiqc {params.inputdir} \
+        --ignore "{params.inputdir}/*/fastqc_raw" \
+        --ignore "{params.inputdir}/*/dh_fastqc" \
+        --ignore "{params.inputdir}/*/fastqc_merged" \
+        --ignore "{params.inputdir}/*/trim_galore" \
+        --ignore "{params.inputdir}/*/qualimap" \
+        --ignore "{params.inputdir}/*/rseqc" \
+        --ignore "{params.inputdir}/*/samtoolsstats" \
+        -o {output.outdir}  2> >(tee {log.errfile} >&2)
         """

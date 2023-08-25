@@ -37,7 +37,7 @@ case "$1" in
                 do
                         if [ ! -f "/data/results/anonymized/${plate}/complete.txt" ]
                         then
-		                snakemake --use-conda -c3 --configfile ${snakemake_config} --config plate=${plate} sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv -n
+		                snakemake --use-conda --rerun-triggers mtime -c${threads} --configfile ${snakemake_config} --config plate=${plate} sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv -n
                         fi
                 done
         ;;
@@ -47,9 +47,13 @@ case "$1" in
                 do
                         if [ ! -f "/data/results/anonymized/${plate}/complete.txt" ]
                         then
-                                snakemake --use-conda -c3 --configfile ${snakemake_config} --config plate=${plate} sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv
+                                snakemake --use-conda --rerun-triggers mtime -c${threads} --configfile ${snakemake_config} --config plate=${plate} sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv
                         fi
                 done
+        ;;
+        unlock)
+                cd ${pipelinedir}
+                snakemake --use-conda --rerun-triggers mtime -c${threads} --configfile ${snakemake_config} --config plate=${plate} sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv --unlock -n
         ;;
         *)
                 echo "Unkown sub-command ${1}" > /dev/stderr

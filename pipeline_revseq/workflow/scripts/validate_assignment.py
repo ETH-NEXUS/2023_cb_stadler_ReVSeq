@@ -40,7 +40,7 @@ if __name__ == '__main__':
     for key,value in metadata.items():
         value = value[0]
         # Current metadata has an empty cell, nan or "deleted" for missing values; 0 or -1 for negatives; 4 or a positive integer >4 for positives
-        if (type(value) == str) or (math.isnan(value) or (value <= 0) or (key == 'Sample number')):
+        if (type(value) == str) or (math.isnan(value) or (value <= 0) or (key == 'Sample number') or (key == "Aufnahmenummer")):
             continue
         elif value > 0:
             positive.append(key.split(" ")[0])
@@ -48,18 +48,21 @@ if __name__ == '__main__':
             sys.exit("ERROR: Unexpected value in the metadata table!")
 
     common_names = []
-    for virus in positive:
-        name = match_table.loc[(match_table['panel_name'] == virus),'strain_name']
-        if len(name) == 0:
-            sys.exit("ERROR: no common virus name found for "+virus+" in the match table!")
-        name = name.to_string(index=False).strip()
-        common_names.append(name)
-    
-    for name in common_names:
-        if name not in count_table['name'].to_list():
-            sys.exit("ERROR: no common virus name found for "+name+" in the count table!")
-
     count_table['panel_positive'] = ""
-    count_table['panel_positive'] = count_table[['outlier']].apply(lambda x: "*" if x['outlier']=="*" else "", axis=1)
+    if len(positive) != 0:
+        for virus in positive:
+            name = match_table.loc[(match_table['panel_name'] == virus),'strain_name']
+            if len(name) == 0:
+                sys.exit("ERROR: no common virus name found for "+virus+" in the match table!")
+            name = name.to_string(index=False).strip()
+            common_names.append(name)
+
+        for name in common_names:
+            if name not in count_table['name'].to_list():
+                sys.exit("ERROR: no common virus name found for "+name+" in the count table!")
+
+        count_table.loc[count_table["name"].isin(common_names), 'panel_positive'] = '*'
+        #count_table['panel_positive'] = count_table[['outlier']].apply(lambda x: "*" if x['outlier']=="*" else "", axis=1)
+
     count_table.to_csv(args.output, sep="\t", float_format='%.2f')
 

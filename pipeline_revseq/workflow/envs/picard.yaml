@@ -5,3 +5,4 @@ channels:
 - defaults
 dependencies:
 - picard-slim
+- samtools

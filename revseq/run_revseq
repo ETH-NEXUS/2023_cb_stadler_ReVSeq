@@ -3,8 +3,11 @@
 
 #revseq syncviollier --recent
 #./revseq pseudoanonymize_samples
-./revseq runpipeline
+#./revseq runpipeline
 # The last points are fully manual and should be run after checking that everything worked as intended
 #revseq packagedata
 #revseq uploadviollier
+cd /data/pipeline
+#snakemake --use-conda -c1 --configfile /data/config/config.yaml --config sample_map=/data/results/pseudoanon_data/010623RVS/010623RVS_samplemap.tsv plate=010623RVS --until bwa
 
+snakemake --use-conda --rerun-triggers mtime -c4  --configfile /data/config/config.yaml --config plate=010623RVS sample_map=/data/results/pseudoanon_data/010623RVS/010623RVS_samplemap.tsv --until multiqc_filtered

@@ -13,19 +13,25 @@ import numpy as np
 import argparse
 from matplotlib import pyplot
 
-def get_outliers(aggregated, percentile):
+def get_outliers(aggregated, percentile, coverage):
     perc90 = np.quantile(aggregated['rpkm_proportions'], percentile)
     q1 = np.quantile(aggregated['rpkm_proportions'], 0.25)
     iqr = perc90-q1
     upper_bound = perc90+(1.5*iqr)
-    aggregated['outlier'] = np.where(aggregated['rpkm_proportions'] >= upper_bound, "*", "")
+    if coverage != 0:
+        aggregated['outlier'] = np.where(aggregated['rpkm_proportions'] >= upper_bound, "*", "")
+    else:
+        aggregated['outlier'] = ''
     aggregated['percentile_threshold'] = str(percentile * 100) + " percentile: " + "{:.4f}".format(upper_bound)
     return aggregated
 
 
-def rpkm(aggregated):
+def rpkm(aggregated, coverage):
     aggregated['rpkm'] = aggregated['aligned']/(aggregated['length']/1000 * aggregated['aligned'].sum()/1000000)
     aggregated['rpkm_proportions'] = aggregated['rpkm'] / aggregated['rpkm'].sum() * 100
+    if coverage == 0:
+        aggregated['rpkm'] = 0
+        aggregated['rpkm_proportions'] = 0
     return aggregated
 
 
@@ -60,27 +66,38 @@ if __name__ == '__main__':
     
     with open(args.genome_res) as f:
         genome_res = f.readlines()
-    coverage = [ float(line.split(" = ")[1].split("X")[0]) for line in genome_res if "mean coverageData = " in line ][0]
+    if len(genome_res) == 0:
+        coverage = 0
+    else:
+        coverage = [ float(line.split(" = ")[1].split("X")[0]) for line in genome_res if "mean coverageData = " in line ][0]
 
     idxstats = pd.merge(idxstats,refs, on='id', how='inner')
     aggregated_stats = idxstats.groupby(by='name')[["aligned","length"]].sum()
-    aggregated_stats = rpkm(aggregated_stats)
-    aggregated_stats = get_outliers(aggregated_stats, args.outlier_percentile)
-    aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
+    aggregated_stats = rpkm(aggregated_stats, coverage)
+    aggregated_stats = get_outliers(aggregated_stats, args.outlier_percentile, coverage)
+    aggregated_stats = aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
+    aggregated_stats["coverage"] = coverage
+    aggregated_stats["coverage_threshold"] = args.dp_threshold
     if coverage < args.dp_threshold:
-        aggregated_stats["outlier"] = "low_coverage"
-    aggregated_stats.to_csv(args.out_prefix + "substrain_count_table.tsv", sep="\t", float_format='%.2f')
+        aggregated_stats["qc_status"] = "failed"
+    else:
+        aggregated_stats["qc_status"] = "passed"
+    aggregated_stats.to_csv(args.out_prefix + "substrain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])
     pyplot.savefig(fname=args.out_prefix + "substrain_proportions_boxplot.pdf", dpi=300, format="pdf")
 
         # Collapsing substrains in major strains using the lookup table
     aggregated_stats.index = aggregated_stats.index.map(lookup)
-    aggregated_stats = aggregated_stats.groupby(by='name')[["aligned","rpkm", "rpkm_proportions"]].sum()
-    aggregated_stats = get_outliers(aggregated_stats, args.outlier_percentile_collapsed)
-    aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
+    aggregated_stats = aggregated_stats.groupby(level=0)[["aligned_reads","rpkm", "rpkm_proportions"]].sum()
+    aggregated_stats = get_outliers(aggregated_stats, args.outlier_percentile_collapsed, coverage)
+    aggregated_stats = aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
+    aggregated_stats["coverage"] = coverage
+    aggregated_stats["coverage_threshold"] = args.dp_threshold
     if coverage < args.dp_threshold:
-        aggregated_stats["outlier"] = "low_coverage"
-    aggregated_stats.to_csv(args.out_prefix + "strain_count_table.tsv", sep="\t", float_format='%.2f')
+        aggregated_stats["qc_status"] = "failed"
+    else:
+        aggregated_stats["qc_status"] = "passed"
+    aggregated_stats.to_csv(args.out_prefix + "strain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])
     pyplot.savefig(fname=args.out_prefix + "strain_proportions_boxplot.pdf", dpi=300, format="pdf")
 

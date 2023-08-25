@@ -89,6 +89,7 @@ rule trim_galore:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/trim_galore/{sample}.benchmark"
     conda:
         "../envs/trim_galore.yaml"
+    threads: config['threads']
     shell:
         """
         trim_galore \
@@ -96,6 +97,7 @@ rule trim_galore:
         --output "{params.outdir}" \
         --retain_unpaired \
         --paired \
+        -j {threads} \
         -r1 {params.min_length_single} \
         -r2 {params.min_length_single} \
         {input.r1} \

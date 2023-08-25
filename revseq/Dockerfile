@@ -15,6 +15,7 @@ RUN mkdir /home/appuser/.ssh
 #RUN --mount=type=secret,required,id=khost && cat /run/secrets/khost > /home/appuser/.ssh/known_hosts
 
 RUN chown -R appuser:appgroup /home/appuser/.ssh
+RUN chown -R appuser:appgroup /opt/conda
 
 RUN apt-get update
 RUN apt-get install -y ssh lftp wget
@@ -25,9 +26,8 @@ USER appuser
 
 RUN export PATH=/data/revseq/:$PATH
 
-COPY snakemake.yaml /app/
+RUN conda install -y -n base -c conda-forge mamba libarchive
+RUN mamba install -y -c conda-forge -c bioconda -n base snakemake=7.32.3
 
-RUN conda env create -f /app/snakemake.yaml
-
-ENTRYPOINT [ "sleep", "10d" ]
-#ENTRYPOINT [ "conda", "run", "-n", "snakemake", "/data/revseq/run_revseq" ]
+#ENTRYPOINT [ "sleep", "10d" ]
+ENTRYPOINT [ "conda", "run", "-n", "base", "/data/revseq/run_revseq" ]

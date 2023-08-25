@@ -1,8 +1,10 @@
 rule filter_alignment:
     input:
-        bam = rules.dehuman.output.bam
+        #bam = rules.dehuman.output.bam
+        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam"
     output:
-        bam = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/filter_alignment/{sample}_filter_alignment.bam")#temp
+        bam = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/filter_alignment/{sample}_filter_alignment.bam"),
+        readcount = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/filter_alignment/{sample}_readcount.txt",
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/filter_alignment/filter_alignment.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/filter_alignment/filter_alignment.err.log",
@@ -16,32 +18,22 @@ rule filter_alignment:
         # remove unpaired reads
         # https://github.com/samtools/samtools/issues/1668
         """
-        samtools view -bh -F 2304 -q 1 -e '![XA]' {input.bam} | samtools collate -u -O - | samtools fixmate -u - - | samtools view -f 1 -o {output.bam}
+        samtools view -bh -F 2304 -q 1 -e '![XA]' {input.bam} | \
+        samtools collate -u -O - | \
+        samtools fixmate -u - - | \
+        samtools view -h -f 1 | \
+        samtools sort -@ {threads} --output-fmt=BAM -o {output.bam} - 2> >(tee {log.errfile} >&2)
+        samtools view -c -F 4 {output.bam} > {output.readcount}
         """
-
-rule sort:
-    input:
-        bwa = rules.filter_alignment.output.bam
-    output:
-        sorted = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/sort/{sample}_sorted_reads.bam",
-    log:
-        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/sort/sort.out.log",
-        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/sort/sort.err.log",
-    benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/sort/{sample}.benchmark"
-    conda:
-        "../envs/samtools.yaml"
-    threads: config["threads"]
-    shell:
-        "samtools sort -@ {threads} --output-fmt=BAM -o {output.sorted} {input.bwa} 2> >(tee {log.errfile} >&2)"
 
 
 rule remove_duplicates:
     input:
-        bam = rules.sort.output.sorted
+        bam = rules.filter_alignment.output.bam
     output:
         bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/remove_duplicates/{sample}_remove_duplicates.bam",
-        metrics = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/remove_duplicates/{sample}_metrics.txt"
+        metrics = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/remove_duplicates/{sample}_metrics.txt",
+        readcount = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/remove_duplicates/{sample}_readcount.txt",
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/remove_duplicates/remove_duplicates.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/remove_duplicates/remove_duplicates.err.log",
@@ -50,29 +42,42 @@ rule remove_duplicates:
     conda:
         "../envs/picard.yaml"
     shell:
-        "picard MarkDuplicates I={input.bam} O={output.bam} M={output.metrics} REMOVE_DUPLICATES=true 2> >(tee {log.errfile} >&2)"
+        """
+        picard MarkDuplicates I={input.bam} O={output.bam} M={output.metrics} REMOVE_DUPLICATES=true 2> >(tee {log.errfile} >&2)
+        samtools view -c -F 4 {output.bam} > {output.readcount}
+        """
 
 
-rule qualimap:
+rule qualimap_filtered:
     input:
         bam = rules.remove_duplicates.output.bam,
+        readcount = rules.remove_duplicates.output.readcount,
     output:
-        report = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/qualimapReport.html",
-        genome_res = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/genome_results.txt",
+        report = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap_filtered/qualimapReport.html",
+        genome_res = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap_filtered/genome_results.txt",
+        qc_status = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap_filtered/qc_status.txt",
     params:
         regions = config["resources"]["reference_table"],
-        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/",
+        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap_filtered/",
+        min_reads = config["tools"]["general"]["min_readcount"],
     log:
-        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap/qualimap.out.log",
-        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap/qualimap.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap_filtered/qualimap.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap_filtered/qualimap.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/qualimap/qualimap.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/qualimap_filtered/qualimap.benchmark"
     conda:
         "../envs/qc.yaml"
     shell:
         """
-        unset DISPLAY
-        qualimap bamqc -outdir {params.outdir} -bam {input.bam} --feature-file {params.regions} -c 2> >(tee {log.errfile} >&2)
+        if (( $(cat {input.readcount}) < {params.min_reads} ))
+        then
+            touch {output.report} {output.genome_res}
+            echo "FAIL" | tee {output.qc_status}
+        else
+            echo "PASS" | tee {output.qc_status}
+            unset DISPLAY
+            qualimap bamqc -outdir {params.outdir} -bam {input.bam} --feature-file {params.regions} -c 2> >(tee {log.errfile} >&2)
+        fi
         """
 
 
@@ -141,7 +146,7 @@ rule assign_virus:
     input:
         idxstats = rules.idxstats.output.idxstats,
         counts = rules.idxstats.output.counts,
-        genome_res = rules.qualimap.output.genome_res,
+        genome_res = rules.qualimap_filtered.output.genome_res,
     output:
         table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_substrain_count_table.tsv",
         strain_table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_strain_count_table.tsv",
@@ -163,16 +168,16 @@ rule assign_virus:
         "../envs/python.yaml"
     shell:
         """
-        python workflow/scripts/assign_virus.py \
-        --ref_table {params.ref_table} \
-        --idxstats {input.idxstats} \
-        --counts {input.counts} \
-        --out_prefix {params.prefix} \
-        --outlier_percentile {params.outlier_percentile} \
-        --outlier_percentile_collapsed {params.outlier_percentile_collapsed} \
-        --lookup {params.lookup}  \
-        --genome_res {input.genome_res} \
-        --dp_threshold {params.dp_threshold} 2> >(tee {log.errfile} >&2)
+            python workflow/scripts/assign_virus.py \
+            --ref_table {params.ref_table} \
+            --idxstats {input.idxstats} \
+            --counts {input.counts} \
+            --out_prefix {params.prefix} \
+            --outlier_percentile {params.outlier_percentile} \
+            --outlier_percentile_collapsed {params.outlier_percentile_collapsed} \
+            --lookup {params.lookup}  \
+            --genome_res {input.genome_res} \
+            --dp_threshold {params.dp_threshold} 2> >(tee {log.errfile} >&2)
         """
 
 
@@ -194,19 +199,20 @@ rule validate_assignment:
         "../envs/python.yaml"
     shell:
         """
-        python workflow/scripts/validate_assignment.py \
-        --metadata_dir {params.metadata_dir} \
-        --pseudoanon_table {params.pseudoanontable} \
-        --ethid {wildcards.sample} \
-        --match_table {params.match_table} \
-        --count_table {input.assignment} \
-        --output {output.validation}  2> >(tee {log.errfile} >&2)
+            python workflow/scripts/validate_assignment.py \
+            --metadata_dir {params.metadata_dir} \
+            --pseudoanon_table {params.pseudoanontable} \
+            --ethid {wildcards.sample} \
+            --match_table {params.match_table} \
+            --count_table {input.assignment} \
+            --output {output.validation}  2> >(tee {log.errfile} >&2)
         """
 
 
 rule consensus:
     input:
         bam = rules.remove_duplicates.output.bam,
+        qualimap_qc = rules.qualimap_filtered.output.qc_status,
     output:
         vcf = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls.vcf.gz",
         calls_norm = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm.bcf",
@@ -223,18 +229,23 @@ rule consensus:
         "../envs/bcftools.yaml"
     shell:
         """
-        bcftools mpileup -Ou -f {params.ref} {input.bam} | bcftools call -mv -Oz -o {output.vcf}
-        bcftools index {output.vcf}
+        if [ $(cat {input.qualimap_qc}) = "PASS" ]
+        then
+            bcftools mpileup -Ou -f {params.ref} {input.bam} | bcftools call -mv -Oz -o {output.vcf}
+            bcftools index {output.vcf}
 
-        # normalize indels
-        bcftools norm -f {params.ref} {output.vcf} -Ob -o {output.calls_norm}
+            # normalize indels
+            bcftools norm -f {params.ref} {output.vcf} -Ob -o {output.calls_norm}
 
-        # filter adjacent indels within 5bp
-        bcftools filter --IndelGap 5 {output.calls_norm} -Ob -o {output.calls_norm_filt_indels}
-        bcftools index {output.calls_norm_filt_indels}
+            # filter adjacent indels within 5bp
+            bcftools filter --IndelGap 5 {output.calls_norm} -Ob -o {output.calls_norm_filt_indels}
+            bcftools index {output.calls_norm_filt_indels}
 
-        # apply variants to create consensus sequence
-        cat {params.ref} | bcftools consensus {output.calls_norm_filt_indels} > {output.all_consensus}
+            # apply variants to create consensus sequence
+            cat {params.ref} | bcftools consensus {output.calls_norm_filt_indels} > {output.all_consensus}
+        else
+            touch {output.vcf} {output.calls_norm} {output.calls_norm_filt_indels} {output.all_consensus}
+        fi
         """
 
 
@@ -242,6 +253,7 @@ rule postprocess_consensus:
     input:
         all_consensus = rules.consensus.output.all_consensus,
         assignment = rules.assign_virus.output.strain_table,
+        qualimap_qc = rules.qualimap_filtered.output.qc_status,
     output:
         consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa",
     params:
@@ -255,10 +267,15 @@ rule postprocess_consensus:
         "../envs/python.yaml"
     shell:
         """
-        # Fetch only the consensus in the regions of the most represented virus
-        python workflow/scripts/filter_consensus.py \
-        --ref_table {params.ref} \
-        --assignment {input.assignment} \
-        --consensus {input.all_consensus} \
-        --output {output.consensus}  2> >(tee {log.errfile} >&2)
+        if [ $(cat {input.qualimap_qc}) = "PASS" ]
+        then
+            # Fetch only the consensus in the regions of the most represented virus
+            python workflow/scripts/filter_consensus.py \
+            --ref_table {params.ref} \
+            --assignment {input.assignment} \
+            --consensus {input.all_consensus} \
+            --output {output.consensus}  2> >(tee {log.errfile} >&2)
+        else
+            touch {output.consensus}
+        fi
         """

@@ -26,12 +26,12 @@ if __name__ == '__main__':
     refs = pd.read_table(args.ref_table, header=None)
     refs = refs.rename(columns={0: "id", 1: "ref_start", 2: "ref_end", 3: "name"})
     assignment = pd.read_table(args.assignment, header=0, sep="\t")
-    fasta_sequences = SeqIO.parse(open(args.consensus),'fasta')
 
     best_assignment = assignment.loc[assignment["rpkm_proportions"] == max(assignment["rpkm_proportions"])]["name"].to_string(index=False)
     regions = refs.loc[refs["name"] == best_assignment]["id"].to_list()
 
-    with open(args.output, "a") as out_file:
+    with open(args.output, "w") as out_file:
+        fasta_sequences = SeqIO.parse(open(args.consensus),'fasta')
         for fasta in fasta_sequences:
             if fasta.id in regions:
                 SeqIO.write(fasta, out_file, "fasta")
