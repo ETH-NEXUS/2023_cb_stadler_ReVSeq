@@ -24,6 +24,9 @@ class Sample(models.Model):
     pseudoanonymized_id = models.TextField(unique=True, null=True)
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return self.pseudoanonymized_id
+
 
 class SampleFile(models.Model):
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
@@ -69,6 +72,9 @@ class SampleCount(models.Model):
     rpkm_proportions = models.FloatField(null=True)
     normcounts = models.FloatField(null=True)
     outlier = models.BooleanField(null=True)
+    qc_status = models.CharField(max_length=20, null=True, blank=True)
+    coverage_threshold = models.FloatField(null=True, blank=True)
+    coverage = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.plate.barcode + " " + self.substrain.name

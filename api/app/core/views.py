@@ -77,6 +77,9 @@ class SampleCountViewSet(viewsets.ModelViewSet):
                 "rpkm_proportions": 0,
                 "normcounts": 0,
                 "outlier": False,
+                "qc_status": "",
+                "coverage_threshold": 0,
+                "coverage": 0,
             }
         )
         strains = {}
@@ -90,6 +93,9 @@ class SampleCountViewSet(viewsets.ModelViewSet):
             strains[strain].rpkm_proportions += item.rpkm_proportions
             strains[strain].normcounts += item.normcounts
             strains[strain].outlier = item.outlier
+            # strains[strain].qc_status = item.qc_status
+            # strains[strain].qc_threshold = item.qc_threshold
+            # strains[strain].coverage += item.coverage
 
         response_data["strains"] = [
             {"strain": key, **value} for key, value in strains.items()

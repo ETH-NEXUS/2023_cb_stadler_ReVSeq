@@ -1,15 +1,18 @@
 import_columns:
   deep_well_location: DeepWellLocation
   sample_number: Sample number
-  pseudoanonymized_id: pseudoanonymized_id
+  pseudoanonymized_id: ethid
   order_date: Order date
   ent_date: ent date
   treatment_type: treatment_type
   prescriber_canton: Prescriber canton
   name: name
   outlier: outlier
-  aligned: aligned
-  length: length
+  aligned: aligned_reads
+  length: reference_length
   rpkm: rpkm
   rpkm_proportions: rpkm_proportions
-  normcounts: normcounts
+  # normcounts: normcounts
+  qc_status: qc_status
+  coverage_threshold: coverage_threshold
+  coverage: coverage

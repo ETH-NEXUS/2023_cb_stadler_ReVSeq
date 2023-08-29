@@ -79,6 +79,9 @@ class SampleCountSerializers(serializers.ModelSerializer):
             "rpkm_proportions",
             "normcounts",
             "outlier",
+            "qc_status",
+            "coverage_threshold",
+            "coverage",
         )
 
 
@@ -101,6 +104,11 @@ class MetadataSerializer(serializers.ModelSerializer):
         )
 
 
+"""
+ ---------------- For aggregation -----------------
+"""
+
+
 class StrainCountsSerializer(serializers.Serializer):
     aligned = serializers.IntegerField()
     length = serializers.IntegerField()
@@ -109,6 +117,9 @@ class StrainCountsSerializer(serializers.Serializer):
     normcounts = serializers.FloatField()
     outlier = serializers.BooleanField()
     strain = serializers.CharField()
+    qc_status = serializers.CharField()
+    coverage_threshold = serializers.FloatField()
+    coverage = serializers.FloatField()
 
 
 class SimpleSampleSerializer(serializers.Serializer):

@@ -19,6 +19,11 @@ import config.get_config as config
 logger = logging.getLogger(__name__)
 
 
+def txt_to_list(input_file):
+    with open(input_file, "r", encoding="utf-8-sig") as f:
+        return f.readlines()
+
+
 def read_csv_file(input_file):
     with open(input_file, "r", encoding="utf-8-sig") as f:
         dialect = csv.Sniffer().sniff(f.readline())
@@ -27,12 +32,21 @@ def read_csv_file(input_file):
 
 
 class Command(BaseCommand):
+    sample_id_dict = {}
+
     def add_arguments(self, parser):
         parser.add_argument(
             "--metadata_file", "-m", type=str, help="File with the metadata to upload"
         )
         parser.add_argument(
             "--counts_file", "-c", type=str, help="File with counts to upload"
+        )
+
+        parser.add_argument(
+            "--empty_samples_file",
+            "-e",
+            type=str,
+            help="A .txt file with the id's of empty samples each on a new line",
         )
 
     def extract_panels(self, item):
@@ -57,7 +71,7 @@ class Command(BaseCommand):
         ent_date = datetime.strptime(item["ent date"], "%Y-%m-%d")
         treatment_type = item["treatment_type"] if item["treatment_type"] else None
         data = self.extract_panels(item)
-        return Metadata.objects.create(
+        metadata, _ = Metadata.objects.update_or_create(
             plate=plate,
             sample=sample,
             well=well,
@@ -67,6 +81,7 @@ class Command(BaseCommand):
             treatment_type=treatment_type,
             data=data,
         )
+        return metadata
 
     def metadata(self, columns, **options):
         """
@@ -89,6 +104,9 @@ class Command(BaseCommand):
                 pseudoanonymized_id=item[columns.pseudoanonymized_id],
                 plate=plate,
             )
+            self.sample_id_dict[
+                item[columns.pseudoanonymized_id]
+            ] = False  # later on, we will check, if all samples have been imported
             self.create_metadata(item, plate, well, sample)
         return plate
 
@@ -101,14 +119,18 @@ class Command(BaseCommand):
         file_name = options.get("counts_file")
         data = read_csv_file(file_name)
         sample_id = os.path.basename(file_name).split("_")[0]
+        if sample_id not in self.sample_id_dict:
+            raise ValueError(f"Sample {sample_id} does not exist in the metadata file")
         try:
             sample = Sample.objects.get(pseudoanonymized_id=sample_id)
+
             for item in data:
                 substrain_name = item[columns.name]
                 outlier = False
                 if item[columns.outlier] == "*":
                     outlier = True
                 try:
+                    print(item)
                     substrain = Substrain.objects.get(name=substrain_name)
                     sampleCount, _ = SampleCount.objects.update_or_create(
                         plate=plate,
@@ -118,21 +140,41 @@ class Command(BaseCommand):
                         length=int(item[columns.length]),
                         rpkm=float(item[columns.rpkm]),
                         rpkm_proportions=float(item[columns.rpkm_proportions]),
-                        normcounts=float(item[columns.normcounts]),
+                        # normcounts=float(item[columns.normcounts]),
                         outlier=outlier,
+                        qc_status=item[columns.qc_status],
+                        coverage_threshold=float(item[columns.coverage_threshold]),
+                        coverage=float(item[columns.coverage]),
                     )
+                    self.sample_id_dict[sample_id] = True
+                    if _:
+                        print(f"Imported sample {sample}")
                 except Substrain.DoesNotExist:
                     logger.error(f"Substrain {substrain_name} does not exist")
                     raise ValueError(f"Substrain {substrain_name} does not exist")
+
         except Sample.DoesNotExist:
             logger.error(f"Sample {sample_id} does not exist")
             raise ValueError(f"Sample {sample_id} does not exist")
+
+    def check_imported_samples(self, file_name):
+        empty_samples = txt_to_list(file_name)
+        print("Empty samples:", ", ".join(empty_samples).replace("\n", ""))
+        if not all(self.sample_id_dict.values()):
+            print("Not all samples have been imported. Please check the metadata file.")
+            for key, value in self.sample_id_dict.items():
+                if not value and key not in empty_samples:
+                    print(f"Sample {key} has not been imported.")
+            raise ValueError(
+                "Not all samples have been imported. Please check the metadata file."
+            )
 
     def handle(self, *args, **options):
         try:
             columns = config.read_config("import_columns")
             plate = self.metadata(columns, **options)
             self.counts(plate, columns, **options)
+            self.check_imported_samples(options.get("empty_samples_file"))
             print("Import successful")
         except Exception as ex:
             logger.error(ex)

@@ -28,7 +28,7 @@ class WellAdmin(admin.ModelAdmin):
 
 @admin.register(Sample)
 class SampleAdmin(admin.ModelAdmin):
-    list_display = ("sample_number", "well")
+    list_display = ("pseudoanonymized_id", "sample_number", "well")
     search_fields = ("sample_number",)
 
 
