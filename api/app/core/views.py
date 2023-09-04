@@ -25,6 +25,16 @@ def def_value():
     return {}
 
 
+class SampleViewSet(viewsets.ModelViewSet):
+    queryset = Sample.objects.all()
+    serializer_class = SampleSerializer
+    filter_backends = (
+        filters.DjangoFilterBackend,
+        drf_filters.OrderingFilter,
+    )
+    filterset_fields = ("plate__barcode",)
+
+
 class SampleCountViewSet(viewsets.ModelViewSet):
     queryset = SampleCount.objects.all()
     serializer_class = SampleCountSerializers
@@ -45,6 +55,10 @@ class SampleCountViewSet(viewsets.ModelViewSet):
 
     # to get csv with curl:
     # curl -H "Accept: text/csv" http://localhost:8000/api/samplecounts/ > sample_counts.csv
+
+    """
+    Call the aggregate function it like this, with the obligatory parameter sample__pseudoanonymized_id: /api/samplecounts/aggregate/?sample__pseudoanonymized_id=896a06
+    """
 
     @action(detail=False, methods=["get"])
     def aggregate(self, request):
@@ -91,11 +105,11 @@ class SampleCountViewSet(viewsets.ModelViewSet):
             strains[strain].length += item.length
             strains[strain].rpkm += item.rpkm
             strains[strain].rpkm_proportions += item.rpkm_proportions
-            strains[strain].normcounts += item.normcounts
             strains[strain].outlier = item.outlier
-            # strains[strain].qc_status = item.qc_status
-            # strains[strain].qc_threshold = item.qc_threshold
-            # strains[strain].coverage += item.coverage
+            strains[strain].qc_status = item.qc_status
+            strains[strain].coverage_threshold = item.coverage_threshold
+            strains[strain].coverage += item.coverage
+            # strains[strain].normcounts += item.normcounts
 
         response_data["strains"] = [
             {"strain": key, **value} for key, value in strains.items()

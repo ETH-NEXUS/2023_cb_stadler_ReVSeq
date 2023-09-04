@@ -5,7 +5,7 @@ export interface TableDataSampleCounts {
   length: number | string
   rpkm: number | string
   rpkm_proportions: number | string
-  normcounts: number | string
+  normcounts?: number | string
 }
 
 export interface TableDataMetadata {

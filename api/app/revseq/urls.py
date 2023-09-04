@@ -6,6 +6,7 @@ from core.views import (
     MetadataViewSet,
     PlateViewSet,
     SubstrainViewSet,
+    SampleViewSet,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -14,6 +15,8 @@ router.register(r"api/samplecounts", SampleCountViewSet, basename="samplecounts"
 router.register(r"api/metadata", MetadataViewSet, basename="metadata")
 router.register(r"api/plates", PlateViewSet, basename="plates")
 router.register(r"api/substrains", SubstrainViewSet, basename="substrains")
+router.register(r"api/samples", SampleViewSet, basename="samples")
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/auth/cookie/", CsrfCookieView.as_view(), name="auth-cookie"),

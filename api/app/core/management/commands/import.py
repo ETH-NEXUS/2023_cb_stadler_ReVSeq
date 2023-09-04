@@ -15,8 +15,27 @@ import csv
 from core.models import SampleCount, Sample, Substrain, Plate, Well, Metadata, Panel
 import logging
 import config.get_config as config
+import sys
+import glob
+
+# from colorful_logger import logger as log
 
 logger = logging.getLogger(__name__)
+
+
+def list_files(startpath):
+    for root, dirs, files in os.walk(startpath):
+        level = root.replace(startpath, "").count(os.sep)
+        indent = "│   " * (level - 1) if level > 0 else ""
+        dir_basename = os.path.basename(root)
+        if root != startpath:
+            print("{}├── {}/".format(indent, dir_basename))
+        subindent = "│   " * level
+        file_indent = "{}├── ".format(subindent)
+        for i, f in enumerate(files):
+            if i == len(files) - 1 and not dirs:
+                file_indent = "{}└── ".format(subindent)
+            print("{}{}".format(file_indent, f))
 
 
 def txt_to_list(input_file):
@@ -36,17 +55,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--metadata_file", "-m", type=str, help="File with the metadata to upload"
-        )
-        parser.add_argument(
-            "--counts_file", "-c", type=str, help="File with counts to upload"
-        )
-
-        parser.add_argument(
-            "--empty_samples_file",
-            "-e",
-            type=str,
-            help="A .txt file with the id's of empty samples each on a new line",
+            "--import_dir", "-d", type=str, help="Directory to import from"
         )
 
     def extract_panels(self, item):
@@ -83,16 +92,16 @@ class Command(BaseCommand):
         )
         return metadata
 
-    def metadata(self, columns, **options):
+    def metadata(self, columns, metadata_file):
         """
         Process the metadata file to create Plate, Well, Sample, and Metadata objects.
-        :param options: Command-line options including metadata file path
+        :param metadata_file: Path to the metadata file
         :return: Plate object representing the processed plate
         """
 
-        barcode = os.path.basename(options.get("metadata_file")).split("_")[0]
+        barcode = os.path.basename(metadata_file.split("_")[0])
         plate, _ = Plate.objects.get_or_create(barcode=barcode)
-        data = read_csv_file(options.get("metadata_file"))
+        data = read_csv_file(metadata_file)
 
         for item in data:
             well, _ = Well.objects.get_or_create(
@@ -110,15 +119,14 @@ class Command(BaseCommand):
             self.create_metadata(item, plate, well, sample)
         return plate
 
-    def counts(self, plate, columns, **options):
+    def counts(self, plate, columns, counts_file):
         """
         Process the counts file to create SampleCount object.
-        :param options: Command-line options including counts file path
+        :param counts_file: Path to the counts file
         :return: None
         """
-        file_name = options.get("counts_file")
-        data = read_csv_file(file_name)
-        sample_id = os.path.basename(file_name).split("_")[0]
+        data = read_csv_file(counts_file)
+        sample_id = os.path.basename(counts_file).split("_")[0]
         if sample_id not in self.sample_id_dict:
             raise ValueError(f"Sample {sample_id} does not exist in the metadata file")
         try:
@@ -130,7 +138,6 @@ class Command(BaseCommand):
                 if item[columns.outlier] == "*":
                     outlier = True
                 try:
-                    print(item)
                     substrain = Substrain.objects.get(name=substrain_name)
                     sampleCount, _ = SampleCount.objects.update_or_create(
                         plate=plate,
@@ -148,7 +155,9 @@ class Command(BaseCommand):
                     )
                     self.sample_id_dict[sample_id] = True
                     if _:
-                        print(f"Imported sample {sample}")
+                        print(
+                            f"Imported sample counts for {substrain} in the sample {sample}"
+                        )
                 except Substrain.DoesNotExist:
                     logger.error(f"Substrain {substrain_name} does not exist")
                     raise ValueError(f"Substrain {substrain_name} does not exist")
@@ -169,13 +178,36 @@ class Command(BaseCommand):
                 "Not all samples have been imported. Please check the metadata file."
             )
 
+    def __locate_files(self, import_dir):
+        metadata_file = glob.glob(os.path.join(import_dir, "*metadata*.csv"))[0]
+        empty_samples_file = glob.glob(os.path.join(import_dir, "*empty_samples*.txt"))[
+            0
+        ]
+        if metadata_file and empty_samples_file:
+            return metadata_file, empty_samples_file
+        else:
+            raise ValueError("Could not locate metadata and empty_samples files")
+
     def handle(self, *args, **options):
+        if len(sys.argv) < 2:
+            print("Usage: python import.py -d <import_dir>")
+            sys.exit(1)
+        import_dir = options.get("import_dir")
+        metadata_file, empty_samples_file = self.__locate_files(import_dir)
+
         try:
-            columns = config.read_config("import_columns")
-            plate = self.metadata(columns, **options)
-            self.counts(plate, columns, **options)
-            self.check_imported_samples(options.get("empty_samples_file"))
-            print("Import successful")
+            if metadata_file and empty_samples_file:
+                columns = config.read_config("import_columns")
+                plate = self.metadata(columns, metadata_file)
+                count_files = glob.glob(
+                    os.path.join(import_dir, "sample_*", "*count_table*.tsv")
+                )
+                for file in count_files:
+                    self.counts(plate, columns, file)
+                    print(f"Imported {file}")
+                self.check_imported_samples(empty_samples_file)
+                print("Import successful")
+
         except Exception as ex:
             logger.error(ex)
             traceback.print_exc()

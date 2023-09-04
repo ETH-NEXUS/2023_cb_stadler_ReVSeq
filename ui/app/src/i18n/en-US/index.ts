@@ -13,6 +13,7 @@ export default {
     about: 'About',
     aggregate: 'Aggregate by strains',
     raw_data: 'Raw data',
+    apply: 'Apply',
   },
   message: {
     enter_username_password: 'Please enter your username and password',

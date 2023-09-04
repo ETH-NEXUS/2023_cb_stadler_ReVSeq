@@ -49,6 +49,7 @@ const filterFnSubstrains = (val: string, update: (fn: () => void) => void) => {
 
 const onSubmit = async () => {
   if (selected_plate.value) {
+    await coreStore.getSamplesByPlate(selected_plate.value)
     await coreStore.getPlateData(selected_plate.value, selected_substrain.value)
   }
 }

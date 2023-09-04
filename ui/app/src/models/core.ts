@@ -36,9 +36,13 @@ export interface SampleCount {
   length: number
   rpkm: number
   rpkm_proportions: number
-  normcounts: number
   outlier: boolean
+  qc_status: string
+  coverage_threshold: number
+  coverage: number
+  normcounts?: number
   strain?: string
+  pseudoanonymized_id?: string
 }
 
 export interface DataItem {

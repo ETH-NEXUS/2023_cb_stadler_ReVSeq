@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 import {api} from 'src/boot/axios'
 import {ref} from 'vue'
-import {Metadata, Plate, SampleCount, Substrain} from 'src/models/core'
+import {Metadata, Plate, SampleCount, Substrain, Sample} from 'src/models/core'
 
 export const useCoreStore = defineStore('core', () => {
   const sampleCounts = ref<SampleCount[]>([])
@@ -11,6 +11,17 @@ export const useCoreStore = defineStore('core', () => {
   const metadata = ref<Metadata[]>([])
   const plates = ref<Plate[]>([])
   const substrains = ref<Substrain[]>([])
+  const samples = ref<Sample[]>([])
+
+  const filterCountDataBySample = (pseudoanonymized_id = '') => {
+    if (pseudoanonymized_id !== '') {
+      tableData.value = sampleCounts.value.filter(
+        item => item.sample.pseudoanonymized_id === pseudoanonymized_id
+      )
+    } else {
+      tableData.value = sampleCounts.value
+    }
+  }
 
   const toggleAggregate = () => {
     const mappedData = new Map()
@@ -25,8 +36,12 @@ export const useCoreStore = defineStore('core', () => {
           rpkm_proportions: 0,
           normcounts: 0,
           outlier: false,
+          qc_status: '',
+          coverage_threshold: 0,
+          coverage: 0,
           plate: null,
           substrain: null,
+          pseudoanonymized_id: null,
         }
 
         const newData = {
@@ -36,9 +51,13 @@ export const useCoreStore = defineStore('core', () => {
           rpkm: existingData.rpkm + item.rpkm,
           rpkm_proportions: existingData.rpkm_proportions + item.rpkm_proportions,
           normcounts: existingData.normcounts + item.normcounts,
-          outlier: item.outlier, // Update if needed
+          qc_status: item.qc_status,
+          coverage_threshold: existingData.coverage_threshold + item.coverage_threshold,
+          coverage: existingData.coverage + item.coverage,
+          outlier: item.outlier,
           plate: item.plate.barcode,
           substrain: substrain,
+          pseudoanonymized_id: item.sample.pseudoanonymized_id,
         }
 
         mappedData.set(strain, newData)
@@ -50,6 +69,7 @@ export const useCoreStore = defineStore('core', () => {
     } else {
       tableData.value = sampleCounts.value
     }
+    alert('END of aggregating')
   }
 
   const getPlates = async () => {
@@ -65,6 +85,15 @@ export const useCoreStore = defineStore('core', () => {
     try {
       const res = await api.get('/api/substrains/')
       substrains.value = res.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const getSamplesByPlate = async (barcode: string) => {
+    try {
+      const res = await api.get(`/api/samples/?plate__barcode=${barcode}`)
+      samples.value = res.data
     } catch (error) {
       console.error(error)
     }
@@ -105,5 +134,8 @@ export const useCoreStore = defineStore('core', () => {
     tableData,
     aggregate,
     toggleAggregate,
+    getSamplesByPlate,
+    samples,
+    filterCountDataBySample,
   }
 })
