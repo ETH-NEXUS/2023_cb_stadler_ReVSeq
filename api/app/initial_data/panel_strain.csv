@@ -1,0 +1,26 @@
+panel_name,strain_name
+resp31,coronavirus OC43
+resp30,coronavirus NL63
+resp29,coronavirus HKU1
+resp28,coronavirus 229E
+resp27,SARS-CoV-2
+resp24,Adenovirus
+resp16,Rhino- / Enterovirus
+resp9,Metapneumovirus
+resp8,Parainlfuenca 4
+resp7,Influenca B
+resp6,Influenca A
+resp5,Parainlfuenca 3
+resp4,Parainlfuenca 2
+resp3,Parainlfuenca 1
+resp1,RSV - A/B
+flub4p,Influenca B
+flua4p,Influenca A
+rsv4p,RSV - A/B
+wuhan0,SARS-CoV-2
+rspc,RSV - A/B
+flub,Influenca B
+flua,Influenca A
+,Bocavirus
+,Parechiovirus
+,Polyomavirus

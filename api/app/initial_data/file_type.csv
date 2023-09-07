@@ -1,0 +1,17 @@
+postfix
+.cram
+count_table
+R1.fastq.gz
+R2.fastq.gz
+R1.fastqc.zip
+R2.fastqc.zip
+.bam
+empty_samples.txt
+metadata
+metadata.csv
+pipeline_version.txt
+.fa
+pipeline_version
+
+
+

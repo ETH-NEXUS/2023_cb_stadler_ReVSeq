@@ -28,6 +28,25 @@ class Sample(models.Model):
         return self.pseudoanonymized_id
 
 
+class FileType(models.Model):
+    postfix = models.TextField(unique=True)
+
+    def __str__(self):
+        return self.postfix
+
+
+class File(models.Model):
+    related_name = "files"
+    path = models.TextField(unique=True)
+    checksum = models.TextField(unique=True)
+    type = models.ForeignKey(FileType, on_delete=models.CASCADE, null=True)
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True)
+    plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.path
+
+
 class SampleFile(models.Model):
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
     file_type = models.CharField(max_length=20)

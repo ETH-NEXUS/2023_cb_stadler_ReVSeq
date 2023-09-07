@@ -9,6 +9,8 @@ from .models import (
     Substrain,
     SampleCount,
     Metadata,
+    FileType,
+    File,
 )
 
 # Register your models here.
@@ -76,4 +78,21 @@ class MetadataAdmin(admin.ModelAdmin):
         "plate",
         "sample",
         "prescriber",
+    )
+
+
+@admin.register(FileType)
+class FileTypeAdmin(admin.ModelAdmin):
+    list_display = ("postfix",)
+
+
+@admin.register(File)
+class FileAdmin(admin.ModelAdmin):
+    list_display = ("path", "checksum", "type", "sample", "plate")
+    search_fields = (
+        "path",
+        "checksum",
+        "type__postfix",
+        "sample__sample_number",
+        "plate__barcode",
     )

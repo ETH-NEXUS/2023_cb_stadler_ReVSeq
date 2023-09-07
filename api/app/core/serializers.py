@@ -7,6 +7,8 @@ from .models import (
     Substrain,
     SampleCount,
     Metadata,
+    File,
+    FileType,
 )
 
 from rest_framework import serializers
@@ -26,13 +28,28 @@ class WellSerializer(serializers.ModelSerializer):
         fields = ("location", "plate")
 
 
+class FileTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileType
+        fields = "__all__"
+
+
+class FileSerializer(serializers.ModelSerializer):
+    type = FileTypeSerializer(read_only=True)
+
+    class Meta:
+        model = File
+        fields = ("path", "checksum", "type")
+
+
 class SampleSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True, source="file_set")
     well = WellSerializer(read_only=True)
     plate = PlateSerializer(read_only=True)
 
     class Meta:
         model = Sample
-        fields = ("well", "pseudoanonymized_id", "plate")
+        fields = ("well", "pseudoanonymized_id", "plate", "files")
 
 
 class StrainSerializer(serializers.ModelSerializer):

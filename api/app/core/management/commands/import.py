@@ -1,64 +1,137 @@
 """
 Import logic:
-1) First we create a new plate object based on the barcode in the name of the metadata file
-2) We create a metadata object for every well (every row represents a well) in the metadata file. 
-Also, for every well we create the well object and the sample object.
-3)The sample counts file refers to the whole plate. We create it at the end. 
 
+ ---Dealing with Files---
+   - Verifies if given files exist and computes their checksum.
+   - Categorizes and processes different files based on their postfix.
+   - Locates and processes plate-specific files.
+
+ ---Dealing with Metadata---
+   - Processes metadata to extract panels.
+   - Creates `Metadata`, `Plate`, `Well`, and `Sample` objects from given metadata.
+   - Each metadata entry is associated with a plate, sample, and well.
+
+ ---Dealing with Counts---
+   - Processes count data to create `SampleCount` objects.
+   - Each count entry is associated with a plate, sample, and substrain.
+
+ ---Validation---
+   - Checks if all samples have been successfully imported. If there are samples missing, the script identifies them.
+
+ ---Main Execution---
+   - Locates plate files in the provided import directory.
+   - Processes metadata and count files.
+   - Imports sample-related files and performs necessary validations.
+   - If any error occurs, it logs the error and prints the traceback.
 """
 import os
 from datetime import datetime
 import re
 from django.core.management.base import BaseCommand
 import traceback
-import csv
-from core.models import SampleCount, Sample, Substrain, Plate, Well, Metadata, Panel
+from core.models import (
+    SampleCount,
+    Sample,
+    Substrain,
+    Plate,
+    Well,
+    Metadata,
+    Panel,
+    File,
+    FileType,
+)
 import logging
 import config.get_config as config
 import sys
 import glob
+from core.helpers import read_csv_file, txt_to_list, compute_checksum
 
 # from colorful_logger import logger as log
 
 logger = logging.getLogger(__name__)
 
-
-def list_files(startpath):
-    for root, dirs, files in os.walk(startpath):
-        level = root.replace(startpath, "").count(os.sep)
-        indent = "│   " * (level - 1) if level > 0 else ""
-        dir_basename = os.path.basename(root)
-        if root != startpath:
-            print("{}├── {}/".format(indent, dir_basename))
-        subindent = "│   " * level
-        file_indent = "{}├── ".format(subindent)
-        for i, f in enumerate(files):
-            if i == len(files) - 1 and not dirs:
-                file_indent = "{}└── ".format(subindent)
-            print("{}{}".format(file_indent, f))
-
-
-def txt_to_list(input_file):
-    with open(input_file, "r", encoding="utf-8-sig") as f:
-        return f.readlines()
-
-
-def read_csv_file(input_file):
-    with open(input_file, "r", encoding="utf-8-sig") as f:
-        dialect = csv.Sniffer().sniff(f.readline())
-        f.seek(0)
-        return list(csv.DictReader(f, dialect=dialect))
+EMPTY_SAMPLES_GLOB = "*empty_samples*.txt"
+META_DATA_GLOB = "*metadata*.csv"
+SAMPLE_DIR_GLOB = "sample_*"
+COUNT_TABLE_GLOB = "*count_table*.tsv"
+PIPELINE_VIRSION_GLOB = "*pipeline_version*.txt"
 
 
 class Command(BaseCommand):
     sample_id_dict = {}
+    stats = {
+        "processed_samples": 0,
+        "errors": [],
+        "warnings": [],
+        "traces": [],
+        "already_existed": 0,
+        "overwritten": 0,
+    }
+
+    """
+    ------------------------------------- ARGUMENTS ----------------------------------------
+    """
 
     def add_arguments(self, parser):
         parser.add_argument(
             "--import_dir", "-d", type=str, help="Directory to import from"
         )
 
-    def extract_panels(self, item):
+    """
+    ------------------------------------- DEALING WITH FILES ----------------------------------------
+    """
+
+    def __process_file(self, filepath, sample=None, plate=None):
+        try:
+            if not os.path.exists(filepath):
+                raise FileNotFoundError(f"File {filepath} does not exist")
+            checksum = compute_checksum(filepath)
+            basename = os.path.basename(filepath)
+            file_types = FileType.objects.all()
+            matching_file_type = None
+            for ft in file_types:
+                if ft.postfix in basename:
+                    matching_file_type = ft
+                    break
+            if not matching_file_type:
+                print(f"File type for {basename} not found")
+
+            file, _ = File.objects.update_or_create(
+                path=filepath,
+                checksum=checksum,
+                type=matching_file_type,
+                sample=sample,
+                plate=plate,
+            )
+            print(f"Saved information about the file {file}")
+
+        except FileNotFoundError as ex:
+            print(f"File with path {filepath} does not exist")
+            logger.error(ex)
+
+    def __process_sample_files(self, sample_dir, sample, plate):
+        file_types = FileType.objects.all()
+        for file_type in file_types:
+            file = glob.glob(os.path.join(sample_dir, f"*{file_type.postfix}*"))
+            if file:
+                self.__process_file(file[0], sample=sample, plate=plate)
+
+    def __locate_plate_files(self, import_dir):
+        metadata_file = glob.glob(os.path.join(import_dir, META_DATA_GLOB))[0]
+        empty_samples_file = glob.glob(os.path.join(import_dir, EMPTY_SAMPLES_GLOB))[0]
+        pipline_version_file = glob.glob(
+            os.path.join(import_dir, PIPELINE_VIRSION_GLOB)
+        )[0]
+        if metadata_file and empty_samples_file:
+            return metadata_file, empty_samples_file, pipline_version_file
+        else:
+            raise ValueError("Could not locate metadata and empty_samples files")
+
+    """
+    ------------------------------------- DEALING WITH METADATA ----------------------------------------
+    """
+
+    def __extract_panels(self, item):
         data = []
         for key, value in item.items():
             match = re.match(r"([a-zA-Z0-9]+) \(\d+\)", key)
@@ -75,11 +148,11 @@ class Command(BaseCommand):
                 )
         return data
 
-    def create_metadata(self, item, plate, well, sample):
+    def __create_metadata(self, item, plate, well, sample):
         order_date = datetime.strptime(item["Order date"], "%Y-%m-%d")
         ent_date = datetime.strptime(item["ent date"], "%Y-%m-%d")
         treatment_type = item["treatment_type"] if item["treatment_type"] else None
-        data = self.extract_panels(item)
+        data = self.__extract_panels(item)
         metadata, _ = Metadata.objects.update_or_create(
             plate=plate,
             sample=sample,
@@ -116,8 +189,12 @@ class Command(BaseCommand):
             self.sample_id_dict[
                 item[columns.pseudoanonymized_id]
             ] = False  # later on, we will check, if all samples have been imported
-            self.create_metadata(item, plate, well, sample)
+            self.__create_metadata(item, plate, well, sample)
         return plate
+
+    """
+    ------------------------------------- DEALING WITH COUNTS ----------------------------------------
+    """
 
     def counts(self, plate, columns, counts_file):
         """
@@ -166,6 +243,10 @@ class Command(BaseCommand):
             logger.error(f"Sample {sample_id} does not exist")
             raise ValueError(f"Sample {sample_id} does not exist")
 
+    """
+    ------------------------------------- CHECKING IF ALL SAMPLES HAVE BEEN IMPORTED ----------------------------------------
+    """
+
     def check_imported_samples(self, file_name):
         empty_samples = txt_to_list(file_name)
         print("Empty samples:", ", ".join(empty_samples).replace("\n", ""))
@@ -178,35 +259,51 @@ class Command(BaseCommand):
                 "Not all samples have been imported. Please check the metadata file."
             )
 
-    def __locate_files(self, import_dir):
-        metadata_file = glob.glob(os.path.join(import_dir, "*metadata*.csv"))[0]
-        empty_samples_file = glob.glob(os.path.join(import_dir, "*empty_samples*.txt"))[
-            0
-        ]
-        if metadata_file and empty_samples_file:
-            return metadata_file, empty_samples_file
-        else:
-            raise ValueError("Could not locate metadata and empty_samples files")
+    """
+     ------------------------------------- MAIN -------------------------------------------------------------------
+    """
 
     def handle(self, *args, **options):
         if len(sys.argv) < 2:
             print("Usage: python import.py -d <import_dir>")
             sys.exit(1)
         import_dir = options.get("import_dir")
-        metadata_file, empty_samples_file = self.__locate_files(import_dir)
+        (
+            metadata_file,
+            empty_samples_file,
+            pipline_version_file,
+        ) = self.__locate_plate_files(import_dir)
 
         try:
             if metadata_file and empty_samples_file:
                 columns = config.read_config("import_columns")
                 plate = self.metadata(columns, metadata_file)
-                count_files = glob.glob(
-                    os.path.join(import_dir, "sample_*", "*count_table*.tsv")
+
+                sample_dirs = glob.glob(os.path.join(import_dir, SAMPLE_DIR_GLOB))
+                for sample_dir in sample_dirs:
+                    print(
+                        f"---------------- IMPORTING COUNTS FOR {sample_dir} ---------------- \n"
+                    )
+                    current_count_table_file = glob.glob(
+                        os.path.join(sample_dir, COUNT_TABLE_GLOB)
+                    )[0]
+                    self.counts(plate, columns, current_count_table_file)
+                    sample_id = os.path.basename(sample_dir).split("_")[1]
+                    sample = Sample.objects.get(pseudoanonymized_id=sample_id)
+                    print(
+                        f"---------------- IMPORTING SAMPLE-RELATED FILES FOR THE SAMPLE {sample_dir} ---------------- \n"
+                    )
+                    self.__process_sample_files(sample_dir, sample, plate)
+
+                print(
+                    f"\n --------------- IMPORTING PLATE-RELATED FILES FOR THE PLATE {plate} -------------------- \n"
                 )
-                for file in count_files:
-                    self.counts(plate, columns, file)
-                    print(f"Imported {file}")
+                self.__process_file(empty_samples_file, plate=plate)
+                self.__process_file(metadata_file, plate=plate)
+                self.__process_file(pipline_version_file, plate=plate)
+
+                print("\n\n --------  CHECKING FOR MISSING SAMPLES...  ------------ \n")
                 self.check_imported_samples(empty_samples_file)
-                print("Import successful")
 
         except Exception as ex:
             logger.error(ex)
