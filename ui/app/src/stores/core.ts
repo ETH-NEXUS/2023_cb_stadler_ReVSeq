@@ -12,8 +12,22 @@ export const useCoreStore = defineStore('core', () => {
   const plates = ref<Plate[]>([])
   const substrains = ref<Substrain[]>([])
   const samples = ref<Sample[]>([])
+  const selected_plate_barcode = ref<string | null>(null)
+  const selected_plate = ref<Plate | null>(null)
+  const selected_substrain = ref<string | null>(null)
+  const selected_sample_id = ref<string | null>(null)
+  const selected_sample = ref<Sample | null>(null)
 
-  const filterCountDataBySample = (pseudoanonymized_id = '') => {
+  const getSelectedSample = async () => {
+    try {
+      const res = await api.get(`/api/samples/?pseudoanonymized_id=${selected_sample_id.value}`)
+      selected_sample.value = res.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const filterCountDataBySample = async (pseudoanonymized_id = '') => {
     if (pseudoanonymized_id !== '') {
       tableData.value = sampleCounts.value.filter(
         item => item.sample.pseudoanonymized_id === pseudoanonymized_id
@@ -21,12 +35,15 @@ export const useCoreStore = defineStore('core', () => {
     } else {
       tableData.value = sampleCounts.value
     }
+
+    await getSelectedSample()
   }
 
   const toggleAggregate = () => {
     const mappedData = new Map()
+
     if (aggregate.value) {
-      sampleCounts.value.forEach(item => {
+      tableData.value.forEach(item => {
         const strain = item.substrain.strain.name
         const substrain = item.substrain
         const existingData = mappedData.get(strain) || {
@@ -69,13 +86,17 @@ export const useCoreStore = defineStore('core', () => {
     } else {
       tableData.value = sampleCounts.value
     }
-    alert('END of aggregating')
   }
 
-  const getPlates = async () => {
+  const getPlates = async (barcode: string | null = null) => {
     try {
-      const res = await api.get('/api/plates/')
-      plates.value = res.data
+      if (barcode) {
+        const res = await api.get(`/api/plates/?barcode=${barcode}`)
+        selected_plate.value = res.data[0]
+      } else {
+        const res = await api.get('/api/plates/')
+        plates.value = res.data
+      }
     } catch (error) {
       console.error(error)
     }
@@ -105,6 +126,7 @@ export const useCoreStore = defineStore('core', () => {
     if (barcode) {
       baseUrl += `?plate__barcode=${barcode}`
       selected_barcode.value = barcode
+      await getPlates(barcode)
 
       if (substrain) {
         baseUrl += `&substrain__name=${substrain}`
@@ -119,6 +141,23 @@ export const useCoreStore = defineStore('core', () => {
       } catch (error) {
         console.error(error)
       }
+    }
+  }
+
+  const downloadFile = async (path: string) => {
+    try {
+      const encodedPath = encodeURIComponent(path)
+      const res = await api.get(`/api/download/${encodedPath}/`, {
+        responseType: 'blob',
+      })
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', path.split('/').pop() || '')
+      document.body.appendChild(link)
+      link.click()
+    } catch (error) {
+      console.error('Error downloading the file:', error)
     }
   }
 
@@ -137,5 +176,11 @@ export const useCoreStore = defineStore('core', () => {
     getSamplesByPlate,
     samples,
     filterCountDataBySample,
+    selected_plate_barcode,
+    selected_substrain,
+    selected_sample,
+    selected_plate,
+    downloadFile,
+    selected_sample_id,
   }
 })

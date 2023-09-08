@@ -19,6 +19,9 @@ from easydict import EasyDict as edict
 from rest_framework.exceptions import ValidationError
 from copy import deepcopy
 from rest_framework import status
+from django.http import FileResponse, Http404
+import os
+from rest_framework.decorators import api_view
 
 
 def def_value():
@@ -32,7 +35,7 @@ class SampleViewSet(viewsets.ModelViewSet):
         filters.DjangoFilterBackend,
         drf_filters.OrderingFilter,
     )
-    filterset_fields = ("plate__barcode",)
+    filterset_fields = ("plate__barcode", "pseudoanonymized_id")
 
 
 class SampleCountViewSet(viewsets.ModelViewSet):
@@ -150,11 +153,40 @@ class MetadataViewSet(viewsets.ModelViewSet):
         return super().finalize_response(request, response, *args, **kwargs)
 
 
-class PlateViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Plate.objects.all()
+from django.core.exceptions import ObjectDoesNotExist
+
+
+class PlateViewSet(viewsets.ModelViewSet):
     serializer_class = PlateSerializer
+
+    def get_queryset(self):
+        barcode = self.request.query_params.get(
+            "barcode", None
+        )  # barcode is not the primary key so that is why we don't make use of ModelViewSet
+        if barcode is not None:
+            try:
+                plate = Plate.objects.get(barcode=barcode)
+                return [plate]
+            except ObjectDoesNotExist:
+                return []
+
+        return Plate.objects.all()
 
 
 class SubstrainViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Substrain.objects.all()
     serializer_class = SubstrainSerializer
+
+
+@api_view(["GET"])
+def download_file(request, filepath):
+    file_path = filepath
+    if os.path.exists(file_path):
+        response = FileResponse(
+            open(file_path, "rb"), content_type="application/octet-stream"
+        )
+        response[
+            "Content-Disposition"
+        ] = f"attachment; filename={os.path.basename(file_path)}"
+        return response
+    raise Http404("File not found.")

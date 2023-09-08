@@ -7,6 +7,7 @@ from core.views import (
     PlateViewSet,
     SubstrainViewSet,
     SampleViewSet,
+    download_file,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -24,4 +25,5 @@ urlpatterns = [
     path("api/auth/logout/", LogoutView.as_view(), name="logout"),
     path("api/auth/users/me/", UserViewSet.as_view({"get": "retrieve"}), name="me"),
     path("", include(router.urls)),
+    path("api/download/<path:filepath>/", download_file, name="download_file"),
 ]

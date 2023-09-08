@@ -5,14 +5,18 @@ import {useCoreStore} from 'stores/core'
 import {useI18n} from 'vue-i18n'
 import {computed, ref} from 'vue'
 import {useQuasar} from 'quasar'
+import {storeToRefs} from 'pinia'
+import PlateFiles from 'components/PlateFiles.vue'
 
 const {t} = useI18n()
 const $q = useQuasar()
 
 const coreStore = useCoreStore()
 
-const selected_sample = ref<string | null>(null)
+const {selected_sample_id, selected_sample} = storeToRefs(coreStore)
 const optionsSamples = ref<string[]>(coreStore.samples.map(s => s.pseudoanonymized_id))
+const showPlateFiles = ref<boolean>(false)
+const showSampleFiles = ref<boolean>(false)
 
 const aggregate = () => {
   try {
@@ -45,8 +49,8 @@ const filterFnSamples = (val: string, update: (fn: () => void) => void) => {
   })
 }
 const filterBySample = () => {
-  if (selected_sample.value) {
-    coreStore.filterCountDataBySample(selected_sample.value)
+  if (selected_sample_id.value) {
+    coreStore.filterCountDataBySample(selected_sample_id.value)
   } else {
     coreStore.filterCountDataBySample('')
     $q.notify({
@@ -61,15 +65,41 @@ const filterBySample = () => {
 </script>
 
 <template>
-  <div class="q-pa-md" v-if="coreStore.sampleCounts.length > 0">
-    <h3 class="text-h4 text-center q-pb-lg">Counts</h3>
+  <div class="q-pa-md counts-cont" v-if="coreStore.sampleCounts.length > 0">
+    <q-dialog v-model="showPlateFiles">
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ t('label.plate_files') }}</div>
+          <q-space></q-space>
+          <q-btn icon="close" flat round dense v-close-popup></q-btn>
+        </q-card-section>
+
+        <q-card-section>
+          <PlateFiles domain="plate" />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="showSampleFiles">
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ t('label.sample_files') }}</div>
+          <q-space></q-space>
+          <q-btn icon="close" flat round dense v-close-popup></q-btn>
+        </q-card-section>
+
+        <q-card-section>
+          <PlateFiles domain="sample" />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
 
     <div class="tw-mb-10">
       <div class="flex row sample_options_cont">
         <q-select
           class="tw-my-6 sample_select"
           color="purple-12"
-          v-model="selected_sample"
+          v-model="selected_sample_id"
           use-input
           input-debounce="0"
           label="Filter by sample (optional)"
@@ -82,15 +112,40 @@ const filterBySample = () => {
             </q-item>
           </template>
         </q-select>
-        <q-btn class="tw-mr-2" color="primary" :label="t('label.apply')" @click="filterBySample"></q-btn>
+        <q-btn
+          class="tw-mr-2 tw-mt-4"
+          color="primary"
+          :label="t('label.apply')"
+          @click="filterBySample"></q-btn>
       </div>
-      <q-btn
-        icon="query_stats"
-        :label="t('label.aggregate')"
-        color="primary"
-        class="tw-mr-2"
-        @click="aggregate"></q-btn>
-      <q-btn color="primary" icon="science" :label="t('label.raw_data')" @click="aggregate"></q-btn>
+      <div class="flex row wrap">
+        <q-btn
+          icon="query_stats"
+          :label="t('label.aggregate')"
+          color="primary"
+          class="tw-mr-2 tw-my-2"
+          @click="aggregate"></q-btn>
+        <q-btn
+          class="tw-my-2 tw-mr-2"
+          color="primary"
+          icon="science"
+          :label="t('label.raw_data')"
+          @click="aggregate"></q-btn>
+        <q-btn
+          icon="file_download"
+          class="tw-my-2 tw-mr-2"
+          :label="t('label.plate_files')"
+          color="primary"
+          @click="showPlateFiles = true"></q-btn>
+
+        <q-btn
+          v-if="selected_sample"
+          icon="file_download"
+          class="tw-my-2"
+          :label="t('label.sample_files')"
+          color="primary"
+          @click="showSampleFiles = true"></q-btn>
+      </div>
     </div>
     <q-table
       :filter="filter"
@@ -103,7 +158,7 @@ const filterBySample = () => {
       row-key="name"></q-table>
   </div>
   <div class="q-pa-md" v-if="coreStore.metadata.length > 0">
-    <h3 class="text-h4 text-center q-pb-md">Metadata</h3>
+    <h3 class="text-h4 text-center q-pb-md">{{ t('titles.metadata') }}</h3>
     <q-table
       :rows-per-page-options="[50, 100]"
       rows-per-page="50"
@@ -116,14 +171,6 @@ const filterBySample = () => {
 </template>
 
 <style scoped>
-.point {
-  cursor: pointer;
-}
-.point:hover {
-  background-color: darkslateblue;
-  cursor: pointer;
-}
-
 .sample_options_cont {
   width: 40%;
   display: flex;
@@ -138,5 +185,10 @@ const filterBySample = () => {
 
 q-btn {
   flex-shrink: 0; /* Prevents the button from shrinking if space is tight */
+}
+
+.counts-cont {
+  max-width: 80%;
+  margin-bottom: 5px;
 }
 </style>

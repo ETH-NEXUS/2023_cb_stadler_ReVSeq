@@ -14,10 +14,21 @@ from .models import (
 from rest_framework import serializers
 
 
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = (
+            "path",
+            "checksum",
+        )
+
+
 class PlateSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True, source="file_set")
+
     class Meta:
         model = Plate
-        fields = "__all__"
+        fields = ("id", "barcode", "files")
 
 
 class WellSerializer(serializers.ModelSerializer):
@@ -26,20 +37,6 @@ class WellSerializer(serializers.ModelSerializer):
     class Meta:
         model = Well
         fields = ("location", "plate")
-
-
-class FileTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FileType
-        fields = "__all__"
-
-
-class FileSerializer(serializers.ModelSerializer):
-    type = FileTypeSerializer(read_only=True)
-
-    class Meta:
-        model = File
-        fields = ("path", "checksum", "type")
 
 
 class SampleSerializer(serializers.ModelSerializer):

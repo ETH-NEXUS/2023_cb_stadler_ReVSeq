@@ -2,6 +2,7 @@
 import {useCoreStore} from 'stores/core'
 import {useI18n} from 'vue-i18n'
 import {ref, onMounted} from 'vue'
+import {storeToRefs} from 'pinia'
 
 onMounted(async () => {
   await coreStore.getPlates()
@@ -9,8 +10,11 @@ onMounted(async () => {
 })
 
 const coreStore = useCoreStore()
-const selected_plate = ref<string | null>(null)
-const selected_substrain = ref<string | null>(null)
+
+const {selected_plate_barcode, selected_substrain} = storeToRefs(coreStore)
+
+// const selected_plate = ref<string | null>(null)
+// const selected_substrain = ref<string | null>(null)
 
 const optionsSubstrains = ref<string[]>(coreStore.substrains.map(s => s.name))
 const optionsPlates = ref<string[]>(coreStore.plates.map(p => p.barcode))
@@ -48,9 +52,9 @@ const filterFnSubstrains = (val: string, update: (fn: () => void) => void) => {
 }
 
 const onSubmit = async () => {
-  if (selected_plate.value) {
-    await coreStore.getSamplesByPlate(selected_plate.value)
-    await coreStore.getPlateData(selected_plate.value, selected_substrain.value)
+  if (selected_plate_barcode.value) {
+    await coreStore.getSamplesByPlate(selected_plate_barcode.value)
+    await coreStore.getPlateData(selected_plate_barcode.value, selected_substrain.value)
   }
 }
 </script>
@@ -63,7 +67,7 @@ const onSubmit = async () => {
       <q-select
         class="tw-my-6"
         color="purple-12"
-        v-model="selected_plate"
+        v-model="selected_plate_barcode"
         use-input
         input-debounce="0"
         label="Plate"

@@ -14,6 +14,8 @@ export default {
     aggregate: 'Aggregate by strains',
     raw_data: 'Raw data',
     apply: 'Apply',
+    plate_files: 'Plate files',
+    sample_files: 'Sample files',
   },
   message: {
     enter_username_password: 'Please enter your username and password',
@@ -25,5 +27,10 @@ export default {
     short_description: 'Respiratory Virus Sequencing',
     description:
       ' The interface of the ReVSeq project that aims at providing an overview on the genetic diversity of respiratory viruses in Switzerland.',
+  },
+  titles: {
+    counts: 'Counts',
+    metadata: 'Metadata',
+    plate_files: 'Plate files',
   },
 }

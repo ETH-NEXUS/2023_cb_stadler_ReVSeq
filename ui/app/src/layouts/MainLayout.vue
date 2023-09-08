@@ -3,6 +3,7 @@ import {ref} from 'vue'
 import {useUserStore} from 'stores/user'
 import {useI18n} from 'vue-i18n'
 import {useRouter} from 'vue-router'
+import {useCoreStore} from 'stores/core'
 
 const router = useRouter()
 
@@ -94,6 +95,7 @@ const links = [
             </a>
           </li>
         </ul>
+
         <div class="tw-hidden xl:tw-flex tw-items-center">
           <a
             @click="logoutButtonClicked"

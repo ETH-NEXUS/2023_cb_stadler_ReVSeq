@@ -7,8 +7,9 @@ import DataTables from 'components/DataTables.vue'
   <section>
     <div class="fit column wrap justify-center items-center content-center">
       <SelectCard />
-
       <DataTables />
     </div>
   </section>
 </template>
+
+<style></style>

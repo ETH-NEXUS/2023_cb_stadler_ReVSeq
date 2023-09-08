@@ -1,5 +1,11 @@
+export interface File {
+  path: string
+  checksum: string
+}
+
 export interface Plate {
   barcode: string
+  files: File[]
 }
 
 export interface Well {
@@ -12,6 +18,7 @@ export interface Sample {
   pseudoanonymized_id: string
   plate: Plate
   sample_number?: string
+  files: File[]
 }
 
 export interface Strain {

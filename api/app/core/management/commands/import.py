@@ -109,12 +109,12 @@ class Command(BaseCommand):
             print(f"File with path {filepath} does not exist")
             logger.error(ex)
 
-    def __process_sample_files(self, sample_dir, sample, plate):
+    def __process_sample_files(self, sample_dir, sample):
         file_types = FileType.objects.all()
         for file_type in file_types:
             file = glob.glob(os.path.join(sample_dir, f"*{file_type.postfix}*"))
             if file:
-                self.__process_file(file[0], sample=sample, plate=plate)
+                self.__process_file(file[0], sample=sample)
 
     def __locate_plate_files(self, import_dir):
         metadata_file = glob.glob(os.path.join(import_dir, META_DATA_GLOB))[0]
@@ -255,9 +255,6 @@ class Command(BaseCommand):
             for key, value in self.sample_id_dict.items():
                 if not value and key not in empty_samples:
                     print(f"Sample {key} has not been imported.")
-            raise ValueError(
-                "Not all samples have been imported. Please check the metadata file."
-            )
 
     """
      ------------------------------------- MAIN -------------------------------------------------------------------
@@ -293,7 +290,7 @@ class Command(BaseCommand):
                     print(
                         f"---------------- IMPORTING SAMPLE-RELATED FILES FOR THE SAMPLE {sample_dir} ---------------- \n"
                     )
-                    self.__process_sample_files(sample_dir, sample, plate)
+                    self.__process_sample_files(sample_dir, sample)
 
                 print(
                     f"\n --------------- IMPORTING PLATE-RELATED FILES FOR THE PLATE {plate} -------------------- \n"
