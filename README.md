@@ -101,3 +101,26 @@ The results are saved in a dedicated table, where outliers are marked with a `*`
 If the user requested it, strains are then collapsed together (e.g. all strains referring to different sub-strains of Influenza A can be collapsed to a single cumulative values for Influenza A in general). RPKM, RPKM percentages and outliers are re-computed based on the new read counts and lengths.
 
 The collapsed results are then compared with the results available in the respiratory virus test panels run on the samples by the clinicians. Strains reported as positive in the test panels are reported with a `*`.
+
+# Web App Revseq: API and UI for importing the output files to the database
+
+## When first deployed
+
+By the very first installation of the app, some static content should be loaded to the db: panel-strain look app, strain-substrain look up, and strain-ORF look up. This can be done by running the following commands:
+
+and filetypes postfixes. The following command will load the static content to the db (to be executed inside the api docker container):
+
+
+``` bash 
+python manage.py fixture panel_strain
+python manage.py fixture strain_substrain
+python manage.py fixture  file_type
+```
+
+## Import data to the database
+
+Import is executed by plates. The import command requires one argument: the path to the directory with the results (typically named by plates' barcode)
+
+``` bash
+python manage.py import <path_to_results_dir>
+```
