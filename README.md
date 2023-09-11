@@ -102,25 +102,30 @@ If the user requested it, strains are then collapsed together (e.g. all strains 
 
 The collapsed results are then compared with the results available in the respiratory virus test panels run on the samples by the clinicians. Strains reported as positive in the test panels are reported with a `*`.
 
-# Web App Revseq: API and UI for importing the output files to the database
+# Web App Revseq: Integration of API and UI for Database Output File Imports 
 
-## When first deployed
+## Initial Deployment 
 
-By the very first installation of the app, some static content should be loaded to the db: panel-strain look app, strain-substrain look up, and strain-ORF look up. This can be done by running the following commands:
+Upon the initial deployment of the application, certain static content must be populated into the database. This includes the data for:
 
-and filetypes postfixes. The following command will load the static content to the db (to be executed inside the api docker container):
+- Panel-Strain Lookup 
+- Strain-Substrain Lookup 
+- Strain-ORF Lookup 
+- File Type Postfixes 
 
+To load this static content into the database, execute the commands below within the API Docker container:
 
-``` bash 
+```bash
 python manage.py fixture panel_strain
 python manage.py fixture strain_substrain
-python manage.py fixture  file_type
+python manage.py fixture file_type
 ```
 
-## Import data to the database
+## Importing Data into the Database 
 
-Import is executed by plates. The import command requires one argument: the path to the directory with the results (typically named by plates' barcode)
+Data import is organized by plates. The command for importing requires a single argument: the directory path containing the results, which is typically named after the plates' barcode. 
 
-``` bash
+```bash
 python manage.py import <path_to_results_dir>
 ```
+
