@@ -22,7 +22,7 @@ if [ "$DJANGO_DEBUG" == "True" ]; then
   #   --port ${PORT} \
   #   --reload
 else
-  gunicorn ldm.asgi:application \
+  gunicorn revseq.asgi:application \
     --log-file - \
     --workers 4 \
     --worker-class uvicorn.workers.UvicornWorker \
