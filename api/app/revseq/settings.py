@@ -161,7 +161,7 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(
     ldap.SCOPE_SUBTREE,
     environ.get(
         "LDAP_FILTER",
-        "(&(ou=@nexus.ethz.ch)(eduPersonAffiliation=staff)(cn=%(user)s))",
+        "(&(|(ou=@nexus.ethz.ch)(ou=bsse-stadler))(eduPersonAffiliation=staff)(cn=%(user)s))",
     ),
 )
 
