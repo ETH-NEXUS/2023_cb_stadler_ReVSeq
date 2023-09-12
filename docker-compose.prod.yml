@@ -2,10 +2,10 @@ version: "3"
 volumes:
   smnrp-data:
 services:
- api:
-   volumes:
-     - /data/revseq/results_example_for_database/package_results:/data
- ws:
+  api:
+    volumes:
+      - /data/revseq/results_example_for_database/package_results:/data
+  ws:
     image: ethnexus/smnrp:1.1.1
     volumes:
       - "web_root:/web_root:z"
