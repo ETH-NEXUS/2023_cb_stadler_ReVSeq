@@ -12,11 +12,11 @@ from core.views import (
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r"api/samplecounts", SampleCountViewSet, basename="samplecounts")
-router.register(r"api/metadata", MetadataViewSet, basename="metadata")
-router.register(r"api/plates", PlateViewSet, basename="plates")
-router.register(r"api/substrains", SubstrainViewSet, basename="substrains")
-router.register(r"api/samples", SampleViewSet, basename="samples")
+router.register(r"samplecounts", SampleCountViewSet, basename="samplecounts")
+router.register(r"metadata", MetadataViewSet, basename="metadata")
+router.register(r"plates", PlateViewSet, basename="plates")
+router.register(r"substrains", SubstrainViewSet, basename="substrains")
+router.register(r"samples", SampleViewSet, basename="samples")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -24,6 +24,6 @@ urlpatterns = [
     path("api/auth/login/", LoginView.as_view(), name="login"),
     path("api/auth/logout/", LogoutView.as_view(), name="logout"),
     path("api/auth/users/me/", UserViewSet.as_view({"get": "retrieve"}), name="me"),
-    path("", include(router.urls)),
+    path("api/", include(router.urls)),
     path("api/download/<path:filepath>/", download_file, name="download_file"),
 ]

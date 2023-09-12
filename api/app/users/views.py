@@ -39,20 +39,19 @@ class LoginView(View):
         data = json.loads(request.body)
         username = data.get("username")
         password = data.get("password")
-        print(username, password)
 
         if username is None or password is None:
             return JsonResponse(
                 {"detail": _("Please provide username and password.")}, status=400
             )
-        print("Before authenticate")
+
         user = authenticate(username=username, password=password)
 
         if user is None:
             return JsonResponse({"detail": _("Invalid credentials.")}, status=400)
-        print("After authenticate")
+
         login(request, user)
-        print("After login")
+
         logger.debug("End login")
         return JsonResponse({"detail": _("Successfully logged in.")})
 
