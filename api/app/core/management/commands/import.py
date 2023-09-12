@@ -45,10 +45,10 @@ import config.get_config as config
 import sys
 import glob
 from core.helpers import read_csv_file, txt_to_list, compute_checksum
+from helpers.color_log import logger
 
 # from colorful_logger import logger as log
 
-logger = logging.getLogger(__name__)
 
 EMPTY_SAMPLES_GLOB = "*empty_samples*.txt"
 META_DATA_GLOB = "*metadata*.csv"
@@ -94,7 +94,7 @@ class Command(BaseCommand):
                     matching_file_type = ft
                     break
             if not matching_file_type:
-                print(f"File type for {basename} not found")
+                logger.error(f"File type for {basename} not found")
 
             file, _ = File.objects.update_or_create(
                 path=filepath,
@@ -103,10 +103,10 @@ class Command(BaseCommand):
                 sample=sample,
                 plate=plate,
             )
-            print(f"Saved information about the file {file}")
+            logger.info(f"Saved information about the file {file}")
 
         except FileNotFoundError as ex:
-            print(f"File with path {filepath} does not exist")
+            logger.error(f"File with path {filepath} does not exist")
             logger.error(ex)
 
     def __process_sample_files(self, sample_dir, sample):
@@ -232,7 +232,7 @@ class Command(BaseCommand):
                     )
                     self.sample_id_dict[sample_id] = True
                     if _:
-                        print(
+                        logger.info(
                             f"Imported sample counts for {substrain} in the sample {sample}"
                         )
                 except Substrain.DoesNotExist:
@@ -249,12 +249,14 @@ class Command(BaseCommand):
 
     def check_imported_samples(self, file_name):
         empty_samples = txt_to_list(file_name)
-        print("Empty samples:", ", ".join(empty_samples).replace("\n", ""))
+        logger.warning("Empty samples:", ", ".join(empty_samples).replace("\n", ""))
         if not all(self.sample_id_dict.values()):
-            print("Not all samples have been imported. Please check the metadata file.")
+            logger.error(
+                "Not all samples have been imported. Please check the metadata file."
+            )
             for key, value in self.sample_id_dict.items():
                 if not value and key not in empty_samples:
-                    print(f"Sample {key} has not been imported.")
+                    logger.warning(f"Sample {key} has not been imported.")
 
     """
      ------------------------------------- MAIN -------------------------------------------------------------------
@@ -262,7 +264,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if len(sys.argv) < 2:
-            print("Usage: python import.py -d <import_dir>")
+            logger.info("Usage: python import.py -d <import_dir>")
             sys.exit(1)
         import_dir = options.get("import_dir")
         (
@@ -278,7 +280,7 @@ class Command(BaseCommand):
 
                 sample_dirs = glob.glob(os.path.join(import_dir, SAMPLE_DIR_GLOB))
                 for sample_dir in sample_dirs:
-                    print(
+                    logger.debug(
                         f"---------------- IMPORTING COUNTS FOR {sample_dir} ---------------- \n"
                     )
                     current_count_table_file = glob.glob(
@@ -287,19 +289,21 @@ class Command(BaseCommand):
                     self.counts(plate, columns, current_count_table_file)
                     sample_id = os.path.basename(sample_dir).split("_")[1]
                     sample = Sample.objects.get(pseudoanonymized_id=sample_id)
-                    print(
+                    logger.debug(
                         f"---------------- IMPORTING SAMPLE-RELATED FILES FOR THE SAMPLE {sample_dir} ---------------- \n"
                     )
                     self.__process_sample_files(sample_dir, sample)
 
-                print(
+                logger.debug(
                     f"\n --------------- IMPORTING PLATE-RELATED FILES FOR THE PLATE {plate} -------------------- \n"
                 )
                 self.__process_file(empty_samples_file, plate=plate)
                 self.__process_file(metadata_file, plate=plate)
                 self.__process_file(pipline_version_file, plate=plate)
 
-                print("\n\n --------  CHECKING FOR MISSING SAMPLES...  ------------ \n")
+                logger.debug(
+                    "\n\n --------  CHECKING FOR MISSING SAMPLES...  ------------ \n"
+                )
                 self.check_imported_samples(empty_samples_file)
 
         except Exception as ex:
