@@ -118,7 +118,10 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
-
+SPECTACULAR_SETTINGS = {
+    "TITLE": "RevSeq API",
+    "DESCRIPTION": "ReVSeq project aims at providing an overview on the genetic diversity of respiratory viruses in Switzerland.",
+}
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
