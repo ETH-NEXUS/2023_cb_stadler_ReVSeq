@@ -92,7 +92,7 @@ class SampleCountViewSet(viewsets.ModelViewSet):
             ```bash
             curl -H "Accept: text/csv" http://https://revseq.nexus.ethz.ch/api/samplecounts/ > sample_counts.csv
             ```
-    - Alternatively, a csv file can be downloaded directly from our  default DRF API view.
+    - Alternatively, a csv file can be downloaded directly from our default DRF API view.
 
     Allowed HTTP Methods: GET, HEAD, OPTIONS
 
@@ -116,7 +116,6 @@ class SampleCountViewSet(viewsets.ModelViewSet):
     ) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
 
     http_method_names = ["get", "head", "options"]
-
 
     """
     Call the aggregate function it like this, with the obligatory parameter sample__pseudoanonymized_id:
@@ -235,8 +234,6 @@ class MetadataViewSet(viewsets.ModelViewSet):
         CSVRenderer,
     ) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
     http_method_names = ["get", "head", "options"]
-
-
 
     def finalize_response(self, request, response, *args, **kwargs):
         if isinstance(request.accepted_renderer, CSVRenderer):
