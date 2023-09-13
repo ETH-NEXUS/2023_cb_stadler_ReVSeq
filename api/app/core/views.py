@@ -117,8 +117,6 @@ class SampleCountViewSet(viewsets.ModelViewSet):
 
     http_method_names = ["get", "head", "options"]
 
-    # to get csv with curl:
-    # curl -H "Accept: text/csv" http://localhost:8000/api/samplecounts/ > sample_counts.csv
 
     """
     Call the aggregate function it like this, with the obligatory parameter sample__pseudoanonymized_id:
@@ -238,8 +236,7 @@ class MetadataViewSet(viewsets.ModelViewSet):
     ) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
     http_method_names = ["get", "head", "options"]
 
-    # to get csv with curl:
-    # curl -H "Accept: text/csv" http://localhost:8000/api/metadata/ > metadata.csv
+
 
     def finalize_response(self, request, response, *args, **kwargs):
         if isinstance(request.accepted_renderer, CSVRenderer):
