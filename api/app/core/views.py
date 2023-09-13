@@ -90,7 +90,7 @@ class SampleCountViewSet(viewsets.ModelViewSet):
         However, the CSV data can be obtained using a designated header via `curl`.
             Example:
             ```bash
-            curl -H "Accept: text/csv" http://localhost:8000/api/samplecounts/ > sample_counts.csv
+            curl -H "Accept: text/csv" http://https://revseq.nexus.ethz.ch/api/samplecounts/ > sample_counts.csv
             ```
     - Alternatively, a csv file can be downloaded directly from our  default DRF API view.
 
@@ -219,7 +219,7 @@ class MetadataViewSet(viewsets.ModelViewSet):
       However, the CSV data can be obtained using a designated header via `curl`.
           Example:
           ```bash
-          curl -H "Accept: text/csv" http://localhost:8000/api/metadata/ > metadata.csv
+          curl -H "Accept: text/csv" http://https://revseq.nexus.ethz.ch//api/metadata/ > metadata.csv
           ```
       - Alternatively, a CSV file can be downloaded directly  from our default DRF API view.
 
