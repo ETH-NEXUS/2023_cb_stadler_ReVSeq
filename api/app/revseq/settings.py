@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "corsheaders",
     "rest_framework",
+    "drf_spectacular",
     "core",
     "users",
 ]
@@ -114,6 +115,7 @@ REST_FRAMEWORK = {
         "core.renderers.custom_renderer.CustomBrowsableAPIRenderer",
         "rest_framework.renderers.JSONRenderer",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 

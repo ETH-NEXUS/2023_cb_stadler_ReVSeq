@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from .models import SampleCount, Plate, Substrain, Metadata, Sample
+from .models import SampleCount, Plate, Substrain, Metadata, Sample, File
 from .serializers import (
     SampleCountSerializers,
     PlateSerializer,
@@ -7,6 +7,7 @@ from .serializers import (
     SubstrainSerializer,
     AggregatedCountSerializer,
     SampleSerializer,
+    FileSerializer,
 )
 from rest_framework import viewsets
 from rest_framework import filters as drf_filters
@@ -23,12 +24,34 @@ from django.http import FileResponse, Http404
 import os
 from rest_framework.decorators import api_view
 
+from rest_framework import permissions
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+
 
 def def_value():
     return {}
 
 
 class SampleViewSet(viewsets.ModelViewSet):
+    """
+    API Endpoint: Samples
+
+    This endpoint provides access to the samples within a plate. Each sample
+    is associated with a specific well on a plate and contains an array of file paths.
+    These files can be downloaded using the designated download endpoint.
+
+    Features:
+    - List View: Retrieve a list of all available samples.
+    - Detail View: Access details of a specific sample by providing
+      its unique database ID.
+
+    Filters:
+    - By Plate Barcode: Filter samples based on the barcode of the plate they are associated with.
+    - By Pseudoanonymized ID: Locate a specific sample using its pseudoanonymized ID.
+
+    Allowed HTTP Methods: GET, HEAD, OPTIONS
+    """
+
     queryset = Sample.objects.all()
     serializer_class = SampleSerializer
     filter_backends = (
@@ -37,8 +60,44 @@ class SampleViewSet(viewsets.ModelViewSet):
     )
     filterset_fields = ("plate__barcode", "pseudoanonymized_id")
 
+    http_method_names = ["get", "head", "options"]
+
 
 class SampleCountViewSet(viewsets.ModelViewSet):
+    """
+    API Endpoint: Sample Counts
+
+    This endpoint provides a view into the counts associated with each sample.
+    Sample counts  indicate various attributes such as alignment, length,
+    rpkm (Reads Per Kilobase Million), and more.
+
+    Features:
+    - List View: Access a list of all available sample counts.
+    - Aggregate View: Provides aggregated metrics for a given sample.
+     This action requires the pseudoanonymized ID of the sample to be provided in the query parameter  to fetch relevant metrics ( 'sample__pseudoanonymized_id') .
+
+    Filters:
+    - By Plate Barcode: Filter counts associated with a specific plate's barcode.
+    - By Substrain Name: View counts specific to a particular substrain.
+    - By Strain Name: Filter based on the overarching strain.
+    - By Pseudoanonymized ID: Filter counts using the sample's pseudoanonymized ID.
+
+    Supported Formats:
+    - JSON
+
+    CSV File Retrieval:
+    - **Swagger Caveat**: Within the Swagger interface, selecting the CSV format will yield the error "Could not satisfy the request Accept header."
+        However, the CSV data can be obtained using a designated header via `curl`.
+            Example:
+            ```bash
+            curl -H "Accept: text/csv" http://localhost:8000/api/samplecounts/ > sample_counts.csv
+            ```
+    - Alternatively, a csv file can be downloaded directly from our  default DRF API view.
+
+    Allowed HTTP Methods: GET, HEAD, OPTIONS
+
+    """
+
     queryset = SampleCount.objects.all()
     serializer_class = SampleCountSerializers
     filter_backends = (
@@ -56,23 +115,28 @@ class SampleCountViewSet(viewsets.ModelViewSet):
         CSVRenderer,
     ) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
 
+    http_method_names = ["get", "head", "options"]
+
     # to get csv with curl:
     # curl -H "Accept: text/csv" http://localhost:8000/api/samplecounts/ > sample_counts.csv
 
     """
-    Call the aggregate function it like this, with the obligatory parameter sample__pseudoanonymized_id: /api/samplecounts/aggregate/?sample__pseudoanonymized_id=896a06
+    Call the aggregate function it like this, with the obligatory parameter sample__pseudoanonymized_id:
+    
+     /api/samplecounts/aggregate/?sample__pseudoanonymized_id=896a06
     """
 
-    @action(detail=False, methods=["get"])
-    def aggregate(self, request):
-        pseudoanonymized_id = request.query_params.get(
-            "sample__pseudoanonymized_id", None
-        )
-        if pseudoanonymized_id is None:
-            raise ValidationError({"error": "pseudoanonymized_id filter is required"})
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="aggregate/(?P<sample__pseudoanonymized_id>[^/.]+)",
+    )
+    def aggregate(self, request, sample__pseudoanonymized_id=None):
+        if not sample__pseudoanonymized_id:
+            raise ValidationError({"error": "pseudoanonymized_id is required"})
 
         try:
-            sample = Sample.objects.get(pseudoanonymized_id=pseudoanonymized_id)
+            sample = Sample.objects.get(pseudoanonymized_id=sample__pseudoanonymized_id)
         except Sample.DoesNotExist:
             raise ValidationError(
                 {"error": "Sample with this pseudoanonymized_id does not exist"}
@@ -126,13 +190,43 @@ class SampleCountViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def finalize_response(self, request, response, *args, **kwargs):
-        if isinstance(request.accepted_renderer, CSVRenderer):
+        if hasattr(request, "accepted_renderer") and isinstance(
+            request.accepted_renderer, CSVRenderer
+        ):
             filename = "sample_counts.csv"
             response["Content-Disposition"] = f'attachment; filename="{filename}"'
         return super().finalize_response(request, response, *args, **kwargs)
 
 
 class MetadataViewSet(viewsets.ModelViewSet):
+    """
+    API Endpoint: Metadata
+
+    This endpoint provides access to metadata related to the samples or plates.
+
+    Features:
+    - List View: Access a list of all available metadata entries.
+    - Filters:
+      - By Plate Barcode: Filter metadata associated with a specific plate's barcode.
+
+    Supported Formats:
+    - JSON
+
+
+    CSV File Retrieval:
+    - **Swagger Caveat**: Within the Swagger interface, selecting the CSV format will yield the error
+      "Could not satisfy the request Accept header."
+      However, the CSV data can be obtained using a designated header via `curl`.
+          Example:
+          ```bash
+          curl -H "Accept: text/csv" http://localhost:8000/api/metadata/ > metadata.csv
+          ```
+      - Alternatively, a CSV file can be downloaded directly  from our default DRF API view.
+
+    Allowed HTTP Methods: GET, HEAD, OPTIONS
+
+    """
+
     queryset = Metadata.objects.all()
     serializer_class = MetadataSerializer
     filter_backends = (filters.DjangoFilterBackend, drf_filters.OrderingFilter)
@@ -142,6 +236,7 @@ class MetadataViewSet(viewsets.ModelViewSet):
         JSONRenderer,
         CSVRenderer,
     ) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
+    http_method_names = ["get", "head", "options"]
 
     # to get csv with curl:
     # curl -H "Accept: text/csv" http://localhost:8000/api/metadata/ > metadata.csv
@@ -157,36 +252,131 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class PlateViewSet(viewsets.ModelViewSet):
+    """
+    API Endpoint: Plates
+
+    This endpoint provides access to plates' data.
+
+    Features:
+    - List View: Retrieve a list of all available plates.
+    - Filtered View: Obtain details of a specific plate by providing its barcode.
+
+    Filters:
+    - By Plate Barcode: Obtain details of a specific plate using its barcode.
+      Example:
+      ```
+      /api/plates/?barcode=PLATE_BARCODE_HERE
+      ```
+      If a plate with the provided barcode exists, details of that plate will be returned.
+      If not, an empty list is returned.
+
+    Supported Formats:
+    - JSON
+
+    Allowed HTTP Methods: GET, HEAD, OPTIONS
+
+    Note: The barcode is not a primary key in this viewset, hence the custom filtering.
+    """
+
+    queryset = Plate.objects.all()
     serializer_class = PlateSerializer
-
-    def get_queryset(self):
-        barcode = self.request.query_params.get(
-            "barcode", None
-        )  # barcode is not the primary key so that is why we don't make use of ModelViewSet
-        if barcode is not None:
-            try:
-                plate = Plate.objects.get(barcode=barcode)
-                return [plate]
-            except ObjectDoesNotExist:
-                return []
-
-        return Plate.objects.all()
+    filter_backends = (
+        filters.DjangoFilterBackend,
+        drf_filters.OrderingFilter,
+    )
+    filterset_fields = ("barcode",)
+    http_method_names = ["get", "head", "options"]
 
 
 class SubstrainViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API Endpoint: Substrains
+
+    This endpoint provides access to the data of different substrains.
+
+    Features:
+    - List View: Retrieve a comprehensive list of all available substrains in the system.
+    - Detail View: Access detailed information of a specific substrain by using its unique ID.
+
+    Supported Formats:
+    - JSON
+
+    Allowed HTTP Methods: GET, HEAD, OPTIONS
+    """
+
     queryset = Substrain.objects.all()
     serializer_class = SubstrainSerializer
+    http_method_names = ["get", "head", "options"]
 
 
 @api_view(["GET"])
 def download_file(request, filepath):
+    """
+    API Endpoint: Download File
+
+    This endpoint offers a direct download mechanism for a file based on the provided filepath.
+
+    Features:
+    - Direct File Download: By supplying a valid filepath as a parameter, users can initiate the download of the specified file.
+
+    Parameters:
+    - filepath: Absolute path of the desired file (a list of available files is provided with each plate or sample item, as well as within the files API endpoint.)
+
+    Response:
+    - If the file exists and is accessible: Initiates a file download.
+    - If the file does not exist or is inaccessible: Returns an appropriate error message.
+
+    Allowed HTTP Methods: GET
+    """
+
     file_path = filepath
     if os.path.exists(file_path):
-        response = FileResponse(
-            open(file_path, "rb"), content_type="application/octet-stream"
-        )
-        response[
-            "Content-Disposition"
-        ] = f"attachment; filename={os.path.basename(file_path)}"
-        return response
-    raise Http404("File not found.")
+        try:
+            response = FileResponse(
+                open(file_path, "rb"), content_type="application/octet-stream"
+            )
+            response[
+                "Content-Disposition"
+            ] = f"attachment; filename={os.path.basename(file_path)}"
+            return response
+        except PermissionError:
+            return Response(
+                {"detail": "Permission denied for the requested file."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        except FileNotFoundError:
+            raise Http404("File doesn't have permission to be downloaded.")
+
+
+class FileViewSet(viewsets.ModelViewSet):
+    """
+    API Endpoint: Files
+
+    Overview:
+    The endpoint facilitates access to file paths tied to a specific sample or plate.
+    The files can be downloaded using the designated download endpoint.
+
+
+
+    Available Filters:
+    - **Plate Barcode**: Narrow down file paths associated with a particular plate's barcode.
+    - **Sample Pseudoanonymized ID**: Filter files specific to a given sample using its unique pseudoanonymized ID.
+
+    Supported Data Formats:
+    - JSON
+
+    Permitted HTTP Methods: GET, HEAD, OPTIONS"""
+
+    queryset = File.objects.all()
+    serializer_class = FileSerializer
+    http_method_names = ["get", "head", "options"]
+
+    filter_backends = (
+        filters.DjangoFilterBackend,
+        drf_filters.OrderingFilter,
+    )
+
+    filterset_fields = (
+        "plate__barcode",
+        "sample__pseudoanonymized_id",
+    )
