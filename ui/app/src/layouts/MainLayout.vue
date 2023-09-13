@@ -47,10 +47,19 @@ const navigateToHome = async () => {
   }
 }
 
+const navigateToAPI = async () => {
+  try {
+    await router.push({path: '/api/docs'})
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const links = [
   {name: 'Home', function: () => navigateToHome()},
   {name: 'Database', function: () => navigateToSearch()},
   {name: 'About', function: () => navigateToAboutPage()},
+  {name: 'API', function: () => navigateToAPI()},
 ]
 </script>
 
