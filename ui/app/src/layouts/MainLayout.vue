@@ -59,7 +59,7 @@ const links = [
   {name: 'Home', function: () => navigateToHome()},
   {name: 'Database', function: () => navigateToSearch()},
   {name: 'About', function: () => navigateToAboutPage()},
-  {name: 'API', function: () => navigateToAPI()},
+  // {name: 'API', function: () => navigateToAPI()}, #TODO: make it work from the first click
 ]
 </script>
 
