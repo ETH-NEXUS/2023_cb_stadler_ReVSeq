@@ -49,7 +49,7 @@ const navigateToHome = async () => {
 
 const navigateToAPI = async () => {
   try {
-    await router.push({path: '/api/docs'})
+    await router.push({path: '/api/docs/'})
   } catch (err) {
     console.error(err)
   }
