@@ -25,8 +25,8 @@ rule merge_lanes:
         r1 = find_input_fastq_lanes_r1,
         r2 = find_input_fastq_lanes_r2,
     output:
-        r1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz",
-        r2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz",
+        r1 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz"),
+        r2 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz"),
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/merge_lanes/merge_lanes.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/merge_lanes/merge_lanes.err.log",
@@ -75,8 +75,8 @@ rule trim_galore:
         r1 = rules.merge_lanes.output.r1,
         r2 = rules.merge_lanes.output.r2,
     output:
-        r1 = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz"),#temp
-        r2 = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R2_val_2.fq.gz"),#temp
+        r1 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz"),#temp
+        r2 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R2_val_2.fq.gz"),#temp
     params:
         base_name = "data/{sample}",
         outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore",

@@ -21,27 +21,16 @@ def get_top_strain(inputdir, sample, dirname):
     else:
         sys.exit("ERROR: unknown subdir to fetch the assignments")
     top_strain = strain.loc[strain['rpkm_proportions'] == max(strain['rpkm_proportions'])]
+    top_strain = top_strain.drop(columns="Unnamed: 0", errors="ignore")
+    if len(top_strain) > 1:
+        if top_strain['coverage'][0] == 0:
+            top_strain = top_strain.head(1)
+            top_strain['name'] = ""
+            top_strain['outlier'] = ""
+            top_strain = top_strain.drop(columns="Unnamed: 0", errors="ignore")
+        else:
+            sys.exit("Error: multiple highest strains with exactly the same rpkm proportion for sample: " + sample)
     return(top_strain)
-
-
-def move_last_column_first(df):
-    cols = df.columns.tolist()
-    cols = cols[-1:] + cols[:-1]
-    df = df[cols]
-    return df
-
-
-def create_line(df, linetype, sample):
-    if linetype == "substrain":
-        names_dict = {"name": "substrain_name", "aligned_reads": "aligned_reads_substrain", "rpkm": "rpkm_substrain", "rpkm_proprtions": "rpkm_proportions_substrain", "outlier": "outlier_substrain", "percentile_threshold": "percentile_threshold_substrain"}
-    elif linetype == "strain":
-        names_dict = {"name": "strain_name", "aligned_reads": "aligned_reads_strain", "rpkm": "rpkm_strain", "rpkm_proprtions": "rpkm_proportions_strain", "outlier": "outlier_strain", "percentile_threshold": "percentile_threshold_strain"}
-    else:
-        sys.exit("ERROR: invalid linetype")
-    df = df.rename(columns=names_dict)
-    df['sample'] = sample
-    df = move_last_column_first(df)
-    return df
 
 
 # Script
@@ -74,9 +63,27 @@ if __name__ == '__main__':
             dehuman_counts = f.readline().strip()
         with open(sampledir + "/" + args.duplicates_subdir + "/" + sample + "_readcount.txt") as f:
             duplicate_counts = f.readline().strip()
-        line = pd.DataFrame({"sample_name": sample, "all_reads": bwa_counts_all, "aligned_reads": bwa_counts, "dehumanized_reads": dehuman_counts, "filtered_reads": filter_counts, "deduplicated_reads": duplicate_counts}, index=[0])
+        if bwa_counts == '0':
+            dehuman_percent = 0
+        else:
+            dehuman_percent = int(dehuman_counts)/int(bwa_counts)*100
+        if dehuman_counts == '0':
+            filter_percent = 0
+        else:
+            filter_percent = int(filter_counts)/int(dehuman_counts)*100
+        if filter_counts == '0':
+            duplicate_percent = 0
+        else:
+            duplicate_percent = int(duplicate_counts)/int(filter_counts)*100
+        if bwa_counts_all == '0':
+            duplicate_percent_all = 0
+            bwa_percent = 0
+        else:
+            duplicate_percent_all = int(duplicate_counts)/int(bwa_counts_all)*100
+            bwa_percent = int(bwa_counts)/int(bwa_counts_all)*100
+        line = pd.DataFrame({"sample_name": sample, "all_reads": bwa_counts_all, "aligned_reads": bwa_counts, "aligned - % of all": bwa_percent, "dehumanized_reads": dehuman_counts, "dehumanized - % of aligned": dehuman_percent, "filtered_reads": filter_counts, "filtered - % of dehumanized": filter_percent, "deduplicated_reads": duplicate_counts, "deduplicated - % of filtered": duplicate_percent, "deduplicated - % of total": duplicate_percent_all}, index=[0])
         try:
-            aggregated_qc.append(line)
+            aggregated_qc = aggregated_qc.append(line)
         except NameError:
             aggregated_qc = line
 

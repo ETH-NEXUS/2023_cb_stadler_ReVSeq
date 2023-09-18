@@ -29,5 +29,5 @@ RUN export PATH=/data/revseq/:$PATH
 RUN conda install -y -n base -c conda-forge mamba libarchive
 RUN mamba install -y -c conda-forge -c bioconda -n base snakemake=7.32.3
 
-#ENTRYPOINT [ "sleep", "10d" ]
-ENTRYPOINT [ "conda", "run", "-n", "base", "/data/revseq/run_revseq" ]
+ENTRYPOINT [ "sleep", "10d" ]
+#ENTRYPOINT [ "conda", "run", "-n", "base", "/data/revseq/run_revseq" ]

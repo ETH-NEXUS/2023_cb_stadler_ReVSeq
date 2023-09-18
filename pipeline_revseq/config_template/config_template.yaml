@@ -45,10 +45,10 @@ tools:
     min_map_qual: 20
   assign_virus:
     # Upper percentile limit to use to find viral sequences with outlier RPKM values
-    outlier_percentile: 0.95
+    outlier_percentile: 95
     # Upper percentile limit to use to find viral sequences with outlier RPKM values
     # Used only after collapsing strains
-    outlier_percentile_collapsed: 0.95
+    outlier_percentile_collapsed: 95
     # Lookup table with the matches between substrains and major strains
     # It is used to collapse the substrains available for the bioinformatics analysis
     # to the major strains available in the panel

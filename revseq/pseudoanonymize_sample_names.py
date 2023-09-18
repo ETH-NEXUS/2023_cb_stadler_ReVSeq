@@ -190,7 +190,7 @@ if __name__ == '__main__':
         newsamples = newsamples.rename(columns={0: "Sample number", 1: "ethid"})
         if len(newsamples.index) > 0:
             outdir = create_plate_directory(plate, args.pseudoanondir)
-            [ link_pseudoanonimised_names(s, ethid, args.mirrordir, args.pseudoanondir, plate) for s,ethid in zip(newsamples["Sample number"], newsamples["ethid"]) ]
+            #[ link_pseudoanonimised_names(s, ethid, args.mirrordir, args.pseudoanondir, plate) for s,ethid in zip(newsamples["Sample number"], newsamples["ethid"]) ]
             try:
                 pd.DataFrame(newsamples).to_csv(outdir + "/" + plate + "_pseudoanon_table.tsv", sep="\t", index=None)
             except:

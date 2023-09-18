@@ -14,15 +14,12 @@ import argparse
 from matplotlib import pyplot
 
 def get_outliers(aggregated, percentile, coverage):
-    perc90 = np.quantile(aggregated['rpkm_proportions'], percentile)
-    q1 = np.quantile(aggregated['rpkm_proportions'], 0.25)
-    iqr = perc90-q1
-    upper_bound = perc90+(1.5*iqr)
+    perc = np.percentile(aggregated['rpkm_proportions'], percentile)
     if coverage != 0:
-        aggregated['outlier'] = np.where(aggregated['rpkm_proportions'] >= upper_bound, "*", "")
+        aggregated['outlier'] = np.where(np.logical_and(aggregated['rpkm_proportions'] >= perc, aggregated['rpkm_proportions'] != 0), "*", "")
     else:
         aggregated['outlier'] = ''
-    aggregated['percentile_threshold'] = str(percentile * 100) + " percentile: " + "{:.4f}".format(upper_bound)
+    aggregated['percentile_threshold'] = str(percentile) + " percentile: " + "{:.4f}".format(perc)
     return aggregated
 
 
@@ -88,6 +85,8 @@ if __name__ == '__main__':
 
         # Collapsing substrains in major strains using the lookup table
     aggregated_stats.index = aggregated_stats.index.map(lookup)
+    if np.nan in aggregated_stats.index.tolist():
+        sys.exit("Error: The strain/substrain lookup did not contain correct entries and produced empty names. Please check the lookup table for syntax errors or missing entries.")
     aggregated_stats = aggregated_stats.groupby(level=0)[["aligned_reads","rpkm", "rpkm_proportions"]].sum()
     aggregated_stats = get_outliers(aggregated_stats, args.outlier_percentile_collapsed, coverage)
     aggregated_stats = aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
