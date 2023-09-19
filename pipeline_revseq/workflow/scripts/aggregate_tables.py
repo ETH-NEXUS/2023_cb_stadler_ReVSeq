@@ -44,12 +44,19 @@ def get_alternative_tops(inputdir, sample, dirname, top_strain_name):
     else:
         sys.exit("ERROR: unknown subdir to fetch the assignments")
     top_strain = strain.loc[strain['outlier'] == "*"]
-    top_strain = top_strain['name'].to_list()
-    if len(top_strain) == 1 or len(top_strain) == 0:
+    outliers = top_strain[['name', 'rpkm_proportions']].values.tolist()
+    if len(outliers) == 1 or len(outliers) == 0:
         return ""
-    top_strain.remove(top_strain_name)
-    top_strain = ",".join(top_strain)
-    return(top_strain)
+    matches = [ item for item in outliers if top_strain_name in item ]
+    if len(matches) != 1:
+        sys.exit("ERROR: multiple matches for the top strain. This should never happen")
+    outliers.remove(matches[0])
+    for item in outliers:
+        if item == outliers[0]:
+            mystring = item[0] + " (" + f'{item[1]:.5f}' + ")"
+        else:
+            mystring = mystring + ", " + item[0] + " (" + f'{item[1]:.5f}' + ")"
+    return(mystring)
 
 
 def move_last_column_first(df):
@@ -103,16 +110,16 @@ if __name__ == '__main__':
             qc = f.readline().strip()
         if qc == "PASS":
             top_strain['qc_readnum'] = 'passed'
-            try:
-                aggregated_substrain = pd.concat([aggregated_substrain, top_substrain], ignore_index=True)
-            except NameError:
-                #print("first line")
-                aggregated_substrain = top_substrain
-            try:
-                aggregated_strain = pd.concat([aggregated_strain, top_strain], ignore_index=True)
-            except NameError:
-                #print("first line")
-                aggregated_strain = top_strain
+        try:
+            aggregated_substrain = pd.concat([aggregated_substrain, top_substrain], ignore_index=True)
+        except NameError:
+            #print("first line")
+            aggregated_substrain = top_substrain
+        try:
+            aggregated_strain = pd.concat([aggregated_strain, top_strain], ignore_index=True)
+        except NameError:
+            #print("first line")
+            aggregated_strain = top_strain
 
     aggregated_table =  aggregated_substrain.merge(aggregated_strain, on="sample")
     aggregated_table.to_csv(args.outfile, sep="\t", float_format='%.5f')
