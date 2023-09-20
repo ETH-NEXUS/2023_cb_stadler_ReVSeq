@@ -13,4 +13,5 @@ dependencies:
   - scipy
   - biopython
   - matplotlib
+  - shortuuid
   

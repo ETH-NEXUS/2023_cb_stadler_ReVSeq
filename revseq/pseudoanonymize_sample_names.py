@@ -15,13 +15,13 @@
 import pandas as pd
 import sys, os, re
 import argparse
-import uuid
+import shortuuid
 import base64
 import unittest
 import gzip
 
-def truncated_uuid4():
-    return str(uuid.uuid4())[:6]
+def generate_id(length=6):
+    return shortuuid.ShortUUID().random(length=length)
 
 
 def detect_empty_sample(samplename, anondir, plate):
@@ -48,14 +48,14 @@ def generate_new_ethids(anon_df, all_samples):
                 print("Sample already in anonymization table. Skipping.")
                 continue
             else:
-                newethid = truncated_uuid4()
+                newethid = generate_id()
                 while (newethid in anon_df["ethid"]) and any(newethid == sublist[1] for sublist in newsamples):
-                    newethid = truncated_uuid4()
+                    newethid = generate_id()
                 newsamples.append( [samplename, newethid] )
         else:
-            newethid = truncated_uuid4()
+            newethid = generate_id()
             while any(newethid == sublist[1] for sublist in newsamples):
-                newethid = truncated_uuid4()
+                newethid = generate_id()
             newsamples.append( [samplename, newethid] )
     newsamples = pd.DataFrame(newsamples)
     return newsamples
