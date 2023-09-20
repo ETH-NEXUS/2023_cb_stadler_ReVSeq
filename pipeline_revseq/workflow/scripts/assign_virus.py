@@ -20,7 +20,7 @@ def get_outliers(aggregated, percentile, coverage):
     else:
         aggregated['outlier'] = ''
     aggregated['percentile_threshold'] = str(percentile) + " percentile: " + "{:.4f}".format(perc)
-    return aggregated
+    return [aggregated, perc]
 
 
 def rpkm(aggregated, coverage):
@@ -71,7 +71,9 @@ if __name__ == '__main__':
     idxstats = pd.merge(idxstats,refs, on='id', how='inner')
     aggregated_stats = idxstats.groupby(by='name')[["aligned","length"]].sum()
     aggregated_stats = rpkm(aggregated_stats, coverage)
-    aggregated_stats = get_outliers(aggregated_stats, args.outlier_percentile, coverage)
+    all_outlier_info = get_outliers(aggregated_stats, args.outlier_percentile, coverage)
+    aggregated_stats = all_outlier_info[0]
+    outlier_threshold = all_outlier_info[1]
     aggregated_stats = aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
     aggregated_stats["coverage"] = coverage
     aggregated_stats["coverage_threshold"] = args.dp_threshold
@@ -81,6 +83,10 @@ if __name__ == '__main__':
         aggregated_stats["qc_status"] = "passed"
     aggregated_stats.to_csv(args.out_prefix + "substrain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])
+    for row in aggregated_stats.itertuples():
+        rpkm_proportions = row.rpkm_proportions
+        if rpkm_proportions > outlier_threshold:
+            pyplot.text(1.05, rpkm_proportions, row.Index, ha='right', va='bottom', fontsize='xx-small')
     pyplot.savefig(fname=args.out_prefix + "substrain_proportions_boxplot.pdf", dpi=300, format="pdf")
 
         # Collapsing substrains in major strains using the lookup table
@@ -88,7 +94,9 @@ if __name__ == '__main__':
     if np.nan in aggregated_stats.index.tolist():
         sys.exit("Error: The strain/substrain lookup did not contain correct entries and produced empty names. Please check the lookup table for syntax errors or missing entries.")
     aggregated_stats = aggregated_stats.groupby(level=0)[["aligned_reads","rpkm", "rpkm_proportions"]].sum()
-    aggregated_stats = get_outliers(aggregated_stats, args.outlier_percentile_collapsed, coverage)
+    all_outlier_info = get_outliers(aggregated_stats, args.outlier_percentile_collapsed, coverage)
+    aggregated_stats = all_outlier_info[0]
+    outlier_threshold = all_outlier_info[1]
     aggregated_stats = aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
     aggregated_stats["coverage"] = coverage
     aggregated_stats["coverage_threshold"] = args.dp_threshold
@@ -98,5 +106,9 @@ if __name__ == '__main__':
         aggregated_stats["qc_status"] = "passed"
     aggregated_stats.to_csv(args.out_prefix + "strain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])
+    for row in aggregated_stats.itertuples():
+        rpkm_proportions = row.rpkm_proportions
+        if rpkm_proportions > outlier_threshold:
+            pyplot.text(1.05, rpkm_proportions, row.Index, ha='right', va='bottom', fontsize='xx-small')
     pyplot.savefig(fname=args.out_prefix + "strain_proportions_boxplot.pdf", dpi=300, format="pdf")
 
