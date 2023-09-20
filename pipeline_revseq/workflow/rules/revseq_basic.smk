@@ -9,7 +9,7 @@ rule filter_alignment:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/filter_alignment/filter_alignment.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/filter_alignment/filter_alignment.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/filter_alignment/{sample}.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/filter_alignment/{sample}.benchmark"
     conda:
         "../envs/samtools.yaml"
     shell:
@@ -38,7 +38,7 @@ rule remove_duplicates:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/remove_duplicates/remove_duplicates.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/remove_duplicates/remove_duplicates.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/remove_duplicates/{sample}.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/remove_duplicates/{sample}.benchmark"
     conda:
         "../envs/picard.yaml"
     shell:
@@ -110,7 +110,7 @@ rule pileup:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/pileup/pileup.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/pileup/pileup.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/pileup/{sample}.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/pileup/{sample}.benchmark"
     conda:
         "../envs/samtools.yaml"
     shell:
@@ -132,7 +132,7 @@ rule idxstats:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/idxstats/{sample}_idxstats.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/idxstats/{sample}_idxstats.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/idxstats/{sample}_idxstats.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/idxstats/{sample}_idxstats.benchmark"
     conda:
         "../envs/samtools.yaml"
     shell:
@@ -163,7 +163,7 @@ rule assign_virus:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/assign_virus/{sample}_assignment.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/assign_virus/{sample}_assignment.benchmark"
     conda:
         "../envs/python.yaml"
     shell:
@@ -194,7 +194,7 @@ rule validate_assignment:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/validate_assignment/{sample}_validation.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/validate_assignment/{sample}_validation.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/validate_assignment/{sample}_validation.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/validate_assignment/{sample}_validation.benchmark"
     conda:
         "../envs/python.yaml"
     shell:
@@ -224,7 +224,7 @@ rule consensus:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus/{sample}_consensus.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus/{sample}_consensus.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/consensus/{sample}_consensus.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/consensus/{sample}_consensus.benchmark"
     conda:
         "../envs/bcftools.yaml"
     shell:
@@ -262,7 +262,7 @@ rule postprocess_consensus:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/postprocess_consensus/{sample}_consensus.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/postprocess_consensus/{sample}_consensus.benchmark"
     conda:
         "../envs/python.yaml"
     shell:

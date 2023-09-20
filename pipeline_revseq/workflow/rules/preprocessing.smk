@@ -86,7 +86,7 @@ rule trim_galore:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/trim_galore/{sample}_trim_galore.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/trim_galore/{sample}_trim_galore.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/trim_galore/{sample}.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/trim_galore/{sample}.benchmark"
     conda:
         "../envs/trim_galore.yaml"
     threads: config['threads']

@@ -13,7 +13,7 @@
 #        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bwa/bwa.out.log",
 #        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bwa/bwa.err.log",
 #    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/bwa/{sample}.benchmark"
+#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/bwa/{sample}.benchmark"
 #    conda:
 #        "../envs/bwa.yaml"
 #    threads: config["threads"]
@@ -39,7 +39,7 @@
 #        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/dehuman/dehuman.out.log",
 #        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/dehuman/dehuman.err.log",
 #    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/dehuman/{sample}.benchmark"
+#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/dehuman/{sample}.benchmark"
 #    conda:
 #        "../envs/samtools.yaml"
 #    shell:
@@ -62,7 +62,7 @@ rule cram:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/cram/fastq_to_cram.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/cram/fastq_to_cram.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/cram/{sample}.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/cram/{sample}.benchmark"
     conda:
         "../envs/samtools.yaml"
     shell:
