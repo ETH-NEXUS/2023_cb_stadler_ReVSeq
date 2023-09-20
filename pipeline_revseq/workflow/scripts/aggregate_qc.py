@@ -47,7 +47,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     ignorable_files = ['logs', 'multiqc', 'multiqc_filtered', 'package_results', 'complete.txt',  'aggregate']
 
-    #add args here
     files = os.listdir(args.inputdir)
     samples = [ file for file in files if file not in ignorable_files]
 

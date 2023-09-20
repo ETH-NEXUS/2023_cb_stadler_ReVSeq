@@ -2,10 +2,12 @@ name: assign_virus
 channels:
 - conda-forge
 - bioconda
+- r
 - defaults
 dependencies:
 - python==3.6*
 - pip
+- pysam
 - pip:
   - pandas
   - scipy
