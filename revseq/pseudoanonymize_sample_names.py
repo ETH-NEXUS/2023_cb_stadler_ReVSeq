@@ -24,10 +24,10 @@ def generate_id(length=6):
     return shortuuid.ShortUUID().random(length=length)
 
 
-def detect_empty_sample(samplename, anondir, plate):
+def detect_empty_sample(samplename, outdir, plate):
     # samples with 0 reads crash the pipeline and should be skipped
     # these samples will not be added to the samplemap to avoid crashing the procedure
-    inputdir = anondir + "/" + plate + "/" + samplename 
+    inputdir = outdir + "/" + plate + "/" + samplename 
     file = os.path.join(inputdir, os.listdir(inputdir)[0])
     with gzip.open(file, 'rb') as f:
         data = f.read(1)
@@ -80,19 +80,19 @@ def link_pseudoanonimised_names(samplename, ethid, sampledir, anonymizeddir, pla
             sys.exit("ERROR: cannot create the symlink for sample " + ethid)
 
 
-def create_plate_directory(platename, anondir):
+def create_plate_directory(platename, outdir):
     print("Creating directory for plate: " + platename)
     try:
-        os.mkdir(anondir + "/" + platename)
+        os.mkdir(outdir + "/" + platename)
     except FileExistsError:
-        sys.exit("ERROR: the folder " + anondir + "/" + platename, " already exisits")
-    return anondir + "/" + platename
+        sys.exit("ERROR: the folder " + outdir + "/" + platename, " already exisits")
+    return outdir + "/" + platename
 
 
-def create_sample_map(samples, anondir):
+def create_sample_map(samples, outdir):
     lanes = []
     for id in samples:
-        rawfiles = os.scandir(anondir + "/" + plate + "/" + id)
+        rawfiles = os.scandir(outdir + "/" + plate + "/" + id)
         lanes_partial = []
         for file in rawfiles:
             lanes_partial.append(file.name.split("_")[1])
@@ -141,8 +141,8 @@ def verify_if_complete_plate(new_plates, mirrordir):
     return complete
 
 
-def get_pseudoanon_names(anondir):
-    plates = [ anondir + "/" + plate for plate in os.listdir(anondir) ]
+def get_pseudoanon_names(outdir):
+    plates = [ outdir + "/" + plate for plate in os.listdir(outdir) ]
     anon = []
     for plate in plates:
         anon_names = [ plate + "/" + sample for sample in os.listdir(plate) ]
@@ -155,17 +155,17 @@ if __name__ == '__main__':
     # Parse input args
     parser = argparse.ArgumentParser(description='fetch the primers positions on the reference',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--pseudoanondir', required=True, type=str, help='the path to the directory where the pseudoanonymized directory structure needs to be written')
+    parser.add_argument('--outdir', required=True, type=str, help='the path to the output directory')
     parser.add_argument('--metadatadir', required=True, type=str, help='the path to the directory where the metadata are mirrored')
     parser.add_argument('--mirrordir', required=True, type=str, help='the directory containing all raw data samples, one folder per sample')
 
     args = parser.parse_args()
 
-    processed_plates = os.listdir(args.pseudoanondir)
+    processed_plates = os.listdir(args.outdir)
     if len(processed_plates) == 0:
         print("Warning: no processed plates found. If this is not the very first run of the workflow please check the configuration")
 
-    anon = get_pseudoanon_names(args.pseudoanondir)
+    anon = get_pseudoanon_names(args.outdir)
 
     new_plates = verify_if_new_plate(args.metadatadir, processed_plates)
     if len(new_plates) == 0:
@@ -189,13 +189,12 @@ if __name__ == '__main__':
         newsamples = generate_new_ethids(anon, sample)
         newsamples = newsamples.rename(columns={0: "Sample number", 1: "ethid"})
         if len(newsamples.index) > 0:
-            outdir = create_plate_directory(plate, args.pseudoanondir)
-            #[ link_pseudoanonimised_names(s, ethid, args.mirrordir, args.pseudoanondir, plate) for s,ethid in zip(newsamples["Sample number"], newsamples["ethid"]) ]
+            outdir = create_plate_directory(plate, args.outdir)
             try:
                 pd.DataFrame(newsamples).to_csv(outdir + "/" + plate + "_pseudoanon_table.tsv", sep="\t", index=None)
             except:
                 sys.exit("Error: could not write the pseudoanonymization table. All directories have been created and need to be deleted for the procedure to move forward\nTo know what directories to delete, check in " + args.anonymizeddir + " the ethids that are not present in the pseudoanonymised table and delete all of them")
-            all_samples_status = [ detect_empty_sample(sample, args.pseudoanondir, plate) for sample in newsamples["ethid"].to_list() ]
+            all_samples_status = [ detect_empty_sample(sample, args.outdir, plate) for sample in newsamples["ethid"].to_list() ]
             empty_samples = [ sample[0] for sample in all_samples_status if sample[1] == "empty"]
             with open(outdir + "/" + plate + "_empty_samples.txt", 'w') as f:
                 f.write("\n".join(empty_samples))
@@ -207,7 +206,7 @@ if __name__ == '__main__':
 
             not_empty_samples = [ sample[0] for sample in all_samples_status if sample[1] == "not_empty"]
 
-            samplemap = create_sample_map(not_empty_samples, args.pseudoanondir)
+            samplemap = create_sample_map(not_empty_samples, args.outdir)
             samplemap.rename(columns={0: "sample", 1: "lane"})
             try:
                 samplemap.to_csv(outdir + "/" + plate + "_samplemap.tsv", sep="\t", index=None)

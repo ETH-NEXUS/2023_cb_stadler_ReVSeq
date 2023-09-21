@@ -1,21 +1,21 @@
-rule fastqc_raw:
-    input:
-        inputdir = expand(config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/{{sample}}/")
-    output:
-        zip1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R1_001_fastqc.zip",
-        zip2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R2_001_fastqc.zip"
-    params:
-        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw"
-    log:
-        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc_raw/fastqc.out.log",
-        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc_raw/fastqc.err.log",
-    benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/fastqc_raw/fastqc.benchmark"
-    conda:
-        "../envs/qc.yaml"
-    threads: config["threads"]
-    shell:
-        "fastqc {input.inputdir}/{wildcards.sample}_L00*_R*_001.fastq.gz -t {threads} -o {params.outdir}  2> >(tee {log.errfile} >&2)"
+#rule fastqc_raw:
+#    input:
+#        inputdir = expand(config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/{{sample}}/")
+#    output:
+#        zip1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R1_001_fastqc.zip",
+#        zip2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R2_001_fastqc.zip"
+#    params:
+#        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw"
+#    log:
+#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc_raw/fastqc.out.log",
+#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc_raw/fastqc.err.log",
+#    benchmark:
+#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/fastqc_raw/fastqc.benchmark"
+#    conda:
+#        "../envs/qc.yaml"
+#    threads: config["threads"]
+#    shell:
+#        "fastqc {input.inputdir}/{wildcards.sample}_L00*_R*_001.fastq.gz -t {threads} -o {params.outdir}  2> >(tee {log.errfile} >&2)"
 
 
 rule fastqc_merged:
@@ -31,7 +31,7 @@ rule fastqc_merged:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc/fastqc_merged.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc/fastqc_merged.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/fastqc/fastqc_merged.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/fastqc/{sample}_fastqc_merged.benchmark"
     conda:
         "../envs/qc.yaml"
     threads: config["threads"]
@@ -53,7 +53,7 @@ rule samtoolsstats:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/samtoolsstats/samtoolsstats.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/samtoolsstats/samtoolsstats.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/samtoolsstats/samtoolsstats.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/samtoolsstats/{sample}_samtoolsstats.benchmark"
     conda:
         "../envs/samtools.yaml"
     threads: config["threads"]
@@ -75,7 +75,7 @@ rule rseqc:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/rseqc/rseqc.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/rseqc/rseqc.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/rseqc/rseqc.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/rseqc/{sample}_rseqc.benchmark"
     conda:
         "../envs/qc.yaml"
     shell:
@@ -96,7 +96,7 @@ rule qualimap:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap/qualimap.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/qualimap/qualimap.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/qualimap/qualimap.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/qualimap/{sample}_qualimap.benchmark"
     conda:
         "../envs/qc.yaml"
     shell:
@@ -151,7 +151,7 @@ rule samtoolsstats_filtered:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/samtoolsstats_filtered/samtoolsstats.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/samtoolsstats_filtered/samtoolsstats.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/samtoolsstats_filtered/samtoolsstats.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/samtoolsstats_filtered/{sample}_samtoolsstats.benchmark"
     conda:
         "../envs/samtools.yaml"
     threads: config["threads"]
@@ -171,7 +171,7 @@ rule rseqc_filtered:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/rseqc_filtered/rseqc.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/rseqc_filtered/rseqc.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/rseqc_filtered/rseqc.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/rseqc_filtered/{sample}_rseqc.benchmark"
     conda:
         "../envs/qc.yaml"
     shell:

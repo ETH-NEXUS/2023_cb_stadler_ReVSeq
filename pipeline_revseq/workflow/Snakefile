@@ -48,7 +48,7 @@ rule all:
         #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa", sample = sample_ids),
         #####qc main
-        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),
+        #####expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),
         #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_merged/{sample}_merged_R1_fastqc.zip", sample = sample_ids),
         #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt", sample = sample_ids),
         #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/rseqc/{sample}_bam_stat.txt", sample = sample_ids),

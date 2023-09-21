@@ -3,7 +3,7 @@
 # Note: all paths should refer to the directory structure within the docker container
 inputOutput:
   # Full path to directory with input fastq files. Input raw data can be gzip-compressed
-  input_fastqs: "/data/results/pseudoanon_data"
+  input_fastqs: "/data/viollier_mirror/raw_sequences"
   # Full path to directory where the output must be written
   output_dir: "/data/results"
 
