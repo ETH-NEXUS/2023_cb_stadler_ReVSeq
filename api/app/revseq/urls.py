@@ -28,7 +28,7 @@ urlpatterns = [
     path("api/auth/login/", LoginView.as_view(), name="login"),
     path("api/auth/logout/", LogoutView.as_view(), name="logout"),
     path("api/auth/users/me/", UserViewSet.as_view({"get": "retrieve"}), name="me"),
-    path("api/download/<path:filepath>/", download_file, name="download_file"),
+    re_path(r"^api/download/(?P<filepath>.+)/$", download_file, name="download_file"),
     path("api/", include(router.urls)),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
