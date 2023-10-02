@@ -339,7 +339,12 @@ def download_file(request, filepath):
                 status=status.HTTP_403_FORBIDDEN,
             )
         except FileNotFoundError:
-            raise Http404("File doesn't have permission to be downloaded.")
+            return Response(
+                {"detail": "File not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+    else:
+        raise Http404("File doesn't exist or is inaccessible.")
 
 
 class FileViewSet(viewsets.ModelViewSet):
