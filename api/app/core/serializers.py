@@ -18,6 +18,7 @@ class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = (
+            "id",
             "path",
             "checksum",
         )

@@ -324,6 +324,7 @@ def download_file(request, filepath):
     """
 
     file_path = filepath
+    print("file_path", file_path, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     if os.path.exists(file_path):
         try:
             response = FileResponse(
