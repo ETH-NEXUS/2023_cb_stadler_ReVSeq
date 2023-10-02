@@ -324,6 +324,8 @@ def download_file(request, filepath):
     """
 
     file_path = filepath
+    if not file_path.startswith("/"):
+        file_path = "/" + file_path
     print("file_path", file_path, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     if os.path.exists(file_path):
         try:
