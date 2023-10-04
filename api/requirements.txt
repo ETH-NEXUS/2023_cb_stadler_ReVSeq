@@ -11,7 +11,7 @@ colorful-logger==0.1.13
 gunicorn==21.2.0
 uvicorn==0.23.0
 psycopg2==2.9.6
-pyyaml==6.0.1
+pyyaml==5.1
 pandas==2.0.3
 numpy==1.25.2
 tqdm==4.65.0
