@@ -12,6 +12,9 @@ from .serializers import UserSerializer
 
 from rest_framework import viewsets
 import logging
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
 
@@ -62,4 +65,12 @@ class LogoutView(View):
             return JsonResponse({"detail": _("You're not logged in.")}, status=400)
 
         logout(request)
+
+        # The url where the user was before logging out
+        referer_url = request.META.get('HTTP_REFERER', '')
+        path = urlparse(referer_url).path
+
+        if path.startswith('/api/'):
+            return HttpResponseRedirect(reverse('api_login'))
+
         return JsonResponse({"detail": _("Successfully logged out.")})

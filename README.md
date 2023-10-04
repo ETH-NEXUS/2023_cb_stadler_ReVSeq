@@ -129,3 +129,28 @@ Data import is organized by plates. The command for importing requires a single 
 python manage.py import <path_to_results_dir>
 ```
 
+
+## Authentication & Login
+
+### Browser Access
+
+When accessing the API through a browser, you'll automatically be redirected to the login page if you're not authenticated.
+
+### Terminal Access
+
+For terminal or command-line access, you'll need to use JWT (JSON Web Token) authentication. Follow the steps below:
+
+1 Use the following command to obtain an access token:
+
+```bash
+curl -X POST -H "Content-Type: application/json"  -H "Accept: application/json" -d '{"username": "your_username", "password": "your_password"}' https://revseq.nexus.ethz.ch/api/token/
+
+```
+
+2. Include the obtained access token in the Authorization header of your requests. For example:
+
+```bash
+curl -X GET  -H "Authorization: Bearer your_access_token" -H "Accept: application/json"  https://revseq.nexus.ethz.ch/api/samples/
+
+
+```

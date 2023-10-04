@@ -13,7 +13,6 @@ from rest_framework import viewsets
 from rest_framework import filters as drf_filters
 from rest_framework_csv.renderers import CSVRenderer
 from rest_framework.settings import api_settings
-from rest_framework.renderers import JSONRenderer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from easydict import EasyDict as edict
@@ -24,8 +23,13 @@ from django.http import FileResponse, Http404
 import os
 from rest_framework.decorators import api_view
 
-from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.renderers import JSONRenderer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+
+
 
 
 def def_value():
@@ -51,7 +55,8 @@ class SampleViewSet(viewsets.ModelViewSet):
 
     Allowed HTTP Methods: GET, HEAD, OPTIONS
     """
-
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Sample.objects.all()
     serializer_class = SampleSerializer
     filter_backends = (
@@ -97,6 +102,8 @@ class SampleCountViewSet(viewsets.ModelViewSet):
     Allowed HTTP Methods: GET, HEAD, OPTIONS
 
     """
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     queryset = SampleCount.objects.all()
     serializer_class = SampleCountSerializers
@@ -223,7 +230,8 @@ class MetadataViewSet(viewsets.ModelViewSet):
     Allowed HTTP Methods: GET, HEAD, OPTIONS
 
     """
-
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Metadata.objects.all()
     serializer_class = MetadataSerializer
     filter_backends = (filters.DjangoFilterBackend, drf_filters.OrderingFilter)
@@ -272,6 +280,8 @@ class PlateViewSet(viewsets.ModelViewSet):
     Note: The barcode is not a primary key in this viewset, hence the custom filtering.
     """
 
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Plate.objects.all()
     serializer_class = PlateSerializer
     filter_backends = (
@@ -298,12 +308,54 @@ class SubstrainViewSet(viewsets.ReadOnlyModelViewSet):
     Allowed HTTP Methods: GET, HEAD, OPTIONS
     """
 
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Substrain.objects.all()
     serializer_class = SubstrainSerializer
     http_method_names = ["get", "head", "options"]
 
 
+
+class FileViewSet(viewsets.ModelViewSet):
+    """
+    API Endpoint: Files
+
+    Overview:
+    The endpoint facilitates access to file paths tied to a specific sample or plate.
+    The files can be downloaded using the designated download endpoint.
+
+
+
+    Available Filters:
+    - **Plate Barcode**: Narrow down file paths associated with a particular plate's barcode.
+    - **Sample Pseudoanonymized ID**: Filter files specific to a given sample using its unique pseudoanonymized ID.
+
+    Supported Data Formats:
+    - JSON
+
+    Permitted HTTP Methods: GET, HEAD, OPTIONS"""
+
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    queryset = File.objects.all()
+    serializer_class = FileSerializer
+    http_method_names = ["get", "head", "options"]
+
+    filter_backends = (
+        filters.DjangoFilterBackend,
+        drf_filters.OrderingFilter,
+    )
+
+    filterset_fields = (
+        "plate__barcode",
+        "sample__pseudoanonymized_id",
+    )
+
 @api_view(["GET"])
+@authentication_classes([JWTAuthentication, SessionAuthentication])
+@permission_classes([IsAuthenticated])
 def download_file(request, filepath):
     """
     API Endpoint: Download File
@@ -326,7 +378,7 @@ def download_file(request, filepath):
     file_path = filepath
     if not file_path.startswith("/"):
         file_path = "/" + file_path
-    print("file_path", file_path, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
     if os.path.exists(file_path):
         try:
             response = FileResponse(
@@ -348,37 +400,3 @@ def download_file(request, filepath):
             )
     else:
         raise Http404("File doesn't exist or is inaccessible.")
-
-
-class FileViewSet(viewsets.ModelViewSet):
-    """
-    API Endpoint: Files
-
-    Overview:
-    The endpoint facilitates access to file paths tied to a specific sample or plate.
-    The files can be downloaded using the designated download endpoint.
-
-
-
-    Available Filters:
-    - **Plate Barcode**: Narrow down file paths associated with a particular plate's barcode.
-    - **Sample Pseudoanonymized ID**: Filter files specific to a given sample using its unique pseudoanonymized ID.
-
-    Supported Data Formats:
-    - JSON
-
-    Permitted HTTP Methods: GET, HEAD, OPTIONS"""
-
-    queryset = File.objects.all()
-    serializer_class = FileSerializer
-    http_method_names = ["get", "head", "options"]
-
-    filter_backends = (
-        filters.DjangoFilterBackend,
-        drf_filters.OrderingFilter,
-    )
-
-    filterset_fields = (
-        "plate__barcode",
-        "sample__pseudoanonymized_id",
-    )

@@ -20,6 +20,7 @@ schema==0.7.5
 requests==2.31.0
 shortuuid==1.0.11
 drf-spectacular==0.26.4
+ena-upload-cli==0.6.3
 
 
 
