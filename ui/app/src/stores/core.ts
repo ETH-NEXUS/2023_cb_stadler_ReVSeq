@@ -39,10 +39,10 @@ export const useCoreStore = defineStore('core', () => {
     await getSelectedSample()
   }
 
-  const toggleAggregate = () => {
+  const aggregateData = () => {
+    aggregate.value = true
     const mappedData = new Map()
 
-    if (aggregate.value) {
       tableData.value.forEach(item => {
         const strain = item.substrain.strain.name
         const substrain = item.substrain
@@ -90,9 +90,12 @@ export const useCoreStore = defineStore('core', () => {
         strain: key,
         ...value,
       }))
-    } else {
-      tableData.value = sampleCounts.value
-    }
+
+  }
+
+  const cancelAggregate = () => {
+    aggregate.value = false
+    tableData.value = sampleCounts.value
   }
 
   const getPlates = async (barcode: string | null = null) => {
@@ -179,7 +182,7 @@ export const useCoreStore = defineStore('core', () => {
     substrains,
     tableData,
     aggregate,
-    toggleAggregate,
+    aggregateData,
     getSamplesByPlate,
     samples,
     filterCountDataBySample,
@@ -189,5 +192,6 @@ export const useCoreStore = defineStore('core', () => {
     selected_plate,
     downloadFile,
     selected_sample_id,
+    cancelAggregate,
   }
 })

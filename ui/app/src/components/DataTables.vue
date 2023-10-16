@@ -120,17 +120,19 @@ const filterBySample = () => {
       </div>
       <div class="flex row wrap">
         <q-btn
+          v-if="!coreStore.aggregate"
           icon="query_stats"
           :label="t('label.aggregate')"
           color="primary"
           class="tw-mr-2 tw-my-2"
-          @click="aggregate"></q-btn>
+          @click="coreStore.aggregateData"></q-btn>
         <q-btn
+          v-if="coreStore.aggregate"
           class="tw-my-2 tw-mr-2"
           color="primary"
           icon="science"
           :label="t('label.raw_data')"
-          @click="aggregate"></q-btn>
+          @click="coreStore.cancelAggregate"></q-btn>
         <q-btn
           icon="file_download"
           class="tw-my-2 tw-mr-2"
