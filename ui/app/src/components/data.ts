@@ -98,4 +98,57 @@ export const columnsSampleCount: SampleCountsTableColumns[] = [
     sortable: true,
     field: 'outlier',
   },
+  {
+    name: 'DP',
+    required: true,
+    label: 'DP',
+    align: 'center',
+    sortable: true,
+    field: 'DP',
+  },
+  {
+    name: 'DP_threshold',
+    required: true,
+    label: 'DP threshold',
+    align: 'center',
+    sortable: true,
+    field: 'DP_threshold',
+
+  },
+  {
+    name: 'DP_status',
+    required: true,
+    label: 'DP status',
+    align: 'center',
+    sortable: true,
+    field: 'DP_status',
+
+  },
+  {
+    name: 'readnum_threshold',
+    required: true,
+    label: 'Readnum threshold',
+    align: 'center',
+    sortable: true,
+    field: 'readnum_threshold',
+
+  },
+  {
+    name: 'readnum_status',
+    required: true,
+    label: 'Readnum status',
+    align: 'center',
+    sortable: true,
+    field: 'readnum_status',
+
+  },
+  {
+    name: 'percentile_threshold',
+    required: true,
+    label: 'Percentile threshold',
+    align: 'center',
+    sortable: true,
+    field: 'percentile_threshold',
+
+  }
 ]

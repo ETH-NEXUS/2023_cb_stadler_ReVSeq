@@ -13,8 +13,13 @@ export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSa
       length: sampleCount.length,
       rpkm: sampleCount.rpkm,
       rpkm_proportions: sampleCount.rpkm_proportions,
-      //  normcounts: sampleCount.normcounts,
       outlier: sampleCount.outlier,
+      DP_threshold: sampleCount.DP_threshold,
+      DP: sampleCount.DP,
+      DP_status: sampleCount.DP_status,
+      readnum_threshold: sampleCount.readnum_threshold,
+      readnum_status: sampleCount.readnum_status,
+      percentile_threshold: sampleCount.percentile_threshold,
     }
   })
 }

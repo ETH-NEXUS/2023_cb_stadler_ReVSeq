@@ -136,17 +136,20 @@ class SampleCountViewSet(viewsets.ModelViewSet):
         url_path="aggregate/(?P<sample__pseudoanonymized_id>[^/.]+)",
     )
     def aggregate(self, request, sample__pseudoanonymized_id=None):
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         if not sample__pseudoanonymized_id:
             raise ValidationError({"error": "pseudoanonymized_id is required"})
 
         try:
             sample = Sample.objects.get(pseudoanonymized_id=sample__pseudoanonymized_id)
+
         except Sample.DoesNotExist:
             raise ValidationError(
                 {"error": "Sample with this pseudoanonymized_id does not exist"}
             )
 
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset =  SampleCount.objects.filter(sample=sample)   # SampleCount.objects.filter(sample=sample)
+
         response_data = {
             "sample": {
                 "sample_id": sample.pseudoanonymized_id,
@@ -163,8 +166,12 @@ class SampleCountViewSet(viewsets.ModelViewSet):
                 "normcounts": 0,
                 "outlier": False,
                 "qc_status": "",
-                "coverage_threshold": 0,
-                "coverage": 0,
+                "DP_threshold": 0,
+                "DP": 0,
+                "DP_status": "",
+                "readnum_status": "",
+                "readnum_threshold": 0,
+                "percentile_threshold": "",
             }
         )
         strains = {}
@@ -177,16 +184,21 @@ class SampleCountViewSet(viewsets.ModelViewSet):
             strains[strain].rpkm += item.rpkm
             strains[strain].rpkm_proportions += item.rpkm_proportions
             strains[strain].outlier = item.outlier
-            strains[strain].qc_status = item.qc_status
-            strains[strain].coverage_threshold = item.coverage_threshold
-            strains[strain].coverage += item.coverage
-            # strains[strain].normcounts += item.normcounts
+            strains[strain].DP_threshold = item.DP_threshold
+            strains[strain].DP += item.DP
+            strains[strain].DP_status = item.DP_status
+            strains[strain].readnum_status = item.readnum_status
+            strains[strain].readnum_threshold +=item.readnum_threshold
+            strains[strain].percentile_threshold = item.percentile_threshold
+
 
         response_data["strains"] = [
             {"strain": key, **value} for key, value in strains.items()
         ]
+        #print("RESPONSE DATA", response_data)
 
         serializer = AggregatedCountSerializer(data=response_data)
+        print("SERIALIZER", serializer)
 
         if serializer.is_valid():
             return Response(serializer.data)
