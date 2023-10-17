@@ -18,6 +18,7 @@ class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = (
+            "id",
             "path",
             "checksum",
         )
@@ -93,9 +94,14 @@ class SampleCountSerializers(serializers.ModelSerializer):
             "rpkm_proportions",
             "normcounts",
             "outlier",
-            "qc_status",
-            "coverage_threshold",
-            "coverage",
+            "DP_threshold",
+            "DP",
+            "DP_status",
+            "readnum_status",
+            "readnum_threshold",
+            "percentile_threshold",
+
+
         )
 
 
@@ -131,9 +137,13 @@ class StrainCountsSerializer(serializers.Serializer):
     normcounts = serializers.FloatField()
     outlier = serializers.BooleanField()
     strain = serializers.CharField()
-    qc_status = serializers.CharField()
-    coverage_threshold = serializers.FloatField()
-    coverage = serializers.FloatField()
+    DP_threshold = serializers.FloatField()
+    DP = serializers.FloatField()
+    DP_status = serializers.CharField()
+    readnum_status = serializers.CharField()
+    readnum_threshold = serializers.FloatField()
+    percentile_threshold = serializers.CharField()
+
 
 
 class SimpleSampleSerializer(serializers.Serializer):

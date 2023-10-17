@@ -12,7 +12,10 @@ import_columns:
   length: reference_length
   rpkm: rpkm
   rpkm_proportions: rpkm_proportions
-  # normcounts: normcounts
-  qc_status: qc_status
-  coverage_threshold: coverage_threshold
-  coverage: coverage
+  DP_threshold: DP_threshold
+  DP: DP
+  DP_status: DP_status
+  readnum_status: readnum_status
+  readnum_threshold: readnum_threshold
+  percentile_threshold: percentile_threshold
+

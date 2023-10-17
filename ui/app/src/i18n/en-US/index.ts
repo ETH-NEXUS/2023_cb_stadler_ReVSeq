@@ -12,7 +12,7 @@ export default {
     search_db: 'Search database',
     about: 'About',
     aggregate: 'Aggregate by strains',
-    raw_data: 'Raw data',
+    raw_data: 'Cancel aggregation',
     apply: 'Apply',
     plate_files: 'Plate files',
     sample_files: 'Sample files',

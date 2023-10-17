@@ -13,7 +13,6 @@ from rest_framework import viewsets
 from rest_framework import filters as drf_filters
 from rest_framework_csv.renderers import CSVRenderer
 from rest_framework.settings import api_settings
-from rest_framework.renderers import JSONRenderer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from easydict import EasyDict as edict
@@ -24,8 +23,13 @@ from django.http import FileResponse, Http404
 import os
 from rest_framework.decorators import api_view
 
-from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.renderers import JSONRenderer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+
+
 
 
 def def_value():
@@ -51,7 +55,8 @@ class SampleViewSet(viewsets.ModelViewSet):
 
     Allowed HTTP Methods: GET, HEAD, OPTIONS
     """
-
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Sample.objects.all()
     serializer_class = SampleSerializer
     filter_backends = (
@@ -97,6 +102,8 @@ class SampleCountViewSet(viewsets.ModelViewSet):
     Allowed HTTP Methods: GET, HEAD, OPTIONS
 
     """
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     queryset = SampleCount.objects.all()
     serializer_class = SampleCountSerializers
@@ -129,17 +136,20 @@ class SampleCountViewSet(viewsets.ModelViewSet):
         url_path="aggregate/(?P<sample__pseudoanonymized_id>[^/.]+)",
     )
     def aggregate(self, request, sample__pseudoanonymized_id=None):
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         if not sample__pseudoanonymized_id:
             raise ValidationError({"error": "pseudoanonymized_id is required"})
 
         try:
             sample = Sample.objects.get(pseudoanonymized_id=sample__pseudoanonymized_id)
+
         except Sample.DoesNotExist:
             raise ValidationError(
                 {"error": "Sample with this pseudoanonymized_id does not exist"}
             )
 
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset =  SampleCount.objects.filter(sample=sample)   # SampleCount.objects.filter(sample=sample)
+
         response_data = {
             "sample": {
                 "sample_id": sample.pseudoanonymized_id,
@@ -156,8 +166,12 @@ class SampleCountViewSet(viewsets.ModelViewSet):
                 "normcounts": 0,
                 "outlier": False,
                 "qc_status": "",
-                "coverage_threshold": 0,
-                "coverage": 0,
+                "DP_threshold": 0,
+                "DP": 0,
+                "DP_status": "",
+                "readnum_status": "",
+                "readnum_threshold": 0,
+                "percentile_threshold": "",
             }
         )
         strains = {}
@@ -170,16 +184,21 @@ class SampleCountViewSet(viewsets.ModelViewSet):
             strains[strain].rpkm += item.rpkm
             strains[strain].rpkm_proportions += item.rpkm_proportions
             strains[strain].outlier = item.outlier
-            strains[strain].qc_status = item.qc_status
-            strains[strain].coverage_threshold = item.coverage_threshold
-            strains[strain].coverage += item.coverage
-            # strains[strain].normcounts += item.normcounts
+            strains[strain].DP_threshold = item.DP_threshold
+            strains[strain].DP += item.DP
+            strains[strain].DP_status = item.DP_status
+            strains[strain].readnum_status = item.readnum_status
+            strains[strain].readnum_threshold +=item.readnum_threshold
+            strains[strain].percentile_threshold = item.percentile_threshold
+
 
         response_data["strains"] = [
             {"strain": key, **value} for key, value in strains.items()
         ]
+        #print("RESPONSE DATA", response_data)
 
         serializer = AggregatedCountSerializer(data=response_data)
+        print("SERIALIZER", serializer)
 
         if serializer.is_valid():
             return Response(serializer.data)
@@ -223,7 +242,8 @@ class MetadataViewSet(viewsets.ModelViewSet):
     Allowed HTTP Methods: GET, HEAD, OPTIONS
 
     """
-
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Metadata.objects.all()
     serializer_class = MetadataSerializer
     filter_backends = (filters.DjangoFilterBackend, drf_filters.OrderingFilter)
@@ -272,6 +292,8 @@ class PlateViewSet(viewsets.ModelViewSet):
     Note: The barcode is not a primary key in this viewset, hence the custom filtering.
     """
 
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Plate.objects.all()
     serializer_class = PlateSerializer
     filter_backends = (
@@ -298,48 +320,13 @@ class SubstrainViewSet(viewsets.ReadOnlyModelViewSet):
     Allowed HTTP Methods: GET, HEAD, OPTIONS
     """
 
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Substrain.objects.all()
     serializer_class = SubstrainSerializer
     http_method_names = ["get", "head", "options"]
 
-
-@api_view(["GET"])
-def download_file(request, filepath):
-    """
-    API Endpoint: Download File
-
-    This endpoint offers a direct download mechanism for a file based on the provided filepath.
-
-    Features:
-    - Direct File Download: By supplying a valid filepath as a parameter, users can initiate the download of the specified file.
-
-    Parameters:
-    - filepath: Absolute path of the desired file (a list of available files is provided with each plate or sample item, as well as within the files API endpoint.)
-
-    Response:
-    - If the file exists and is accessible: Initiates a file download.
-    - If the file does not exist or is inaccessible: Returns an appropriate error message.
-
-    Allowed HTTP Methods: GET
-    """
-
-    file_path = filepath
-    if os.path.exists(file_path):
-        try:
-            response = FileResponse(
-                open(file_path, "rb"), content_type="application/octet-stream"
-            )
-            response[
-                "Content-Disposition"
-            ] = f"attachment; filename={os.path.basename(file_path)}"
-            return response
-        except PermissionError:
-            return Response(
-                {"detail": "Permission denied for the requested file."},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-        except FileNotFoundError:
-            raise Http404("File doesn't have permission to be downloaded.")
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -361,6 +348,9 @@ class FileViewSet(viewsets.ModelViewSet):
 
     Permitted HTTP Methods: GET, HEAD, OPTIONS"""
 
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = File.objects.all()
     serializer_class = FileSerializer
     http_method_names = ["get", "head", "options"]
@@ -374,3 +364,51 @@ class FileViewSet(viewsets.ModelViewSet):
         "plate__barcode",
         "sample__pseudoanonymized_id",
     )
+
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication, SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def download_file(request, filepath):
+    """
+    API Endpoint: Download File
+
+    This endpoint offers a direct download mechanism for a file based on the provided filepath.
+
+    Features:
+    - Direct File Download: By supplying a valid filepath as a parameter, users can initiate the download of the specified file.
+
+    Parameters:
+    - filepath: Absolute path of the desired file (a list of available files is provided with each plate or sample item, as well as within the files API endpoint.)
+
+    Response:
+    - If the file exists and is accessible: Initiates a file download.
+    - If the file does not exist or is inaccessible: Returns an appropriate error message.
+
+    Allowed HTTP Methods: GET
+    """
+
+    file_path = filepath
+    if not file_path.startswith("/"):
+        file_path = "/" + file_path
+
+    if os.path.exists(file_path):
+        try:
+            response = FileResponse(
+                open(file_path, "rb"), content_type="application/octet-stream"
+            )
+            response[
+                "Content-Disposition"
+            ] = f"attachment; filename={os.path.basename(file_path)}"
+            return response
+        except PermissionError:
+            return Response(
+                {"detail": "Permission denied for the requested file."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        except FileNotFoundError:
+            return Response(
+                {"detail": "File not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+    else:
+        raise Http404("File doesn't exist or is inaccessible.")

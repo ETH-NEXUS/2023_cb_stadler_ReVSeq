@@ -39,7 +39,11 @@ const login = async () => {
       type: 'positive',
       message: t('message.successfully_logged_in'),
     });
-    await router.push({ path: (route.query.next as string) || '/' });
+    let next = route.query.next as string;
+    if (next.includes('login')) {
+      next = '/';
+    }
+    await router.push({ path: (next as string) || '/' });
   } else {
     error.value = true;
   }

@@ -44,9 +44,12 @@ export interface SampleCount {
   rpkm: number
   rpkm_proportions: number
   outlier: boolean
-  qc_status: string
-  coverage_threshold: number
-  coverage: number
+  DP: number
+  DP_threshold: number
+  DP_status: string
+  readnum_status: string
+  readnum_threshold: number
+  percentile_threshold: string
   normcounts?: number
   strain?: string
   pseudoanonymized_id?: string

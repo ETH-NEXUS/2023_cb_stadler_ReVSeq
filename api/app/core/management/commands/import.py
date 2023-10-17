@@ -40,14 +40,14 @@ from core.models import (
     File,
     FileType,
 )
-import logging
+
 import config.get_config as config
 import sys
 import glob
 from core.helpers import read_csv_file, txt_to_list, compute_checksum
 from helpers.color_log import logger
 
-# from colorful_logger import logger as log
+
 
 
 EMPTY_SAMPLES_GLOB = "*empty_samples*.txt"
@@ -226,9 +226,12 @@ class Command(BaseCommand):
                         rpkm_proportions=float(item[columns.rpkm_proportions]),
                         # normcounts=float(item[columns.normcounts]),
                         outlier=outlier,
-                        qc_status=item[columns.qc_status],
-                        coverage_threshold=float(item[columns.coverage_threshold]),
-                        coverage=float(item[columns.coverage]),
+                        DP_threshold=float(item[columns.DP_threshold]),
+                        DP=float(item[columns.DP]),
+                        DP_status=item[columns.DP_status],
+                        readnum_status=item[columns.readnum_status],
+                        readnum_threshold=float(item[columns.readnum_threshold]),
+                        percentile_threshold=item[columns.percentile_threshold],
                     )
                     self.sample_id_dict[sample_id] = True
                     if _:

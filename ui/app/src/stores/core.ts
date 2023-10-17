@@ -39,10 +39,10 @@ export const useCoreStore = defineStore('core', () => {
     await getSelectedSample()
   }
 
-  const toggleAggregate = () => {
+  const aggregateData = () => {
+    aggregate.value = true
     const mappedData = new Map()
 
-    if (aggregate.value) {
       tableData.value.forEach(item => {
         const strain = item.substrain.strain.name
         const substrain = item.substrain
@@ -53,9 +53,13 @@ export const useCoreStore = defineStore('core', () => {
           rpkm_proportions: 0,
           normcounts: 0,
           outlier: false,
-          qc_status: '',
-          coverage_threshold: 0,
-          coverage: 0,
+
+          DP_threshold: 0,
+          DP: 0,
+          DP_status: '',
+          readnum_threshold: 0,
+          readnum_status: '',
+          percentile_threshold: '',
           plate: null,
           substrain: null,
           pseudoanonymized_id: null,
@@ -68,9 +72,12 @@ export const useCoreStore = defineStore('core', () => {
           rpkm: existingData.rpkm + item.rpkm,
           rpkm_proportions: existingData.rpkm_proportions + item.rpkm_proportions,
           normcounts: existingData.normcounts + item.normcounts,
-          qc_status: item.qc_status,
-          coverage_threshold: existingData.coverage_threshold + item.coverage_threshold,
-          coverage: existingData.coverage + item.coverage,
+          DP_threshold:  item.DP_threshold,
+          DP: existingData.DP + item.DP,
+          DP_status: item.DP_status,
+          readnum_threshold:  item.readnum_threshold,
+          readnum_status: item.readnum_status,
+          percentile_threshold: item.percentile_threshold,
           outlier: item.outlier,
           plate: item.plate.barcode,
           substrain: substrain,
@@ -83,9 +90,12 @@ export const useCoreStore = defineStore('core', () => {
         strain: key,
         ...value,
       }))
-    } else {
-      tableData.value = sampleCounts.value
-    }
+
+  }
+
+  const cancelAggregate = () => {
+    aggregate.value = false
+    tableData.value = sampleCounts.value
   }
 
   const getPlates = async (barcode: string | null = null) => {
@@ -172,7 +182,7 @@ export const useCoreStore = defineStore('core', () => {
     substrains,
     tableData,
     aggregate,
-    toggleAggregate,
+    aggregateData,
     getSamplesByPlate,
     samples,
     filterCountDataBySample,
@@ -182,5 +192,6 @@ export const useCoreStore = defineStore('core', () => {
     selected_plate,
     downloadFile,
     selected_sample_id,
+    cancelAggregate,
   }
 })
