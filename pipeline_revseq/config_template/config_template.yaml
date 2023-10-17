@@ -5,7 +5,7 @@ inputOutput:
   # Full path to directory with input fastq files. Input raw data can be gzip-compressed
   input_fastqs: "/data/viollier_mirror/raw_sequences"
   # Full path to directory where the output must be written
-  output_dir: "/data/results"
+  output_dir: "/data/revseq/results/results"
 
 resources:
   # Full path to the BED file listing the virus references
@@ -28,6 +28,10 @@ tools:
   general:
     # Minimum number of reads to allow steps to proceed
     min_readcount: 100
+    # Lookup table with the matches between substrains and major strains
+    # It is used to collapse the substrains available for the bioinformatics analysis
+    # to the major strains available in the panel
+    lookup: "/data/pipeline/resources/strain_substrain_lookup.csv"
   bwa:
     # Threads to assign to bwa
     threads: 4
@@ -53,10 +57,6 @@ tools:
     # Upper percentile limit to use to find viral sequences with outlier RPKM values
     # Used only after collapsing strains
     outlier_percentile_collapsed: 95
-    # Lookup table with the matches between substrains and major strains
-    # It is used to collapse the substrains available for the bioinformatics analysis
-    # to the major strains available in the panel
-    lookup: "/data/pipeline/resources/strain_substrain_lookup.csv"
     # Minimum average coverage allowed in the sample for the assignment to be reported
     dp_threshold: 20
   validate_assignment:
@@ -71,3 +71,7 @@ tools:
     # For "outliers" and "top": if there are no outliers, the consensus will be empty; for fragmented genomes,
     #    e.g. influenza, the consensus will be a multi-fasta with one fragment per entry
     consensus_type: "outliers"
+  gather_results:
+    # Full path of the results folder OUTSIDE of the docker container
+    # This is necessary to create the c
+    external_results_path: "/data/revseq/results/results"

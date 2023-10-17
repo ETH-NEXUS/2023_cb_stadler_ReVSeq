@@ -18,7 +18,7 @@ include: "rules/preprocessing.smk"
 include: "rules/dehuman.smk"
 include: "rules/revseq_basic.smk"
 include: "rules/qc.smk"
-#include: "rules/gather_results.smk"
+include: "rules/gather_results.smk"
 include: "rules/aggregate.smk"
 
 # include local rules
@@ -32,54 +32,30 @@ rule all:
         #####preprocessing
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_galore/{sample}_merged_R1_val_1.fq.gz", sample = sample_ids),
         #####dehuman
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_mapped_reads.bam", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/cram/{sample}.cram", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r1.fastq", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dh_fastqc/{sample}_bam_to_fastq_r1_fastqc.zip", sample = sample_ids),
         #####pipeline
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/filter_alignment/{sample}_filter_alignment.bam", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/remove_duplicates/{sample}_remove_duplicates.bam", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/pileup/{sample}_pileup.txt", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/idxstats/{sample}_idxstats.txt", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_strain_count_table.tsv", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/validate_assignment/{sample}_validation.tsv", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa", sample = sample_ids),
         #####qc main
-        #####expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R1_001_fastqc.zip", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_merged/{sample}_merged_R1_fastqc.zip", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/rseqc/{sample}_bam_stat.txt", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/qualimapReport.html", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc/multiqc_report.html"),
         #####qc filtered
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/samtoolsstats_filtered/{sample}_samtools_stats.txt", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/rseqc_filtered/{sample}_bam_stat.txt", sample = sample_ids),
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap_filtered/qualimapReport.html", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered/multiqc_report.html"),
         #####gathering
-        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather/"+config["plate"]+"/{sample}/{sample}_to_upload.txt", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/sample_{sample}/{sample}_count_table.tsv", sample = sample_ids),
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
         #aggregation
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_assignment_table.tsv"),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_qc_table.tsv"),
+        #db_upload
+        ####config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/push_to_db/db_upload_success",
+        #viollier_upload
+        ####config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/upload_viollier/viollier_upload_success",
     output:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/complete.txt",
     shell:
         "date > {output}"
-
-#
-#rule all:
-#    input:
-#        rules.run_samples.output,
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_assignment_table.tsv",
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_qc_table.tsv",
-#    output:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/complete.txt",
-#    shell:
-#        "date > {output}"
-
-
-
 
