@@ -2,15 +2,14 @@ rule aggregate:
     input:
         assignment = expand(rules.assign_virus.output.table, sample=sample_ids),
         validation = expand(rules.validate_assignment.output.validation, sample=sample_ids),
-        bwa_all =expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_readcount_all.txt", sample=sample_ids),
-        bwa = expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_readcount.txt",sample=sample_ids),
-        dehuman = expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_readcount.txt", sample=sample_ids),
-        #bwa_all = expand(rules.bwa.output.readcount_all, sample=sample_ids),
-        #bwa = expand(rules.bwa.output.readcount, sample=sample_ids),
-        #dehuman = expand(rules.dehuman.output.readcount, sample=sample_ids),
+        #bwa_all =expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_readcount_all.txt", sample=sample_ids),
+        #bwa = expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_readcount.txt",sample=sample_ids),
+        #dehuman = expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_readcount.txt", sample=sample_ids),
+        bwa_all = expand(rules.bwa.output.readcount_all, sample=sample_ids),
+        bwa = expand(rules.bwa.output.readcount, sample=sample_ids),
+        dehuman = expand(rules.dehuman.output.readcount, sample=sample_ids),
         filter_alignment = expand(rules.filter_alignment.output.readcount, sample=sample_ids),
         duplicate = expand(rules.remove_duplicates.output.readcount, sample=sample_ids),
-        qc_status = expand(rules.qualimap_filtered.output.qc_status, sample=sample_ids),
     output:
         aggregated_assignment = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_assignment_table.tsv",
         aggregated_qc = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_qc_table.tsv",
@@ -23,6 +22,7 @@ rule aggregate:
         filtername = "filter_alignment",
         duplicatename = "remove_duplicates",
         qcname = "qualimap_filtered",
+        sample_map = config["sample_map"]
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/aggregate/aggregate.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/aggregate/aggregate.err.log",
@@ -36,8 +36,8 @@ rule aggregate:
         --inputdir {params.inputdir} \
         --assignment_subdir {params.assigndirname} \
         --validation_subdir {params.validatedirname} \
-        --qc_status {params.qcname} \
-        --outfile {output.aggregated_assignment}
+        --outfile {output.aggregated_assignment} \
+        --sample_map {params.sample_map}
 
         python workflow/scripts/aggregate_qc.py \
         --inputdir {params.inputdir} \
@@ -45,6 +45,8 @@ rule aggregate:
         --dehuman_subdir {params.dehumanname} \
         --filter_subdir {params.filtername} \
         --duplicates_subdir {params.duplicatename} \
-        --outfile {output.aggregated_qc}
+        --outfile {output.aggregated_qc} \
+        --sample_map {params.sample_map}
+
         """
 

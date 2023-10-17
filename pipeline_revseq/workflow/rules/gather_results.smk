@@ -1,4 +1,4 @@
-rule package_results_samples:
+rule gather_results_samples:
     input:
         assignment = rules.assign_virus.output.table,
         rawr1 = rules.merge_lanes.output.r1,
@@ -48,26 +48,35 @@ rule package_results_samples:
         """
 
 
-#rule package_results_plate:
-#   input:
-#
-#   output:
-#       metadata_out = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
-#       multiqc_out = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/"+config["plate"]+"/multiqc"),
-#       empty_samples_out = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/"+config["plate"]+"/"+config["plate"]+"_empty_samples.txt",
-#       version = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/package_results/"+config["plate"]+"/"+config["plate"]+"_pipeline_version.txt",
-#   params:
-#       pipeline_version = config["resources"]["pipeline_version"],
-#   log:
-#       outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/package_results/package_results.out.log",
-#       errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/package_results/package_results.err.log",
-#   benchmark:
-#       config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/package_results/package_results.benchmark"
-#   shell:
-#       """
-#       ln {input.metadata} {output.metadata_out}
-#       ln {input.empty_samples} {output.empty_samples_out}
-#       cp -r {input.multiqcdir} {output.multiqc_out}
-#       cp {params.pipeline_version} {output.version}
-#       """
-#
+rule push_to_db:
+    input:
+        file_list = rules.gather_results,
+    output:
+        db_upload_response = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/push_to_db/db_upload_response.txt",
+    log:
+		outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/push_to_db/push_to_db.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/push_to_db/push_to_db.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/push_to_db/push_to_db.benchmark"
+    shell:
+        """
+        (XXXX && \
+        echo "SUCCESS" > {output.db_upload_response}) || \
+        exit 1
+		"""
+
+rule upload_viollier:
+    input:
+        db_upload_response = rules.push_to_db.output.db_upload_response,
+    output:
+        viollier_upload_response = onfig["inputOutput"]["output_dir"]+"/"+config["plate"]+"/upload_viollier/viollier_upload_response.txt",
+    log:
+		outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/upload_viollier/upload_viollier.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/upload_viollier/upload_viollier.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/upload_viollier/upload_viollier.benchmark"
+    conda:
+        "../envs/viollier_upload.yaml"
+    shell:
+        """
+        lftp XXXXX

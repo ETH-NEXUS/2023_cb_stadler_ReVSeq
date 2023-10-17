@@ -135,7 +135,7 @@ rule trim_galore:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/trim_galore/{sample}.benchmark"
     conda:
         "../envs/trim_galore.yaml"
-    threads: config['threads']
+    threads: config['tools']['trim_galore']['threads']
     shell:
         """
         trim_galore \

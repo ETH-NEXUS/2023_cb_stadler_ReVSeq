@@ -43,12 +43,15 @@ if __name__ == '__main__':
     parser.add_argument('--filter_subdir', required=True, type=str, help='The name assigned to the filter_alignment rule subdirectory')
     parser.add_argument('--duplicates_subdir', required=True, type=str, help='The name assigned to the remove_duplicates subdirectory')
     parser.add_argument('--outfile', required=True, type=str, help='the path and filename for the output')
+    parser.add_argument('--sample_map', required=True, type=str, help='Sample map file containing all sample names')
+
 
     args = parser.parse_args()
-    ignorable_files = ['logs', 'multiqc', 'multiqc_filtered', 'package_results', 'complete.txt',  'aggregate']
+    sample_map = pd.read_table(args.sample_map)
+    samples = sample_map["sample"].unique()
 
     files = os.listdir(args.inputdir)
-    samples = [ file for file in files if file not in ignorable_files]
+    samples = [file for file in files if file in samples]
 
     for sample in samples:
         sampledir = args.inputdir + "/" + sample

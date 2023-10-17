@@ -22,17 +22,21 @@ resources:
   pipeline_version: "/data/pipeline/resources/pipeline_version.txt"
   
 # Number of threads to use as default
-threads: 4
+threads: 2
 
 tools:
   general:
     # Minimum number of reads to allow steps to proceed
-    min_readcount: 1
+    min_readcount: 100
+  bwa:
+    # Threads to assign to bwa
+    threads: 4
   trim_galore:
     # Read length filtering threshold
     min_length: 20
     # Read length filtering threshold for singletons
     min_length_single: 30
+    threads: 4
   pileup:
     # minimum mapping quality threshold. Passed to samtools option -q
     # Used to create the pileup for visualization.
@@ -59,3 +63,11 @@ tools:
     # Lookup table wit the matches between major strains and panel strains
     # It is used to match the bioinformatics analysis results with the clinical panel results
     match_table: "/data/pipeline/resources/panel_strain_lookup.csv"
+  consensus:
+    # Behaviour for building the consensus. Accepted options are:
+    # all: create a multi-fasta with all consensus for all references
+    # outliers: create a multi-fasta with all consensus for all outliers
+    # top: create a fasta with the consensus of the top outlier
+    # For "outliers" and "top": if there are no outliers, the consensus will be empty; for fragmented genomes,
+    #    e.g. influenza, the consensus will be a multi-fasta with one fragment per entry
+    consensus_type: "outliers"

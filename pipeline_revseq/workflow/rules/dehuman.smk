@@ -16,7 +16,9 @@ rule bwa:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/bwa/{sample}.benchmark"
     conda:
         "../envs/bwa.yaml"
-    threads: config["threads"]
+    threads: config["tools"]["bwa"]["threads"]
+    resources:
+        mem_mb=6500
     shell:
         """
         bwa mem -t {threads} -M {input.ref} {input.reads} > {output.bwa}
@@ -29,8 +31,7 @@ rule bwa:
 
 rule dehuman:
     input:
-        #bam = rules.bwa.output.bam,
-        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam"
+        bam = rules.bwa.output.bam,
     output:
         bam = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam"),
         bai = (config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam.bai"),
@@ -52,8 +53,7 @@ rule dehuman:
 
 rule cram:
     input:
-        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam",
-        #bam = rules.dehuman.output.bam,
+        bam = rules.dehuman.output.bam,
     output:
         cram = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/cram/{sample}.cram",
     params:
@@ -71,8 +71,7 @@ rule cram:
 
 rule bam_to_fastq:
     input:
-        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam",
-        #bam = rules.dehuman.output.bam,
+        bam = rules.dehuman.output.bam,
     output:
         fq1 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r1.fastq"),#temp
         fq2 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r2.fastq"),#temp

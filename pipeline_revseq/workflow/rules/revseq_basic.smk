@@ -1,7 +1,6 @@
 rule filter_alignment:
     input:
-        #bam = rules.dehuman.output.bam
-        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam"
+        bam = rules.dehuman.output.bam
     output:
         bam = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/filter_alignment/{sample}_filter_alignment.bam"),
         readcount = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/filter_alignment/{sample}_readcount.txt",
@@ -12,6 +11,7 @@ rule filter_alignment:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/filter_alignment/{sample}_filter_alignment.benchmark"
     conda:
         "../envs/samtools.yaml"
+    threads: config["threads"]
     shell:
         # remove flags 256 and 2048, remove MAPQ = 0 and remove any read with tag XA
         # fix the mate pair flags to know which reads became unpaired after filtering
@@ -157,8 +157,9 @@ rule assign_virus:
         prefix = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_",
         outlier_percentile = config["tools"]["assign_virus"]["outlier_percentile"],
         outlier_percentile_collapsed = config["tools"]["assign_virus"]["outlier_percentile_collapsed"],
-        lookup = config["tools"]["assign_virus"]["lookup"],
+        lookup = config["tools"]["general"]["lookup"],
         dp_threshold = config["tools"]["assign_virus"]["dp_threshold"],
+        readnum_threshold = config["tools"]["general"]["min_readcount"]
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.err.log",
@@ -177,7 +178,8 @@ rule assign_virus:
             --outlier_percentile_collapsed {params.outlier_percentile_collapsed} \
             --lookup {params.lookup}  \
             --genome_res {input.genome_res} \
-            --dp_threshold {params.dp_threshold} 2> >(tee {log.errfile} >&2)
+            --dp_threshold {params.dp_threshold} \
+            --readnum_threshold {params.readnum_threshold} 2> >(tee {log.errfile} >&2)
         """
 
 
@@ -188,7 +190,7 @@ rule validate_assignment:
         validation = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/validate_assignment/{sample}_validation.tsv",
     params:
         metadata_dir = config["resources"]["metadata_dir"],
-        pseudoanontable = config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv",
+        pseudoanontable = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv",
         match_table = config["tools"]["validate_assignment"]["match_table"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/validate_assignment/{sample}_validation.out.log",
@@ -212,7 +214,7 @@ rule validate_assignment:
 rule consensus:
     input:
         bam = rules.remove_duplicates.output.bam,
-        qualimap_qc = rules.qualimap_filtered.output.qc_status,
+        #qualimap_qc = rules.qualimap_filtered.output.qc_status,
     output:
         vcf = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls.vcf.gz",
         calls_norm = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm.bcf",
@@ -229,8 +231,6 @@ rule consensus:
         "../envs/bcftools.yaml"
     shell:
         """
-        if [ $(cat {input.qualimap_qc}) = "PASS" ]
-        then
             bcftools mpileup -Ou -f {params.ref} {input.bam} | bcftools call -mv -Oz -o {output.vcf}
             bcftools index {output.vcf}
 
@@ -243,21 +243,20 @@ rule consensus:
 
             # apply variants to create consensus sequence
             cat {params.ref} | bcftools consensus {output.calls_norm_filt_indels} > {output.all_consensus}
-        else
-            touch {output.vcf} {output.calls_norm} {output.calls_norm_filt_indels} {output.all_consensus}
-        fi
         """
 
 
 rule postprocess_consensus:
     input:
         all_consensus = rules.consensus.output.all_consensus,
-        assignment = rules.assign_virus.output.strain_table,
+        assignment = rules.assign_virus.output.table,
         qualimap_qc = rules.qualimap_filtered.output.qc_status,
     output:
         consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa",
     params:
         ref = config["resources"]["reference_table"],
+        consensus_type = config["tools"]["consensus"]["consensus_type"],
+        lookup = config["tools"]["general"]["lookup"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.err.log",
@@ -274,6 +273,7 @@ rule postprocess_consensus:
             --ref_table {params.ref} \
             --assignment {input.assignment} \
             --consensus {input.all_consensus} \
+            --consensus_type {params.consensus_type} \
             --output {output.consensus}  2> >(tee {log.errfile} >&2)
         else
             touch {output.consensus}

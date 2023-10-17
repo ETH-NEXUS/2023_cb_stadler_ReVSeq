@@ -13,23 +13,28 @@ import numpy as np
 import argparse
 from matplotlib import pyplot
 
-def get_outliers(aggregated, percentile, coverage):
+def get_outliers(aggregated, percentile):
     perc = np.percentile(aggregated['rpkm_proportions'], percentile)
-    if coverage != 0:
-        aggregated['outlier'] = np.where(np.logical_and(aggregated['rpkm_proportions'] >= perc, aggregated['rpkm_proportions'] != 0), "*", "")
-    else:
-        aggregated['outlier'] = ''
-    aggregated['percentile_threshold'] = str(percentile) + " percentile: " + "{:.4f}".format(perc)
+    aggregated['outlier'] = np.where(np.logical_and(aggregated['rpkm_proportions'] >= perc, aggregated['rpkm_proportions'] != 0), "*", "")
+    aggregated['percentile_threshold'] = str(percentile) + " percentile: " + "{:.5f}".format(perc)
     return [aggregated, perc]
 
 
-def rpkm(aggregated, coverage):
+def rpkm(aggregated):
     aggregated['rpkm'] = aggregated['aligned']/(aggregated['length']/1000 * aggregated['aligned'].sum()/1000000)
     aggregated['rpkm_proportions'] = aggregated['rpkm'] / aggregated['rpkm'].sum() * 100
-    if coverage == 0:
-        aggregated['rpkm'] = 0
-        aggregated['rpkm_proportions'] = 0
     return aggregated
+
+
+def fetch_coverage(genome_res, number_refs):
+    try:
+        #after the string there is a blank line, so we need to move 2 indexes forward to catch the first genome
+        start_index = genome_res.index(">>>>>>> Coverage per contig") + 2
+    except:
+        sys.exit("Error: cannot find the coverage by contig in the genome_results file. Please check that the correct file is passed and that the format has not changed")
+    end_index = start_index + number_refs - 1
+    cov_df = pd.DataFrame([ [item.split('\t')[0],item.split('\t')[3] ] for item in genome_res[start_index:end_index+1] ], columns=["id", "DP"], dtype='float64')
+    return cov_df
 
 
 # Script
@@ -44,7 +49,8 @@ if __name__ == '__main__':
     parser.add_argument('--outlier_percentile', required=True, type=float, help='percentile cutoff for outlier detection')
     parser.add_argument('--outlier_percentile_collapsed', required=True, type=float, help='percentile cutoff for outlier detection for collapsed list showing only major strains')
     parser.add_argument('--genome_res', required=True, type=str, help='The genome_results.txt file as output by qualimap bamqc')
-    parser.add_argument('--dp_threshold', required=True, type=int, help='The minimum average coverage that allows for actual assignment')
+    parser.add_argument('--dp_threshold', required=True, type=int, help='The minimum average DP allowed for assignment')
+    parser.add_argument('--readnum_threshold', required=True, type=int, help='The minimum number of reads allowed for DP calculation')
 
     args = parser.parse_args()
 
@@ -57,30 +63,38 @@ if __name__ == '__main__':
     with open(args.counts) as f:
         counts = int(f.readline().strip())
             
-    lookup = pd.read_csv(args.lookup, header=0, index_col=1).to_dict(orient="index")
-    for k,v in lookup.items():
-        lookup[k] = v['strain_name']
+    lookup = pd.read_csv(args.lookup, header=0, index_col=1)
+    lookup_dict = lookup.to_dict(orient="index")
+    for k,v in lookup_dict.items():
+        lookup_dict[k] = v['strain_name']
     
     with open(args.genome_res) as f:
         genome_res = f.readlines()
-    if len(genome_res) == 0:
-        coverage = 0
-    else:
-        coverage = [ float(line.split(" = ")[1].split("X")[0]) for line in genome_res if "mean coverageData = " in line ][0]
 
-    idxstats = pd.merge(idxstats,refs, on='id', how='inner')
-    aggregated_stats = idxstats.groupby(by='name')[["aligned","length"]].sum()
-    aggregated_stats = rpkm(aggregated_stats, coverage)
-    all_outlier_info = get_outliers(aggregated_stats, args.outlier_percentile, coverage)
+    idxstats = pd.merge(idxstats, refs, on='id', how='inner')
+
+    if len(genome_res) == 0:
+        idxstats["DP"] = 0
+    else:
+        genome_res = [ line.strip() for line in genome_res ]
+        coverage = fetch_coverage(genome_res, len(refs))
+        idxstats = pd.merge(idxstats, coverage, on='id', how='inner')
+
+    aggregated_stats = idxstats.groupby(by='name')[["aligned","length","DP"]].sum()
+    aggregated_stats = rpkm(aggregated_stats)
+    all_outlier_info = get_outliers(aggregated_stats, args.outlier_percentile)
     aggregated_stats = all_outlier_info[0]
     outlier_threshold = all_outlier_info[1]
     aggregated_stats = aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
-    aggregated_stats["coverage"] = coverage
-    aggregated_stats["coverage_threshold"] = args.dp_threshold
-    if coverage < args.dp_threshold:
-        aggregated_stats["qc_status"] = "failed"
+    aggregated_stats["readnum_threshold"] = args.readnum_threshold
+    if len(genome_res) == 0:
+        aggregated_stats["readnum_status"] = "FAILED: not enough reads in the sample to calculate DP"
     else:
-        aggregated_stats["qc_status"] = "passed"
+        aggregated_stats["readnum_status"] = "SUCCESS"
+    aggregated_stats["DP_threshold"] = args.dp_threshold
+    aggregated_stats["DP_status"] = "placeholder"
+    aggregated_stats.loc[aggregated_stats['DP'] >= args.dp_threshold, "DP_status"] = "PASSED"
+    aggregated_stats.loc[aggregated_stats['DP'] < args.dp_threshold, "DP_status"] = "FAILED"
     aggregated_stats.to_csv(args.out_prefix + "substrain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])
     for row in aggregated_stats.itertuples():
@@ -90,20 +104,14 @@ if __name__ == '__main__':
     pyplot.savefig(fname=args.out_prefix + "substrain_proportions_boxplot.pdf", dpi=300, format="pdf")
 
         # Collapsing substrains in major strains using the lookup table
-    aggregated_stats.index = aggregated_stats.index.map(lookup)
+    aggregated_stats.index = aggregated_stats.index.map(lookup_dict)
     if np.nan in aggregated_stats.index.tolist():
         sys.exit("Error: The strain/substrain lookup did not contain correct entries and produced empty names. Please check the lookup table for syntax errors or missing entries.")
     aggregated_stats = aggregated_stats.groupby(level=0)[["aligned_reads","rpkm", "rpkm_proportions"]].sum()
-    all_outlier_info = get_outliers(aggregated_stats, args.outlier_percentile_collapsed, coverage)
+    all_outlier_info = get_outliers(aggregated_stats, args.outlier_percentile_collapsed)
     aggregated_stats = all_outlier_info[0]
     outlier_threshold = all_outlier_info[1]
     aggregated_stats = aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
-    aggregated_stats["coverage"] = coverage
-    aggregated_stats["coverage_threshold"] = args.dp_threshold
-    if coverage < args.dp_threshold:
-        aggregated_stats["qc_status"] = "failed"
-    else:
-        aggregated_stats["qc_status"] = "passed"
     aggregated_stats.to_csv(args.out_prefix + "strain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])
     for row in aggregated_stats.itertuples():

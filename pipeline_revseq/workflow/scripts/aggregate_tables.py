@@ -23,7 +23,7 @@ def get_top_strain(inputdir, sample, dirname):
     top_strain = strain.loc[strain['rpkm_proportions'] == max(strain['rpkm_proportions'])]
     top_strain = top_strain.drop(columns="Unnamed: 0", errors="ignore")
     if len(top_strain) > 1:
-        if top_strain['coverage'][0] == 0:
+        if top_strain['aligned_reads'].sum() == 0:
             top_strain = top_strain.head(1)
             top_strain['name'] = ""
             top_strain['outlier'] = ""
@@ -34,17 +34,20 @@ def get_top_strain(inputdir, sample, dirname):
 
 
 def get_alternative_tops(inputdir, sample, dirname, top_strain_name):
-    if top_strain_name == "":
+    if len(top_strain_name) == 0:
         return ""
+    top_strain_name = top_strain_name[0]
     sampledir = inputdir + "/" + sample
     if(dirname == "assign_virus"):
         strain = pd.read_table(sampledir + "/" + dirname + "/" + sample + "_substrain_count_table.tsv")
+        columns_to_use = ['name', 'rpkm_proportions', 'aligned_reads', "DP"]
     elif(dirname == "validate_assignment"):
         strain = pd.read_table(sampledir + "/" + dirname + "/" + sample + "_validation.tsv")
+        columns_to_use = ['name', 'rpkm_proportions', 'aligned_reads']
     else:
         sys.exit("ERROR: unknown subdir to fetch the assignments")
     top_strain = strain.loc[strain['outlier'] == "*"]
-    outliers = top_strain[['name', 'rpkm_proportions']].values.tolist()
+    outliers = top_strain[columns_to_use].values.tolist()
     if len(outliers) == 1 or len(outliers) == 0:
         return ""
     matches = [ item for item in outliers if top_strain_name in item ]
@@ -53,33 +56,33 @@ def get_alternative_tops(inputdir, sample, dirname, top_strain_name):
     outliers.remove(matches[0])
     for item in outliers:
         if item == outliers[0]:
-            mystring = item[0] + " (" + f'{item[1]:.5f}' + ")"
+            if(dirname == "assign_virus"):
+                prefix = " (DP:" + f'{item[3]:.5f}' + "; "
+            elif(dirname == "validate_assignment"):
+                prefix = " ("
+            else:
+                sys.exit("ERROR: unknown subdir to fetch the assignments")
+            mystring = item[0] + prefix + "reads:" + f'{item[2]:.5f}' + "; rpkm_prop: " + f'{item[1]:.5f}' + ")"
         else:
-            mystring = mystring + ", " + item[0] + " (" + f'{item[1]:.5f}' + ")"
+            mystring = mystring + ", " + item[0] + " (DP:" + f'{item[3]:.5f}' + "; reads:" + f'{item[2]:.5f}' + " rpkm_prop: " + f'{item[1]:.5f}' + ")"
     return(mystring)
-
-
-def move_last_column_first(df):
-    cols = df.columns.tolist()
-    cols = cols[-1:] + cols[:-1]
-    df = df[cols]
-    return df
 
 
 def create_line(df, linetype, sample, alternative_outliers):
     if linetype == "substrain":
-        names = ["substrain_name", "aligned_reads_substrain", "reference_length", "rpkm_substrain", "rpkm_proportions_substrain", "outlier_substrain", "percentile_threshold_substrain", "alternative_outliers_substrain", "sample"]
-        df = df.iloc[:, 0:7]
+        names = ["substrain_name", "aligned_reads_substrain", "reference_length", "DP", "rpkm_substrain", "rpkm_proportions_substrain", "outlier_substrain", "percentile_threshold_substrain", "readnum_threshold", "readnum_status", "DP_threshold", "DP_status", "alternative_outliers_substrain", "sample"]
+        names_ordered = ["sample", "substrain_name", "aligned_reads_substrain", "reference_length", "DP", "rpkm_substrain", "rpkm_proportions_substrain", "outlier_substrain", "percentile_threshold_substrain", "alternative_outliers_substrain", "readnum_threshold", "readnum_status", "DP_threshold", "DP_status"]
         df['alternative_outliers_substrain'] = alternative_outliers
         df["sample"] = sample
     elif linetype == "strain":
         df['alternative_outliers_strain'] = alternative_outliers
         df["sample"] = sample
-        names = ["strain_name", "aligned_reads_strain", "rpkm_strain", "rpkm_proportions_strain", "outlier_strain", "percentile_threshold_strain", "coverage", "coverage_threshold", "qc_coverage", "panel_positive", "alternative_outliers_strain", "sample"]
+        names = ["strain_name", "aligned_reads_strain", "rpkm_strain", "rpkm_proportions_strain", "outlier_strain", "percentile_threshold_strain", "panel_positive", "alternative_outliers_strain", "sample"]
+        names_ordered = ["sample", "strain_name", "aligned_reads_strain", "rpkm_strain", "rpkm_proportions_strain", "outlier_strain", "percentile_threshold_strain", "alternative_outliers_strain", "panel_positive"]
     else:
         sys.exit("ERROR: invalid linetype")
     df.columns = names
-    df = move_last_column_first(df)
+    df = df[names_ordered]
     return df
 
 
@@ -90,35 +93,30 @@ if __name__ == '__main__':
     parser.add_argument('--inputdir', required=True, type=str, help='The main plate results directory from the ReVSeq pipeline')
     parser.add_argument('--assignment_subdir', required=True, type=str, help='The name assigned to the assignment subdirectory')
     parser.add_argument('--validation_subdir', required=True, type=str, help='The name assigned to the validation subdirectory')
-    parser.add_argument('--qc_status', required=True, type=str, help='The status output text file from rule qualimap_filtered')
     parser.add_argument('--outfile', required=True, type=str, help='the path and filename for the output')
+    parser.add_argument('--sample_map', required=True, type=str, help='Sample map file containing all sample names')
 
     args = parser.parse_args()
-    ignorable_files = ['logs', 'multiqc', 'multiqc_filtered', 'package_results', 'complete.txt',  'aggregate']
+    sample_map = pd.read_table(args.sample_map)
+    samples = sample_map["sample"].unique()
 
     files = os.listdir(args.inputdir)
-    samples = [ file for file in files if file not in ignorable_files]
+    samples = [file for file in files if file in samples]
 
     for sample in samples:
         top_substrain = get_top_strain(args.inputdir, sample, args.assignment_subdir)
-        alternative_outliers_substrain = get_alternative_tops(args.inputdir, sample, args.assignment_subdir, top_substrain["name"].values[0])
+        alternative_outliers_substrain = get_alternative_tops(args.inputdir, sample, args.assignment_subdir, top_substrain["name"].values)
         top_substrain = create_line(top_substrain, "substrain", sample, alternative_outliers_substrain)
         top_strain = get_top_strain(args.inputdir, sample, args.validation_subdir)
         alternative_outliers_strain = get_alternative_tops(args.inputdir, sample, args.validation_subdir, top_strain["name"].values[0])
         top_strain = create_line(top_strain, "strain", sample, alternative_outliers_strain)
-        with open(args.inputdir + "/" + sample + "/" + args.qc_status + "/qc_status.txt") as f:
-            qc = f.readline().strip()
-        if qc == "PASS":
-            top_strain['qc_readnum'] = 'passed'
         try:
             aggregated_substrain = pd.concat([aggregated_substrain, top_substrain], ignore_index=True)
         except NameError:
-            #print("first line")
             aggregated_substrain = top_substrain
         try:
             aggregated_strain = pd.concat([aggregated_strain, top_strain], ignore_index=True)
         except NameError:
-            #print("first line")
             aggregated_strain = top_strain
 
     aggregated_table =  aggregated_substrain.merge(aggregated_strain, on="sample")
