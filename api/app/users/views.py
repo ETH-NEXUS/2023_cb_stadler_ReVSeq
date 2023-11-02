@@ -74,3 +74,9 @@ class LogoutView(View):
             return HttpResponseRedirect(reverse('api_login'))
 
         return JsonResponse({"detail": _("Successfully logged out.")})
+
+
+
+
+
+

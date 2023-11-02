@@ -1,3 +1,5 @@
+from django.core.handlers.wsgi import WSGIRequest
+from django.views import View
 from django_filters import rest_framework as filters
 from .models import SampleCount, Plate, Substrain, Metadata, Sample, File
 from .serializers import (
@@ -28,6 +30,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+import logging
+import json
+from django.http import JsonResponse
+from django.core.management import call_command
+
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -136,7 +145,7 @@ class SampleCountViewSet(viewsets.ModelViewSet):
         url_path="aggregate/(?P<sample__pseudoanonymized_id>[^/.]+)",
     )
     def aggregate(self, request, sample__pseudoanonymized_id=None):
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
         if not sample__pseudoanonymized_id:
             raise ValidationError({"error": "pseudoanonymized_id is required"})
 
@@ -412,3 +421,24 @@ def download_file(request, filepath):
             )
     else:
         raise Http404("File doesn't exist or is inaccessible.")
+
+class ImportResultsView(View):
+    def post(self, request: WSGIRequest, *args, **kwargs):
+        logger.debug("Starting import")
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError as e:
+            logger.error("Invalid JSON")
+            return JsonResponse({"detail": "Invalid JSON."}, status=400)
+        path = data.get("path")
+        if not path:
+            return JsonResponse({"detail": "Please provide path."}, status=400)
+
+        try:
+            call_command('import', path)
+            logger.debug("Import finished")
+            return JsonResponse({"detail": "Import finished."}, status=200)
+        except Exception as e:
+            logger.error("Import failed")
+            logger.error(e)
+            return JsonResponse({"detail": "Import failed."}, status=400)

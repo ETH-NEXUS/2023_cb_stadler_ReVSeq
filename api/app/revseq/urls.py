@@ -9,6 +9,7 @@ from core.views import (
     SampleViewSet,
     download_file,
     FileViewSet,
+    ImportResultsView,
 
 )
 from rest_framework.routers import DefaultRouter
@@ -44,4 +45,5 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
+    path("api/import_results/", ImportResultsView.as_view(), name="import_results"),
 ]
