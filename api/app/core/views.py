@@ -34,6 +34,8 @@ import logging
 import json
 from django.http import JsonResponse
 from django.core.management import call_command
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 logger = logging.getLogger(__name__)
@@ -422,7 +424,14 @@ def download_file(request, filepath):
     else:
         raise Http404("File doesn't exist or is inaccessible.")
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ImportResultsView(View):
+    """
+     post:
+     Import results data of the experiment.
+
+     path -- The file system path to the directory containing the data to import.
+     """
     def post(self, request: WSGIRequest, *args, **kwargs):
         logger.debug("Starting import")
         try:
