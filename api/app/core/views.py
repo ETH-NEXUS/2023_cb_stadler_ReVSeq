@@ -1,6 +1,8 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.views import View
 from django_filters import rest_framework as filters
+from rest_framework.views import APIView
+
 from .models import SampleCount, Plate, Substrain, Metadata, Sample, File
 from .serializers import (
     SampleCountSerializers,
@@ -36,6 +38,7 @@ from django.http import JsonResponse
 from django.core.management import call_command
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.request import Request
 
 
 logger = logging.getLogger(__name__)
@@ -425,29 +428,23 @@ def download_file(request, filepath):
         raise Http404("File doesn't exist or is inaccessible.")
 
 @method_decorator(csrf_exempt, name='dispatch')
-class ImportResultsView(View):
+class ImportResultsView(APIView):
     """
-     post:
-     Import results data of the experiment.
+    post:
+    Import results data of the experiment.
 
-     path -- The file system path to the directory containing the data to import.
-     """
-    def post(self, request: WSGIRequest, *args, **kwargs):
+    path -- The file system path to the directory containing the data to import.
+    """
+    def post(self, request: Request, *args, **kwargs):
         logger.debug("Starting import")
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError as e:
-            logger.error("Invalid JSON")
-            return JsonResponse({"detail": "Invalid JSON."}, status=400)
-        path = data.get("path")
+        path = request.data.get("path")
         if not path:
-            return JsonResponse({"detail": "Please provide path."}, status=400)
+            return Response({"detail": "Please provide path."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             call_command('import', path)
             logger.debug("Import finished")
-            return JsonResponse({"detail": "Import finished."}, status=200)
+            return Response({"detail": "Import finished."}, status=status.HTTP_200_OK)
         except Exception as e:
-            logger.error("Import failed")
-            logger.error(e)
-            return JsonResponse({"detail": "Import failed."}, status=400)
+            logger.error("Import failed: %s", e, exc_info=True)
+            return Response({"detail": "Import failed."}, status=status.HTTP_400_BAD_REQUEST)
