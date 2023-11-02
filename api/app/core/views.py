@@ -442,7 +442,7 @@ class ImportResultsView(APIView):
             return Response({"detail": "Please provide path."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            call_command('import', path)
+            call_command('import', "--import_dir", path)
             logger.debug("Import finished")
             return Response({"detail": "Import finished."}, status=status.HTTP_200_OK)
         except Exception as e:
