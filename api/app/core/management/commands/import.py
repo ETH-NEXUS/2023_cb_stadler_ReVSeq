@@ -117,6 +117,7 @@ class Command(BaseCommand):
                 self.__process_file(file[0], sample=sample)
 
     def __locate_plate_files(self, import_dir):
+        print("----------------------------Import dir content--------------------------------------", os.listdir(import_dir))
         metadata_file = glob.glob(os.path.join(import_dir, META_DATA_GLOB))[0]
         empty_samples_file = glob.glob(os.path.join(import_dir, EMPTY_SAMPLES_GLOB))[0]
         pipline_version_file = glob.glob(

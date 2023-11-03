@@ -158,6 +158,6 @@ curl -X GET  -H "Authorization: Bearer your_access_token" -H "Accept: applicatio
 ## Uploading Data to the Database
 
 ```
-curl -X POST -H "Content-Type: application/json" -d '{"path":"/path/to/results/dir"}' https://revseq.nexus.ethz.ch/api/import-results/
+curl -X POST  -H "Authorization: Bearer your_access_token"  -H "Accept: application/json"   -H "Content-Type: application/json" -d '{"path":"/path/to/results/dir"}' https://revseq.nexus.ethz.ch/api/import-results/
 
 ```
