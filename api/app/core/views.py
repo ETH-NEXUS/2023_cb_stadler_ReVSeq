@@ -1,6 +1,7 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.views import View
 from django_filters import rest_framework as filters
+from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 
 from .models import SampleCount, Plate, Substrain, Metadata, Sample, File
@@ -428,6 +429,7 @@ def download_file(request, filepath):
         raise Http404("File doesn't exist or is inaccessible.")
 
 @method_decorator(csrf_exempt, name='dispatch')
+@extend_schema(exclude=True)
 class ImportResultsView(APIView):
     """
     post:
