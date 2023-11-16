@@ -78,5 +78,10 @@ class LogoutView(View):
 
 
 
-
-
+class CheckSessionView(View):
+    def get(self, request):
+        is_authenticated = request.user.is_authenticated
+        return JsonResponse({
+            "is_authenticated": is_authenticated,
+            "detail": _("You're logged in.") if is_authenticated else _("You're not logged in.")
+        })
