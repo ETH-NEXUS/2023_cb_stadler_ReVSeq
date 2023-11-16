@@ -9,8 +9,7 @@
 ## upload results back to Viollier
 ## Commands "runpipeline" and "dryrun" require the plate on which to run as option
 
-scriptdir="$(dirname $(which $0))"
-. ${scriptdir}/revseq.conf
+. /data/revseq/revseq.conf
 
 case "$1" in
         syncviollier)
@@ -21,39 +20,84 @@ case "$1" in
                 echo "Removing partial files from:" "${mirror}/"
                 find "${mirror}/" -type f -name '*.filepart' -print0 | xargs -r -0 rm -vi
 		# Mirroring samples
-                lftp -c "set debug; set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${source}"
-		# Mirroring metadata
-		lftp -c "set debug; set cmd:move-background false; set net:timeout $(( contimeout / retries)); set net:max-retries ${retries}; set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; connect sftp://${fileserver}${srvport:+:${srvport}}; mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
+                lftp -c "set debug; set cmd:move-background false; \
+                        set net:timeout $(( contimeout / retries)); \
+                        set net:max-retries ${retries}; \
+                        set net:reconnect-interval-base 8; \
+                        set xfer:timeout ${iotimeout}; \
+                        connect sftp://${fileserver}${srvport:+:${srvport}}; \
+                        mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${source}; \
+                        mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
 	;;
-        #uploadviollier)
-        #        echo "Uploading Viollier"
-        #;;
+        uploadviollier)
+                echo "Uploading Viollier"
+                plate=$2
+                if [ ! -d ${resultsdir}/${plate} ]; then
+                        echo "ERROR: cannot find pipeline results directory ${resultsdir}/${plate}"
+                        exit 1
+                else
+                        mirror_command=""
+                        for dir in ${to_upload[@]}; do
+                                mirror_command=$(echo "${mirror_command} mirror --continue --no-perms --parallel=${parallel} --loop -R ${resultsdir}/${plate}/${dir} /${uploaddir};")
+                        done
+                        lftp -c "set debug; \
+                                set cmd:move-background false; \
+                                set net:timeout $(( contimeout / retries)); \
+                                set net:max-retries ${retries}; \
+                                set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; \
+                                connect sftp://${fileserver}${srvport:+:${srvport}}; \
+                                ${mirror_command}"
+        ;;
         pseudoanonymize_samples)
-                python ${scriptdir}/pseudoanonymize_sample_names.py --mirrordir ${sampledir} --pseudoanondir ${anonymizeddir} --metadatadir ${metadatadir}
+                plate=$2
+                python \
+                        ${scriptdir}/pseudoanonymize_sample_names.py \
+                        --mirrordir ${sampledir} \
+                        --pseudoanondir ${anonymizeddir} \
+                        --metadatadir ${metadatadir}
         ;;
         dryrun)
 		cd ${pipelinedir}
-                for plate in $(ls /data/results/anonymized)
-                do
-                        if [ ! -f "/data/results/anonymized/${plate}/complete.txt" ]
-                        then
-		                snakemake --use-conda --rerun-triggers mtime -c${threads} --configfile ${snakemake_config} --config plate=${plate} sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv -n
-                        fi
-                done
-        ;;
+                plate=$2
+                if [ ! -f "/data/results/anonymized/${plate}/complete.txt" ]
+                then
+		        snakemake \
+                                --use-conda \
+                                --rerun-triggers mtime \
+                                -c${threads} \
+                                --configfile ${snakemake_config} \
+                                --config plate=${plate} \
+                                sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv \
+                                -n
+                fi
+                     ;;
         runpipeline)
 		cd ${pipelinedir}
-                for plate in $(ls /data/results/anonymized)
-                do
-                        if [ ! -f "/data/results/anonymized/${plate}/complete.txt" ]
-                        then
-                                snakemake --use-conda --rerun-triggers mtime -c${threads} --configfile ${snakemake_config} --config plate=${plate} sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv
-                        fi
-                done
+                plate=$2
+                if [ ! -f "${anonymizeddir}/${plate}/complete.txt" ]; then
+                        snakemake \
+                                --use-conda \
+                                --rerun-triggers mtime \
+                                -c${threads} \
+                                --configfile ${snakemake_config} \
+                                --config plate=${plate} \
+                                sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv
+                else
+                        echo "The plate has been already analysed (file ${anonymizeddir}/${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
+                fi
         ;;
         unlock)
                 cd ${pipelinedir}
-                snakemake --use-conda --rerun-triggers mtime -c${threads} --configfile ${snakemake_config} --config plate=${plate} sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv --unlock -n
+                plate=$2
+                        snakemake \
+                        --use-conda \
+                        --rerun-triggers mtime \
+                        -c${threads} \
+                        --configfile ${snakemake_config} \
+                        --config plate=${plate} \
+                        sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv \
+                        --unlock \
+                        -n
         ;;
         *)
                 echo "Unkown sub-command ${1}" > /dev/stderr

@@ -86,22 +86,3 @@ rule gather_results_plate:
 #        echo "SUCCESS" > {output.db_upload_response}) || \
 #        exit 1
 #		"""
-#
-#rule upload_viollier:
-#    input:
-#        db_upload_response = rules.push_to_db.output.db_upload_response,
-#    output:
-#        viollier_upload_success = onfig["inputOutput"]["output_dir"]+"/"+config["plate"]+"/upload_viollier/viollier_upload_success",
-#    log:
-#		outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/upload_viollier/upload_viollier.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/upload_viollier/upload_viollier.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/upload_viollier/upload_viollier.benchmark"
-#    conda:
-#        "../envs/viollier_upload.yaml"
-#    shell:
-#        """
-#        (lftp XXXXX && \
-#        echo "SUCCESS" > {output.viollier_upload_success}) || \
-#        exit 1
-#        """

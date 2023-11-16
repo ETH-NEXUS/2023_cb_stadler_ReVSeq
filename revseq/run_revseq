@@ -1,13 +1,30 @@
 #!/bin/bash
 #### add checks and checkpoints to avoid to upload incomplete stuff
 
-#revseq syncviollier --recent
-#./revseq pseudoanonymize_samples
-#./revseq runpipeline
-# The last points are fully manual and should be run after checking that everything worked as intended
-#revseq packagedata
-#revseq uploadviollier
-cd /data/pipeline
-#snakemake --use-conda -c1 --configfile /data/config/config.yaml --config sample_map=/data/results/pseudoanon_data/010623RVS/010623RVS_samplemap.tsv plate=010623RVS --until bwa
+. /data/revseq/revseq.conf
 
-snakemake --use-conda --rerun-triggers mtime -c8 --configfile /data/config/config.yaml --config plate=010623RVS sample_map=/data/results/010623RVS/010623RVS_samplemap.tsv --notemp --until bwa 
+. ${scriptdir}/revseq syncviollier
+. ${scriptdir}/revseq pseudoanonymize_samples ${plate}
+
+for plate in $(ls -d ${anonizeddir}); do
+	if [ ! -d ${resultsdir}/${plate} ]; then
+		echo "Found new pseudonymized plate to analyze: ${plate}"
+		echo "Pipeline..."
+		${scriptdir}/revseq runpipeline ${plate} && \
+			echo "uploading results to Viollier..." && \
+			${scriptdir}/revseq uploadviollier ${plate}
+	else
+		echo "No new plates to analyze"
+done
+
+#cd /data/pipeline
+#
+#snakemake \
+#	--use-conda \
+#	--rerun-triggers mtime \
+#	-c8 \
+#	--configfile /data/config/config.yaml \
+#	--config plate=010623RVS \
+#	sample_map=/data/results/010623RVS/010623RVS_samplemap.tsv \
+#	--notemp \
+#	--until bwa &&
