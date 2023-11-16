@@ -1,4 +1,9 @@
+from django.core.handlers.wsgi import WSGIRequest
+from django.views import View
 from django_filters import rest_framework as filters
+from drf_spectacular.utils import extend_schema
+from rest_framework.views import APIView
+
 from .models import SampleCount, Plate, Substrain, Metadata, Sample, File
 from .serializers import (
     SampleCountSerializers,
@@ -28,6 +33,16 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+import logging
+import json
+from django.http import JsonResponse
+from django.core.management import call_command
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.request import Request
+
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -136,7 +151,7 @@ class SampleCountViewSet(viewsets.ModelViewSet):
         url_path="aggregate/(?P<sample__pseudoanonymized_id>[^/.]+)",
     )
     def aggregate(self, request, sample__pseudoanonymized_id=None):
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
         if not sample__pseudoanonymized_id:
             raise ValidationError({"error": "pseudoanonymized_id is required"})
 
@@ -412,3 +427,26 @@ def download_file(request, filepath):
             )
     else:
         raise Http404("File doesn't exist or is inaccessible.")
+
+@method_decorator(csrf_exempt, name='dispatch')
+@extend_schema(exclude=True)
+class ImportResultsView(APIView):
+    """
+    post:
+    Import results data of the experiment.
+
+    path -- The file system path to the directory containing the data to import.
+    """
+    def post(self, request: Request, *args, **kwargs):
+        logger.debug("Starting import")
+        path = request.data.get("path")
+        if not path:
+            return Response({"detail": "Please provide path."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            call_command('import', "--import_dir", path)
+            logger.debug("Import finished")
+            return Response({"detail": "Import finished."}, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error("Import failed: %s", e, exc_info=True)
+            return Response({"detail": "Import failed."}, status=status.HTTP_400_BAD_REQUEST)

@@ -78,8 +78,8 @@ export const useUserStore = defineStore('user', () => {
 
   const sessionLogout = async () => {
     try {
-      await removeToken();
       await api.get(endpoints.sessionLogout);
+      await removeToken();
     } catch (err) {
       console.error(err);
     }
@@ -99,6 +99,17 @@ export const useUserStore = defineStore('user', () => {
     _removeUserInfo();
   };
 
+
+  const checkAuthentication = async () => {
+  try {
+    const response = await api.get('/api/check-session/');
+    return response.data.is_authenticated;
+  } catch (error) {
+    // Handle error (e.g., user not authenticated)
+    return false;
+  }
+};
+
   return {
     authenticated,
     user,
@@ -106,5 +117,6 @@ export const useUserStore = defineStore('user', () => {
     sessionLogout,
     getUserInfo,
     removeToken,
+    checkAuthentication,
   };
 });

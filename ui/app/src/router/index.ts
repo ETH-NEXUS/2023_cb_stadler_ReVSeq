@@ -9,6 +9,7 @@ import {
 import routes from './routes';
 import { useUserStore } from 'stores/user';
 
+
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -35,7 +36,7 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach((to, from, next) => {
+  Router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore();
 
     if (to.path.startsWith('/admin/')) {
@@ -43,15 +44,15 @@ export default route(function (/* { store, ssrContext } */) {
     }
 
     if (!['/login'].includes(to.path ? to.path.toString() : '')) {
-      // If we do not want to login or register we check if the JWT token exists, if not we route to the login page.
-      console.debug('authenticated', userStore.authenticated);
-      // if (!userStore.jwt) {
-      if (!userStore.authenticated) {
+
+    const isAuthenticated = await userStore.checkAuthentication();
+      if (!isAuthenticated) {
         next({
           path: '/login',
           query: { next: encodeURI(to.fullPath) },
         });
       } else {
+        userStore.authenticated = 'true';
         next();
       }
     } else {

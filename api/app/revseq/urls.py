@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
-from users.views import CsrfCookieView, LoginView, LogoutView, UserViewSet
+from users.views import CsrfCookieView, LoginView, LogoutView, UserViewSet, CheckSessionView
 from core.views import (
     SampleCountViewSet,
     MetadataViewSet,
@@ -9,6 +9,7 @@ from core.views import (
     SampleViewSet,
     download_file,
     FileViewSet,
+    ImportResultsView,
 
 )
 from rest_framework.routers import DefaultRouter
@@ -44,4 +45,6 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
+    path("api/import_results/", ImportResultsView.as_view(), name="import_results"),
+    path('api/check-session/', CheckSessionView.as_view(), name='check_session'),
 ]
