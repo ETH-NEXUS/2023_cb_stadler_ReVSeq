@@ -42,10 +42,10 @@ export default route(function (/* { store, ssrContext } */) {
     if (to.path.startsWith('/admin/')) {
       next();
     }
-
+const isAuthenticated = await userStore.checkAuthentication();
     if (!['/login'].includes(to.path ? to.path.toString() : '')) {
 
-    const isAuthenticated = await userStore.checkAuthentication();
+
       if (!isAuthenticated) {
         next({
           path: '/login',
@@ -56,7 +56,7 @@ export default route(function (/* { store, ssrContext } */) {
         next();
       }
     } else {
-      if (userStore.authenticated) {
+      if (isAuthenticated) {
         // It makes no sense to login if we are already logged in so we route back to the path we come from.
         next({
           path: from.path,
