@@ -18,8 +18,8 @@ include: "rules/preprocessing.smk"
 include: "rules/dehuman.smk"
 include: "rules/revseq_basic.smk"
 include: "rules/qc.smk"
-include: "rules/gather_results.smk"
 include: "rules/aggregate.smk"
+include: "rules/uploads.smk"
 
 # include local rules
 localrules:
@@ -53,7 +53,7 @@ rule all:
         #db_upload
         ####config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/push_to_db/db_upload_success",
         #viollier_upload
-        ####config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/upload_viollier/viollier_upload_success",
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
     output:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/complete.txt",
     shell:

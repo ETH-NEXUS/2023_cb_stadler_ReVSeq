@@ -31,14 +31,14 @@ case "$1" in
 	;;
         uploadviollier)
                 echo "Uploading Viollier"
-                plate=$2
-                if [ ! -d ${resultsdir}/${plate} ]; then
-                        echo "ERROR: cannot find pipeline results directory ${resultsdir}/${plate}"
+                results=$2
+                if [ ! -d ${results} ]; then
+                        echo "ERROR: cannot find pipeline results directory ${results}"
                         exit 1
                 else
                         mirror_command=""
                         for dir in ${to_upload[@]}; do
-                                mirror_command=$(echo "${mirror_command} mirror --continue --no-perms --parallel=${parallel} --loop -R ${resultsdir}/${plate}/${dir} /${uploaddir};")
+                                mirror_command=$(echo "${mirror_command} mirror --continue --no-perms --parallel=${parallel} --loop --dereference --exclude-glob *.fastq.gz --exclude-glob *_remove_duplicates.bam -R ${results} /${uploaddir};")
                         done
                         lftp -c "set debug; \
                                 set cmd:move-background false; \
@@ -47,6 +47,7 @@ case "$1" in
                                 set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; \
                                 connect sftp://${fileserver}${srvport:+:${srvport}}; \
                                 ${mirror_command}"
+                fi
         ;;
         pseudoanonymize_samples)
                 plate=$2

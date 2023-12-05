@@ -44,6 +44,7 @@ if __name__ == '__main__':
     parser.add_argument('--ref_table', required=True, type=str, help='the bed file listing all the reference viral genomes')
     parser.add_argument('--idxstats', required=True, type=str, help='the output of samtools idxstats')
     parser.add_argument('--counts', required=True, type=str, help='the count file output by samtools view -c -F 4')
+    parser.add_argument('--taxon_table', required=True, type=str, help='the table with all the substrain name/taxon matches')
     parser.add_argument('--out_prefix', required=True, type=str, help='the prefix for the outputs. Can include a path')
     parser.add_argument('--lookup', required=True, type=str, help='Lookup table in CSV format showing the match between strain_name and substrain_name (with column names). The table will be used to collapse substrains into strains')
     parser.add_argument('--outlier_percentile', required=True, type=float, help='percentile cutoff for outlier detection')
@@ -60,9 +61,12 @@ if __name__ == '__main__':
     refs = refs.rename(columns={0: "id", 1: "ref_start", 2: "ref_end", 3: "name"})
     idxstats = pd.read_table(args.idxstats, header=None)
     idxstats = idxstats.rename(columns={0: "id", 1: "length", 2: "aligned", 3: "unaligned"})
+    taxon = pd.read_csv(args.taxon_table, index_col=0)
+    #taxon_dict = taxon.to_dict(orient="index")
+ 
     with open(args.counts) as f:
         counts = int(f.readline().strip())
-            
+
     lookup = pd.read_csv(args.lookup, header=0, index_col=1)
     lookup_dict = lookup.to_dict(orient="index")
     for k,v in lookup_dict.items():
@@ -95,6 +99,10 @@ if __name__ == '__main__':
     aggregated_stats["DP_status"] = "placeholder"
     aggregated_stats.loc[aggregated_stats['DP'] >= args.dp_threshold, "DP_status"] = "PASSED"
     aggregated_stats.loc[aggregated_stats['DP'] < args.dp_threshold, "DP_status"] = "FAILED"
+    aggregated_stats.merge(taxon, right_index=True, left_index=True, how="left")
+
+    aggregated_stats[""]
+
     aggregated_stats.to_csv(args.out_prefix + "substrain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])
     for row in aggregated_stats.itertuples():

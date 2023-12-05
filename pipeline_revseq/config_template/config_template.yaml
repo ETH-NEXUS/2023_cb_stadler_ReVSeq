@@ -10,7 +10,7 @@ inputOutput:
 resources:
   # Full path to the BED file listing the virus references
   reference_table: "/data/pipeline/resources/RespiratoryVirus.20200409.bed"
-  # Full path to the host reference sequence in FASTA format
+  # Full path to the merged host+virus reference sequence in FASTA format
   host_ref: "/data/config/RespiratoryVirus_hg38.20200409.fa"
   # Full path to the viral reference sequences in multi-fasta format
   reference: "/data/config/RespiratoryVirus.20200409.fa"
@@ -71,7 +71,6 @@ tools:
     # For "outliers" and "top": if there are no outliers, the consensus will be empty; for fragmented genomes,
     #    e.g. influenza, the consensus will be a multi-fasta with one fragment per entry
     consensus_type: "outliers"
-  gather_results:
-    # Full path of the results folder OUTSIDE of the docker container
-    # This is necessary to create the c
-    external_results_path: "/data/revseq/results/results"
+  viollier_upload:
+    # Location of the revseq executable
+    revseq_executable: /data/revseq/revseq
