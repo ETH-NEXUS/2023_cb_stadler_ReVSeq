@@ -22,6 +22,6 @@ USER appuser
 RUN export PATH=/data/revseq/:$PATH
 
 RUN conda install -y -n base -c conda-forge mamba libarchive
-RUN mamba install -y -c conda-forge -c bioconda -n base snakemake=7.32.3
+RUN mamba install -y -c conda-forge -c bioconda -n base snakemake=7.32.3 shortuuid
 
 ENTRYPOINT [ "/data/revseq/entrypoint.sh" ]

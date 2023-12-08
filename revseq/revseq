@@ -13,11 +13,11 @@
 
 case "$1" in
         syncviollier)
-                echo "Sync Viollier"
+                echo "$(date) Sync Viollier"
 		cd ${mirror}
-                # HACK delete previous partial downloads
-                . <(grep '^mirror=' revseq.conf)
-                echo "Removing partial files from:" "${mirror}/"
+                # delete previous partial downloads
+                . <(grep '^mirror=' /data/revseq/revseq.conf)
+                echo "$(date) Removing partial files from:" "${mirror}/"
                 find "${mirror}/" -type f -name '*.filepart' -print0 | xargs -r -0 rm -vi
 		# Mirroring samples
                 lftp -c "set debug; set cmd:move-background false; \
@@ -26,14 +26,14 @@ case "$1" in
                         set net:reconnect-interval-base 8; \
                         set xfer:timeout ${iotimeout}; \
                         connect sftp://${fileserver}${srvport:+:${srvport}}; \
-                        mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${source}; \
-                        mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
+                        mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${source}" #; \
+                        #mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
 	;;
         uploadviollier)
-                echo "Uploading Viollier"
+                echo "$(date) Uploading Viollier"
                 results=$2
                 if [ ! -d ${results} ]; then
-                        echo "ERROR: cannot find pipeline results directory ${results}"
+                        echo "$(date) ERROR: cannot find pipeline results directory ${results}"
                         exit 1
                 else
                         mirror_command=""
@@ -50,12 +50,11 @@ case "$1" in
                 fi
         ;;
         pseudoanonymize_samples)
-                plate=$2
                 python \
                         ${scriptdir}/pseudoanonymize_sample_names.py \
                         --mirrordir ${sampledir} \
-                        --pseudoanondir ${anonymizeddir} \
-                        --metadatadir ${metadatadir}
+                        --outdir ${anonymizeddir} #\
+                        #--metadatadir ${metadatadir}
         ;;
         dryrun)
 		cd ${pipelinedir}
@@ -75,16 +74,16 @@ case "$1" in
         runpipeline)
 		cd ${pipelinedir}
                 plate=$2
-                if [ ! -f "${anonymizeddir}/${plate}/complete.txt" ]; then
+                if [ ! -f "${plate}/complete.txt" ]; then
                         snakemake \
                                 --use-conda \
                                 --rerun-triggers mtime \
                                 -c${threads} \
                                 --configfile ${snakemake_config} \
                                 --config plate=${plate} \
-                                sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv
+                                sample_map=${plate}/${plate##*/}_samplemap.tsv
                 else
-                        echo "The plate has been already analysed (file ${anonymizeddir}/${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
+                        echo "$(date) The plate has been already analysed (file ${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
                 fi
         ;;
         unlock)
@@ -101,7 +100,7 @@ case "$1" in
                         -n
         ;;
         *)
-                echo "Unkown sub-command ${1}" > /dev/stderr
+                echo "$(date) Unkown sub-command ${1}" > /dev/stderr
                 exit 2
         ;;
 esac

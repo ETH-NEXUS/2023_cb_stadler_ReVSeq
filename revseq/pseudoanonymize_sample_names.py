@@ -43,17 +43,12 @@ def generate_new_ethids(anon_df, all_samples):
         print("Warning: empty anonymization table. This is just a notice, not an error.")
     newsamples = []
     for samplename in all_samples:
+        newethid = generate_id()
         if len(anon_df) > 0:
-            if samplename in anon_df["sample_name"].values:
-                print("Sample already in anonymization table. Skipping.")
-                continue
-            else:
+            while (newethid in anon_df) and any(newethid == sublist[1] for sublist in newsamples):
                 newethid = generate_id()
-                while (newethid in anon_df["ethid"]) and any(newethid == sublist[1] for sublist in newsamples):
-                    newethid = generate_id()
-                newsamples.append( [samplename, newethid] )
+            newsamples.append( [samplename, newethid] )
         else:
-            newethid = generate_id()
             while any(newethid == sublist[1] for sublist in newsamples):
                 newethid = generate_id()
             newsamples.append( [samplename, newethid] )
@@ -89,6 +84,16 @@ def create_plate_directory(platename, outdir):
     return outdir + "/" + platename
 
 
+def create_sample_directories(platename, outdir, samples):
+    print("Creating sample directories for plate: " + platename)
+    for sample in samples:
+        try:
+            os.mkdir(outdir + "/" + platename + "/" + sample)
+        except FileExistsError:
+            sys.exit("ERROR: the folder " + outdir + "/" + platename, + "/" + sample + " already exisits")
+    return
+
+
 def create_sample_map(samples, outdir):
     lanes = []
     for id in samples:
@@ -104,27 +109,50 @@ def create_sample_map(samples, outdir):
     lanes = lanes.rename(columns={0: "sample", 1: "lane"})
     return lanes
 
-def verify_if_new_plate(metadatadir, processed_plates):
-    metadata_subdirs = os.listdir(metadatadir)
-    metadata_files = [ metadatadir + "/" + subdir + "/" + os.listdir(metadatadir + "/" + subdir)[0] for subdir in metadata_subdirs ]
+#def verify_if_new_plate(metadatadir, processed_plates):
+#    metadata_subdirs = os.listdir(metadatadir)
+#    metadata_files = [ metadatadir + "/" + subdir + "/" + os.listdir(metadatadir + "/" + subdir)[0] for subdir in metadata_subdirs ]
+#    new_plates = []
+#    for file in metadata_files:
+#        with open(file) as f:
+#            metadata = f.read().splitlines()
+#        try:
+#            plate = metadata[1].split(";")[4]
+#        except indexError:
+#            sys.exit("ERROR: the metadata table " + file + " is either empty or truncated")
+#        if plate not in processed_plates:
+#            new_plates.append([plate, file])
+#    return new_plates
+
+
+def verify_if_new_plate(mirrordir, mirrored_plates, processed_plates):
+    new_plates_names = [ plate for plate in mirrored_plates if plate not in processed_plates ]
     new_plates = []
-    for file in metadata_files:
-        with open(file) as f:
+    for plate in new_plates_names:
+        platedir = mirrordir + "/" + plate
+        metadata_file = [ file for file in os.listdir(platedir) if ".csv" in file]
+        metadata_file = [ platedir + "/" + file for file in metadata_file if "seq_" in file ]
+        if len(metadata_file) != 1:
+            sys.exit("ERROR: found " + str(len(metadata_file)) + " metadata files in mirrored directory " + platedir)
+        metadata_file = metadata_file[0]
+        with open(metadata_file) as f:
             metadata = f.read().splitlines()
         try:
-            plate = metadata[1].split(";")[4]
+            metadata_plate = metadata[1].split(";")[4]
+            metadata_plate = metadata_plate.replace('"', '')
         except indexError:
             sys.exit("ERROR: the metadata table " + file + " is either empty or truncated")
-        if plate not in processed_plates:
-            new_plates.append([plate, file])
+        if metadata_plate != plate:
+            sys.exit("ERROR: the metadata table " + file + " lists a different plate than the directory name")
+        new_plates.append([plate,metadata_file])
     return new_plates
 
 
 def verify_if_complete_plate(new_plates, mirrordir):
-    mirrorsamples = os.listdir(mirrordir)
     completeness = {}
     # find how many samples we have in the mirror for the new plates
     for plate,file in new_plates:
+        mirrorsamples = os.listdir(mirrordir + "/" + plate)
         samples = pd.read_csv(file, sep=";")['Sample number'].to_list()
         r1 = []
         r2 = []
@@ -145,8 +173,7 @@ def get_pseudoanon_names(outdir):
     plates = [ outdir + "/" + plate for plate in os.listdir(outdir) ]
     anon = []
     for plate in plates:
-        anon_names = [ plate + "/" + sample for sample in os.listdir(plate) ]
-        anon.extend(anon_names)
+        anon.extend(os.listdir(plate))
     return anon
 
 
@@ -156,7 +183,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='fetch the primers positions on the reference',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--outdir', required=True, type=str, help='the path to the output directory')
-    parser.add_argument('--metadatadir', required=True, type=str, help='the path to the directory where the metadata are mirrored')
+    #parser.add_argument('--metadatadir', required=True, type=str, help='the path to the directory where the metadata are mirrored')
     parser.add_argument('--mirrordir', required=True, type=str, help='the directory containing all raw data samples, one folder per sample')
 
     args = parser.parse_args()
@@ -164,10 +191,15 @@ if __name__ == '__main__':
     processed_plates = os.listdir(args.outdir)
     if len(processed_plates) == 0:
         print("Warning: no processed plates found. If this is not the very first run of the workflow please check the configuration")
-
+    
+    mirrored_plates = os.listdir(args.mirrordir)
+    if len(mirrored_plates) == 0:
+        print("Warning: no mirrored plates found. Please check the configuration")
+    
     anon = get_pseudoanon_names(args.outdir)
 
-    new_plates = verify_if_new_plate(args.metadatadir, processed_plates)
+    #new_plates = verify_if_new_plate(args.metadatadir, processed_plates)
+    new_plates = verify_if_new_plate(args.mirrordir, mirrored_plates, processed_plates)
     if len(new_plates) == 0:
         print("No new plate found.")
         print("NEW = the plate has not been pseudo-anonymized before")
@@ -189,9 +221,10 @@ if __name__ == '__main__':
         newsamples = generate_new_ethids(anon, sample)
         newsamples = newsamples.rename(columns={0: "Sample number", 1: "ethid"})
         if len(newsamples.index) > 0:
-            outdir = create_plate_directory(plate, args.outdir)
+            create_plate_directory(plate, args.outdir)
+            create_sample_directories(plate, args.outdir, newsamples["ethid"].to_list())
             try:
-                pd.DataFrame(newsamples).to_csv(outdir + "/" + plate + "_pseudoanon_table.tsv", sep="\t", index=None)
+                pd.DataFrame(newsamples).to_csv(outdir + "/" + plate +  "/" + plate + "_pseudoanon_table.tsv", sep="\t", index=None)
             except:
                 sys.exit("Error: could not write the pseudoanonymization table. All directories have been created and need to be deleted for the procedure to move forward\nTo know what directories to delete, check in " + args.anonymizeddir + " the ethids that are not present in the pseudoanonymised table and delete all of them")
             all_samples_status = [ detect_empty_sample(sample, args.outdir, plate) for sample in newsamples["ethid"].to_list() ]
