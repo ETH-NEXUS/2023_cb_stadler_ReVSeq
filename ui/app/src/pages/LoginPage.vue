@@ -34,7 +34,7 @@ const login = async () => {
     console.error(err);
   }
 
-  if (userStore.authenticated) {
+  if (await userStore.checkAuthentication()) {   // userStore.authenticated
     $q.notify({
       type: 'positive',
       message: t('message.successfully_logged_in'),

@@ -24,15 +24,10 @@ interface ObtainTokenPayload {
   password: string;
 }
 
-interface UpdateTokenPayload {
-  access: string;
-  refresh: string;
-}
+
 
 export const useUserStore = defineStore('user', () => {
-  const authenticated = ref<string | null>(
-    localStorage.getItem('authenticated')
-  );
+
   const user = ref<User | null>(
     JSON.parse(localStorage.getItem('user') || 'null')
   );
@@ -41,17 +36,6 @@ export const useUserStore = defineStore('user', () => {
     sessionLogin: '/api/auth/login/',
     sessionLogout: '/api/auth/logout/',
     user: '/api/auth/users/me/',
-  };
-
-  const _updateToken = (payload: UpdateTokenPayload) => {
-    localStorage.setItem('authenticated', 'true');
-    authenticated.value = 'true';
-  };
-
-  const _removeToken = () => {
-    localStorage.removeItem('authenticated');
-    authenticated.value = null;
-    user.value = null;
   };
 
   const updateUserInfo = (payload: User) => {
@@ -68,8 +52,7 @@ export const useUserStore = defineStore('user', () => {
     try {
       await api.get(endpoints.loginCookie);
       const resp = await api.post(endpoints.sessionLogin, payload);
-      console.log('respo', resp.data);
-      _updateToken(resp.data);
+      console.log('resp', resp.data);
       await getUserInfo();
     } catch (err) {
       console.error(err);
@@ -95,7 +78,6 @@ export const useUserStore = defineStore('user', () => {
   };
 
   const removeToken = async () => {
-    _removeToken();
     _removeUserInfo();
   };
 
@@ -104,14 +86,14 @@ export const useUserStore = defineStore('user', () => {
   try {
     const response = await api.get('/api/check-session/');
     return response.data.is_authenticated;
+
   } catch (error) {
-    // Handle error (e.g., user not authenticated)
+
     return false;
   }
 };
 
   return {
-    authenticated,
     user,
     sessionLogin,
     sessionLogout,

@@ -45,14 +45,13 @@ export default route(function (/* { store, ssrContext } */) {
 const isAuthenticated = await userStore.checkAuthentication();
     if (!['/login'].includes(to.path ? to.path.toString() : '')) {
 
-
       if (!isAuthenticated) {
         next({
           path: '/login',
           query: { next: encodeURI(to.fullPath) },
         });
       } else {
-        userStore.authenticated = 'true';
+
         next();
       }
     } else {
