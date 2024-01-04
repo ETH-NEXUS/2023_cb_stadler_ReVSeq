@@ -11,6 +11,8 @@ from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
 
 from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 import logging
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -67,21 +69,27 @@ class LogoutView(View):
         logout(request)
 
         # The url where the user was before logging out
-        referer_url = request.META.get('HTTP_REFERER', '')
-        path = urlparse(referer_url).path
+        # referer_url = request.META.get("HTTP_REFERER", "")
+        # path = urlparse(referer_url).path
 
-        if path.startswith('/api/'):
-            return HttpResponseRedirect(reverse('api_login'))
+        # if path.startswith("/api/"):
+        #     return HttpResponseRedirect(reverse("api_login"))
 
         return JsonResponse({"detail": _("Successfully logged out.")})
 
 
+class CheckSessionView(APIView):
+    # We need to support this view if we are not authenticated
+    # authentication_classes = ()
+    permission_classes = (AllowAny,)
 
-
-class CheckSessionView(View):
     def get(self, request):
         is_authenticated = request.user.is_authenticated
-        return JsonResponse({
-            "is_authenticated": is_authenticated,
-            "detail": _("You're logged in.") if is_authenticated else _("You're not logged in.")
-        })
+        return JsonResponse(
+            {
+                "is_authenticated": is_authenticated,
+                "detail": _("You're logged in.")
+                if is_authenticated
+                else _("You're not logged in."),
+            }
+        )
