@@ -35,6 +35,27 @@ services:
       - GIT_LASTCOMMITDATE=${GIT_LASTCOMMITDATE}
     depends_on:
       - db
+  ena:
+    # image: ethnexus/ena-upload-ms:main
+    image: ena-upload-api:latest
+    hostname: ena
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${ENA_POSTGRES_DB}
+      - POSTGRES_USER=${ENA_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${ENA_POSTGRES_PASSWORD}
+      - ENA_USERNAME=${ENA_USERNAME}
+      - ENA_PASSWORD=${ENA_PASSWORD}
+      - ENA_USE_DEV_ENDPOINT=${ENA_USE_DEV_ENDPOINT}
+      - ENA_UPLOAD_FREQ_SECS=${ENA_UPLOAD_FREQ_SECS}
+      - ENA_TOKEN=${ENA_TOKEN}
+    volumes:
+      - ./ena/templates:/templates
+      - ./data:/data
+    depends_on:
+      - db
   db:
     image: postgres:13.4-alpine
     hostname: db
@@ -42,3 +63,4 @@ services:
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
+      - ./scripts/init_ena_db.sh:/docker-entrypoint-initdb.d/init_ena_db.sh

@@ -12,7 +12,6 @@ services:
       - "smnrp-data:/etc/letsencrypt"
       - ./api/static:/vol/web/static:z
       - ./api/media:/vol/web/media:z
-
     ports:
       - "80:80"
       - "443:443"
