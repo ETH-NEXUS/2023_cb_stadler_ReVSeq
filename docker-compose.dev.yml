@@ -24,8 +24,6 @@ services:
   ena:
     ports:
       - 5011:5000
-    volumes:
-      - ./data:/data
   db:
     ports:
       - "54310:5432"
