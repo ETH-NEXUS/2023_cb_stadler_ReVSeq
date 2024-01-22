@@ -12,7 +12,6 @@ services:
       - "smnrp-data:/etc/letsencrypt"
       - ./api/static:/vol/web/static:z
       - ./api/media:/vol/web/media:z
-
     ports:
       - "80:80"
       - "443:443"
@@ -30,3 +29,6 @@ services:
         mv /app/dist/spa/* /app/dist/.
         rm -rf /app/dist/spa
       "
+  ena:
+    volumes:
+      - /data/revseq/results_example_for_database/package_results:/data

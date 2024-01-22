@@ -74,6 +74,8 @@ class Panel(models.Model):
 
 class Substrain(models.Model):
     name = models.TextField()
+    taxon_id = models.IntegerField(null=True)
+    scientific_name = models.TextField(null=True)
     strain = models.ForeignKey(Strain, on_delete=models.CASCADE, null=True)
 
     def __str__(self):

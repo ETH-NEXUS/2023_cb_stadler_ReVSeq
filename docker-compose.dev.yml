@@ -20,7 +20,10 @@ services:
     environment:
       - DJANGO_DEBUG=True
     ports:
-      - "5010:5000"
+      - 5010:5000
+  ena:
+    ports:
+      - 5011:5000
   db:
     ports:
-      - "54398:5432"
+      - "54310:5432"

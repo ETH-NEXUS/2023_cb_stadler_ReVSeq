@@ -1,6 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
-from users.views import CsrfCookieView, LoginView, LogoutView, UserViewSet, CheckSessionView
+from users.views import (
+    CsrfCookieView,
+    LoginView,
+    LogoutView,
+    UserViewSet,
+    CheckSessionView,
+)
 from core.views import (
     SampleCountViewSet,
     MetadataViewSet,
@@ -10,13 +16,13 @@ from core.views import (
     download_file,
     FileViewSet,
     ImportResultsView,
-
 )
 from rest_framework.routers import DefaultRouter
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from django.contrib.auth.views import LoginView as LV
+
+# from django.contrib.auth.views import LoginView as LV
 
 
 router = DefaultRouter()
@@ -28,17 +34,15 @@ router.register(r"samples", SampleViewSet, basename="samples")
 router.register(r"files", FileViewSet, basename="files")
 
 urlpatterns = [
-  path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('login/', LV.as_view(template_name="core/login.html"), name='api_login'),
-
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    # path("login/", LV.as_view(template_name="core/login.html"), name="api_login"),
     path("admin/", admin.site.urls),
     path("api/auth/cookie/", CsrfCookieView.as_view(), name="auth-cookie"),
     path("api/auth/login/", LoginView.as_view(), name="login"),
     path("api/auth/logout/", LogoutView.as_view(), name="logout"),
     path("api/auth/users/me/", UserViewSet.as_view({"get": "retrieve"}), name="me"),
     re_path(r"^api/download/(?P<filepath>.+)/$", download_file, name="download_file"),
-    path("api/", include(router.urls)),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
         "api/docs/",
@@ -46,5 +50,6 @@ urlpatterns = [
         name="api-docs",
     ),
     path("api/import_results/", ImportResultsView.as_view(), name="import_results"),
-    path('api/check-session/', CheckSessionView.as_view(), name='check_session'),
+    path("api/check-session/", CheckSessionView.as_view(), name="check_session"),
+    path("api/", include(router.urls)),
 ]
