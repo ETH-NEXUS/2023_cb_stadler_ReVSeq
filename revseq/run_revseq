@@ -10,8 +10,9 @@ while [[ -n "1" ]]; do
 	. ${scriptdir}/revseq pseudoanonymize_samples
 
 	for plate in $(ls -d ${anonymizeddir}/*); do
-		if [ ! -d ${plate} ]; then
-			echo "$(date) Found new pseudonymized plate to analyze: ${plate##*/}"
+		plate=${plate##*/}
+		if [ ! -f ${anonymizeddir}/${plate}/complete.txt ]; then
+			echo "$(date) Found new pseudonymized plate to analyze: ${plate}"
 			echo "$(date) Pipeline..."
 			${scriptdir}/revseq runpipeline ${plate} #&& \
 				#echo "uploading results to Viollier..." && \

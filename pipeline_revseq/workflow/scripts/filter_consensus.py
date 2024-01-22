@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     if len(filter_values) != 0:
         for strain in filter_values:
-            if assignment.loc[assignment["name"] == filter_values[0]]["DP_status"].item() == "FAILED":
+            if assignment.loc[assignment["name"] == filter_values[0]]["coverage_status"].item() == "FAILED":
                 filter_values.remove(strain)
 
     if assignment["readnum_status"][0] != "SUCCESS":

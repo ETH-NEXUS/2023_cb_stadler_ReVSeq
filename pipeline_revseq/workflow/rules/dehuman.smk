@@ -104,5 +104,8 @@ rule dh_fastqc:
         "../envs/qc.yaml"
     threads: config["threads"]
     shell:
-        "fastqc {input.inputdir}/{wildcards.sample}_bam_to_fastq_r*.fastq -t {threads} -o {params.outdir}  2> >(tee {log.errfile} >&2)"
+        """
+        fastqc {input.inputdir}/{wildcards.sample}_bam_to_fastq_r1.fastq -t {threads} -o {params.outdir}  2> >(tee {log.errfile} >&2)
+        fastqc {input.inputdir}/{wildcards.sample}_bam_to_fastq_r2.fastq -t {threads} -o {params.outdir}  2> >(tee {log.errfile} >&2)
+        """
 

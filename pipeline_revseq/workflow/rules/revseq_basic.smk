@@ -97,7 +97,6 @@ rule samtools_index:
         "samtools index {input.bam} 2> >(tee {log.errfile} >&2)"
 
 
-
 rule pileup:
     input:
         bam = rules.remove_duplicates.output.bam,
@@ -118,6 +117,23 @@ rule pileup:
         samtools mpileup -q {params.min_map_qual} -f {input.fasta} {input.bam} > {output.outpile}  2> >(tee {log.errfile} >&2)
         """
 
+rule depth:
+    input:
+        bam = rules.remove_duplicates.output.bam,
+        index = rules.samtools_index.output.index,
+    output:
+        depth = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/depth/{sample}_depth.tsv",
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/depth/{sample}_depth.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/depth/{sample}_depth.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/depth/{sample}_depth.benchmark"
+    conda:
+        "../envs/samtools.yaml"
+    shell:
+        """
+        samtools depth -a -o {output.depth} {input.bam}
+        """
 
 rule idxstats:
     input:
@@ -147,6 +163,7 @@ rule assign_virus:
         idxstats = rules.idxstats.output.idxstats,
         counts = rules.idxstats.output.counts,
         genome_res = rules.qualimap_filtered.output.genome_res,
+        depth = rules.depth.output.depth,
     output:
         table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_substrain_count_table.tsv",
         strain_table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_strain_count_table.tsv",
@@ -158,8 +175,9 @@ rule assign_virus:
         outlier_percentile = config["tools"]["assign_virus"]["outlier_percentile"],
         outlier_percentile_collapsed = config["tools"]["assign_virus"]["outlier_percentile_collapsed"],
         lookup = config["tools"]["general"]["lookup"],
-        dp_threshold = config["tools"]["assign_virus"]["dp_threshold"],
-        readnum_threshold = config["tools"]["general"]["min_readcount"]
+        coverage_threshold = config["tools"]["assign_virus"]["coverage_threshold"],
+        readnum_threshold = config["tools"]["general"]["min_readcount"],
+        taxon = config["tools"]["assign_virus"]["taxon"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.err.log",
@@ -173,12 +191,14 @@ rule assign_virus:
             --ref_table {params.ref_table} \
             --idxstats {input.idxstats} \
             --counts {input.counts} \
+            --taxon_table {params.taxon} \
+            --depth_table {input.depth} \
             --out_prefix {params.prefix} \
             --outlier_percentile {params.outlier_percentile} \
             --outlier_percentile_collapsed {params.outlier_percentile_collapsed} \
             --lookup {params.lookup}  \
             --genome_res {input.genome_res} \
-            --dp_threshold {params.dp_threshold} \
+            --coverage_threshold {params.coverage_threshold} \
             --readnum_threshold {params.readnum_threshold} 2> >(tee {log.errfile} >&2)
         """
 

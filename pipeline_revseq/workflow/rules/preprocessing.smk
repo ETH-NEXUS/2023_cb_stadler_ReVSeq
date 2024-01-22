@@ -5,42 +5,45 @@ import pandas as pd
 def find_input_fastq_lanes_r1(wildcards):
     #"return a list of all input fastq files available for one sample. Handles multi-lane data"
     mate = "R1"
-    sample = wildcards.sample
+    sample = str(wildcards.sample)
     matches = pd.read_table(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv")
     snumber = int(matches[matches["ethid"] == sample]["Sample number"].to_string(index=False))
     sample_table = sample_map[sample_map["sample"] == sample]
     sample_lanes = sample_table["lane"].tolist()
     sample_lanes.sort()
     fastq_files = []
-    total_samples = os.listdir(config["inputOutput"]["input_fastqs"])
+    total_samples = os.listdir(config["inputOutput"]["input_fastqs"]+"/"+config["plate"])
     for lane in sample_lanes:
         all_samples = [ file for file in total_samples if str(snumber) in file ]
         lanefile = [ file for file in all_samples if lane in file ]
         raw = [ file for file in lanefile if mate in file ]
         if len(raw) == 0:
-            sys.exit("ERROR: can't file raw file for sample " + snumber + " lane " + lane + " mate " + mate)
-        fastq_files.append(config["inputOutput"]["input_fastqs"]+"/"+raw[0])
+            sys.exit("ERROR: can't find raw file for sample " + str(snumber) + " lane " + lane + " mate " + mate)
+        fastq_files.append(config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/"+raw[0])
     return fastq_files
 
 
 def find_input_fastq_lanes_r2(wildcards):
     #"return a list of all input fastq files available for one sample. Handles multi-lane data"
     mate = "R2"
-    sample = wildcards.sample
+    sample = str(wildcards.sample)
     matches = pd.read_table(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv")
     snumber = int(matches[matches["ethid"] == sample]["Sample number"].to_string(index=False))
     sample_table = sample_map[sample_map["sample"] == sample]
     sample_lanes = sample_table["lane"].tolist()
     sample_lanes.sort()
     fastq_files = []
-    total_samples = os.listdir(config["inputOutput"]["input_fastqs"])
+    total_samples = os.listdir(config["inputOutput"]["input_fastqs"]+"/"+config["plate"])
     for lane in sample_lanes:
         all_samples = [ file for file in total_samples if str(snumber) in file ]
+        print(all_samples)
         lanefile = [ file for file in all_samples if lane in file ]
+        print(lanefile)
         raw = [ file for file in lanefile if mate in file ]
+        print(raw)
         if len(raw) == 0:
-            sys.exit("ERROR: can't file raw file for sample " + snumber + " lane " + lane + " mate " + mate)
-        fastq_files.append(config["inputOutput"]["input_fastqs"]+"/"+raw[0])
+            sys.exit("ERROR: can't find raw file for sample " + str(snumber) + " lane " + lane + " mate " + mate)
+        fastq_files.append(config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/"+raw[0])
     return fastq_files
 
 

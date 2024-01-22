@@ -115,7 +115,7 @@ rule multiqc:
         stats = expand(rules.samtoolsstats.output.stats, sample=sample_ids),
         flagstats = expand(rules.samtoolsstats.output.flagstats, sample=sample_ids),
         rseqcstats = expand(rules.rseqc.output.stats, sample=sample_ids),
-        qualimap = expand(rules.qualimap.output.report, sample=sample_ids),
+        #qualimap = expand(rules.qualimap.output.report, sample=sample_ids),
     output:
         outfile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc/multiqc_report.html",
         outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc")
@@ -137,6 +137,7 @@ rule multiqc:
         --ignore "{params.inputdir}/*/qualimap_filtered" \
         --ignore "{params.inputdir}/*/rseqc_filtered" \
         --ignore "{params.inputdir}/*/samtoolsstats_filtered" \
+        --ignore "{params.inputdir}/*/qualimap" \
         -o {params.outdir}  2> >(tee {log.errfile} >&2)
         """
 
@@ -183,7 +184,7 @@ rule multiqc_filtered:
         stats = expand(rules.samtoolsstats_filtered.output.stats, sample=sample_ids),
         flagstats = expand(rules.samtoolsstats_filtered.output.flagstats, sample=sample_ids),
         rseqcstats = expand(rules.rseqc_filtered.output.stats, sample=sample_ids),
-        qualimap = expand(rules.qualimap_filtered.output.report, sample=sample_ids),
+        #qualimap = expand(rules.qualimap_filtered.output.report, sample=sample_ids),
     output:
         outfile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered/multiqc_report.html",
         outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered")
@@ -204,7 +205,9 @@ rule multiqc_filtered:
         --ignore "{params.inputdir}/*/fastqc_merged" \
         --ignore "{params.inputdir}/*/trim_galore" \
         --ignore "{params.inputdir}/*/qualimap" \
+        --ignore "{params.inputdir}/*/qualimap_filtered" \
         --ignore "{params.inputdir}/*/rseqc" \
         --ignore "{params.inputdir}/*/samtoolsstats" \
+        --ignore "{params.inputdir}/*/remove_duplicates" \
         -o {output.outdir}  2> >(tee {log.errfile} >&2)
         """

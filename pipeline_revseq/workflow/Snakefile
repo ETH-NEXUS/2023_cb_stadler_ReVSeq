@@ -54,6 +54,7 @@ rule all:
         ####config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/push_to_db/db_upload_success",
         #viollier_upload
         #config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/depth/{sample}_depth.tsv", sample = sample_ids),
     output:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/complete.txt",
     shell:

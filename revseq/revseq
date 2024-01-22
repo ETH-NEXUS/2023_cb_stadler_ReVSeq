@@ -26,8 +26,11 @@ case "$1" in
                         set net:reconnect-interval-base 8; \
                         set xfer:timeout ${iotimeout}; \
                         connect sftp://${fileserver}${srvport:+:${srvport}}; \
-                        mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${source}" #; \
+                        mirror --continue --no-perms --parallel=${parallel} --loop \
+                        --on-change='source ${scriptdir}/email.sh' \
+                        --target-directory=${mirror}/ ${source}" #; \
                         #mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
+                
 	;;
         uploadviollier)
                 echo "$(date) Uploading Viollier"
@@ -59,7 +62,7 @@ case "$1" in
         dryrun)
 		cd ${pipelinedir}
                 plate=$2
-                if [ ! -f "/data/results/anonymized/${plate}/complete.txt" ]
+                if [ ! -f "${anonymizeddir}/${plate}/complete.txt" ]
                 then
 		        snakemake \
                                 --use-conda \
@@ -67,23 +70,23 @@ case "$1" in
                                 -c${threads} \
                                 --configfile ${snakemake_config} \
                                 --config plate=${plate} \
-                                sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv \
+                                sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
                                 -n
                 fi
                      ;;
         runpipeline)
 		cd ${pipelinedir}
                 plate=$2
-                if [ ! -f "${plate}/complete.txt" ]; then
+                if [ ! -f "${anonymizeddir}/${plate}/complete.txt" ]; then
                         snakemake \
                                 --use-conda \
                                 --rerun-triggers mtime \
                                 -c${threads} \
                                 --configfile ${snakemake_config} \
                                 --config plate=${plate} \
-                                sample_map=${plate}/${plate##*/}_samplemap.tsv
+                                sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv --notemp
                 else
-                        echo "$(date) The plate has been already analysed (file ${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
+                        echo "$(date) The plate has been already analysed (file ${anonymizeddir}/${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
                 fi
         ;;
         unlock)
@@ -95,7 +98,7 @@ case "$1" in
                         -c${threads} \
                         --configfile ${snakemake_config} \
                         --config plate=${plate} \
-                        sample_map=/data/results/anonymized/${plate}/${plate}_samplemap.tsv \
+                        sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
                         --unlock \
                         -n
         ;;

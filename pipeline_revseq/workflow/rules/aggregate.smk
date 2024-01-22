@@ -22,7 +22,9 @@ rule aggregate:
         filtername = "filter_alignment",
         duplicatename = "remove_duplicates",
         qcname = "qualimap_filtered",
-        sample_map = config["sample_map"]
+        sample_map = config["sample_map"],
+        pseudoanon_metadata = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
+        match_table = config["tools"]["validate_assignment"]["match_table"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/aggregate/aggregate.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/aggregate/aggregate.err.log",
@@ -37,7 +39,9 @@ rule aggregate:
         --assignment_subdir {params.assigndirname} \
         --validation_subdir {params.validatedirname} \
         --outfile {output.aggregated_assignment} \
-        --sample_map {params.sample_map}
+        --sample_map {params.sample_map} \
+        --pseudoanon_metadata {params.pseudoanon_metadata} \
+        --match_table {params.match_table}
 
         python workflow/scripts/aggregate_qc.py \
         --inputdir {params.inputdir} \

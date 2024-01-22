@@ -26,14 +26,15 @@ if __name__ == '__main__':
     anontable = pd.read_table(args.pseudoanon_table)
     match_table = pd.read_csv(args.match_table,sep=",", header=0)
     count_table = pd.read_csv(args.count_table,sep="\t")
-    metadata_subdirs = [os.path.join(args.metadata_dir, file) for file in os.listdir(args.metadata_dir)]
-    all_files = [ os.path.join(metaname, os.listdir(metaname)[0]) for metaname in metadata_subdirs ]
-    metadata = pd.concat((pd.read_csv(f, sep=";") for f in all_files), ignore_index=True)
+    metadata_subdirs = [os.path.join(args.metadata_dir, batchdir) for batchdir in os.listdir(args.metadata_dir)]
+    metadata_files = [ os.path.join(batchdir, file) for batchdir in metadata_subdirs for file in os.listdir(batchdir) if ".csv" in file ]
+    #all_files = [ os.path.join(metaname, os.listdir(metaname)[0]) for metaname in metadata_subdirs ]
+    metadata = pd.concat((pd.read_csv(f, sep=";") for f in metadata_files), ignore_index=True)#all_files), ignore_index=True)
     sample_name = anontable.loc[anontable['ethid'] == args.ethid]['Sample number'].astype(int)
     sample_name = int(sample_name.iloc[0])
     metadata = metadata.loc[metadata['Sample number'] == sample_name]
     if len(metadata.index) == 0:
-        sys.exit("ERROR: cannot find the sample name associated to ethid " + ethid + " in the metadata table!")
+        sys.exit("ERROR: cannot find the sample name associated to ethid " + args.ethid + " in the metadata table!")
     
     metadata = metadata.to_dict(orient='list')
     positive = []
@@ -50,7 +51,7 @@ if __name__ == '__main__':
             positive.append(key.split(" ")[0])
 
     common_names = []
-    count_table['panel_positive'] = ""
+    count_table['panel_match'] = ""
     if len(positive) != 0:
         for virus in positive:
             name = match_table.loc[(match_table['panel_name'] == virus),'strain_name']
@@ -63,8 +64,7 @@ if __name__ == '__main__':
             if name not in count_table['name'].to_list():
                 sys.exit("ERROR: no common virus name found for "+name+" in the count table!")
 
-        count_table.loc[count_table["name"].isin(common_names), 'panel_positive'] = '*'
-        #count_table['panel_positive'] = count_table[['outlier']].apply(lambda x: "*" if x['outlier']=="*" else "", axis=1)
+        count_table.loc[count_table["name"].isin(common_names), 'panel_match'] = '*'
 
     count_table.to_csv(args.output, sep="\t", float_format='%.2f')
 

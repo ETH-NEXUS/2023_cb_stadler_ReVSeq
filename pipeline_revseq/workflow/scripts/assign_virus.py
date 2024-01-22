@@ -10,7 +10,7 @@
 
 import pandas as pd
 import numpy as np
-import argparse
+import argparse, pandas.errors
 from matplotlib import pyplot
 
 def get_outliers(aggregated, percentile):
@@ -33,8 +33,12 @@ def fetch_coverage(genome_res, number_refs):
     except:
         sys.exit("Error: cannot find the coverage by contig in the genome_results file. Please check that the correct file is passed and that the format has not changed")
     end_index = start_index + number_refs - 1
-    cov_df = pd.DataFrame([ [item.split('\t')[0],item.split('\t')[3] ] for item in genome_res[start_index:end_index+1] ], columns=["id", "DP"], dtype='float64')
+    cov_df = pd.DataFrame([ [item.split('\t')[0],item.split('\t')[3] ] for item in genome_res[start_index:end_index+1] ], columns=["id", "coverage"], dtype='float64')
     return cov_df
+
+
+def get_dp20(depth):
+    return f'{len(depth.loc[depth[2] > 20])/len(depth)*100:.2f}'+"%"
 
 
 # Script
@@ -45,13 +49,14 @@ if __name__ == '__main__':
     parser.add_argument('--idxstats', required=True, type=str, help='the output of samtools idxstats')
     parser.add_argument('--counts', required=True, type=str, help='the count file output by samtools view -c -F 4')
     parser.add_argument('--taxon_table', required=True, type=str, help='the table with all the substrain name/taxon matches')
+    parser.add_argument('--depth_table', required=True, type=str, help='the table with the read depth calculated with samtools depth')
     parser.add_argument('--out_prefix', required=True, type=str, help='the prefix for the outputs. Can include a path')
     parser.add_argument('--lookup', required=True, type=str, help='Lookup table in CSV format showing the match between strain_name and substrain_name (with column names). The table will be used to collapse substrains into strains')
     parser.add_argument('--outlier_percentile', required=True, type=float, help='percentile cutoff for outlier detection')
     parser.add_argument('--outlier_percentile_collapsed', required=True, type=float, help='percentile cutoff for outlier detection for collapsed list showing only major strains')
     parser.add_argument('--genome_res', required=True, type=str, help='The genome_results.txt file as output by qualimap bamqc')
-    parser.add_argument('--dp_threshold', required=True, type=int, help='The minimum average DP allowed for assignment')
-    parser.add_argument('--readnum_threshold', required=True, type=int, help='The minimum number of reads allowed for DP calculation')
+    parser.add_argument('--coverage_threshold', required=True, type=int, help='The minimum average coverage allowed for assignment')
+    parser.add_argument('--readnum_threshold', required=True, type=int, help='The minimum number of reads allowed for coverage calculation')
 
     args = parser.parse_args()
 
@@ -62,8 +67,12 @@ if __name__ == '__main__':
     idxstats = pd.read_table(args.idxstats, header=None)
     idxstats = idxstats.rename(columns={0: "id", 1: "length", 2: "aligned", 3: "unaligned"})
     taxon = pd.read_csv(args.taxon_table, index_col=0)
-    #taxon_dict = taxon.to_dict(orient="index")
- 
+    empty_depth = 0
+    try:
+        depth = pd.read_table(args.depth_table, header=None)
+    except pandas.errors.EmptyDataError:
+        empty_depth = 1
+
     with open(args.counts) as f:
         counts = int(f.readline().strip())
 
@@ -78,13 +87,13 @@ if __name__ == '__main__':
     idxstats = pd.merge(idxstats, refs, on='id', how='inner')
 
     if len(genome_res) == 0:
-        idxstats["DP"] = 0
+        idxstats["coverage"] = 0
     else:
         genome_res = [ line.strip() for line in genome_res ]
         coverage = fetch_coverage(genome_res, len(refs))
         idxstats = pd.merge(idxstats, coverage, on='id', how='inner')
 
-    aggregated_stats = idxstats.groupby(by='name')[["aligned","length","DP"]].sum()
+    aggregated_stats = idxstats.groupby(by='name')[["aligned","length","coverage"]].sum()
     aggregated_stats = rpkm(aggregated_stats)
     all_outlier_info = get_outliers(aggregated_stats, args.outlier_percentile)
     aggregated_stats = all_outlier_info[0]
@@ -92,16 +101,19 @@ if __name__ == '__main__':
     aggregated_stats = aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
     aggregated_stats["readnum_threshold"] = args.readnum_threshold
     if len(genome_res) == 0:
-        aggregated_stats["readnum_status"] = "FAILED: not enough reads in the sample to calculate DP"
+        aggregated_stats["readnum_status"] = "FAILED"
     else:
-        aggregated_stats["readnum_status"] = "SUCCESS"
-    aggregated_stats["DP_threshold"] = args.dp_threshold
-    aggregated_stats["DP_status"] = "placeholder"
-    aggregated_stats.loc[aggregated_stats['DP'] >= args.dp_threshold, "DP_status"] = "PASSED"
-    aggregated_stats.loc[aggregated_stats['DP'] < args.dp_threshold, "DP_status"] = "FAILED"
-    aggregated_stats.merge(taxon, right_index=True, left_index=True, how="left")
+        aggregated_stats["readnum_status"] = "PASSED"
+    aggregated_stats["coverage_threshold"] = args.coverage_threshold
+    aggregated_stats["coverage_status"] = "placeholder"
+    aggregated_stats.loc[aggregated_stats['coverage'] >= args.coverage_threshold, "coverage_status"] = "PASSED"
+    aggregated_stats.loc[aggregated_stats['coverage'] < args.coverage_threshold, "coverage_status"] = "FAILED"
+    aggregated_stats = aggregated_stats.merge(taxon, right_index=True, left_index=True, how="left")
 
-    aggregated_stats[""]
+    if empty_depth == 1:
+        aggregated_stats["DP20"] = 0
+    else:
+        aggregated_stats["DP20"] = get_dp20(depth)
 
     aggregated_stats.to_csv(args.out_prefix + "substrain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])

@@ -83,7 +83,7 @@ if __name__ == '__main__':
         else:
             duplicate_percent_all = int(duplicate_counts)/int(bwa_counts_all)*100
             bwa_percent = int(bwa_counts)/int(bwa_counts_all)*100
-        line = pd.DataFrame({"sample_name": sample, "all_reads": bwa_counts_all, "aligned_reads": bwa_counts, "aligned - % of all": bwa_percent, "dehumanized_reads": dehuman_counts, "dehumanized - % of aligned": dehuman_percent, "filtered_reads": filter_counts, "filtered - % of dehumanized": filter_percent, "deduplicated_reads": duplicate_counts, "deduplicated - % of filtered": duplicate_percent, "deduplicated - % of total": duplicate_percent_all}, index=[0])
+        line = pd.DataFrame({"sample_name": sample, "all_reads": bwa_counts_all, "aligned_reads": bwa_counts, "aligned - % of all": bwa_percent, "dehumanized_reads": dehuman_counts, "dehumanized - % of aligned": dehuman_percent, "passed_filters_reads": filter_counts, "passed_filters - % of dehumanized": filter_percent, "deduplicated_reads": duplicate_counts, "deduplicated - % of filtered": duplicate_percent, "all_filters - % of total": duplicate_percent_all}, index=[0])
         try:
             aggregated_qc = aggregated_qc.append(line)
         except NameError:
