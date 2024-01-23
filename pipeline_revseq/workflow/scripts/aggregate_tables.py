@@ -136,7 +136,7 @@ if __name__ == '__main__':
     parser.add_argument('--validation_subdir', required=True, type=str, help='The name assigned to the validation subdirectory')
     parser.add_argument('--outfile', required=True, type=str, help='the path and filename for the output')
     parser.add_argument('--sample_map', required=True, type=str, help='Sample map file containing all sample names')
-    parser.add_argument('--pseudoanon_metadata', required=True, type=str, help='Metadata table including the pseudoanonymized sample names')
+    parser.add_argument('--pseudoanon_metadata', required=True, type=str, help='Metadata table including the pseudonymized sample names')
     parser.add_argument('--match_table', required=True, type=str, help='TSV matching the panel code with the common virus name used in the pipeline')
     parser.add_argument('--filter_alternatives', required=False, type=bool, default=True, help='Should we filter the alternative outliers using the same readnum and coverage thresholds used for the QC of the top outlier?')
 

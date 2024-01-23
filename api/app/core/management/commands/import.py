@@ -184,11 +184,11 @@ class Command(BaseCommand):
             sample, _ = Sample.objects.get_or_create(
                 well=well,
                 sample_number=item[columns.sample_number],
-                pseudoanonymized_id=item[columns.pseudoanonymized_id],
+                pseudonymized_id=item[columns.pseudonymized_id],
                 plate=plate,
             )
             self.sample_id_dict[
-                item[columns.pseudoanonymized_id]
+                item[columns.pseudonymized_id]
             ] = False  # later on, we will check, if all samples have been imported
             self.__create_metadata(item, plate, well, sample)
         return plate
@@ -208,7 +208,7 @@ class Command(BaseCommand):
         if sample_id not in self.sample_id_dict:
             raise ValueError(f"Sample {sample_id} does not exist in the metadata file")
         try:
-            sample = Sample.objects.get(pseudoanonymized_id=sample_id)
+            sample = Sample.objects.get(pseudonymized_id=sample_id)
 
             for item in data:
                 substrain_name = item[columns.name]
@@ -292,7 +292,7 @@ class Command(BaseCommand):
                     )[0]
                     self.counts(plate, columns, current_count_table_file)
                     sample_id = os.path.basename(sample_dir).split("_")[1]
-                    sample = Sample.objects.get(pseudoanonymized_id=sample_id)
+                    sample = Sample.objects.get(pseudonymized_id=sample_id)
                     logger.debug(
                         f"---------------- IMPORTING SAMPLE-RELATED FILES FOR THE SAMPLE {sample_dir} ---------------- \n"
                     )

@@ -32,7 +32,7 @@ class SampleCountViewSetTest(APITestCase):
     ):
         response = self.client.get(
             URL_SAMPLE_COUNTS_LIST,
-            {"sample__pseudoanonymized_id": "0b9ad2"},
+            {"sample__pseudonymized_id": "0b9ad2"},
         )
         # print(response.data)
         data = response.data
@@ -47,6 +47,6 @@ class SampleCountViewSetTest(APITestCase):
 
     def test_aggregate_action(self):
         response = self.client.get(
-            AGGREGATE_URL, {"sample__pseudoanonymized_id": "0b9ad2"}
+            AGGREGATE_URL, {"sample__pseudonymized_id": "0b9ad2"}
         )
         print("#################", response.data)

@@ -12,12 +12,12 @@ study:
 
 #
 sample:
-  alias: revseq_sample_{}
+  alias: revseq_sample_{} #  revseq_sample_<pseudonymized id>_{}
   title: ReVSeq Sample
   taxon_id: 269049 # (mapping from substrain)
   sample_description: ReVSeq Sample Description
   # dynamic
-  host subject id: xx
+  host subject id: xx #  pseudonymized ethid
   collection date: 2023-11-10
   geographic location (region and locality): CANTON
   # static
@@ -33,10 +33,10 @@ sample:
 
 #
 experiment:
-  alias: revseq_experiment_{}
+  alias: revseq_experiment_{} # add id
   title: ReVSeq Experiment
   study_alias: revseq_study
-  sample_alias: revseq_sample_{}
+  sample_alias: revseq_sample_{}  # it must be the same as the alias of sampel: revseq_sample_<pseudonymized id>_{}
   design_description: "None"
   library_name: "None"
   library_strategy: RNA-Seq
@@ -57,6 +57,6 @@ run:
 analysis:
   name: analysis_{}
   assembly_type: clone
-  coverage: 3.7
+  coverage: 3.7  # it is in the sample_counts (there will be another column named coverage)
   program: TODO
   platform: TODO

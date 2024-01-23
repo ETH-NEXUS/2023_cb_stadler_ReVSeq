@@ -13,9 +13,9 @@ export interface SampleCountsTableColumns {
 }
 export const columnsMetadata: SampleCountsTableColumns[] = [
   {
-    name: 'pseudoanonymized_id',
+    name: 'pseudonymized_id',
     label: 'Sample ID',
-    field: 'pseudoanonymized_id',
+    field: 'pseudonymized_id',
     align: 'center',
     sortable: true,
   },
@@ -28,9 +28,9 @@ export const columnsMetadata: SampleCountsTableColumns[] = [
 
 export const columnsSampleCount: SampleCountsTableColumns[] = [
   {
-    name: 'pseudoanonymized_id',
+    name: 'pseudonymized_id',
     label: 'Sample ID',
-    field: 'pseudoanonymized_id',
+    field: 'pseudonymized_id',
     align: 'center',
     sortable: true,
   },

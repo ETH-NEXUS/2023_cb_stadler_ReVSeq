@@ -14,7 +14,7 @@ const $q = useQuasar()
 const coreStore = useCoreStore()
 
 const {selected_sample_id, selected_sample} = storeToRefs(coreStore)
-const optionsSamples = ref<string[]>(coreStore.samples.map(s => s.pseudoanonymized_id))
+const optionsSamples = ref<string[]>(coreStore.samples.map(s => s.pseudonymized_id))
 const showPlateFiles = ref<boolean>(false)
 const showSampleFiles = ref<boolean>(false)
 
@@ -37,14 +37,14 @@ const filter = ref<string>('')
 const filterFnSamples = (val: string, update: (fn: () => void) => void) => {
   if (val === '') {
     update(() => {
-      optionsSamples.value = coreStore.samples.map(s => s.pseudoanonymized_id)
+      optionsSamples.value = coreStore.samples.map(s => s.pseudonymized_id)
     })
     return
   }
   update(() => {
     const needle = val.toLowerCase()
     optionsSamples.value = coreStore.samples
-      .map(s => s.pseudoanonymized_id)
+      .map(s => s.pseudonymized_id)
       .filter(v => v.toLowerCase().indexOf(needle) > -1)
   })
 }

@@ -4,9 +4,9 @@ import {SampleCount, Metadata} from 'src/models/core'
 export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSampleCounts[] => {
   return sampleCounts.map(sampleCount => {
     return {
-      pseudoanonymized_id: sampleCount.sample
-        ? sampleCount.sample.pseudoanonymized_id
-        : sampleCount.pseudoanonymized_id,
+      pseudonymized_id: sampleCount.sample
+        ? sampleCount.sample.pseudonymized_id
+        : sampleCount.pseudonymized_id,
       substrain: sampleCount.substrain.name,
       strain: sampleCount.substrain.strain.name,
       aligned: sampleCount.aligned,
@@ -27,7 +27,7 @@ export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSa
 export const createMetadataRows = (metadata: Metadata[]): TableDataMetadata[] => {
   return metadata.map(m => {
     return {
-      pseudoanonymized_id: m.sample.pseudoanonymized_id,
+      pseudonymized_id: m.sample.pseudonymized_id,
       prescriber: m.prescriber,
       well: m.well.location,
       order_date: m.order_date,

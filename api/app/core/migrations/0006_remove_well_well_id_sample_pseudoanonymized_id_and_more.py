@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='sample',
-            name='pseudoanonymized_id',
+            name='pseudonymized_id',
             field=models.TextField(null=True, unique=True),
         ),
         migrations.AddField(

@@ -66,7 +66,7 @@ class SampleViewSet(viewsets.ModelViewSet):
 
     Filters:
     - By Plate Barcode: Filter samples based on the barcode of the plate they are associated with.
-    - By Pseudoanonymized ID: Locate a specific sample using its pseudoanonymized ID.
+    - By pseudonymized ID: Locate a specific sample using its pseudonymized ID.
 
     Allowed HTTP Methods: GET, HEAD, OPTIONS
     """
@@ -78,7 +78,7 @@ class SampleViewSet(viewsets.ModelViewSet):
         filters.DjangoFilterBackend,
         drf_filters.OrderingFilter,
     )
-    filterset_fields = ("plate__barcode", "pseudoanonymized_id")
+    filterset_fields = ("plate__barcode", "pseudonymized_id")
 
     http_method_names = ["get", "head", "options"]
 
@@ -94,13 +94,13 @@ class SampleCountViewSet(viewsets.ModelViewSet):
     Features:
     - List View: Access a list of all available sample counts.
     - Aggregate View: Provides aggregated metrics for a given sample.
-     This action requires the pseudoanonymized ID of the sample to be provided in the query parameter  to fetch relevant metrics ( 'sample__pseudoanonymized_id') .
+     This action requires the pseudonymized_id  of the sample to be provided in the query parameter  to fetch relevant metrics ( 'sample__pseudonymized_id') .
 
     Filters:
     - By Plate Barcode: Filter counts associated with a specific plate's barcode.
     - By Substrain Name: View counts specific to a particular substrain.
     - By Strain Name: Filter based on the overarching strain.
-    - By Pseudoanonymized ID: Filter counts using the sample's pseudoanonymized ID.
+    - By pseudonymized_id: Filter counts using the sample's pseudonymized_id.
 
     Supported Formats:
     - JSON
@@ -130,7 +130,7 @@ class SampleCountViewSet(viewsets.ModelViewSet):
         "plate__barcode",
         "substrain__name",
         "substrain__strain__name",
-        "sample__pseudoanonymized_id",
+        "sample__pseudonymized_id",
     )
     renderer_classes = (
         JSONRenderer,
@@ -140,34 +140,34 @@ class SampleCountViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "head", "options"]
 
     """
-    Call the aggregate function it like this, with the obligatory parameter sample__pseudoanonymized_id:
+    Call the aggregate function it like this, with the obligatory parameter sample__pseudonymized_id:
     
-     /api/samplecounts/aggregate/?sample__pseudoanonymized_id=896a06
+     /api/samplecounts/aggregate/?sample__pseudonymized_id=896a06
     """
 
     @action(
         detail=False,
         methods=["get"],
-        url_path="aggregate/(?P<sample__pseudoanonymized_id>[^/.]+)",
+        url_path="aggregate/(?P<sample__pseudonymized_id>[^/.]+)",
     )
-    def aggregate(self, request, sample__pseudoanonymized_id=None):
+    def aggregate(self, request, sample__pseudonymized_id=None):
 
-        if not sample__pseudoanonymized_id:
-            raise ValidationError({"error": "pseudoanonymized_id is required"})
+        if not sample__pseudonymized_id:
+            raise ValidationError({"error": "pseudonymized_id is required"})
 
         try:
-            sample = Sample.objects.get(pseudoanonymized_id=sample__pseudoanonymized_id)
+            sample = Sample.objects.get(pseudonymized_id=sample__pseudonymized_id)
 
         except Sample.DoesNotExist:
             raise ValidationError(
-                {"error": "Sample with this pseudoanonymized_id does not exist"}
+                {"error": "Sample with this pseudonymized_id does not exist"}
             )
 
         queryset =  SampleCount.objects.filter(sample=sample)   # SampleCount.objects.filter(sample=sample)
 
         response_data = {
             "sample": {
-                "sample_id": sample.pseudoanonymized_id,
+                "sample_id": sample.pseudonymized_id,
                 "plate": sample.plate.barcode,
             },
             "strains": [],
@@ -356,7 +356,7 @@ class FileViewSet(viewsets.ModelViewSet):
 
     Available Filters:
     - **Plate Barcode**: Narrow down file paths associated with a particular plate's barcode.
-    - **Sample Pseudoanonymized ID**: Filter files specific to a given sample using its unique pseudoanonymized ID.
+    - **Sample pseudonymized ID**: Filter files specific to a given sample using its unique pseudonymized ID.
 
     Supported Data Formats:
     - JSON
@@ -377,7 +377,7 @@ class FileViewSet(viewsets.ModelViewSet):
 
     filterset_fields = (
         "plate__barcode",
-        "sample__pseudoanonymized_id",
+        "sample__pseudonymized_id",
     )
 
 @api_view(["GET"])

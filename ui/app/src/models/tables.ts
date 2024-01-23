@@ -9,7 +9,7 @@ export interface TableDataSampleCounts {
 }
 
 export interface TableDataMetadata {
-  pseudoanonymized_id: string
+  pseudonymized_id: string
   well: string
   prescriber: string
   order_date: string | Date

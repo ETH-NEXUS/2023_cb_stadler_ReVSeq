@@ -15,7 +15,7 @@ export interface Well {
 
 export interface Sample {
   well: Well
-  pseudoanonymized_id: string
+  pseudonymized_id: string
   plate: Plate
   sample_number?: string
   files: File[]
@@ -52,7 +52,7 @@ export interface SampleCount {
   percentile_threshold: string
   normcounts?: number
   strain?: string
-  pseudoanonymized_id?: string
+  pseudonymized_id?: string
 }
 
 export interface DataItem {

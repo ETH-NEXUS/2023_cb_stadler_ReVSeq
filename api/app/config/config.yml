@@ -1,7 +1,7 @@
 import_columns:
   deep_well_location: DeepWellLocation
   sample_number: Sample number
-  pseudoanonymized_id: ethid
+  pseudonymized_id: ethid
   order_date: Order date
   ent_date: ent date
   treatment_type: treatment_type

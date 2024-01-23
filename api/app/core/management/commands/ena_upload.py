@@ -1,11 +1,51 @@
+
 from django.core.management.base import BaseCommand
+import requests
+from os import environ
+from core.models import Sample, File, Metadata
+import datetime as dt
+
+
+STUDY_ENDPOINT = 'http://ena:5000/api/jobs/study/'
+SER_ENDPOINT = 'http://ena:5000/api/jobs/ser/'
+ANALYSIS_ENDPOINT = 'http://ena:5000/api/analysisjobs/'
+ANALYSIS_FILES_ENDPOINT = 'http://ena:5000/api/analysisfiles/'
+ENQUEUE_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/enqueue/'
+RELEASE_JOB_ENDPOINT = 'http://ena:5000/api/jobs/<job_id>/release/'
+RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/release/'
 
 
 class Command(BaseCommand):
+
+    def __init__(self):
+        super().__init__()
+        self.job_analysis_ids = []
+
+    token = environ.get('ENA_TOKEN')
+    headers = {'Authorization': f'Token {token}', 'Content-Type': 'application/json'}
+
+    def handle_http_request(self, url, payload=None, method='get', message=None):
+        try:
+            response = None
+            if method == 'get':
+                response = requests.get(url, headers=self.headers)
+            elif method == 'post':
+                response = requests.post(url, headers=self.headers, json=payload)
+            if response.status_code in [200, 201]:
+                if message:
+                    print(message)
+                return response.json()
+            else:
+                print(f'Error calling the endpoint {url}: {response.text}')
+        except Exception as e:
+            print(f'Exception: {e}')
+        return None
+
     def add_arguments(self, parser):
         parser.add_argument(
-            '-t', '--type', type=str, choices=['study', 'ser', 'analysis', 'all'],
-            help='Type of data to upload: study, ser (sample-experiment-run), analysis, or all'
+            '-t', '--type', type=str, choices=['study', 'ser_and_analysis'],
+            help='Type of data to upload: study, or ser_and_analysis to upload the samples which don;t already have a '
+                 'job_id'
         )
 
     def handle(self, *args, **options):
@@ -13,22 +53,72 @@ class Command(BaseCommand):
 
         if data_type == 'study':
             self.upload_study()
-        elif data_type == 'ser':
+        elif data_type == 'ser_and_analysis':
             self.upload_ser()
-        elif data_type == 'analysis':
-            self.upload_analysis()
-        elif data_type == 'all':
-            self.upload_study()
-            self.upload_ser()
-            self.upload_analysis()
         else:
             print('Please specify a data type to upload: study, ser, analysis, or all')
 
     def upload_study(self):
-        pass
+        payload = {'template': 'default', 'data': {}}
+        self.handle_http_request(STUDY_ENDPOINT, payload, 'post', 'Study uploaded successfully')
 
     def upload_ser(self):
-        pass
+        samples = Sample.objects.filter(job_id__isnull=True)
+        for sample in samples:
+            sample_count = sample.samplecounts.first()  # this will be changed as soon as Matteo provides a file with the most expressed gen
+            payload = {'template': 'default', 'data': {}, 'files': []}
+            if sample_count is None:
+                print(f'No sample count for {sample}')
+                continue
 
-    def upload_analysis(self):
-        pass
+            taxon_id = sample_count.substrain.taxon_id  # this will be changed as soon as Matteo provides a file with the most expressed gen
+            metadata = Metadata.objects.filter(sample=sample).first()
+            collection_date = metadata.ent_date.strftime("%Y-%m-%d")
+            geo_location = metadata.prescriber
+            now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
+            payload['data']['alias'] = f"revseq_sample_{sample.pseudonymized_id}_{now}"
+            payload['data']['taxon_id'] = taxon_id
+            payload['data']['collection date'] = collection_date
+            payload['data']['geographic location (region and locality)'] = geo_location
+
+            files = File.objects.filter(sample=sample)
+
+            for file in files:
+                if file.type.postfix == '.cram':
+                    payload['files'].append(file.path)
+                    print(f'Adding {file.path} to SER for {sample}')
+
+            response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
+                                                message=f'SER for {sample} uploaded successfully')
+            job_id = response['id']
+            sample.job_id = job_id
+            sample.save()
+            self.upload_analysis_job_and_files(job_id, sample, files)
+            self.release_job(RELEASE_JOB_ENDPOINT, job_id)
+        for analysis_job_id in self.job_analysis_ids:
+            self.release_job(RELEASE_ANALYSIS_JOB_ENDPOINT, analysis_job_id)
+
+    def upload_analysis_job_and_files(self, job_id, sample, files):
+        payload = {'template': 'default', 'data': {}, 'job': job_id}
+        response = self.handle_http_request(ANALYSIS_ENDPOINT, payload, 'post',
+                                            message=f'Analysis job for {sample} uploaded successfully')
+        analysis_job_id = response['id']
+        sample.analysis_job_id = analysis_job_id
+        sample.save()
+        self.upload_analysis_files(analysis_job_id, files)
+        self.enqueue_analysis_job(analysis_job_id)
+        self.job_analysis_ids.append(analysis_job_id)
+
+    def upload_analysis_files(self, analysis_job_id, files):
+        for file in files:
+            payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": 'FASTA'}
+            self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
+                                     message=f'Analysis file {file} uploaded successfully')
+
+    def enqueue_analysis_job(self, analysis_job_id):
+        url = ENQUEUE_ENDPOINT.replace('<job_id>', str(analysis_job_id))
+        self.handle_http_request(url, method='get', message=f'Analysis job {analysis_job_id} enqueued')
+
+    def release_job(self, url, job_id):
+        _url = url.replace('<job_id>', str(job_id))
+        self.handle_http_request(_url, method='get', message=f'Job {job_id} released successfully')

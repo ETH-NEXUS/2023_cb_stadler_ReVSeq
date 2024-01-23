@@ -47,7 +47,7 @@ class SampleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sample
-        fields = ("well", "pseudoanonymized_id", "plate", "files")
+        fields = ("well", "pseudonymized_id", "plate", "files")
 
 
 class StrainSerializer(serializers.ModelSerializer):
@@ -152,7 +152,7 @@ class SimpleSampleSerializer(serializers.Serializer):
 
     class Meta:
         model = Sample
-        fields = "pseudoanonymized_id"
+        fields = "pseudonymized_id"
 
 
 class AggregatedCountSerializer(serializers.Serializer):

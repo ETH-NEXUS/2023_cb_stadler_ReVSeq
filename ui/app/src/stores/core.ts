@@ -20,17 +20,17 @@ export const useCoreStore = defineStore('core', () => {
 
   const getSelectedSample = async () => {
     try {
-      const res = await api.get(`/api/samples/?pseudoanonymized_id=${selected_sample_id.value}`)
+      const res = await api.get(`/api/samples/?pseudonymized_id=${selected_sample_id.value}`)
       selected_sample.value = res.data
     } catch (error) {
       console.error(error)
     }
   }
 
-  const filterCountDataBySample = async (pseudoanonymized_id = '') => {
-    if (pseudoanonymized_id !== '') {
+  const filterCountDataBySample = async (pseudonymized_id = '') => {
+    if (pseudonymized_id !== '') {
       tableData.value = sampleCounts.value.filter(
-        item => item.sample.pseudoanonymized_id === pseudoanonymized_id
+        item => item.sample.pseudonymized_id === pseudonymized_id
       )
     } else {
       tableData.value = sampleCounts.value
@@ -62,7 +62,7 @@ export const useCoreStore = defineStore('core', () => {
           percentile_threshold: '',
           plate: null,
           substrain: null,
-          pseudoanonymized_id: null,
+          pseudonymized_id: null,
         }
 
         const newData = {
@@ -81,7 +81,7 @@ export const useCoreStore = defineStore('core', () => {
           outlier: item.outlier,
           plate: item.plate.barcode,
           substrain: substrain,
-          pseudoanonymized_id: item.sample.pseudoanonymized_id,
+          pseudonymized_id: item.sample.pseudonymized_id,
         }
 
         mappedData.set(strain, newData)
