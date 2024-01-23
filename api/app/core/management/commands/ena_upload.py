@@ -1,10 +1,8 @@
-
 from django.core.management.base import BaseCommand
 import requests
 from os import environ
 from core.models import Sample, File, Metadata
 import datetime as dt
-
 
 STUDY_ENDPOINT = 'http://ena:5000/api/jobs/study/'
 SER_ENDPOINT = 'http://ena:5000/api/jobs/ser/'
@@ -48,15 +46,7 @@ class Command(BaseCommand):
                  'job_id'
         )
 
-    def handle(self, *args, **options):
-        data_type = options.get('type')
 
-        if data_type == 'study':
-            self.upload_study()
-        elif data_type == 'ser_and_analysis':
-            self.upload_ser()
-        else:
-            print('Please specify a data type to upload: study, ser, analysis, or all')
 
     def upload_study(self):
         payload = {'template': 'default', 'data': {}}
@@ -65,28 +55,15 @@ class Command(BaseCommand):
     def upload_ser(self):
         samples = Sample.objects.filter(job_id__isnull=True)
         for sample in samples:
-            sample_count = sample.samplecounts.first()  # this will be changed as soon as Matteo provides a file with the most expressed gen
-            payload = {'template': 'default', 'data': {}, 'files': []}
+            sample_count = sample.samplecounts.first()  # this is temporally
             if sample_count is None:
                 print(f'No sample count for {sample}')
                 continue
 
-            taxon_id = sample_count.substrain.taxon_id  # this will be changed as soon as Matteo provides a file with the most expressed gen
-            metadata = Metadata.objects.filter(sample=sample).first()
-            collection_date = metadata.ent_date.strftime("%Y-%m-%d")
-            geo_location = metadata.prescriber
-            now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
-            payload['data']['alias'] = f"revseq_sample_{sample.pseudonymized_id}_{now}"
-            payload['data']['taxon_id'] = taxon_id
-            payload['data']['collection date'] = collection_date
-            payload['data']['geographic location (region and locality)'] = geo_location
 
+            payload = self._create_ser_payload(sample, sample_count)
             files = File.objects.filter(sample=sample)
-
-            for file in files:
-                if file.type.postfix == '.cram':
-                    payload['files'].append(file.path)
-                    print(f'Adding {file.path} to SER for {sample}')
+            self._add_files_to_payload(payload, files, sample)
 
             response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
                                                 message=f'SER for {sample} uploaded successfully')
@@ -95,8 +72,46 @@ class Command(BaseCommand):
             sample.save()
             self.upload_analysis_job_and_files(job_id, sample, files)
             self.release_job(RELEASE_JOB_ENDPOINT, job_id)
+
         for analysis_job_id in self.job_analysis_ids:
             self.release_job(RELEASE_ANALYSIS_JOB_ENDPOINT, analysis_job_id)
+
+
+
+    def _add_files_to_payload(self, payload, files, sample):
+        for file in files:
+            if file.type.postfix == '.cram':
+                payload['files'].append(file.path)
+                print(f'Adding {file.path} to SER for {sample}')
+
+    def _create_ser_payload(self, sample, sample_count):
+        now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
+        taxon_id = sample_count.substrain.taxon_id
+        metadata = Metadata.objects.filter(sample=sample).first()
+        collection_date = metadata.ent_date.strftime("%Y-%m-%d")
+        geo_location = metadata.prescriber
+
+        sample_alias = f"revseq_sample_{sample.pseudonymized_id}_{now}"
+        experiment_alias = f"revseq_experiment_{sample.pseudonymized_id}_{now}"
+
+        return {
+            'template': 'default',
+            'data': {
+                'sample': {
+                    'alias': sample_alias,
+                    'host subject id': sample.pseudonymized_id,
+                    'taxon_id': taxon_id,
+                    'collection date': collection_date,
+                    'geographic location (region and locality)': geo_location
+                },
+                'experiment': {
+                    'alias': experiment_alias,
+                    'sample_alias': sample_alias
+                },
+                'run': {}
+            },
+            'files': []
+        }
 
     def upload_analysis_job_and_files(self, job_id, sample, files):
         payload = {'template': 'default', 'data': {}, 'job': job_id}
@@ -122,3 +137,14 @@ class Command(BaseCommand):
     def release_job(self, url, job_id):
         _url = url.replace('<job_id>', str(job_id))
         self.handle_http_request(_url, method='get', message=f'Job {job_id} released successfully')
+
+
+    def handle(self, *args, **options):
+        data_type = options.get('type')
+
+        if data_type == 'study':
+            self.upload_study()
+        elif data_type == 'ser_and_analysis':
+            self.upload_ser()
+        else:
+            print('Please specify a data type to upload: study, ser, analysis, or all')
