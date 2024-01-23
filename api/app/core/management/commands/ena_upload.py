@@ -55,16 +55,16 @@ class Command(BaseCommand):
     def upload_ser(self):
         samples = Sample.objects.filter(job_id__isnull=True)
         for sample in samples:
-            sample_count = sample.samplecounts.first()  # this is temporally
+            sample_count = sample.samplecou
+            # this is temporally
             if sample_count is None:
                 print(f'No sample count for {sample}')
                 continue
 
 
             payload = self._create_ser_payload(sample, sample_count)
-            files = File.objects.filter(sample=sample)
-            self._add_files_to_payload(payload, files, sample)
 
+            files = File.objects.filter(sample=sample)
             response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
                                                 message=f'SER for {sample} uploaded successfully')
             job_id = response['id']
@@ -78,12 +78,6 @@ class Command(BaseCommand):
 
 
 
-    def _add_files_to_payload(self, payload, files, sample):
-        for file in files:
-            if file.type.postfix == '.cram':
-                payload['files'].append(file.path)
-                print(f'Adding {file.path} to SER for {sample}')
-
     def _create_ser_payload(self, sample, sample_count):
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
         taxon_id = sample_count.substrain.taxon_id
@@ -93,6 +87,12 @@ class Command(BaseCommand):
 
         sample_alias = f"revseq_sample_{sample.pseudonymized_id}_{now}"
         experiment_alias = f"revseq_experiment_{sample.pseudonymized_id}_{now}"
+        _files = []
+        files = File.objects.filter(sample=sample)
+        for file in files:
+            if file.type.postfix == '.cram':
+                _files.append(file.path)
+                print(f'Adding {file.path} to SER for {sample}')
 
         return {
             'template': 'default',
@@ -108,9 +108,9 @@ class Command(BaseCommand):
                     'alias': experiment_alias,
                     'sample_alias': sample_alias
                 },
-                'run': {}
+
             },
-            'files': []
+            'files': _files
         }
 
     def upload_analysis_job_and_files(self, job_id, sample, files):
