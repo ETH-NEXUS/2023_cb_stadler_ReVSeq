@@ -65,6 +65,8 @@ const filterBySample = () => {
 </script>
 
 <template>
+
+
   <div class="q-pa-md counts-cont" v-if="coreStore.sampleCounts.length > 0">
     <q-dialog v-model="showPlateFiles">
       <q-card>

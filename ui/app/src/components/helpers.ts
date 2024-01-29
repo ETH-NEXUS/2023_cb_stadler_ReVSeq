@@ -14,12 +14,15 @@ export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSa
       rpkm: sampleCount.rpkm,
       rpkm_proportions: sampleCount.rpkm_proportions,
       outlier: sampleCount.outlier,
-      DP_threshold: sampleCount.DP_threshold,
-      DP: sampleCount.DP,
-      DP_status: sampleCount.DP_status,
+      coverage_threshold: sampleCount.coverage_threshold,
+      coverage: sampleCount.coverage,
+      coverage_status: sampleCount.coverage_status,
       readnum_threshold: sampleCount.readnum_threshold,
       readnum_status: sampleCount.readnum_status,
       percentile_threshold: sampleCount.percentile_threshold,
+      tax_id: sampleCount.tax_id,
+      scientific_name: sampleCount.scientific_name,
+      DP20: sampleCount.DP20,
     }
   })
 }

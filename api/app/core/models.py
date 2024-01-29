@@ -41,7 +41,7 @@ class FileType(models.Model):
 class File(models.Model):
     related_name = "files"
     path = models.TextField(unique=True)
-    checksum = models.TextField(unique=True)
+    checksum = models.TextField()
     type = models.ForeignKey(FileType, on_delete=models.CASCADE, null=True)
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True)
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
@@ -97,12 +97,16 @@ class SampleCount(models.Model):
     rpkm_proportions = models.FloatField(null=True)
     normcounts = models.FloatField(null=True)
     outlier = models.BooleanField(null=True)
-    DP_threshold = models.FloatField(null=True, blank=True)
-    DP = models.FloatField(null=True, blank=True)
-    DP_status = models.CharField(max_length=20, null=True, blank=True)
+    coverage_threshold = models.FloatField(null=True, blank=True)
+
+    coverage = models.FloatField(null=True, blank=True)
+    coverage_status = models.CharField(max_length=20, null=True, blank=True)
     readnum_status = models.TextField(null=True, blank=True)
     readnum_threshold = models.FloatField(null=True, blank=True)
     percentile_threshold = models.TextField(null=True, blank=True)
+    tax_id = models.IntegerField(null=True, blank=True)
+    scientific_name = models.TextField(null=True, blank=True)
+    DP20 = models.TextField(null=True, blank=True)
 
 
     def __str__(self):

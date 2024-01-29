@@ -3,6 +3,9 @@ import {useCoreStore} from 'stores/core'
 import {useI18n} from 'vue-i18n'
 import {ref, onMounted} from 'vue'
 import {storeToRefs} from 'pinia'
+import {useQuasar} from 'quasar'
+
+const $q = useQuasar()
 
 onMounted(async () => {
   await coreStore.getPlates()
@@ -18,6 +21,7 @@ const {selected_plate_barcode, selected_substrain} = storeToRefs(coreStore)
 
 const optionsSubstrains = ref<string[]>(coreStore.substrains.map(s => s.name))
 const optionsPlates = ref<string[]>(coreStore.plates.map(p => p.barcode))
+
 
 const {t} = useI18n()
 
@@ -53,8 +57,15 @@ const filterFnSubstrains = (val: string, update: (fn: () => void) => void) => {
 
 const onSubmit = async () => {
   if (selected_plate_barcode.value) {
+
+    $q.loading.show({
+      message: t('message.loading'),
+    })
+
     await coreStore.getSamplesByPlate(selected_plate_barcode.value)
     await coreStore.getPlateData(selected_plate_barcode.value, selected_substrain.value)
+
+    $q.loading.hide()
   }
 }
 </script>

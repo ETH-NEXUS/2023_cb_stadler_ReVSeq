@@ -223,16 +223,18 @@ class Command(BaseCommand):
                         substrain=substrain,
                         aligned=int(item[columns.aligned]),
                         length=int(item[columns.length]),
-                        rpkm=float(item[columns.rpkm]),
-                        rpkm_proportions=float(item[columns.rpkm_proportions]),
-                        # normcounts=float(item[columns.normcounts]),
+                        rpkm=float(item[columns.rpkm]) if item[columns.rpkm] != '' else None,
+                        rpkm_proportions=float(item[columns.rpkm_proportions]) if item[columns.rpkm] != '' else None,
                         outlier=outlier,
-                        DP_threshold=float(item[columns.DP_threshold]),
-                        DP=float(item[columns.DP]),
-                        DP_status=item[columns.DP_status],
+                        coverage_threshold=float(item[columns.coverage_threshold]),
+                        coverage=float(item[columns.coverage]),
+                        coverage_status=item[columns.coverage_status],
                         readnum_status=item[columns.readnum_status],
                         readnum_threshold=float(item[columns.readnum_threshold]),
                         percentile_threshold=item[columns.percentile_threshold],
+                        tax_id=int(item[columns.tax_id]),
+                        scientific_name=item[columns.scientific_name],
+                        DP20=item[columns.DP20],
                     )
                     self.sample_id_dict[sample_id] = True
                     if _:
@@ -253,7 +255,10 @@ class Command(BaseCommand):
 
     def check_imported_samples(self, file_name):
         empty_samples = txt_to_list(file_name)
-        logger.warning("Empty samples:", ", ".join(empty_samples).replace("\n", ""))
+        empty_samples_message = "No empty samples found"
+        if len(empty_samples) > 0:
+            empty_samples_message = "Empty samples: " + ", ".join(empty_samples)
+        logger.warning(empty_samples_message)
         if not all(self.sample_id_dict.values()):
             logger.error(
                 "Not all samples have been imported. Please check the metadata file."

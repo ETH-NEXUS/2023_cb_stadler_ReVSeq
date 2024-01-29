@@ -163,7 +163,7 @@ class SampleCountViewSet(viewsets.ModelViewSet):
                 {"error": "Sample with this pseudonymized_id does not exist"}
             )
 
-        queryset =  SampleCount.objects.filter(sample=sample)   # SampleCount.objects.filter(sample=sample)
+        queryset = SampleCount.objects.filter(sample=sample)   # SampleCount.objects.filter(sample=sample)
 
         response_data = {
             "sample": {
@@ -181,12 +181,15 @@ class SampleCountViewSet(viewsets.ModelViewSet):
                 "normcounts": 0,
                 "outlier": False,
                 "qc_status": "",
-                "DP_threshold": 0,
-                "DP": 0,
-                "DP_status": "",
+                "coverage_threshold": 0,
+                "coverage": 0,
+                "coverage_status": "",
                 "readnum_status": "",
                 "readnum_threshold": 0,
                 "percentile_threshold": "",
+                "DP20": "",
+                "scientific_name": "",
+                "tax_id": "",
             }
         )
         strains = {}
@@ -199,12 +202,16 @@ class SampleCountViewSet(viewsets.ModelViewSet):
             strains[strain].rpkm += item.rpkm
             strains[strain].rpkm_proportions += item.rpkm_proportions
             strains[strain].outlier = item.outlier
-            strains[strain].DP_threshold = item.DP_threshold
-            strains[strain].DP += item.DP
-            strains[strain].DP_status = item.DP_status
+            strains[strain].coverage_threshold = item.coverage_threshold
+            strains[strain].coverage += item.coverage
+            strains[strain].coverage_status = item.coverage_status
             strains[strain].readnum_status = item.readnum_status
             strains[strain].readnum_threshold +=item.readnum_threshold
             strains[strain].percentile_threshold = item.percentile_threshold
+            strains[strain].DP20 = item.DP20
+            strains[strain].scientific_name = item.substrain.scientific_name
+            strains[strain].tax_id = item.substrain.taxon_id
+
 
 
         response_data["strains"] = [
@@ -242,7 +249,6 @@ class MetadataViewSet(viewsets.ModelViewSet):
 
     Supported Formats:
     - JSON
-
 
     CSV File Retrieval:
     - **Swagger Caveat**: Within the Swagger interface, selecting the CSV format will yield the error

@@ -44,19 +44,20 @@ export const useCoreStore = defineStore('core', () => {
     const mappedData = new Map()
 
       tableData.value.forEach(item => {
+
+        const strain_sampleId = item.substrain.strain.name + '__' + item.sample.pseudonymized_id
         const strain = item.substrain.strain.name
         const substrain = item.substrain
-        const existingData = mappedData.get(strain) || {
+        const existingData = mappedData.get(strain_sampleId) || {
           aligned: 0,
           length: 0,
           rpkm: 0,
           rpkm_proportions: 0,
           normcounts: 0,
           outlier: false,
-
-          DP_threshold: 0,
-          DP: 0,
-          DP_status: '',
+          coverage_threshold: 0,
+          coverage: 0,
+          coverage_status: '',
           readnum_threshold: 0,
           readnum_status: '',
           percentile_threshold: '',
@@ -72,9 +73,9 @@ export const useCoreStore = defineStore('core', () => {
           rpkm: existingData.rpkm + item.rpkm,
           rpkm_proportions: existingData.rpkm_proportions + item.rpkm_proportions,
           normcounts: existingData.normcounts + item.normcounts,
-          DP_threshold:  item.DP_threshold,
-          DP: existingData.DP + item.DP,
-          DP_status: item.DP_status,
+          coverage_threshold:  item.coverage_threshold,
+          coverage: existingData.DP + item.coverage,
+          coverage_status: item.coverage_status,
           readnum_threshold:  item.readnum_threshold,
           readnum_status: item.readnum_status,
           percentile_threshold: item.percentile_threshold,
@@ -84,10 +85,13 @@ export const useCoreStore = defineStore('core', () => {
           pseudonymized_id: item.sample.pseudonymized_id,
         }
 
-        mappedData.set(strain, newData)
+        mappedData.set(strain_sampleId, newData)
       })
+    console.log(mappedData)
+
       tableData.value = Array.from(mappedData.entries()).map(([key, value]) => ({
-        strain: key,
+        strain: key.split('__')[0],
+        pseudonymized_id: key.split('__')[1],
         ...value,
       }))
 
