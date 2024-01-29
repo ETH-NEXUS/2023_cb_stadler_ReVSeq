@@ -22,11 +22,13 @@ class Well(models.Model):
 class Sample(models.Model):
     sample_number = models.TextField(unique=True)
     well = models.ForeignKey(Well, on_delete=models.CASCADE)
-    pseudoanonymized_id = models.TextField(unique=True, null=True)
+    pseudonymized_id = models.TextField(unique=True, null=True)
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
+    job_id = models.IntegerField(null=True, blank=True)
+    analysis_job_id = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.pseudoanonymized_id
+        return self.pseudonymized_id
 
 
 class FileType(models.Model):
@@ -39,7 +41,7 @@ class FileType(models.Model):
 class File(models.Model):
     related_name = "files"
     path = models.TextField(unique=True)
-    checksum = models.TextField(unique=True)
+    checksum = models.TextField()
     type = models.ForeignKey(FileType, on_delete=models.CASCADE, null=True)
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True)
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
@@ -83,10 +85,11 @@ class Substrain(models.Model):
 
 
 class SampleCount(models.Model):
-    plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
-    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True)
+    related_name = "samplecounts"
+    plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True, related_name=related_name)
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True, related_name=related_name)
     substrain = models.ForeignKey(
-        Substrain, on_delete=models.CASCADE, null=True
+        Substrain, on_delete=models.CASCADE, null=True, related_name=related_name
     )  # null=True because we first create the object by import and populate it later
     aligned = models.IntegerField(null=True)
     length = models.IntegerField(null=True)
@@ -94,21 +97,27 @@ class SampleCount(models.Model):
     rpkm_proportions = models.FloatField(null=True)
     normcounts = models.FloatField(null=True)
     outlier = models.BooleanField(null=True)
-    DP_threshold = models.FloatField(null=True, blank=True)
-    DP = models.FloatField(null=True, blank=True)
-    DP_status = models.CharField(max_length=20, null=True, blank=True)
+    coverage_threshold = models.FloatField(null=True, blank=True)
+
+    coverage = models.FloatField(null=True, blank=True)
+    coverage_status = models.CharField(max_length=20, null=True, blank=True)
     readnum_status = models.TextField(null=True, blank=True)
     readnum_threshold = models.FloatField(null=True, blank=True)
     percentile_threshold = models.TextField(null=True, blank=True)
+    tax_id = models.IntegerField(null=True, blank=True)
+    scientific_name = models.TextField(null=True, blank=True)
+    DP20 = models.TextField(null=True, blank=True)
+
 
     def __str__(self):
         return self.plate.barcode + " " + self.substrain.name
 
 
 class Metadata(models.Model):
-    plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
-    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True)
-    well = models.ForeignKey(Well, on_delete=models.CASCADE, null=True)
+    related_name = "metadata"
+    plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True, related_name=related_name)
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True, related_name=related_name)
+    well = models.ForeignKey(Well, on_delete=models.CASCADE, null=True, related_name=related_name)
     prescriber = models.CharField(max_length=20)
     order_date = models.DateField()
     ent_date = models.DateField()

@@ -20,17 +20,17 @@ export const useCoreStore = defineStore('core', () => {
 
   const getSelectedSample = async () => {
     try {
-      const res = await api.get(`/api/samples/?pseudoanonymized_id=${selected_sample_id.value}`)
+      const res = await api.get(`/api/samples/?pseudonymized_id=${selected_sample_id.value}`)
       selected_sample.value = res.data
     } catch (error) {
       console.error(error)
     }
   }
 
-  const filterCountDataBySample = async (pseudoanonymized_id = '') => {
-    if (pseudoanonymized_id !== '') {
+  const filterCountDataBySample = async (pseudonymized_id = '') => {
+    if (pseudonymized_id !== '') {
       tableData.value = sampleCounts.value.filter(
-        item => item.sample.pseudoanonymized_id === pseudoanonymized_id
+        item => item.sample.pseudonymized_id === pseudonymized_id
       )
     } else {
       tableData.value = sampleCounts.value
@@ -44,25 +44,26 @@ export const useCoreStore = defineStore('core', () => {
     const mappedData = new Map()
 
       tableData.value.forEach(item => {
+
+        const strain_sampleId = item.substrain.strain.name + '__' + item.sample.pseudonymized_id
         const strain = item.substrain.strain.name
         const substrain = item.substrain
-        const existingData = mappedData.get(strain) || {
+        const existingData = mappedData.get(strain_sampleId) || {
           aligned: 0,
           length: 0,
           rpkm: 0,
           rpkm_proportions: 0,
           normcounts: 0,
           outlier: false,
-
-          DP_threshold: 0,
-          DP: 0,
-          DP_status: '',
+          coverage_threshold: 0,
+          coverage: 0,
+          coverage_status: '',
           readnum_threshold: 0,
           readnum_status: '',
           percentile_threshold: '',
           plate: null,
           substrain: null,
-          pseudoanonymized_id: null,
+          pseudonymized_id: null,
         }
 
         const newData = {
@@ -72,22 +73,25 @@ export const useCoreStore = defineStore('core', () => {
           rpkm: existingData.rpkm + item.rpkm,
           rpkm_proportions: existingData.rpkm_proportions + item.rpkm_proportions,
           normcounts: existingData.normcounts + item.normcounts,
-          DP_threshold:  item.DP_threshold,
-          DP: existingData.DP + item.DP,
-          DP_status: item.DP_status,
+          coverage_threshold:  item.coverage_threshold,
+          coverage: existingData.DP + item.coverage,
+          coverage_status: item.coverage_status,
           readnum_threshold:  item.readnum_threshold,
           readnum_status: item.readnum_status,
           percentile_threshold: item.percentile_threshold,
           outlier: item.outlier,
           plate: item.plate.barcode,
           substrain: substrain,
-          pseudoanonymized_id: item.sample.pseudoanonymized_id,
+          pseudonymized_id: item.sample.pseudonymized_id,
         }
 
-        mappedData.set(strain, newData)
+        mappedData.set(strain_sampleId, newData)
       })
+    console.log(mappedData)
+
       tableData.value = Array.from(mappedData.entries()).map(([key, value]) => ({
-        strain: key,
+        strain: key.split('__')[0],
+        pseudonymized_id: key.split('__')[1],
         ...value,
       }))
 

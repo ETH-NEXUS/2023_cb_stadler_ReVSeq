@@ -20,6 +20,7 @@ export default {
   message: {
     enter_username_password: 'Please enter your username and password',
     successfully_logged_in: 'Successfully signed in',
+    loading: 'Loading...',
   },
   main_layout: {
     eth: 'ETH Zurich',

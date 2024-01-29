@@ -4,9 +4,9 @@ import {SampleCount, Metadata} from 'src/models/core'
 export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSampleCounts[] => {
   return sampleCounts.map(sampleCount => {
     return {
-      pseudoanonymized_id: sampleCount.sample
-        ? sampleCount.sample.pseudoanonymized_id
-        : sampleCount.pseudoanonymized_id,
+      pseudonymized_id: sampleCount.sample
+        ? sampleCount.sample.pseudonymized_id
+        : sampleCount.pseudonymized_id,
       substrain: sampleCount.substrain.name,
       strain: sampleCount.substrain.strain.name,
       aligned: sampleCount.aligned,
@@ -14,12 +14,15 @@ export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSa
       rpkm: sampleCount.rpkm,
       rpkm_proportions: sampleCount.rpkm_proportions,
       outlier: sampleCount.outlier,
-      DP_threshold: sampleCount.DP_threshold,
-      DP: sampleCount.DP,
-      DP_status: sampleCount.DP_status,
+      coverage_threshold: sampleCount.coverage_threshold,
+      coverage: sampleCount.coverage,
+      coverage_status: sampleCount.coverage_status,
       readnum_threshold: sampleCount.readnum_threshold,
       readnum_status: sampleCount.readnum_status,
       percentile_threshold: sampleCount.percentile_threshold,
+      tax_id: sampleCount.tax_id,
+      scientific_name: sampleCount.scientific_name,
+      DP20: sampleCount.DP20,
     }
   })
 }
@@ -27,7 +30,7 @@ export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSa
 export const createMetadataRows = (metadata: Metadata[]): TableDataMetadata[] => {
   return metadata.map(m => {
     return {
-      pseudoanonymized_id: m.sample.pseudoanonymized_id,
+      pseudonymized_id: m.sample.pseudonymized_id,
       prescriber: m.prescriber,
       well: m.well.location,
       order_date: m.order_date,

@@ -7,7 +7,7 @@
 ##      Generates random, unique 6-characters IDs used to anonymize the sample
 ##      names provided by the sequencing lab.
 ##	    Replicates the raw data directory structure in a new directory using softlinks.
-##      Creates the anonymization table with the matches between original IDs and pseudoanonymized IDs.
+##      Creates the anonymization table with the matches between original IDs and pseudonymized IDs.
 ##      Creates the sample map file for the pipeline with the list of lanes available for each sample.
 ######
 

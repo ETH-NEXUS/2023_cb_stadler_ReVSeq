@@ -1,4 +1,4 @@
-Prescriber canton;Sample number;Order date;ent date;PlateID;DeepWellLocation;resp31 (56748);resp30 (56746);resp29 (56744);resp28 (56742);resp27 (56688);resp24 (56685);resp16 (56648);resp9 (56643);resp8 (56639);resp7 (56637);resp6 (56636);resp5 (56635);resp4 (56634);resp3 (56633);resp1 (56638);flub4p (61025);flua4p (61024);rsv4p (61023);wuhan0 (60938);rspc (60913);flub (60891);flua (60890);Aufnahmenummer;treatment_type;pseudoanonymized_id
+Prescriber canton;Sample number;Order date;ent date;PlateID;DeepWellLocation;resp31 (56748);resp30 (56746);resp29 (56744);resp28 (56742);resp27 (56688);resp24 (56685);resp16 (56648);resp9 (56643);resp8 (56639);resp7 (56637);resp6 (56636);resp5 (56635);resp4 (56634);resp3 (56633);resp1 (56638);flub4p (61025);flua4p (61024);rsv4p (61023);wuhan0 (60938);rspc (60913);flub (60891);flua (60890);Aufnahmenummer;treatment_type;pseudonymized_id
 AG;40521562;2023-03-28;2023-03-28;010623RVS;B3;0;0;0;0;;4;0;0;0;deleted;deleted;0;0;0;0;;;;;;0;0;;;0b9ad2
 AG;40518383;2023-03-28;2023-03-28;010623RVS;D4;0;0;0;0;;0;0;0;0;4;0;0;0;0;0;;;;;;;;;;1a8fad
 AG;40519000;2023-03-28;2023-03-28;010623RVS;G3;0;0;0;0;;0;0;0;0;4;0;0;0;0;0;;;;;;;;;;34ff75

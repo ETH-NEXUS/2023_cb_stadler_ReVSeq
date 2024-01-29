@@ -1,7 +1,7 @@
 import_columns:
   deep_well_location: DeepWellLocation
   sample_number: Sample number
-  pseudoanonymized_id: ethid
+  pseudonymized_id: ethid
   order_date: Order date
   ent_date: ent date
   treatment_type: treatment_type
@@ -12,10 +12,13 @@ import_columns:
   length: reference_length
   rpkm: rpkm
   rpkm_proportions: rpkm_proportions
-  DP_threshold: DP_threshold
-  DP: DP
-  DP_status: DP_status
+  coverage_threshold: coverage_threshold
+  coverage: coverage
+  coverage_status: coverage_status
   readnum_status: readnum_status
   readnum_threshold: readnum_threshold
   percentile_threshold: percentile_threshold
+  tax_id: tax_id
+  scientific_name: scientific_name
+  DP20: DP20
 
