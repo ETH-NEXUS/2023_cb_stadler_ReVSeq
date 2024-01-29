@@ -58,8 +58,8 @@ def get_alternative_tops(inputdir, sample, dirname, top_strain_name):
         if args.filter_alternatives:
             if (item[1] < args.readnum_threshold) or (item[3] < args.coverage_threshold):
                 continue
-        try mystring:
-            mystring = mystring + ", " + item[0] + " (cov:" + f'{item[3]:.5f}' + "; reads:" + f'{item[2]:.5f}' + " rpkm_prop: " + f'{item[1]:.5f}' + ")"
+        try:
+            mystring = mystring + ", " + item[0] + " (cov:" + f'{item[3]:.5f}' + "; reads:" + f'{item[2]:.0f}' + " rpkm_prop: " + f'{item[1]:.5f}' + ")"
         except NameError:
             if(dirname == "assign_virus"):
                 prefix = " (cov:" + f'{item[3]:.5f}' + "; "
@@ -138,7 +138,8 @@ if __name__ == '__main__':
     parser.add_argument('--sample_map', required=True, type=str, help='Sample map file containing all sample names')
     parser.add_argument('--pseudoanon_metadata', required=True, type=str, help='Metadata table including the pseudoanonymized sample names')
     parser.add_argument('--match_table', required=True, type=str, help='TSV matching the panel code with the common virus name used in the pipeline')
-    parser.add_argument('--filter_alternatives', required=False, type=bool, default=True, help='Should we filter the alternative outliers using the same readnum and coverage thresholds used for the QC of the top outlier?')
+    parser.add_argument('--filter_alternatives', required=False, type=bool, default=False, help='Should we filter the alternative outliers using the same readnum and coverage thresholds used for the QC of the top outlier?')
+    parser.add_argument('--readnum_threshold', required=True, type=int, help='The read number threshold to apply to the alternative outliers')
 
     args = parser.parse_args()
     sample_map = pd.read_table(args.sample_map)
