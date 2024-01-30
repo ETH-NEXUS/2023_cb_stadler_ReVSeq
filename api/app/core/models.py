@@ -98,7 +98,6 @@ class SampleCount(models.Model):
     normcounts = models.FloatField(null=True)
     outlier = models.BooleanField(null=True)
     coverage_threshold = models.FloatField(null=True, blank=True)
-
     coverage = models.FloatField(null=True, blank=True)
     coverage_status = models.CharField(max_length=20, null=True, blank=True)
     readnum_status = models.TextField(null=True, blank=True)

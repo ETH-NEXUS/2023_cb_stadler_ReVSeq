@@ -28,7 +28,7 @@ const aggregate = () => {
 }
 const filterColumnNames = computed(() => {
   if (coreStore.aggregate) {
-    return columnsSampleCount.filter((c: SampleCountsTableColumns) => c.name !== 'substrain')
+    return columnsSampleCount.filter((c: SampleCountsTableColumns) => !['substrain', 'outlier'].includes(c.name))
   }
   return columnsSampleCount
 })

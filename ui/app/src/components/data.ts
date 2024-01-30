@@ -99,29 +99,29 @@ export const columnsSampleCount: SampleCountsTableColumns[] = [
     field: 'outlier',
   },
   {
-    name: 'DP',
+    name: 'coverage',
     required: true,
-    label: 'DP',
+    label: 'Coverage',
     align: 'center',
     sortable: true,
-    field: 'DP',
+    field: 'coverage',
   },
   {
-    name: 'DP_threshold',
+    name: 'coverage_threshold',
     required: true,
-    label: 'DP threshold',
+    label: 'Coverage threshold',
     align: 'center',
     sortable: true,
-    field: 'DP_threshold',
+    field: 'coverage_threshold',
 
   },
   {
-    name: 'DP_status',
+    name: 'coverage_status',
     required: true,
-    label: 'DP status',
+    label: 'Coverage status',
     align: 'center',
     sortable: true,
-    field: 'DP_status',
+    field: 'coverage_status',
 
   },
   {
@@ -150,5 +150,15 @@ export const columnsSampleCount: SampleCountsTableColumns[] = [
     sortable: true,
     field: 'percentile_threshold',
 
+  },
+
+  {
+    name: 'DP20',
+    required: true,
+    label: 'DP20',
+    align: 'center',
+    sortable: true,
+    field: 'DP20',
   }
+
 ]

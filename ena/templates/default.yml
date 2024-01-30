@@ -29,7 +29,6 @@ sample:
   collector name: "Viollier AG"
   collecting institution: Viollier AG
   isolate: "Respiratory swabs"
-  
 
 #
 experiment:
@@ -38,15 +37,15 @@ experiment:
   study_alias: revseq_study
   sample_alias: revseq_sample_{}  # it must be the same as the alias of sampel: revseq_sample_<pseudonymized id>_{}
   design_description: "None"
-  library_name: "None"
-  library_strategy: RNA-Seq
-  library_source: METAGENOMIC
+  library_name: "Respiratory Virus Oligos Panel V2"
+  library_strategy: Targeted-Capture
+  library_source: genomic
   library_selection: cDNA
   library_layout: "paired"
   insert_size: 250
   library_construction_protocol: "None"
   platform: illumina
-  instrument_model: Illumina MiSeq
+  instrument_model: Illumina NextSeq 500
 
 #
 run:

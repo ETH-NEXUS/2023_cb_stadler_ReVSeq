@@ -139,6 +139,9 @@ class SampleCountViewSet(viewsets.ModelViewSet):
 
     http_method_names = ["get", "head", "options"]
 
+    def get_queryset(self):
+        return SampleCount.objects.prefetch_related('plate', 'substrain', 'sample')
+
     """
     Call the aggregate function it like this, with the obligatory parameter sample__pseudonymized_id:
     

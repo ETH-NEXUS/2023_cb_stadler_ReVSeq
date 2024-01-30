@@ -13,6 +13,8 @@ RELEASE_JOB_ENDPOINT = 'http://ena:5000/api/jobs/<job_id>/release/'
 RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/release/'
 
 
+
+
 class Command(BaseCommand):
 
     def __init__(self):
@@ -21,6 +23,13 @@ class Command(BaseCommand):
 
     token = environ.get('ENA_TOKEN')
     headers = {'Authorization': f'Token {token}', 'Content-Type': 'application/json'}
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '-t', '--type', type=str, choices=['study', 'ser_and_analysis'],
+            help='Type of data to upload: study, or ser_and_analysis to upload the samples which don;t already have a '
+                 'job_id'
+        )
 
     def handle_http_request(self, url, payload=None, method='get', message=None):
         try:
@@ -39,14 +48,9 @@ class Command(BaseCommand):
             print(f'Exception: {e}')
         return None
 
-    def add_arguments(self, parser):
-        parser.add_argument(
-            '-t', '--type', type=str, choices=['study', 'ser_and_analysis'],
-            help='Type of data to upload: study, or ser_and_analysis to upload the samples which don;t already have a '
-                 'job_id'
-        )
-
-
+    def __sort_key(self, x):
+        # if the value is None, it is treated as a very small number for sorting purposes
+        return x.rpkm_proportions if x.rpkm_proportions is not None else float('-inf')
 
     def upload_study(self):
         payload = {'template': 'default', 'data': {}}
@@ -55,14 +59,12 @@ class Command(BaseCommand):
     def upload_ser(self):
         samples = Sample.objects.filter(job_id__isnull=True)
         for sample in samples:
-            sample_count = sample.samplecou
-            # this is temporally
-            if sample_count is None:
-                print(f'No sample count for {sample}')
+            sample_counts = sample.samplecounts.all()
+            if not sample_counts:
+                print(f'No counts for {sample}')
                 continue
 
-
-            payload = self._create_ser_payload(sample, sample_count)
+            payload = self._create_ser_payload(sample, sample_counts)
 
             files = File.objects.filter(sample=sample)
             response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
@@ -76,11 +78,13 @@ class Command(BaseCommand):
         for analysis_job_id in self.job_analysis_ids:
             self.release_job(RELEASE_ANALYSIS_JOB_ENDPOINT, analysis_job_id)
 
+    def _create_ser_payload(self, sample, sample_counts):
 
 
-    def _create_ser_payload(self, sample, sample_count):
+
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
-        taxon_id = sample_count.substrain.taxon_id
+        sorted_sample_counts = sorted(sample_counts, key=self.__sort_key, reverse=True)
+        taxon_id = sorted_sample_counts[0].substrain.taxon_id
         metadata = Metadata.objects.filter(sample=sample).first()
         collection_date = metadata.ent_date.strftime("%Y-%m-%d")
         geo_location = metadata.prescriber
@@ -137,7 +141,6 @@ class Command(BaseCommand):
     def release_job(self, url, job_id):
         _url = url.replace('<job_id>', str(job_id))
         self.handle_http_request(_url, method='get', message=f'Job {job_id} released successfully')
-
 
     def handle(self, *args, **options):
         data_type = options.get('type')
