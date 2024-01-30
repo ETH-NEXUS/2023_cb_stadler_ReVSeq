@@ -36,6 +36,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -245,3 +246,11 @@ MEDIA_ROOT = "/vol/web/media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "/api/docs/"
+
+
+# UNFOALD ADMIN
+
+UNFOLD = {
+    "SITE_TITLE": "ReVSeq API Admin Interface",
+    "SITE_HEADER": "RevSeq API"
+}

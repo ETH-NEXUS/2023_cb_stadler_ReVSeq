@@ -12,55 +12,63 @@ from .models import (
     FileType,
     File,
 )
+from unfold.admin import ModelAdmin
+
 
 # Register your models here.
 
 
+
+
 @admin.register(Plate)
-class PlateAdmin(admin.ModelAdmin):
+class PlateAdmin(ModelAdmin): # class PlateAdmin(admin.ModelAdmin):
     list_display = ("barcode",)
     search_fields = ("barcode",)
 
 
 @admin.register(Well)
-class WellAdmin(admin.ModelAdmin):
+class WellAdmin(ModelAdmin):
     list_display = ("location", "plate")
     search_fields = ("location",)
 
 
 @admin.register(Sample)
-class SampleAdmin(admin.ModelAdmin):
+class SampleAdmin(ModelAdmin):
     list_display = ("pseudonymized_id", "sample_number", "well", "job_id")
-    search_fields = ("sample_number",)
+    search_fields = ("sample_number", "pseudonymized_id", "well__location")
+    list_filter_submit = True
+    list_filter = ("plate__barcode",)
 
 
 @admin.register(SampleFile)
-class SampleFileAdmin(admin.ModelAdmin):
+class SampleFileAdmin(ModelAdmin):
     list_display = ("sample", "file_type", "file")
     search_fields = ("sample__sample_id", "file_type", "file")
 
 
 @admin.register(Strain)
-class StrainAdmin(admin.ModelAdmin):
+class StrainAdmin(ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
 
 
 @admin.register(Panel)
-class PanelAdmin(admin.ModelAdmin):
+class PanelAdmin(ModelAdmin):
     list_display = ("name", "strain")
     search_fields = ("name", "strain__name")
 
 
 @admin.register(Substrain)
-class SubstrainAdmin(admin.ModelAdmin):
+class SubstrainAdmin(ModelAdmin):
     list_display = ("name", "strain")
 
     search_fields = ("name", "strain__name")
+    list_filter_submit = True
+    list_filter= ("strain",)
 
 
 @admin.register(SampleCount)
-class SampleCountAdmin(admin.ModelAdmin):
+class SampleCountAdmin(ModelAdmin):
     list_display = (
         "aligned",
         "length",
@@ -69,25 +77,29 @@ class SampleCountAdmin(admin.ModelAdmin):
         "normcounts",
         "outlier",
     )
+    list_filter_submit = True
+    list_filter = ("plate__barcode", "sample__pseudonymized_id", "substrain__name")
 
 
 @admin.register(Metadata)
-class MetadataAdmin(admin.ModelAdmin):
+class MetadataAdmin(ModelAdmin):
     list_display = (
         "well",
         "plate",
         "sample",
         "prescriber",
     )
+    list_filter_submit = True
+    list_filter = ("plate__barcode", )
 
 
 @admin.register(FileType)
-class FileTypeAdmin(admin.ModelAdmin):
+class FileTypeAdmin(ModelAdmin):
     list_display = ("postfix",)
 
 
 @admin.register(File)
-class FileAdmin(admin.ModelAdmin):
+class FileAdmin(ModelAdmin):
     list_display = ("path", "checksum", "type", "sample", "plate")
     search_fields = (
         "path",
