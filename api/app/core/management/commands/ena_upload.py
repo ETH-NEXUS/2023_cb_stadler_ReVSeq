@@ -13,10 +13,7 @@ RELEASE_JOB_ENDPOINT = 'http://ena:5000/api/jobs/<job_id>/release/'
 RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/release/'
 
 
-
-
 class Command(BaseCommand):
-
     def __init__(self):
         super().__init__()
         self.job_analysis_ids = []
@@ -57,7 +54,7 @@ class Command(BaseCommand):
         self.handle_http_request(STUDY_ENDPOINT, payload, 'post', 'Study uploaded successfully')
 
     def upload_ser(self):
-        samples = Sample.objects.filter(job_id__isnull=True)
+        samples = Sample.objects.filter(job_id__isnull=True, valid=True)
         for sample in samples:
             sample_counts = sample.samplecounts.all()
             if not sample_counts:

@@ -18,8 +18,6 @@ from unfold.admin import ModelAdmin
 # Register your models here.
 
 
-
-
 @admin.register(Plate)
 class PlateAdmin(ModelAdmin): # class PlateAdmin(admin.ModelAdmin):
     list_display = ("barcode",)
@@ -34,7 +32,7 @@ class WellAdmin(ModelAdmin):
 
 @admin.register(Sample)
 class SampleAdmin(ModelAdmin):
-    list_display = ("pseudonymized_id", "sample_number", "well", "job_id")
+    list_display = ("pseudonymized_id", 'valid', "sample_number", "well", "job_id")
     search_fields = ("sample_number", "pseudonymized_id", "well__location")
     list_filter_submit = True
     list_filter = ("plate__barcode",)

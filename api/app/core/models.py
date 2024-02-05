@@ -26,6 +26,7 @@ class Sample(models.Model):
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
     job_id = models.IntegerField(null=True, blank=True)
     analysis_job_id = models.IntegerField(null=True, blank=True)
+    valid = models.BooleanField(null=True, blank=True, default=True)
 
     def __str__(self):
         return self.pseudonymized_id
@@ -106,6 +107,7 @@ class SampleCount(models.Model):
     tax_id = models.IntegerField(null=True, blank=True)
     scientific_name = models.TextField(null=True, blank=True)
     DP20 = models.TextField(null=True, blank=True)
+
 
 
     def __str__(self):
