@@ -53,6 +53,8 @@ export interface SampleCount {
   tax_id: number
   scientific_name: string
   DP20: string
+  DP1: string
+  DP2: string
   normcounts?: number
   strain?: string
   pseudonymized_id?: string

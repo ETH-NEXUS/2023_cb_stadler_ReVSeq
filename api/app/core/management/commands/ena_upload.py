@@ -17,6 +17,7 @@ class Command(BaseCommand):
     def __init__(self):
         super().__init__()
         self.job_analysis_ids = []
+        self.job_ids = []
 
     token = environ.get('ENA_TOKEN')
     headers = {'Authorization': f'Token {token}', 'Content-Type': 'application/json'}
@@ -83,9 +84,6 @@ class Command(BaseCommand):
             self.release_job(RELEASE_ANALYSIS_JOB_ENDPOINT, analysis_job_id)
 
     def _create_ser_payload(self, sample, sample_counts):
-
-
-
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
         sorted_sample_counts = sorted(sample_counts, key=self.__sort_key, reverse=True)
         taxon_id = sorted_sample_counts[0].substrain.taxon_id

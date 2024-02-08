@@ -160,5 +160,25 @@ export const columnsSampleCount: SampleCountsTableColumns[] = [
     sortable: true,
     field: 'DP20',
   }
+  ,
+
+  {
+    name: 'DP1',
+    required: true,
+    label: 'DP1',
+    align: 'center',
+    sortable: true,
+    field: 'DP1',
+  }
+  ,
+
+  {
+    name: 'DP2',
+    required: true,
+    label: 'DP2',
+    align: 'center',
+    sortable: true,
+    field: 'DP2',
+  }
 
 ]

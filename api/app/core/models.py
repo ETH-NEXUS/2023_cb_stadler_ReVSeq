@@ -107,6 +107,8 @@ class SampleCount(models.Model):
     tax_id = models.IntegerField(null=True, blank=True)
     scientific_name = models.TextField(null=True, blank=True)
     DP20 = models.TextField(null=True, blank=True)
+    DP1 = models.TextField(null=True, blank=True)
+    DP2 = models.TextField(null=True, blank=True)
 
 
 
