@@ -31,4 +31,4 @@ services:
       "
   ena:
     volumes:
-      - /data/revseq/results_example_for_database/package_results:/data
+      - /data/revseq/results/gather_results:/data

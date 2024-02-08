@@ -82,7 +82,7 @@ class SampleViewSet(viewsets.ModelViewSet):
 
     http_method_names = ["get", "head", "options"]
 
-    @action
+    @action(detail=False, methods=["post"])
     def ena_upload_study(self, request, *args, **kwargs):
         """
         API Endpoint: ENA Upload Study
@@ -97,7 +97,7 @@ class SampleViewSet(viewsets.ModelViewSet):
         call_command('ena_upload', 'study')
         return JsonResponse({"detail": "Study upload initiated."}, status=200)
 
-    @action
+    @action(detail=False, methods=["post"])
     def ena_upload_ser_and_analysis(self, request, *args, **kwargs):
 
         """

@@ -23,10 +23,17 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '-t', '--type', type=str, choices=['study', 'ser_and_analysis'],
+            '-t', '--type', type=str, choices=['study', 'ser_and_analysis', 'delete_job_id'],
             help='Type of data to upload: study, or ser_and_analysis to upload the samples which don;t already have a '
                  'job_id'
         )
+
+    def delete_job_id(self):
+        samples = Sample.objects.filter(job_id__isnull=False)
+        for sample in samples:
+            sample.job_id = None
+            sample.save()
+            print(f'Job id for {sample} deleted')
 
     def handle_http_request(self, url, payload=None, method='get', message=None):
         try:
@@ -146,5 +153,8 @@ class Command(BaseCommand):
             self.upload_study()
         elif data_type == 'ser_and_analysis':
             self.upload_ser()
+
+        elif data_type == 'delete_job_id':
+            self.delete_job_id()
         else:
             print('Please specify a data type to upload: study, ser, analysis, or all')
