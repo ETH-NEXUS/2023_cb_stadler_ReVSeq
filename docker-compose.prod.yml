@@ -5,6 +5,7 @@ services:
   api:
     volumes:
       - /data/revseq/results/gather_results:/data
+      - /data/revseq/results/results:/data/revseq/results/results
   ws:
     image: ethnexus/smnrp:1.1.1
     volumes:
@@ -32,3 +33,4 @@ services:
   ena:
     volumes:
       - /data/revseq/results/gather_results:/data
+      - /data/revseq/results/results:/data/revseq/results/results
