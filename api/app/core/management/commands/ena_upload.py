@@ -3,6 +3,7 @@ import requests
 from os import environ
 from core.models import Sample, File, Metadata
 import datetime as dt
+from helpers.color_log import logger
 
 STUDY_ENDPOINT = 'http://ena:5000/api/jobs/study/'
 SER_ENDPOINT = 'http://ena:5000/api/jobs/ser/'
@@ -11,6 +12,7 @@ ANALYSIS_FILES_ENDPOINT = 'http://ena:5000/api/analysisfiles/'
 ENQUEUE_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/enqueue/'
 RELEASE_JOB_ENDPOINT = 'http://ena:5000/api/jobs/<job_id>/release/'
 RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/release/'
+JOBS_ENDPOINT = 'http://ena:5000/api/jobs/'
 
 
 class Command(BaseCommand):
@@ -34,7 +36,7 @@ class Command(BaseCommand):
         for sample in samples:
             sample.job_id = None
             sample.save()
-            print(f'Job id for {sample} deleted')
+            logger.info(f'Job id for {sample} deleted')
 
     def handle_http_request(self, url, payload=None, method='get', message=None):
         try:
@@ -45,12 +47,12 @@ class Command(BaseCommand):
                 response = requests.post(url, headers=self.headers, json=payload)
             if response.status_code in [200, 201]:
                 if message:
-                    print(message)
+                    logger.info(message)
                 return response.json()
             else:
-                print(f'Error calling the endpoint {url}: {response.text}')
+                logger.error(f'Error calling the endpoint {url}: {response.text}')
         except Exception as e:
-            print(f'Exception: {e}')
+            logger.error(f'Exception: {e}')
         return None
 
     def __sort_key(self, x):
@@ -66,7 +68,7 @@ class Command(BaseCommand):
         for sample in samples:
             sample_counts = sample.samplecounts.all()
             if not sample_counts:
-                print(f'No counts for {sample}')
+                logger.warning(f'No counts for {sample}')
                 continue
 
             payload = self._create_ser_payload(sample, sample_counts)
@@ -78,10 +80,13 @@ class Command(BaseCommand):
             sample.job_id = job_id
             sample.save()
             self.upload_analysis_job_and_files(job_id, sample, files)
-            self.release_job(RELEASE_JOB_ENDPOINT, job_id)
+            self.job_ids.append(job_id)
 
-        for analysis_job_id in self.job_analysis_ids:
-            self.release_job(RELEASE_ANALYSIS_JOB_ENDPOINT, analysis_job_id)
+        #for job_id in self.job_ids:
+        #    self.release_job(RELEASE_JOB_ENDPOINT, job_id)
+
+        #for analysis_job_id in self.job_analysis_ids:
+        #    self.release_job(RELEASE_ANALYSIS_JOB_ENDPOINT, analysis_job_id)
 
     def _create_ser_payload(self, sample, sample_counts):
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
@@ -98,7 +103,7 @@ class Command(BaseCommand):
         for file in files:
             if file.type.postfix == '.cram':
                 _files.append(file.path)
-                print(f'Adding {file.path} to SER for {sample}')
+                logger.debug(f'Adding {file.path} to SER for {sample}')
 
         return {
             'template': 'default',
@@ -155,4 +160,4 @@ class Command(BaseCommand):
         elif data_type == 'delete_job_id':
             self.delete_job_id()
         else:
-            print('Please specify a data type to upload: study, ser, analysis, or all')
+            logger.warning('Please specify a data type to upload: study, ser, analysis, or all')

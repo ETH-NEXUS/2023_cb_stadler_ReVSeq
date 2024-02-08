@@ -21,7 +21,7 @@ const showSampleFiles = ref<boolean>(false)
 const aggregate = () => {
   try {
     coreStore.aggregate = !coreStore.aggregate
-    coreStore.toggleAggregate()
+
   } catch (err) {
     console.error(err)
   }

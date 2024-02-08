@@ -23,6 +23,8 @@ export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSa
       tax_id: sampleCount.tax_id,
       scientific_name: sampleCount.scientific_name,
       DP20: sampleCount.DP20,
+      DP1: sampleCount.DP1,
+      DP2: sampleCount.DP2,
     }
   })
 }
