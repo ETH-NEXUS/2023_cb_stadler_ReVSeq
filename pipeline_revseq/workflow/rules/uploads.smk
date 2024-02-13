@@ -7,18 +7,17 @@ rule gather_results_samples:
         dehuman_cram = rules.cram.output.cram,
         fastqcr1 = rules.fastqc_merged.output.zip1,
         fastqcr2 = rules.fastqc_merged.output.zip2,
-        multiqc = rules.multiqc.output.outfile,
         consensus = rules.postprocess_consensus.output.consensus,
         qc_status = rules.qualimap_filtered.output.qc_status,
     output:
-        assignment = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/sample_{sample}/{sample}_count_table.tsv",
-        rawr1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/sample_{sample}/{sample}_merged_R1.fastq.gz",
-        rawr2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/sample_{sample}/{sample}_merged_R2.fastq.gz",
-        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/sample_{sample}/{sample}_remove_duplicates.bam",
-        dehuman_cram = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/sample_{sample}/{sample}.cram",
-        fastqcr1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/sample_{sample}/{sample}_merged_R1.fastqc.zip",
-        fastqcr2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/sample_{sample}/{sample}_R2.fastqc.zip",
-        consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/sample_{sample}/{sample}_consensus.fa",
+        assignment = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_count_table.tsv",
+        rawr1 = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_merged_R1.fastq.gz",
+        rawr2 = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_merged_R2.fastq.gz",
+        bam = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_remove_duplicates.bam",
+        dehuman_cram = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}.cram",
+        fastqcr1 = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_merged_R1.fastqc.zip",
+        fastqcr2 = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_R2.fastqc.zip",
+        consensus = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_consensus.fa",
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_results_sample/{sample}_gather_results.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_results_sample/{sample}_gather_results.err.log",
@@ -46,13 +45,13 @@ rule gather_results_plate:
         aggregated_assignment = rules.aggregate.output.aggregated_assignment,
         aggregated_qc = rules.aggregate.output.aggregated_qc,
     output:
-        metadata = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
-        multiqcdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/multiqc"),
-        multiqcdir_filtered = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/multiqc_filtered"),
-        empty_samples = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/"+config["plate"]+"_empty_samples.txt",
-        version = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/"+config["plate"]+"_pipeline_version.txt",
-        aggregated_assignment = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/"+config["plate"]+"_aggregated_assignment.tsv",
-        aggregated_qc = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/"+config["plate"]+"_aggregated_qc.tsv",
+        metadata = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
+        multiqcdir = directory(config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/multiqc"),
+        multiqcdir_filtered = directory(config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/multiqc_filtered"),
+        empty_samples = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_empty_samples.txt",
+        version = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_pipeline_version.txt",
+        aggregated_assignment = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_aggregated_assignment.tsv",
+        aggregated_qc = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_aggregated_qc.tsv",
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/gather_results_plate/gather_results_plate.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/gather_results_plate/gather_results_plate.err.log",
@@ -75,22 +74,29 @@ rule gather_results_plate:
         cat {input.version} > {output.version}
         """
 
-#rule push_to_db:
-#    input:
-#        file_list = rules.gather_results,
-#    output:
-#        db_upload_success = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/push_to_db/db_upload_success",
-#    log:
-#		outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/push_to_db/push_to_db.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/push_to_db/push_to_db.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/push_to_db/push_to_db.benchmark"
-#    shell:
-#        """
-#        (XXXX && \
-#        echo "SUCCESS" > {output.db_upload_response}) || \
-#        exit 1
-#		"""
+rule push_to_db:
+    input:
+        multiqcdir_filtered = rules.gather_results_plate.output.multiqcdir_filtered,
+    output:
+        db_upload_status = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/db_upload_status",
+    params:
+        credentials_file = config["tools"]["push_to_db"]["credentials_file"],
+        plate = config["plate"],
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/push_to_db/push_to_db.benchmark"
+    conda:
+        "../envs/curl.yaml"
+    shell:
+        """
+        echo "Starting db_upload of plate {params.plate}"
+        creds={params.credentials_file}
+        plate={params.plate}
+        token=$(curl -X POST -H "Content-Type: application/json"  -H "Accept: application/json" -d '{"username": $(head -n 1 ${crefs}), "password": $(tail -n -1 ${creds})}' https://revseq.nexus.ethz.ch/api/token/)
+        ##### manipulate to get the token value
+        (curl -X POST -H "Authorization: Bearer ${token}"  -H "Accept: application/json"   -H "Content-Type: application/json" -d '{"path":"/data/${plate}"}' https://revseq.nexus.ethz.ch/api/import-results/ && \
+            echo "SUCCESS" > {output.db_upload_status}) || \
+            echo "FAILED" > {output.db_upload_status}
+		"""
 
 rule viollier_upload:
     input:

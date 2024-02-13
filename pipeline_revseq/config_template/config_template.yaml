@@ -74,3 +74,9 @@ tools:
   viollier_upload:
     # Location of the revseq executable
     revseq_executable: /data/revseq/revseq
+  gather_results:
+    # output folder for gather_results, the rule linking all data for the database uploads
+    outdir: /data/gather_results
+  push_to_db:
+    # file containing the username and password to use for the login to the database
+    credentials_file: /run/secrets/db_credentials_file

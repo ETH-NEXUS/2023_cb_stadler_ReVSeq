@@ -26,19 +26,28 @@ def rpkm(aggregated):
     return aggregated
 
 
-def fetch_coverage(genome_res, number_refs):
+def fetch_coverage(genome_res):
     try:
         #after the string there is a blank line, so we need to move 2 indexes forward to catch the first genome
         start_index = genome_res.index(">>>>>>> Coverage per contig") + 2
     except:
         sys.exit("Error: cannot find the coverage by contig in the genome_results file. Please check that the correct file is passed and that the format has not changed")
-    end_index = start_index + number_refs - 1
-    cov_df = pd.DataFrame([ [item.split('\t')[0],item.split('\t')[3] ] for item in genome_res[start_index:end_index+1] ], columns=["id", "coverage"], dtype='float64')
+    #end_index = start_index + number_refs - 1
+    cov_df = pd.DataFrame([ [item.split('\t')[0],item.split('\t')[3] ] for item in genome_res[start_index:] if item not in [""] ], columns=["id", "coverage"], dtype='float64')
     return cov_df
 
 
-def get_dp20(depth):
-    return f'{len(depth.loc[depth[2] > 20])/len(depth)*100:.2f}'+"%"
+def get_dp(depth, value, aggregated_stats, ref_table):
+    dp_colname = "DP" + str(value)
+    aggregated_stats[dp_colname] = "0%"
+    for i in aggregated_stats.index:
+        ref_id = ref_table.loc[ref_table["name"] == i, "id"].values[0]
+        if ref_id in depth[0].unique():
+            depth_filtered = depth.loc[depth[0] == ref_id]
+            aggregated_stats.loc[aggregated_stats.index == i, dp_colname] = f'{len(depth_filtered.loc[depth[2] > value])/len(depth_filtered)*100:.2f}'+"%"
+        else:
+            aggregated_stats.loc[aggregated_stats.index == i, dp_colname] = "0%"
+    return aggregated_stats
 
 
 # Script
@@ -90,7 +99,7 @@ if __name__ == '__main__':
         idxstats["coverage"] = 0
     else:
         genome_res = [ line.strip() for line in genome_res ]
-        coverage = fetch_coverage(genome_res, len(refs))
+        coverage = fetch_coverage(genome_res)
         idxstats = pd.merge(idxstats, coverage, on='id', how='inner')
 
     aggregated_stats = idxstats.groupby(by='name')[["aligned","length","coverage"]].sum()
@@ -110,10 +119,14 @@ if __name__ == '__main__':
     aggregated_stats.loc[aggregated_stats['coverage'] < args.coverage_threshold, "coverage_status"] = "FAILED"
     aggregated_stats = aggregated_stats.merge(taxon, right_index=True, left_index=True, how="left")
 
-    if empty_depth == 1:
-        aggregated_stats["DP20"] = 0
+    if empty_depth == 0:
+        aggregated_stats = get_dp(depth, 1, aggregated_stats, refs)
+        aggregated_stats = get_dp(depth, 2, aggregated_stats, refs)
+        aggregated_stats = get_dp(depth, 20, aggregated_stats, refs)
     else:
-        aggregated_stats["DP20"] = get_dp20(depth)
+        aggregated_stats["DP1"] = "0%"
+        aggregated_stats["DP2"] = "0%"
+        aggregated_stats["DP20"] = "0%"
 
     aggregated_stats.to_csv(args.out_prefix + "substrain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])

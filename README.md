@@ -49,7 +49,6 @@ The `revseq` command is the hub that controls all workflow steps. When the conta
 - `anonymize_samples`: Anonymizes sample names by running the script `anonymize_sample_names.py`. Sample names are assigned a random, unique 6-characters ETHID from an alphabet composed of lowercase letters and numbers
 - `dryrun`: Triggers a snakemake dry run of the bioinformatics pipeline. Useful for debugging and development
 - `runpipeline`: Triggers a run of the bioinformatics pipeline
-- `packagedata`: Packages data for import into the database
 
 ## Bioinformatics pipeline (pipeline_revseq folder)
 A snakemake workflow is available to run the full analysis on the available raw data. It requires a `sample_map` file with a complete list of samples to analyse, an `anonymization_table` file with a list of all lanes associated to each sample, corretly configured `config.yaml`, `Dockerfile` and `docker-compose.yml` files.

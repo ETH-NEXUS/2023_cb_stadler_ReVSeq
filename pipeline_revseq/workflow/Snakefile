@@ -45,13 +45,13 @@ rule all:
         #####qc filtered
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered/multiqc_report.html"),
         #####gathering
-        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/sample_{sample}/{sample}_count_table.tsv", sample = sample_ids),
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
+        expand(config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_count_table.tsv", sample = sample_ids),
+        config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
         #aggregation
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_assignment_table.tsv"),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_qc_table.tsv"),
         #db_upload
-        ####config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/push_to_db/db_upload_success",
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/db_upload_status",
         #viollier_upload
         #config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/depth/{sample}_depth.tsv", sample = sample_ids),
