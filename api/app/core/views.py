@@ -489,4 +489,4 @@ class ImportResultsView(APIView):
             return Response({"detail": "Import finished."}, status=status.HTTP_200_OK)
         except Exception as e:
             logger.error("Import failed: %s", e, exc_info=True)
-            return Response({"detail": "Import failed."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": f"Import failed: {e}"}, status=status.HTTP_400_BAD_REQUEST)

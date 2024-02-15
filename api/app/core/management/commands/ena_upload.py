@@ -4,6 +4,7 @@ from os import environ
 from core.models import Sample, File, Metadata
 import datetime as dt
 from helpers.color_log import logger
+import time
 
 STUDY_ENDPOINT = 'http://ena:5000/api/jobs/study/'
 SER_ENDPOINT = 'http://ena:5000/api/jobs/ser/'
@@ -13,6 +14,7 @@ ENQUEUE_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/enqueue/'
 RELEASE_JOB_ENDPOINT = 'http://ena:5000/api/jobs/<job_id>/release/'
 RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/release/'
 JOBS_ENDPOINT = 'http://ena:5000/api/jobs/'
+ANALYSIS_JOBS_ENDPOINT = 'http://ena:5000/api/analysisjobs/'
 
 
 class Command(BaseCommand):
@@ -63,6 +65,24 @@ class Command(BaseCommand):
         payload = {'template': 'default', 'data': {}}
         self.handle_http_request(STUDY_ENDPOINT, payload, 'post', 'Study uploaded successfully')
 
+    def _release_jobs_loop(self, endpoint):
+        try:
+            continue_releasing = True
+            while continue_releasing:
+                jobs = self.handle_http_request(endpoint, method='get')['results']
+                submitted_jobs = [j for j in jobs if j['status'] == 'SUBMITTED']
+                queued_jobs = [j for j in jobs if j['status'] == 'QUEUED']
+                running_jobs = [j for j in jobs if j['status'] == 'RUNNING']
+                print(f"There are {len(submitted_jobs)} submitted jobs, {len(queued_jobs)} queued jobs, and {len(running_jobs)} running jobs")
+                for job in submitted_jobs:
+                    self.release_job(RELEASE_JOB_ENDPOINT, job['id'])
+                    print(f"Released job {job['id']}")
+                continue_releasing = queued_jobs or running_jobs or submitted_jobs
+                time.sleep(30)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+
     def upload_ser(self):
         samples = Sample.objects.filter(job_id__isnull=True, valid=True)
         for sample in samples:
@@ -79,14 +99,15 @@ class Command(BaseCommand):
             job_id = response['id']
             sample.job_id = job_id
             sample.save()
+            time.sleep(10)
             self.upload_analysis_job_and_files(job_id, sample, files)
             self.job_ids.append(job_id)
 
-        #for job_id in self.job_ids:
-        #    self.release_job(RELEASE_JOB_ENDPOINT, job_id)
 
-        #for analysis_job_id in self.job_analysis_ids:
-        #    self.release_job(RELEASE_ANALYSIS_JOB_ENDPOINT, analysis_job_id)
+        self._release_jobs_loop(ANALYSIS_JOBS_ENDPOINT)
+        self._release_jobs_loop(JOBS_ENDPOINT)
+
+
 
     def _create_ser_payload(self, sample, sample_counts):
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
@@ -132,6 +153,7 @@ class Command(BaseCommand):
         sample.analysis_job_id = analysis_job_id
         sample.save()
         self.upload_analysis_files(analysis_job_id, files)
+
         self.enqueue_analysis_job(analysis_job_id)
         self.job_analysis_ids.append(analysis_job_id)
 
