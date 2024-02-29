@@ -26,6 +26,7 @@ class Sample(models.Model):
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
     job_id = models.IntegerField(null=True, blank=True)
     analysis_job_id = models.IntegerField(null=True, blank=True)
+    valid = models.BooleanField(null=True, blank=True, default=True)
 
     def __str__(self):
         return self.pseudonymized_id
@@ -98,7 +99,6 @@ class SampleCount(models.Model):
     normcounts = models.FloatField(null=True)
     outlier = models.BooleanField(null=True)
     coverage_threshold = models.FloatField(null=True, blank=True)
-
     coverage = models.FloatField(null=True, blank=True)
     coverage_status = models.CharField(max_length=20, null=True, blank=True)
     readnum_status = models.TextField(null=True, blank=True)
@@ -107,6 +107,9 @@ class SampleCount(models.Model):
     tax_id = models.IntegerField(null=True, blank=True)
     scientific_name = models.TextField(null=True, blank=True)
     DP20 = models.TextField(null=True, blank=True)
+    DP1 = models.TextField(null=True, blank=True)
+    DP2 = models.TextField(null=True, blank=True)
+
 
 
     def __str__(self):

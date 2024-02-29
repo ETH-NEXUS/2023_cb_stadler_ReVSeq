@@ -103,6 +103,8 @@ class SampleCountSerializers(serializers.ModelSerializer):
             "tax_id",
             "scientific_name",
             "DP20",
+            "DP1",
+            "DP2",
 
         )
 

@@ -21,14 +21,14 @@ const showSampleFiles = ref<boolean>(false)
 const aggregate = () => {
   try {
     coreStore.aggregate = !coreStore.aggregate
-    coreStore.toggleAggregate()
+
   } catch (err) {
     console.error(err)
   }
 }
 const filterColumnNames = computed(() => {
   if (coreStore.aggregate) {
-    return columnsSampleCount.filter((c: SampleCountsTableColumns) => c.name !== 'substrain')
+    return columnsSampleCount.filter((c: SampleCountsTableColumns) => !['substrain', 'outlier'].includes(c.name))
   }
   return columnsSampleCount
 })

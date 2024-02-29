@@ -235,6 +235,8 @@ class Command(BaseCommand):
                         tax_id=int(item[columns.tax_id]),
                         scientific_name=item[columns.scientific_name],
                         DP20=item[columns.DP20],
+                        DP1=item[columns.DP1],
+                        DP2=item[columns.DP2],
                     )
                     self.sample_id_dict[sample_id] = True
                     if _:

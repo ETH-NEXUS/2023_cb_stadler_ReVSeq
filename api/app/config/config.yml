@@ -21,4 +21,6 @@ import_columns:
   tax_id: tax_id
   scientific_name: scientific_name
   DP20: DP20
+  DP1: DP1
+  DP2: DP2
 

@@ -74,7 +74,7 @@ export const useCoreStore = defineStore('core', () => {
           rpkm_proportions: existingData.rpkm_proportions + item.rpkm_proportions,
           normcounts: existingData.normcounts + item.normcounts,
           coverage_threshold:  item.coverage_threshold,
-          coverage: existingData.DP + item.coverage,
+          coverage: existingData.coverage + item.coverage,
           coverage_status: item.coverage_status,
           readnum_threshold:  item.readnum_threshold,
           readnum_status: item.readnum_status,

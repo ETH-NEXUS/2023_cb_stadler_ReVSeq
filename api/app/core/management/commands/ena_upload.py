@@ -3,6 +3,8 @@ import requests
 from os import environ
 from core.models import Sample, File, Metadata
 import datetime as dt
+from helpers.color_log import logger
+import time
 
 STUDY_ENDPOINT = 'http://ena:5000/api/jobs/study/'
 SER_ENDPOINT = 'http://ena:5000/api/jobs/ser/'
@@ -11,16 +13,32 @@ ANALYSIS_FILES_ENDPOINT = 'http://ena:5000/api/analysisfiles/'
 ENQUEUE_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/enqueue/'
 RELEASE_JOB_ENDPOINT = 'http://ena:5000/api/jobs/<job_id>/release/'
 RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/release/'
+JOBS_ENDPOINT = 'http://ena:5000/api/jobs/'
+ANALYSIS_JOBS_ENDPOINT = 'http://ena:5000/api/analysisjobs/'
 
 
 class Command(BaseCommand):
-
     def __init__(self):
         super().__init__()
         self.job_analysis_ids = []
+        self.job_ids = []
 
     token = environ.get('ENA_TOKEN')
     headers = {'Authorization': f'Token {token}', 'Content-Type': 'application/json'}
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '-t', '--type', type=str, choices=['study', 'ser_and_analysis', 'delete_job_id'],
+            help='Type of data to upload: study, or ser_and_analysis to upload the samples which don;t already have a '
+                 'job_id'
+        )
+
+    def delete_job_id(self):
+        samples = Sample.objects.filter(job_id__isnull=False)
+        for sample in samples:
+            sample.job_id = None
+            sample.save()
+            logger.info(f'Job id for {sample} deleted')
 
     def handle_http_request(self, url, payload=None, method='get', message=None):
         try:
@@ -31,38 +49,49 @@ class Command(BaseCommand):
                 response = requests.post(url, headers=self.headers, json=payload)
             if response.status_code in [200, 201]:
                 if message:
-                    print(message)
+                    logger.info(message)
                 return response.json()
             else:
-                print(f'Error calling the endpoint {url}: {response.text}')
+                logger.error(f'Error calling the endpoint {url}: {response.text}')
         except Exception as e:
-            print(f'Exception: {e}')
+            logger.error(f'Exception: {e}')
         return None
 
-    def add_arguments(self, parser):
-        parser.add_argument(
-            '-t', '--type', type=str, choices=['study', 'ser_and_analysis'],
-            help='Type of data to upload: study, or ser_and_analysis to upload the samples which don;t already have a '
-                 'job_id'
-        )
-
-
+    def __sort_key(self, x):
+        # if the value is None, it is treated as a very small number for sorting purposes
+        return x.rpkm_proportions if x.rpkm_proportions is not None else float('-inf')
 
     def upload_study(self):
         payload = {'template': 'default', 'data': {}}
         self.handle_http_request(STUDY_ENDPOINT, payload, 'post', 'Study uploaded successfully')
 
+    def _release_jobs_loop(self, endpoint):
+        try:
+            continue_releasing = True
+            while continue_releasing:
+                jobs = self.handle_http_request(endpoint, method='get')['results']
+                submitted_jobs = [j for j in jobs if j['status'] == 'SUBMITTED']
+                queued_jobs = [j for j in jobs if j['status'] == 'QUEUED']
+                running_jobs = [j for j in jobs if j['status'] == 'RUNNING']
+                print(f"There are {len(submitted_jobs)} submitted jobs, {len(queued_jobs)} queued jobs, and {len(running_jobs)} running jobs")
+                for job in submitted_jobs:
+                    self.release_job(RELEASE_JOB_ENDPOINT, job['id'])
+                    print(f"Released job {job['id']}")
+                continue_releasing = queued_jobs or running_jobs or submitted_jobs
+                time.sleep(30)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+
     def upload_ser(self):
-        samples = Sample.objects.filter(job_id__isnull=True)
+        samples = Sample.objects.filter(job_id__isnull=True, valid=True)
         for sample in samples:
-            sample_count = sample.samplecou
-            # this is temporally
-            if sample_count is None:
-                print(f'No sample count for {sample}')
+            sample_counts = sample.samplecounts.all()
+            if not sample_counts:
+                logger.warning(f'No counts for {sample}')
                 continue
 
-
-            payload = self._create_ser_payload(sample, sample_count)
+            payload = self._create_ser_payload(sample, sample_counts)
 
             files = File.objects.filter(sample=sample)
             response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
@@ -70,17 +99,20 @@ class Command(BaseCommand):
             job_id = response['id']
             sample.job_id = job_id
             sample.save()
+            time.sleep(10)
             self.upload_analysis_job_and_files(job_id, sample, files)
-            self.release_job(RELEASE_JOB_ENDPOINT, job_id)
-
-        for analysis_job_id in self.job_analysis_ids:
-            self.release_job(RELEASE_ANALYSIS_JOB_ENDPOINT, analysis_job_id)
+            self.job_ids.append(job_id)
 
 
+        self._release_jobs_loop(ANALYSIS_JOBS_ENDPOINT)
+        self._release_jobs_loop(JOBS_ENDPOINT)
 
-    def _create_ser_payload(self, sample, sample_count):
+
+
+    def _create_ser_payload(self, sample, sample_counts):
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
-        taxon_id = sample_count.substrain.taxon_id
+        sorted_sample_counts = sorted(sample_counts, key=self.__sort_key, reverse=True)
+        taxon_id = sorted_sample_counts[0].substrain.taxon_id
         metadata = Metadata.objects.filter(sample=sample).first()
         collection_date = metadata.ent_date.strftime("%Y-%m-%d")
         geo_location = metadata.prescriber
@@ -92,7 +124,7 @@ class Command(BaseCommand):
         for file in files:
             if file.type.postfix == '.cram':
                 _files.append(file.path)
-                print(f'Adding {file.path} to SER for {sample}')
+                logger.debug(f'Adding {file.path} to SER for {sample}')
 
         return {
             'template': 'default',
@@ -121,6 +153,7 @@ class Command(BaseCommand):
         sample.analysis_job_id = analysis_job_id
         sample.save()
         self.upload_analysis_files(analysis_job_id, files)
+
         self.enqueue_analysis_job(analysis_job_id)
         self.job_analysis_ids.append(analysis_job_id)
 
@@ -138,7 +171,6 @@ class Command(BaseCommand):
         _url = url.replace('<job_id>', str(job_id))
         self.handle_http_request(_url, method='get', message=f'Job {job_id} released successfully')
 
-
     def handle(self, *args, **options):
         data_type = options.get('type')
 
@@ -146,5 +178,8 @@ class Command(BaseCommand):
             self.upload_study()
         elif data_type == 'ser_and_analysis':
             self.upload_ser()
+
+        elif data_type == 'delete_job_id':
+            self.delete_job_id()
         else:
-            print('Please specify a data type to upload: study, ser, analysis, or all')
+            logger.warning('Please specify a data type to upload: study, ser, analysis, or all')

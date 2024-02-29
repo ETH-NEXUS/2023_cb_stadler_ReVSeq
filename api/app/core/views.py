@@ -82,6 +82,37 @@ class SampleViewSet(viewsets.ModelViewSet):
 
     http_method_names = ["get", "head", "options"]
 
+    @action(detail=False, methods=["post"])
+    def ena_upload_study(self, request, *args, **kwargs):
+        """
+        API Endpoint: ENA Upload Study
+
+        This endpoint initiates the upload of the study data to the ENA (European Nucleotide Archive).
+
+        Features:
+        - Study Upload: Initiates the upload of the study data to the ENA.
+
+        Allowed HTTP Methods: POST
+        """
+        call_command('ena_upload', 'study')
+        return JsonResponse({"detail": "Study upload initiated."}, status=200)
+
+    @action(detail=False, methods=["post"])
+    def ena_upload_ser_and_analysis(self, request, *args, **kwargs):
+
+        """
+        API Endpoint: ENA Upload SER and Analysis
+
+        This endpoint initiates the upload of the SER and Analysis data to the ENA (European Nucleotide Archive).
+
+        Features:
+        - SER and Analysis Upload: Initiates the upload of the SER and Analysis data to the ENA.
+
+        Allowed HTTP Methods: POST
+        """
+        call_command('ena_upload', 'ser_and_analysis')
+        return JsonResponse({"detail": "SER and Analysis upload initiated."}, status=200)
+
 
 class SampleCountViewSet(viewsets.ModelViewSet):
     """
@@ -138,6 +169,9 @@ class SampleCountViewSet(viewsets.ModelViewSet):
     ) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
 
     http_method_names = ["get", "head", "options"]
+
+    def get_queryset(self):
+        return SampleCount.objects.prefetch_related('plate', 'substrain', 'sample')
 
     """
     Call the aggregate function it like this, with the obligatory parameter sample__pseudonymized_id:
@@ -455,4 +489,4 @@ class ImportResultsView(APIView):
             return Response({"detail": "Import finished."}, status=status.HTTP_200_OK)
         except Exception as e:
             logger.error("Import failed: %s", e, exc_info=True)
-            return Response({"detail": "Import failed."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": f"Import failed: {e}"}, status=status.HTTP_400_BAD_REQUEST)
