@@ -7,7 +7,9 @@ services:
           context: Path/to/revseq/docker
           args:
             DOCKER_BUILDKIT: 1
-
+        environment:
+          REVSEQ_USERNAME: ${REVSEQ_USERNAME}
+          REVSEQ_PASSWORD: ${REVSEQ_PASSWORD}
         volumes:
             ## Path/To/Raw/Data must point to the folder where the raw data will be linked
             - Path/To/Raw/Data:/data/raw_data
@@ -21,6 +23,10 @@ services:
             - Path/To/Revseq:/data/revseq
             ## Path/To/Viollier/Mirror must point to the folder where Viollier will be mirrored
             - Path/To/Viollier/Mirror:/data/viollier_mirror
+            ## Path/To/gather_results must point to the folder where the data for the database uploads should be stored
+            - Path/To/gather_results:/data/gather_results
+            ## Path/To/RevSeqDataLoader must point to the folder where the repository RevSeqDataLoader is stored
+            - Path/To/RevSeqDataLoader:/app/RevSeqDataLoader
         secrets:
             - config
             - prkey

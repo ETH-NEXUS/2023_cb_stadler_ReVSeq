@@ -74,28 +74,34 @@ rule gather_results_plate:
         cat {input.version} > {output.version}
         """
 
+envvars:
+    "USERNAME_REVSEQ",
+    "PASSWORD_REVSEQ",
 rule push_to_db:
     input:
         multiqcdir_filtered = rules.gather_results_plate.output.multiqcdir_filtered,
     output:
         db_upload_status = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/db_upload_status",
     params:
-        credentials_file = config["tools"]["push_to_db"]["credentials_file"],
+        #credentials_file = config["tools"]["push_to_db"]["credentials_file"],
         plate = config["plate"],
+        revseq_username = os.environ["USERNAME_REVSEQ"],
+        revseq_password = os.environ["PASSWORD_REVSEQ"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/push_to_db/push_to_db.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/push_to_db/push_to_db.err.log",
     benchmark:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/push_to_db/push_to_db.benchmark"
     conda:
-        "../envs/curl.yaml"
+        "../envs/revseqdataloader.yaml"
     shell:
         """
         echo "Starting db_upload of plate {params.plate}"
-        creds={params.credentials_file}
-        plate={params.plate}
-        token=$(curl -X POST -H "Content-Type: application/json"  -H "Accept: application/json" -d '{"username": $(head -n 1 ${crefs}), "password": $(tail -n -1 ${creds})}' https://revseq.nexus.ethz.ch/api/token/)
-        ##### manipulate to get the token value
-        (curl -X POST -H "Authorization: Bearer ${token}"  -H "Accept: application/json"   -H "Content-Type: application/json" -d '{"path":"/data/${plate}"}' https://revseq.nexus.ethz.ch/api/import-results/ && \
-            echo "SUCCESS" > {output.db_upload_status}) || \
-            echo "FAILED" > {output.db_upload_status}
+        export USERNAME_REVSEQ={params.revseq_username}
+        export PASSWORD_REVSEQ={params.revseq_password}
+        (python workflow/scripts/upload_to_db.py --plate {params.plate} && \
+        touch {output.db_upload_status}) || \
+        echo "Failed uploading to database"
 		"""
 
 rule viollier_upload:

@@ -230,6 +230,22 @@ rule validate_assignment:
             --output {output.validation}  2> >(tee {log.errfile} >&2)
         """
 
+#rule create_chromosome_file:
+#    input:
+#        assignment = rules.assign_virus.output.table,
+#    output:
+#        chrom_file = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/create_chromosome_file/{sample}_chromosome_file.txt",
+#        chrom_file_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/create_chromosome_file/{sample}_chromosome_file.txt.gz",
+#    log:
+#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/create_chromosome_file/{sample}_create_chromosome_file.out.log",
+#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/create_chromosome_file/{sample}_create_chromosome_file.err.log",
+#    benchmark:
+#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/create_chromosome_file/{sample}_create_chromosome_file.benchmark"
+#    shell:
+#        """
+#        name=sort -r -t$'\t' -k6 {input.assignment} | head -n 2 | tail -n 1 | awk '{print $1}'
+#        echo "${name}\t1\t"
+#        """"
 
 rule consensus:
     input:
@@ -251,7 +267,7 @@ rule consensus:
         "../envs/bcftools.yaml"
     shell:
         """
-            bcftools mpileup -Ou -f {params.ref} {input.bam} | bcftools call -mv -Oz -o {output.vcf}
+            bcftools mpileup -Ou -f {params.ref} {input.bam} | bcftools call --ploidy 1 -mv -Oz -o {output.vcf}
             bcftools index {output.vcf}
 
             # normalize indels
@@ -273,6 +289,7 @@ rule postprocess_consensus:
         qualimap_qc = rules.qualimap_filtered.output.qc_status,
     output:
         consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa",
+        consensus_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa.gz",
     params:
         ref = config["resources"]["reference_table"],
         consensus_type = config["tools"]["consensus"]["consensus_type"],
@@ -294,8 +311,10 @@ rule postprocess_consensus:
             --assignment {input.assignment} \
             --consensus {input.all_consensus} \
             --consensus_type {params.consensus_type} \
-            --output {output.consensus}  2> >(tee {log.errfile} >&2)
+            --output {output.consensus} | \
+            gzip {output.consensus} 2> >(tee {log.errfile} >&2)
         else
+            echo "Not enough reads to calculate consensus"
             touch {output.consensus}
         fi
         """

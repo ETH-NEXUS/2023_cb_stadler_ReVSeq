@@ -1,23 +1,3 @@
-#rule fastqc_raw:
-#    input:
-#        inputdir = expand(config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/{{sample}}/")
-#    output:
-#        zip1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R1_001_fastqc.zip",
-#        zip2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw/{sample}_L001_R2_001_fastqc.zip"
-#    params:
-#        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_raw"
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc_raw/fastqc.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc_raw/fastqc.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/{sample}/fastqc_raw/fastqc.benchmark"
-#    conda:
-#        "../envs/qc.yaml"
-#    threads: config["threads"]
-#    shell:
-#        "fastqc {input.inputdir}/{wildcards.sample}_L00*_R*_001.fastq.gz -t {threads} -o {params.outdir}  2> >(tee {log.errfile} >&2)"
-
-
 rule fastqc_merged:
     input:
         r1 = rules.merge_lanes.output.r1,
@@ -32,6 +12,30 @@ rule fastqc_merged:
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc/fastqc_merged.err.log",
     benchmark:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/fastqc/{sample}_fastqc_merged.benchmark"
+    conda:
+        "../envs/qc.yaml"
+    threads: config["threads"]
+    shell:
+        """
+        fastqc {input.r1} -t {threads} -o {params.outdir}  2> >(tee {log.errfile} >&2)
+        fastqc {input.r2} -t {threads} -o {params.outdir}  2> >(tee {log.errfile} >&2)
+        """
+
+
+rule fastqc_trimmed:
+    input:
+        r1 = rules.trim_galore.output.r1,
+        r2 = rules.trim_galore.output.r2,
+    output:
+        zip1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_trimmed/{sample}_merged_R1_val_1_fastqc.zip",
+        zip2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_trimmed/{sample}_merged_R2_val_2_fastqc.zip",
+    params:
+        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_trimmed"
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc/fastqc_trimmed.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/fastqc/fastqc_trimmed.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/fastqc/{sample}fastqc_trimmed.benchmark"
     conda:
         "../envs/qc.yaml"
     threads: config["threads"]
@@ -110,12 +114,9 @@ rule multiqc:
     input:
         fastqcresult1 = expand(rules.fastqc_merged.output.zip1, sample=sample_ids),
         fastqcresult2 = expand(rules.fastqc_merged.output.zip2, sample=sample_ids),
-        trimresult1 =  expand(rules.trim_galore.output.r1, sample=sample_ids),
-        trimresult2 =  expand(rules.trim_galore.output.r2, sample=sample_ids),
         stats = expand(rules.samtoolsstats.output.stats, sample=sample_ids),
         flagstats = expand(rules.samtoolsstats.output.flagstats, sample=sample_ids),
         rseqcstats = expand(rules.rseqc.output.stats, sample=sample_ids),
-        #qualimap = expand(rules.qualimap.output.report, sample=sample_ids),
     output:
         outfile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc/multiqc_report.html",
         outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc")
@@ -133,6 +134,41 @@ rule multiqc:
         """
         multiqc {params.inputdir} \
         --ignore "{params.inputdir}/*/fastqc_raw" \
+        --ignore "{params.inputdir}/*/fastqc_trimmed" \
+        --ignore "{params.inputdir}/*/dh_fastqc" \
+        --ignore "{params.inputdir}/*/qualimap_filtered" \
+        --ignore "{params.inputdir}/*/rseqc_filtered" \
+        --ignore "{params.inputdir}/*/samtoolsstats_filtered" \
+        --ignore "{params.inputdir}/*/qualimap" \
+        -o {params.outdir}  2> >(tee {log.errfile} >&2)
+        """
+
+
+rule multiqc_trimmed:
+    input:
+        trimresult1 =  expand(rules.fastqc_trimmed.output.zip1, sample=sample_ids),
+        trimresult2 =  expand(rules.fastqc_trimmed.output.zip2, sample=sample_ids),
+        stats = expand(rules.samtoolsstats.output.stats, sample=sample_ids),
+        flagstats = expand(rules.samtoolsstats.output.flagstats, sample=sample_ids),
+        rseqcstats = expand(rules.rseqc.output.stats, sample=sample_ids),
+    output:
+        outfile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_trimmed/multiqc_report.html",
+        outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_trimmed")
+    params:
+        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_trimmed",
+        inputdir = config["inputOutput"]["output_dir"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/multiqc_trimmed/multiqc_trimmed.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/multiqc_trimmed/multiqc_trimmed.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/multiqc_trimmed/multiqc_trimmed.benchmark"
+    conda:
+        "../envs/qc.yaml"
+    shell:
+        """
+        multiqc {params.inputdir} \
+        --ignore "{params.inputdir}/*/fastqc_raw" \
+        --ignore "{params.inputdir}/*/fastqc_merged" \
         --ignore "{params.inputdir}/*/dh_fastqc" \
         --ignore "{params.inputdir}/*/qualimap_filtered" \
         --ignore "{params.inputdir}/*/rseqc_filtered" \

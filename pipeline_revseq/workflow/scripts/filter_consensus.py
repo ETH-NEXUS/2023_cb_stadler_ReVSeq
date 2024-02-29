@@ -27,7 +27,6 @@ if __name__ == '__main__':
     refs = pd.read_table(args.ref_table, header=None)
     refs = refs.rename(columns={0: "id", 1: "ref_start", 2: "ref_end", 3: "substrain_name"})
     assignment = pd.read_table(args.assignment, header=0, sep="\t")
-
     if args.consensus_type == "top":
         print("Calculating consensus only for the top strain")
         filter_values = assignment.loc[assignment["rpkm_proportions"] == max(assignment["rpkm_proportions"])]["name"].to_list()
@@ -45,9 +44,8 @@ if __name__ == '__main__':
             if assignment.loc[assignment["name"] == filter_values[0]]["coverage_status"].item() == "FAILED":
                 filter_values.remove(strain)
 
-    if assignment["readnum_status"][0] != "SUCCESS":
+    if assignment["readnum_status"][0] != "PASSED":
         filter_values = []
-
     regions = refs.loc[refs["substrain_name"].isin(filter_values)]["id"].to_list()
 
     with open(args.output, "w") as out_file:

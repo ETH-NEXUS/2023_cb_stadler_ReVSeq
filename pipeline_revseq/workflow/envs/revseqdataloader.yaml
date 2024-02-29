@@ -1,0 +1,6 @@
+name: revseqdataloader
+channels:
+- conda-forge
+dependencies:
+- requests
+- python-dotenv

@@ -70,7 +70,7 @@ tools:
     # top: create a fasta with the consensus of the top outlier
     # For "outliers" and "top": if there are no outliers, the consensus will be empty; for fragmented genomes,
     #    e.g. influenza, the consensus will be a multi-fasta with one fragment per entry
-    consensus_type: "outliers"
+    consensus_type: "top"
   viollier_upload:
     # Location of the revseq executable
     revseq_executable: /data/revseq/revseq
