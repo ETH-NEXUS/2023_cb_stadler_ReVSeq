@@ -20,7 +20,7 @@ case "$1" in
                 echo "$(date) Removing partial files from:" "${mirror}/"
                 find "${mirror}/" -type f -name '*.filepart' -print0 | xargs -r -0 rm -vi
 		# Mirroring samples
-                lftp -c "set debug; set cmd:move-background false; \
+                lftp -c "set cmd:move-background false; \
                         set net:timeout $(( contimeout / retries)); \
                         set net:max-retries ${retries}; \
                         set net:reconnect-interval-base 8; \
@@ -34,17 +34,13 @@ case "$1" in
 	;;
         uploadviollier)
                 echo "$(date) Uploading Viollier"
-                results=$2
-                if [ ! -d ${results} ]; then
-                        echo "$(date) ERROR: cannot find pipeline results directory ${results}"
+                plate=$2
+                if [ ! -d ${gather_results}/${plate} ]; then
+                        echo "$(date) ERROR: cannot find pipeline results directory ${gather_results}/${plate}"
                         exit 1
                 else
-                        mirror_command=""
-                        for dir in ${to_upload[@]}; do
-                                mirror_command=$(echo "${mirror_command} mirror --continue --no-perms --parallel=${parallel} --loop --dereference --exclude-glob *.fastq.gz --exclude-glob *_remove_duplicates.bam -R ${results} /${uploaddir};")
-                        done
-                        lftp -c "set debug; \
-                                set cmd:move-background false; \
+                        mirror_command=$(echo "${mirror_command} mirror --continue --no-perms --parallel=${parallel} --loop --dereference --exclude-glob */*.fastq.gz --exclude-glob */*_remove_duplicates.bam -R ${gather_results}/${plate} /${uploaddir}/${plate}")
+                        lftp -c "set cmd:move-background false; \
                                 set net:timeout $(( contimeout / retries)); \
                                 set net:max-retries ${retries}; \
                                 set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; \

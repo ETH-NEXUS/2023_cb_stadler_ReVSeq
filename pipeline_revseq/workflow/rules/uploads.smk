@@ -106,7 +106,7 @@ rule push_to_db:
 
 rule viollier_upload:
     input:
-        gathered_results = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/gather_results/",
+        gathered_results = config["tools"]["gather_results"]["outdir"],
     output:
         viollier_upload_success = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
     benchmark:
@@ -116,9 +116,10 @@ rule viollier_upload:
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/viollier_upload/viollier_upload.err.log",
     params:
         revseq_executable = config["tools"]["viollier_upload"]["revseq_executable"],
+        plate = config["plate"]
     shell:
         """
-        ( {params.revseq_executable} uploadviollier {input.gathered_results} && \
+        ( {params.revseq_executable} uploadviollier {input.gathered_results}/{params.plate} && \
         echo "SUCCESS" > {output.viollier_upload_success}) || \
         exit 1
 		"""

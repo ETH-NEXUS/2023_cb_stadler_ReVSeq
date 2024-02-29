@@ -41,6 +41,7 @@ rule all:
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/pileup/{sample}_pileup.txt", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/validate_assignment/{sample}_validation.tsv", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa", sample = sample_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/depth/{sample}_depth.tsv", sample = sample_ids),
         #####qc main
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc/multiqc_report.html"),
         #####qc filtered
@@ -54,8 +55,7 @@ rule all:
         #db_upload
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/db_upload_status",
         #viollier_upload
-        #config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
-        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/depth/{sample}_depth.tsv", sample = sample_ids),
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
     output:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/complete.txt",
     shell:
