@@ -40,6 +40,7 @@ rule gather_results_plate:
         metadata = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
         multiqcdir = rules.multiqc.output.outdir,
         multiqcdir_filtered = rules.multiqc_filtered.output.outdir,
+        multiqcdir_trimmed = rules.multiqc_trimmed.output.outdir,
         empty_samples = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_empty_samples.txt",
         version = config["resources"]["pipeline_version"],
         aggregated_assignment = rules.aggregate.output.aggregated_assignment,
@@ -48,6 +49,7 @@ rule gather_results_plate:
         metadata = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
         multiqcdir = directory(config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/multiqc"),
         multiqcdir_filtered = directory(config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/multiqc_filtered"),
+        multiqcdir_trimmed = directory(config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/multiqc_trimmed"),
         empty_samples = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_empty_samples.txt",
         version = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_pipeline_version.txt",
         aggregated_assignment = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_aggregated_assignment.tsv",
@@ -68,6 +70,10 @@ rule gather_results_plate:
         ln -s {input.multiqcdir_filtered}/multiqc_report.html {output.multiqcdir_filtered}
         mkdir {output.multiqcdir_filtered}/multiqc_data
         ln -s {input.multiqcdir_filtered}/multiqc_data/* {output.multiqcdir_filtered}/multiqc_data
+        mkdir {output.multiqcdir_trimmed}
+        ln -s {input.multiqcdir_trimmed}/multiqc_report.html {output.multiqcdir_trimmed}
+        mkdir {output.multiqcdir_trimmed}/multiqc_data
+        ln -s {input.multiqcdir_trimmed}/multiqc_data/* {output.multiqcdir_trimmed}/multiqc_data
         ln -s {input.empty_samples} {output.empty_samples}
         ln -s {input.aggregated_assignment} {output.aggregated_assignment}
         ln -s {input.aggregated_qc} {output.aggregated_qc}
@@ -119,7 +125,7 @@ rule viollier_upload:
         plate = config["plate"]
     shell:
         """
-        ( {params.revseq_executable} uploadviollier {input.gathered_results}/{params.plate} && \
+        ( {params.revseq_executable} uploadviollier {params.plate} && \
         echo "SUCCESS" > {output.viollier_upload_success}) || \
         exit 1
 		"""

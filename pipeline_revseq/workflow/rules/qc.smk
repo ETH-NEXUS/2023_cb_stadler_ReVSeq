@@ -122,7 +122,7 @@ rule multiqc:
         outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc")
     params:
         outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc",
-        inputdir = config["inputOutput"]["output_dir"],
+        inputdir = config["inputOutput"]["output_dir"]+"/"+config["plate"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/multiqc/multiqc.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/multiqc/multiqc.err.log",
@@ -156,7 +156,7 @@ rule multiqc_trimmed:
         outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_trimmed")
     params:
         outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_trimmed",
-        inputdir = config["inputOutput"]["output_dir"],
+        inputdir = config["inputOutput"]["output_dir"]+"/"+config["plate"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/multiqc_trimmed/multiqc_trimmed.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/multiqc_trimmed/multiqc_trimmed.err.log",
@@ -225,7 +225,7 @@ rule multiqc_filtered:
         outfile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered/multiqc_report.html",
         outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered")
     params:
-        inputdir = config["inputOutput"]["output_dir"],
+        inputdir = config["inputOutput"]["output_dir"]+"/"+config["plate"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/multiqc_filtered/multiqc.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/multiqc_filtered/multiqc.err.log",
