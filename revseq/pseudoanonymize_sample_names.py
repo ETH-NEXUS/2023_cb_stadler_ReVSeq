@@ -13,12 +13,9 @@
 
 
 import pandas as pd
-import sys, os, re
-import argparse
-import shortuuid
-import base64
-import unittest
-import gzip
+import sys, os, re, argparse, shortuuid, base64, unittest, gzip, glob
+
+ctrls_error_msg = "ERROR: unexpected control file format. Expected format [KOpos|KOneg]_S[0-9][0-9]_L0[0-9][0-9]_R[1|2]_001.fastq.gz"
 
 def generate_id(length=6):
     return shortuuid.ShortUUID().random(length=length)
@@ -59,6 +56,26 @@ def generate_new_ethids(anon_df, all_samples):
             newsamples.append( [samplename, newethid] )
     newsamples = pd.DataFrame(newsamples)
     return newsamples
+
+def find_controls(newsamples, ctrl_neg_prefix, ctrl_pos_prefix, mirrordir, plate):
+    ctrl_pos = glob.glob(mirrordir+"/"+plate+"/"+ctrl_pos_prefix+"*")
+    ctrl_neg = glob.glob(mirrordir+"/"+plate+"/"+ctrl_neg_prefix+"*")
+    all_ctrls = []
+    all_ctrls.extend(ctrl_pos)
+    all_ctrls.extend(ctrl_neg)
+    ctrl_count = []
+    for file in all_ctrls:
+        filename = file.split("/")[-1]
+        filename_pieces = filename.split("_")
+        if ("L0" not in filename_pieces[2]) or (("R1" not in filename_pieces[3]) and ("R2" not in filename_pieces[3])):
+            sys.exit(ctrls_error_msg)
+        ctrl_count.append(filename_pieces[0]+"_"+filename_pieces[1])
+    ctrl_count = set(ctrl_count)
+    print("Found "+str(len((ctrl_count)))+" controls: "+str(ctrl_count))
+    ctrl_name = [ element for element in ctrl_count]
+    ctrl_ethid = [ plate+"_"+element for element in ctrl_count ]
+    ctrls = pd.DataFrame({"Sample number": ctrl_name, "ethid": ctrl_ethid})
+    return ctrls
 
 
 def link_pseudoanonimised_names(samplename, ethid, sampledir, anonymizeddir, plate):
@@ -184,7 +201,7 @@ def get_pseudoanon_names(outdir):
 
 
 def find_ethid(sample_number, match_table):
-    return match_table.loc[match_table["Sample number"]==sample_number]["ethid"].to_string(index=False)
+    return match_table.loc[match_table["Sample number"]==str(sample_number)]["ethid"].to_string(index=False)
 
 # Script
 if __name__ == '__main__':
@@ -230,10 +247,11 @@ if __name__ == '__main__':
         newsamples = generate_new_ethids(anon, sample)
         newsamples = newsamples.rename(columns={0: "Sample number", 1: "ethid"})
         newsamples["Sample number"] = newsamples["Sample number"].astype(str)
+        newsamples = pd.concat([newsamples, find_controls(newsamples, args.ctrl_neg_prefix, args.ctrl_pos_prefix, args.mirrordir, plate)])
+        sample = newsamples["Sample number"].tolist()
         if len(newsamples.index) > 0:
             create_plate_directory(plate, args.outdir)
             for s in sample:
-                s=str(s)
                 link_pseudoanonimised_names(s, find_ethid(s, newsamples), args.mirrordir+"/"+plate, args.outdir, plate)
             try:
                 pd.DataFrame(newsamples).to_csv(args.outdir + "/" + plate +  "/" + plate + "_pseudoanon_table.tsv", sep="\t", index=None)
