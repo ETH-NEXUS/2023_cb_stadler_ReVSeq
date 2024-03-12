@@ -71,6 +71,12 @@ tools:
     # For "outliers" and "top": if there are no outliers, the consensus will be empty; for fragmented genomes,
     #    e.g. influenza, the consensus will be a multi-fasta with one fragment per entry
     consensus_type: "top"
+    # Minimum coverage required to report a base in the consensus sequence.
+    # Any position with lower coverage is reported as N
+    minimum_coverage: 10
+  postprocess_consensus:
+    # Maximum fraction of Ns allowed in a consensus before it's flagged as failed in the status report of the tool
+    max_n: 0.2
   viollier_upload:
     # Location of the revseq executable
     revseq_executable: /data/revseq/revseq

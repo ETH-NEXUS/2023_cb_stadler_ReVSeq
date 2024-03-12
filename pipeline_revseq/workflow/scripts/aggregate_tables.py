@@ -130,7 +130,7 @@ def test_qc(s):
 # Script
 if __name__ == '__main__':
     # Parse input args
-    parser = argparse.ArgumentParser(description='fetch the primers positions on the reference', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='Aggregate the virus assignments in a single summary table', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--inputdir', required=True, type=str, help='The main plate results directory from the ReVSeq pipeline')
     parser.add_argument('--assignment_subdir', required=True, type=str, help='The name assigned to the assignment subdirectory')
     parser.add_argument('--validation_subdir', required=True, type=str, help='The name assigned to the validation subdirectory')

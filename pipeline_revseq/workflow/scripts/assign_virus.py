@@ -53,7 +53,7 @@ def get_dp(depth, value, aggregated_stats, ref_table):
 # Script
 if __name__ == '__main__':
 	# Parse input args
-    parser = argparse.ArgumentParser(description='fetch the primers positions on the reference', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='Detects, counts and reports viruses in a sample', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--ref_table', required=True, type=str, help='the bed file listing all the reference viral genomes')
     parser.add_argument('--idxstats', required=True, type=str, help='the output of samtools idxstats')
     parser.add_argument('--counts', required=True, type=str, help='the count file output by samtools view -c -F 4')

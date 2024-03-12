@@ -13,7 +13,7 @@ import pandas as pd
 # Script
 if __name__ == '__main__':
     # Parse input args
-    parser = argparse.ArgumentParser(description='fetch the primers positions on the reference', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='Fetch and merge multi-lane FASTA', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--rawdir', required=True, type=str, help='The directory containing the raw data')
     parser.add_argument('--lanefiles', required=True, type=str, nargs='+', help='List containing all filenames for the sample under analysis')
     parser.add_argument('--pseudoanon_table', required=True, type=str, help='Location of the pseudoanonymization table')

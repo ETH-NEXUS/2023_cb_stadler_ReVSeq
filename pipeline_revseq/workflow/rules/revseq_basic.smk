@@ -252,12 +252,12 @@ rule consensus:
         bam = rules.remove_duplicates.output.bam,
         #qualimap_qc = rules.qualimap_filtered.output.qc_status,
     output:
-        vcf = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls.vcf.gz",
-        calls_norm = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm.bcf",
         calls_norm_filt_indels = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm_filt_indel.bcf",
         all_consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa",
+        low_cov_bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_low_coverage_sites.bed,
     params:
         ref = config["resources"]["reference"],
+        mincov = config["tools"]["consensus"]["minimum_coverage"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus/{sample}_consensus.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus/{sample}_consensus.err.log",
@@ -267,18 +267,16 @@ rule consensus:
         "../envs/bcftools.yaml"
     shell:
         """
-            bcftools mpileup -Ou -f {params.ref} {input.bam} | bcftools call --ploidy 1 -mv -Oz -o {output.vcf}
-            bcftools index {output.vcf}
+            bcftools mpileup -Ou -f {params.ref} {input.bam} | \
+            bcftools call --ploidy 1 -mv -Ou | \
+            bcftools norm -f {params.ref} -Ou | \
+            bcftools filter --IndelGap 5 -Ob -o {output.calls_norm_filt_indels}
+            bcftools index -o {output.calls_norm_filt_indels}.tbi {output.calls_norm_filt_indels}
 
-            # normalize indels
-            bcftools norm -f {params.ref} {output.vcf} -Ob -o {output.calls_norm}
-
-            # filter adjacent indels within 5bp
-            bcftools filter --IndelGap 5 {output.calls_norm} -Ob -o {output.calls_norm_filt_indels}
-            bcftools index {output.calls_norm_filt_indels}
+            bedtools genomecov -ibam {input.bam} -bga | awk '$4 < {params.mincov}' > {output.low_cov_bed}
 
             # apply variants to create consensus sequence
-            cat {params.ref} | bcftools consensus {output.calls_norm_filt_indels} > {output.all_consensus}
+            bcftools consensus {output.calls_norm_filt_indels} -f {params.ref} -m {output.low_cov_bed} > {output.all_consensus}
         """
 
 
@@ -290,10 +288,12 @@ rule postprocess_consensus:
     output:
         consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa",
         consensus_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa.gz",
+        count_n = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_count_n.txt",
     params:
         ref = config["resources"]["reference_table"],
         consensus_type = config["tools"]["consensus"]["consensus_type"],
         lookup = config["tools"]["general"]["lookup"],
+        max_n = config["tools"]["postprocess_consensus"]["max_n"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.err.log",
@@ -303,18 +303,20 @@ rule postprocess_consensus:
         "../envs/python.yaml"
     shell:
         """
-        if [ $(cat {input.qualimap_qc}) = "PASS" ]
-        then
-            # Fetch only the consensus in the regions of the most represented virus
-            python workflow/scripts/filter_consensus.py \
-            --ref_table {params.ref} \
-            --assignment {input.assignment} \
-            --consensus {input.all_consensus} \
-            --consensus_type {params.consensus_type} \
-            --output {output.consensus} | \
-            gzip {output.consensus} 2> >(tee {log.errfile} >&2)
-        else
-            echo "Not enough reads to calculate consensus"
-            touch {output.consensus}
-        fi
-        """
+        # Fetch only the consensus in the regions of the most represented virus
+        python workflow/scripts/filter_consensus.py \
+        --ref_table {params.ref} \
+        --assignment {input.assignment} \
+        --consensus {input.all_consensus} \
+        --consensus_type {params.consensus_type} \
+        --output {output.consensus} 2> >(tee {log.errfile} >&2)
+        
+        gzip {output.consensus} 2> >(tee -a {log.errfile} >&2)
+
+        python workflow/script/count_n.py \
+        --input {output.consensus} \
+        --max_n {params.max_n} \
+        --consensus_type {params.consensus_type} \
+        --output {output.count_n}
+        """  
+        

@@ -36,7 +36,7 @@ def get_top_strain(inputdir, sample, dirname):
 # Script
 if __name__ == '__main__':
     # Parse input args
-    parser = argparse.ArgumentParser(description='fetch the primers positions on the reference', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='Create an aggregate table with all read counts detected through the pipeline steps', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--inputdir', required=True, type=str, help='The main plate results directory from the ReVSeq pipeline')
     parser.add_argument('--bwa_subdir', required=True, type=str, help='The name assigned to the bwa rule subdirectory')
     parser.add_argument('--dehuman_subdir', required=True, type=str, help='The name assigned to the dehuman rule subdirectory')

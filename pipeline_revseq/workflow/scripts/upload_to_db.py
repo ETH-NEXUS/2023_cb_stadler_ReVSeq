@@ -13,7 +13,7 @@ import argparse, os, sys
 # Script
 if __name__ == '__main__':
     # Parse input args
-    parser = argparse.ArgumentParser(description='fetch the primers positions on the reference', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='Upload plate results to database', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--plate', required=True, type=str, help='Barcode of the plate to upload')
     parser.add_argument('--revseqdataloader', type=str, default='/app/RevSeqDataLoader', help='Path of the directory containing the RevSeqDataLoader package')
     args = parser.parse_args()

@@ -14,7 +14,7 @@ import argparse, os, glob, math, sys
 # Script
 if __name__ == '__main__':
 	# Parse input args
-    parser = argparse.ArgumentParser(description='fetch the primers positions on the reference', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='Add and compare clinical panel results to the virus assignments', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--metadata_dir', required=True, type=str, help='directory containing the metadata files')
     parser.add_argument('--pseudoanon_table', required=True, type=str, help='table containing the pseudoanonymization matching')
     parser.add_argument('--output', required=True, type=str, help='Path and name of the output table')
