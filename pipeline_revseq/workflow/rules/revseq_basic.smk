@@ -293,7 +293,6 @@ rule postprocess_consensus:
         ref = config["resources"]["reference_table"],
         consensus_type = config["tools"]["consensus"]["consensus_type"],
         lookup = config["tools"]["general"]["lookup"],
-        max_n = config["tools"]["postprocess_consensus"]["max_n"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.err.log",
@@ -315,7 +314,6 @@ rule postprocess_consensus:
 
         python workflow/script/count_n.py \
         --input {output.consensus} \
-        --max_n {params.max_n} \
         --consensus_type {params.consensus_type} \
         --output {output.count_n}
         """  

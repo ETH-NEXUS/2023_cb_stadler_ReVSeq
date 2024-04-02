@@ -70,7 +70,7 @@ tools:
     # top: create a fasta with the consensus of the top outlier
     # For "outliers" and "top": if there are no outliers, the consensus will be empty; for fragmented genomes,
     #    e.g. influenza, the consensus will be a multi-fasta with one fragment per entry
-    consensus_type: "top"
+    consensus_type: "outliers"
     # Minimum coverage required to report a base in the consensus sequence.
     # Any position with lower coverage is reported as N
     minimum_coverage: 10
