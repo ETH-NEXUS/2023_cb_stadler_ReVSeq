@@ -15,7 +15,7 @@ import argparse
 from Bio import SeqIO
 
 
- Script
+## Script
 if __name__ == '__main__':
 	# Parse input args
     parser = argparse.ArgumentParser(description='Count the number of Ns in a given consensus sequence', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
