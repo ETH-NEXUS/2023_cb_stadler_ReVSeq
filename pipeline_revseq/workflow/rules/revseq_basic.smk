@@ -271,7 +271,7 @@ rule consensus:
             bcftools call --ploidy 1 -mv -Ou | \
             bcftools norm -f {params.ref} -Ou | \
             bcftools filter --IndelGap 5 -Ob -o {output.calls_norm_filt_indels}
-            bcftools index -o {output.calls_norm_filt_indels}.tbi {output.calls_norm_filt_indels}
+            bcftools index -o {output.calls_norm_filt_indels}.csi {output.calls_norm_filt_indels}
 
             bedtools genomecov -ibam {input.bam} -bga | awk '$4 < {params.mincov}' > {output.low_cov_bed}
 
