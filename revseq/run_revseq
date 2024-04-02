@@ -8,7 +8,6 @@ while [[ -n "1" ]]; do
 	. /data/revseq/revseq.conf
 	. ${scriptdir}/revseq syncviollier
 	. ${scriptdir}/revseq pseudoanonymize_samples
-	. ${scriptdir}/revseq add_controls
 
 	for plate in $(ls -d ${anonymizeddir}/*); do
 		plate=${plate##*/}

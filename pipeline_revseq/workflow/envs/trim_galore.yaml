@@ -5,3 +5,4 @@ channels:
 - defaults
 dependencies:
 - trim-galore
+- cutadapt

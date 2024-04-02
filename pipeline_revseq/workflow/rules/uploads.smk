@@ -18,6 +18,7 @@ rule gather_results_samples:
         fastqcr1 = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_merged_R1.fastqc.zip",
         fastqcr2 = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_R2.fastqc.zip",
         consensus = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_consensus.fa",
+        complete = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/complete.txt",
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_results_sample/{sample}_gather_results.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_results_sample/{sample}_gather_results.err.log",
@@ -33,6 +34,7 @@ rule gather_results_samples:
         ln -s {input.fastqcr1} {output.fastqcr1}
         ln -s {input.fastqcr2} {output.fastqcr2}
         ln -s {input.consensus} {output.consensus}
+        touch {output.complete}
         """
 
 rule gather_results_plate:
@@ -54,6 +56,7 @@ rule gather_results_plate:
         version = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_pipeline_version.txt",
         aggregated_assignment = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_aggregated_assignment.tsv",
         aggregated_qc = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_aggregated_qc.tsv",
+        complete = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/complete.txt",
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/gather_results_plate/gather_results_plate.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/gather_results_plate/gather_results_plate.err.log",
@@ -78,6 +81,7 @@ rule gather_results_plate:
         ln -s {input.aggregated_assignment} {output.aggregated_assignment}
         ln -s {input.aggregated_qc} {output.aggregated_qc}
         cat {input.version} > {output.version}
+        touch {output.complete}
         """
 
 envvars:
@@ -112,7 +116,8 @@ rule push_to_db:
 
 rule viollier_upload:
     input:
-        gathered_results = config["tools"]["gather_results"]["outdir"],
+        samples_complete = expand(rules.gather_results_samples.output.complete, sample=sample_ids),
+        plate_complete = expand(rules.gather_results_plate.output.complete, sample=sample_ids),
     output:
         viollier_upload_success = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
     benchmark:

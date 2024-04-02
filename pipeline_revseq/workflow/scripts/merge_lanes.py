@@ -31,7 +31,7 @@ if __name__ == '__main__':
     if len(pseudoanon) > 1:
         sys.exit("ERROR: More than 1 match for sample " + sample_name + " in the pseudoanonymization table.")
 
-    pseudoanon = pseudoanon.to_string(index=False)
+    pseudoanon = pseudoanon.to_string(index=False).strip()
     outfile = args.outdir + "/" + pseudoanon + args.outsuffix
     with open(outfile, 'wb') as wfp:
         for fn in args.lanefiles:

@@ -24,11 +24,11 @@ rule fastqc_merged:
 
 rule fastqc_trimmed:
     input:
-        r1 = rules.trim_galore.output.r1,
-        r2 = rules.trim_galore.output.r2,
+        r1 = rules.cutadapt.output.r1,
+        r2 = rules.cutadapt.output.r2,
     output:
-        zip1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_trimmed/{sample}_merged_R1_val_1_fastqc.zip",
-        zip2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_trimmed/{sample}_merged_R2_val_2_fastqc.zip",
+        zip1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_trimmed/{sample}_R1_trimmed_fastqc.zip",
+        zip2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_trimmed/{sample}_R2_trimmed_fastqc.zip",
     params:
         outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_trimmed"
     log:
@@ -140,6 +140,7 @@ rule multiqc:
         --ignore "{params.inputdir}/*/rseqc_filtered" \
         --ignore "{params.inputdir}/*/samtoolsstats_filtered" \
         --ignore "{params.inputdir}/*/qualimap" \
+        --interactive \
         -o {params.outdir}  2> >(tee {log.errfile} >&2)
         """
 
@@ -174,6 +175,7 @@ rule multiqc_trimmed:
         --ignore "{params.inputdir}/*/rseqc_filtered" \
         --ignore "{params.inputdir}/*/samtoolsstats_filtered" \
         --ignore "{params.inputdir}/*/qualimap" \
+        --interactive \
         -o {params.outdir}  2> >(tee {log.errfile} >&2)
         """
 
@@ -239,11 +241,12 @@ rule multiqc_filtered:
         --ignore "{params.inputdir}/*/fastqc_raw" \
         --ignore "{params.inputdir}/*/dh_fastqc" \
         --ignore "{params.inputdir}/*/fastqc_merged" \
-        --ignore "{params.inputdir}/*/trim_galore" \
+        --ignore "{params.inputdir}/*/cutadapt" \
         --ignore "{params.inputdir}/*/qualimap" \
         --ignore "{params.inputdir}/*/qualimap_filtered" \
         --ignore "{params.inputdir}/*/rseqc" \
         --ignore "{params.inputdir}/*/samtoolsstats" \
         --ignore "{params.inputdir}/*/remove_duplicates" \
+        --interactive \
         -o {output.outdir}  2> >(tee {log.errfile} >&2)
         """

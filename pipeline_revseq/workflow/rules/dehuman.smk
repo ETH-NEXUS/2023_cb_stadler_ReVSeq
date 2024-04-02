@@ -2,7 +2,8 @@ rule bwa:
     input:
         ref = config["resources"]["host_ref"],
         ref_index = rules.bwa_index.output.ref_index,
-        reads = rules.trim_galore.output
+        r1 = rules.cutadapt.output.r1,
+        r2 = rules.cutadapt.output.r2,
     output:
         bwa = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_mapped_reads.bam"),
         bam = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam"),
@@ -21,11 +22,11 @@ rule bwa:
         mem_mb=6500
     shell:
         """
-        bwa mem -t {threads} -M {input.ref} {input.reads} > {output.bwa}
-        samtools sort -@ {threads} --output-fmt=SAM {output.bwa} | samtools view -Sb - > {output.bam} 2> >(tee {log.errfile} >&2)
-        samtools index {output.bam}
-        samtools view -c {output.bam} > {output.readcount_all}
-        samtools view -c -F 4 {output.bam} > {output.readcount}
+        bwa mem -t {threads} -M {input.ref} {input.r1} {input.r2} > {output.bwa} 2> >(tee {log.errfile} >&2)
+        samtools sort -@ {threads} --output-fmt=SAM {output.bwa} | samtools view -Sb - > {output.bam} 2> >(tee -a {log.errfile} >&2)
+        samtools index {output.bam} 2> >(tee -a {log.errfile} >&2)
+        samtools view -c {output.bam} > {output.readcount_all} 2> >(tee -a {log.errfile} >&2)
+        samtools view -c -F 4 {output.bam} > {output.readcount} 2> >(tee -a {log.errfile} >&2)
         """
 
 

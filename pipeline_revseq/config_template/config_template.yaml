@@ -35,11 +35,11 @@ tools:
   bwa:
     # Threads to assign to bwa
     threads: 4
-  trim_galore:
+  cutadapt:
     # Read length filtering threshold
     min_length: 20
-    # Read length filtering threshold for singletons
-    min_length_single: 30
+    # The default sequencing adapter to trim
+    adapter_default: "CTGTCTCTTATA"
     threads: 4
   pileup:
     # minimum mapping quality threshold. Passed to samtools option -q
