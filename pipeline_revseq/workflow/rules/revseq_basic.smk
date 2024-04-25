@@ -178,6 +178,7 @@ rule assign_virus:
         coverage_threshold = config["tools"]["assign_virus"]["coverage_threshold"],
         readnum_threshold = config["tools"]["general"]["min_readcount"],
         taxon = config["tools"]["assign_virus"]["taxon"],
+        dp_limit = config["tools"]["assign_virus"]["dp_limit"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.err.log",
@@ -199,6 +200,7 @@ rule assign_virus:
             --lookup {params.lookup}  \
             --genome_res {input.genome_res} \
             --coverage_threshold {params.coverage_threshold} \
+            --dp_limit {params.dp_limit} \
             --readnum_threshold {params.readnum_threshold} 2> >(tee {log.errfile} >&2)
         """
 

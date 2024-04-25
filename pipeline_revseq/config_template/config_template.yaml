@@ -64,9 +64,13 @@ tools:
     # Used only after collapsing strains
     outlier_percentile_collapsed: 95
     # Minimum average coverage allowed in the sample for the assignment to be reported
-    coverage_threshold: 20
+    coverage_threshold: 10
     # Table containing the matches between substrain name and taxon
     taxon: /data/pipeline/resources/substrain_taxon_lookup.csv
+    # Wether to filter or not the alternative strains and substrains based on the same thresholds used to assign the top
+    filter_alternatives: False
+    # The maximum DP to be reported. The DP field will contain all DPs from 1 to this limit
+    dp_limit: 20
   validate_assignment:
     # Lookup table wit the matches between major strains and panel strains
     # It is used to match the bioinformatics analysis results with the clinical panel results
