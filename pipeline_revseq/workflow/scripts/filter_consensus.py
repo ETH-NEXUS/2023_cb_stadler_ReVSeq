@@ -49,8 +49,9 @@ if __name__ == '__main__':
         filter_values = []
     regions = refs.loc[refs["substrain_name"].isin(filter_values)]["id"].to_list()
 
-    with open(args.output, "w") as out_file:
-        fasta_sequences = SeqIO.parse(open(args.consensus),'fasta')
-        for fasta in fasta_sequences:
-            if fasta.id in regions:
-                SeqIO.write(fasta, out_file, "fasta")
+    consensus = SeqIO.parse(open(args.consensus),'fasta')
+    fasta_sequences = [record for record in consensus if record.id in regions ]
+    with open(args.output, "a") as out_file:
+        print("writing the consensus")
+        for seq in fasta_sequences:
+            SeqIO.write(seq, out_file, "fasta")

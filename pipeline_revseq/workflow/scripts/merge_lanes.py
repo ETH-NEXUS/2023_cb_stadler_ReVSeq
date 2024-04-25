@@ -7,7 +7,7 @@
 ##        and merges the multi-lane raw files while applying the pseudoanonymization
 ######
 
-import argparse, shutil
+import argparse, shutil, sys
 import pandas as pd
 
 # Script
@@ -22,9 +22,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    matches = pd.read_table(args.pseudoanon_table)
+    matches = pd.read_table(args.pseudoanon_table, dtype=str)
 
-    sample_name = int(args.lanefiles[0].split("/")[-1].split("_")[0])
+    sample_name = (args.lanefiles[0].split("/")[-1].split("_")[0])
     pseudoanon = matches.loc[matches['Sample number'] == sample_name]["ethid"]
     if len(pseudoanon) == 0:
         sys.exit("ERROR: cannot find a match for sample " + sample_name + " in the pseudoanonymization table.")

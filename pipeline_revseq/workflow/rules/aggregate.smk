@@ -25,7 +25,11 @@ rule aggregate:
         sample_map = config["sample_map"],
         pseudoanon_metadata = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
         match_table = config["tools"]["validate_assignment"]["match_table"],
+        filter_alternatives = config['tools']['assign_virus']['filter_alternatives'],
         readnum_threshold = config['tools']['general']['min_readcount'],
+        coverage_threshold = config['tools']['assign_virus']['coverage_threshold'],
+        ctrl_pos = config["tools"]["general"]["pos"],
+        ctrl_neg = config["tools"]["general"]["neg"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/aggregate/aggregate.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/aggregate/aggregate.err.log",
@@ -43,7 +47,10 @@ rule aggregate:
         --sample_map {params.sample_map} \
         --pseudoanon_metadata {params.pseudoanon_metadata} \
         --match_table {params.match_table} \
-        --readnum_threshold {params.readnum_threshold}
+        --filter_alternatives {params.filter_alternatives} \
+        --readnum_threshold {params.readnum_threshold} \
+        --coverage_threshold {params.coverage_threshold} \
+        --controls {params.ctrl_pos},{params.ctrl_neg}
 
         python workflow/scripts/aggregate_qc.py \
         --inputdir {params.inputdir} \

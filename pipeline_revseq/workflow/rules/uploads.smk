@@ -8,6 +8,7 @@ rule gather_results_samples:
         fastqcr1 = rules.fastqc_merged.output.zip1,
         fastqcr2 = rules.fastqc_merged.output.zip2,
         consensus = rules.postprocess_consensus.output.consensus,
+        count_n = rules.postprocess_consensus.output.count_n,
         qc_status = rules.qualimap_filtered.output.qc_status,
     output:
         assignment = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_count_table.tsv",
@@ -19,6 +20,7 @@ rule gather_results_samples:
         fastqcr2 = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_R2.fastqc.zip",
         consensus = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_consensus.fa",
         complete = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/complete.txt",
+        count_n = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_count_n.txt",
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_results_sample/{sample}_gather_results.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_results_sample/{sample}_gather_results.err.log",
@@ -34,6 +36,7 @@ rule gather_results_samples:
         ln -s {input.fastqcr1} {output.fastqcr1}
         ln -s {input.fastqcr2} {output.fastqcr2}
         ln -s {input.consensus} {output.consensus}
+        ln -s {input.count_n} {output.count_n}
         touch {output.complete}
         """
 
@@ -87,32 +90,32 @@ rule gather_results_plate:
 envvars:
     "USERNAME_REVSEQ",
     "PASSWORD_REVSEQ",
-rule push_to_db:
-    input:
-        multiqcdir_filtered = rules.gather_results_plate.output.multiqcdir_filtered,
-    output:
-        db_upload_status = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/db_upload_status",
-    params:
-        #credentials_file = config["tools"]["push_to_db"]["credentials_file"],
-        plate = config["plate"],
-        revseq_username = os.environ["USERNAME_REVSEQ"],
-        revseq_password = os.environ["PASSWORD_REVSEQ"],
-    log:
-        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/push_to_db/push_to_db.out.log",
-        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/push_to_db/push_to_db.err.log",
-    benchmark:
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/push_to_db/push_to_db.benchmark"
-    conda:
-        "../envs/revseqdataloader.yaml"
-    shell:
-        """
-        echo "Starting db_upload of plate {params.plate}"
-        export USERNAME_REVSEQ={params.revseq_username}
-        export PASSWORD_REVSEQ={params.revseq_password}
-        (python workflow/scripts/upload_to_db.py --plate {params.plate} && \
-        touch {output.db_upload_status}) || \
-        echo "Failed uploading to database"
-		"""
+#rule push_to_db:
+#    input:
+#        multiqcdir_filtered = rules.gather_results_plate.output.multiqcdir_filtered,
+#    output:
+#        db_upload_status = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/db_upload_status",
+#    params:
+#        #credentials_file = config["tools"]["push_to_db"]["credentials_file"],
+#        plate = config["plate"],
+#        revseq_username = os.environ["USERNAME_REVSEQ"],
+#        revseq_password = os.environ["PASSWORD_REVSEQ"],
+#    log:
+#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/push_to_db/push_to_db.out.log",
+#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/push_to_db/push_to_db.err.log",
+#    benchmark:
+#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/push_to_db/push_to_db.benchmark"
+#    conda:
+#        "../envs/revseqdataloader.yaml"
+#    shell:
+#        """
+#        echo "Starting db_upload of plate {params.plate}"
+#        export USERNAME_REVSEQ={params.revseq_username}
+#        export PASSWORD_REVSEQ={params.revseq_password}
+#        (python workflow/scripts/upload_to_db.py --plate {params.plate} && \
+#        touch {output.db_upload_status}) || \
+#        echo "Failed uploading to database"
+#		"""
 
 rule viollier_upload:
     input:

@@ -107,6 +107,7 @@ rule dh_fastqc:
     shell:
         """
         fastqc {input.inputdir}/{wildcards.sample}_bam_to_fastq_r1.fastq -t {threads} -o {params.outdir}  2> >(tee {log.errfile} >&2)
+        echo test
         fastqc {input.inputdir}/{wildcards.sample}_bam_to_fastq_r2.fastq -t {threads} -o {params.outdir}  2> >(tee {log.errfile} >&2)
         """
 

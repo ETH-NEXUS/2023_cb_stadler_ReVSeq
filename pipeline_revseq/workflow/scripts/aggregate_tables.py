@@ -33,7 +33,7 @@ def get_top_strain(inputdir, sample, dirname):
     return(top_strain)
 
 
-def get_alternative_tops(inputdir, sample, dirname, top_strain_name):
+def get_alternative_tops(inputdir, sample, dirname, top_strain_name, filter_alternatives, readnum_threshold, coverage_threshold):
     if len(top_strain_name) == 0:
         return ""
     top_strain_name = top_strain_name[0]
@@ -55,8 +55,9 @@ def get_alternative_tops(inputdir, sample, dirname, top_strain_name):
         sys.exit("ERROR: multiple matches for the top strain. This should never happen")
     outliers.remove(matches[0])
     for item in outliers:
-        if args.filter_alternatives:
-            if (item[1] < args.readnum_threshold) or (item[3] < args.coverage_threshold):
+        if filter_alternatives:
+            if (item[1] < readnum_threshold) or (item[3] < coverage_threshold):
+                print("Filtered out alternative outlier "+str(item)+" for not hitting the read number or coverage thresholds")
                 continue
         try:
             mystring = mystring + ", " + item[0] + " (cov:" + f'{item[3]:.5f}' + "; reads:" + f'{item[2]:.0f}' + " rpkm_prop: " + f'{item[1]:.5f}' + ")"
@@ -68,6 +69,10 @@ def get_alternative_tops(inputdir, sample, dirname, top_strain_name):
             else:
                 sys.exit("ERROR: unknown subdir to fetch the assignments")
             mystring = item[0] + prefix + "reads:" + f'{item[2]:.0f}' + "; rpkm_prop: " + f'{item[1]:.5f}' + ")"
+    try:
+        mystring
+    except NameError:
+        return ""
     return(mystring)
 
 
@@ -87,6 +92,7 @@ def create_line(df, linetype, sample, alternative_outliers):
     df.columns = names
     df = df[names_ordered]
     return df
+
 
 def get_assigned_panel(metadata, top_strain, match_table):
     metadata = metadata.loc[metadata['ethid'] == sample ]
@@ -140,6 +146,8 @@ if __name__ == '__main__':
     parser.add_argument('--match_table', required=True, type=str, help='TSV matching the panel code with the common virus name used in the pipeline')
     parser.add_argument('--filter_alternatives', required=False, type=bool, default=False, help='Should we filter the alternative outliers using the same readnum and coverage thresholds used for the QC of the top outlier?')
     parser.add_argument('--readnum_threshold', required=True, type=int, help='The read number threshold to apply to the alternative outliers')
+    parser.add_argument('--coverage_threshold', required=True, type=int, help='The coverage threshold to apply to the alternative outliers')
+    parser.add_argument('--controls', required=True, type=str, help='The strings necessary to detect the controls. Comma separated')
 
     args = parser.parse_args()
     sample_map = pd.read_table(args.sample_map)
@@ -152,13 +160,23 @@ if __name__ == '__main__':
     
     match_table = pd.read_csv(args.match_table,sep=",", header=0)
 
+    ctrl_strings = args.controls.split(",")
+
     for sample in samples:
         top_substrain = get_top_strain(args.inputdir, sample, args.assignment_subdir)
-        alternative_outliers_substrain = get_alternative_tops(args.inputdir, sample, args.assignment_subdir, top_substrain["name"].values)
+        alternative_outliers_substrain = get_alternative_tops(args.inputdir, sample, args.assignment_subdir, top_substrain["name"].values, args.filter_alternatives, args.readnum_threshold, args.coverage_threshold)
         top_substrain = create_line(top_substrain, "substrain", sample, alternative_outliers_substrain)
         top_strain = get_top_strain(args.inputdir, sample, args.validation_subdir)
-        alternative_outliers_strain = get_alternative_tops(args.inputdir, sample, args.validation_subdir, top_strain["name"].values[0])
-        top_strain["panel_assignment"] = ';'.join(get_assigned_panel(metadata, top_strain, match_table))
+        alternative_outliers_strain = get_alternative_tops(args.inputdir, sample, args.validation_subdir, top_strain["name"].values[0], args.filter_alternatives, args.readnum_threshold, args.coverage_threshold)
+        ctrl_type = ""
+        for string in ctrl_strings:
+            if string in sample:
+                ctrl_type = string
+        print(ctrl_type)
+        if ctrl_type == "":
+            top_strain["panel_assignment"] = ';'.join(get_assigned_panel(metadata, top_strain, match_table))
+        else:
+            top_strain["panel_assignment"] = ";".join("")
         top_strain = create_line(top_strain, "strain", sample, alternative_outliers_strain)
         try:
             aggregated_substrain = pd.concat([aggregated_substrain, top_substrain], ignore_index=True)

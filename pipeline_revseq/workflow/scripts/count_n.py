@@ -25,8 +25,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     fasta_sequences = SeqIO.parse(open(args.input),'fasta')
-    with open(args.output) as out_file:
-        out_file.write("GenBank_accession\tnumber_n\nfraction_n")
+    with open(args.output, "a") as out_file:
+        out_file.write("GenBank_accession\tnumber_n\tfraction_n")
         for fasta in fasta_sequences:
             name, sequence = fasta.id, str(fasta.seq)
             number_n = sequence.count("N")

@@ -212,6 +212,9 @@ rule validate_assignment:
         metadata_dir = config["resources"]["metadata_dir"],
         pseudoanontable = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv",
         match_table = config["tools"]["validate_assignment"]["match_table"],
+        ctrl_pos = config["tools"]["general"]["pos"],
+        ctrl_neg = config["tools"]["general"]["neg"],
+        plate = config["plate"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/validate_assignment/{sample}_validation.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/validate_assignment/{sample}_validation.err.log",
@@ -227,6 +230,8 @@ rule validate_assignment:
             --ethid {wildcards.sample} \
             --match_table {params.match_table} \
             --count_table {input.assignment} \
+            --controls {params.ctrl_pos},{params.ctrl_neg} \
+            --plate {params.plate} \
             --output {output.validation}  2> >(tee {log.errfile} >&2)
         """
 
@@ -310,11 +315,9 @@ rule postprocess_consensus:
         --consensus_type {params.consensus_type} \
         --output {output.consensus} 2> >(tee {log.errfile} >&2)
         
-        gzip {output.consensus} 2> >(tee -a {log.errfile} >&2)
+        gzip -c {output.consensus} > {output.consensus_gzip}
 
-        python workflow/script/count_n.py \
+        python workflow/scripts/count_n.py \
         --input {output.consensus} \
-        --consensus_type {params.consensus_type} \
         --output {output.count_n}
-        """  
-        
+        """

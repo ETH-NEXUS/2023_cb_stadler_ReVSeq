@@ -3,7 +3,7 @@
 # Note: all paths should refer to the directory structure within the docker container
 inputOutput:
   # Full path to directory with input fastq files. Input raw data can be gzip-compressed
-  input_fastqs: "/data/viollier_mirror/raw_sequences"
+  input_fastqs: "/data/viollier_mirror/revseq_input"
   # Full path to directory where the output must be written
   output_dir: "/data/revseq/results/results"
 
@@ -17,7 +17,7 @@ resources:
   # Full path to the directory containing the multi-fasta reference file
   reference_dir: "/data/config"
   # Full path to the directory containing the sample metadata from Viollier
-  metadata_dir: "/data/viollier_mirror/revseq_data"
+  metadata_dir: "/data/viollier_mirror/revseq_input"
   # full path to the file containing the pipeline version
   pipeline_version: "/data/pipeline/resources/pipeline_version.txt"
   
@@ -32,6 +32,10 @@ tools:
     # It is used to collapse the substrains available for the bioinformatics analysis
     # to the major strains available in the panel
     lookup: "/data/pipeline/resources/strain_substrain_lookup.csv"
+    # String to search for positive controls
+    pos: "KOpos"
+    # String to search for negative controls
+    neg: "KOneg"
   bwa:
     # Threads to assign to bwa
     threads: 4
@@ -41,6 +45,8 @@ tools:
     # The default sequencing adapter to trim
     adapter_default: "CTGTCTCTTATA"
     threads: 4
+    # The common string for any given samplesheet
+    samplesheet_search_string: "SampleSheet"
   pileup:
     # minimum mapping quality threshold. Passed to samtools option -q
     # Used to create the pileup for visualization.
@@ -59,6 +65,8 @@ tools:
     outlier_percentile_collapsed: 95
     # Minimum average coverage allowed in the sample for the assignment to be reported
     coverage_threshold: 20
+    # Table containing the matches between substrain name and taxon
+    taxon: /data/pipeline/resources/substrain_taxon_lookup.csv
   validate_assignment:
     # Lookup table wit the matches between major strains and panel strains
     # It is used to match the bioinformatics analysis results with the clinical panel results

@@ -9,5 +9,6 @@ cp /run/secrets/khost /home/appuser/.ssh/known_hosts
 
 source activate base
 
-#sleep 10d
-/data/revseq/run_revseq
+#DEBUG
+sleep 10d
+#/data/revseq/run_revseq

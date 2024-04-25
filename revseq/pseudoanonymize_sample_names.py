@@ -57,7 +57,7 @@ def generate_new_ethids(anon_df, all_samples):
     newsamples = pd.DataFrame(newsamples)
     return newsamples
 
-def find_controls(newsamples, ctrl_neg_prefix, ctrl_pos_prefix, mirrordir, plate):
+def find_controls(ctrl_neg_prefix, ctrl_pos_prefix, mirrordir, plate):
     ctrl_pos = glob.glob(mirrordir+"/"+plate+"/"+ctrl_pos_prefix+"*")
     ctrl_neg = glob.glob(mirrordir+"/"+plate+"/"+ctrl_neg_prefix+"*")
     all_ctrls = []
@@ -69,11 +69,12 @@ def find_controls(newsamples, ctrl_neg_prefix, ctrl_pos_prefix, mirrordir, plate
         filename_pieces = filename.split("_")
         if ("L0" not in filename_pieces[2]) or (("R1" not in filename_pieces[3]) and ("R2" not in filename_pieces[3])):
             sys.exit(ctrls_error_msg)
-        ctrl_count.append(filename_pieces[0]+"_"+filename_pieces[1])
+        ctrl_count.append(filename_pieces[0])
     ctrl_count = set(ctrl_count)
     print("Found "+str(len((ctrl_count)))+" controls: "+str(ctrl_count))
     ctrl_name = [ element for element in ctrl_count]
-    ctrl_ethid = [ plate+"_"+element for element in ctrl_count ]
+    ctrl_ethid = [ plate+"-"+element.replace("_", "-") for element in ctrl_count ]
+
     ctrls = pd.DataFrame({"Sample number": ctrl_name, "ethid": ctrl_ethid})
     return ctrls
 
@@ -148,13 +149,13 @@ def create_sample_map(samples, outdir):
 #    return new_plates
 
 
-def verify_if_new_plate(mirrordir, mirrored_plates, processed_plates):
+def verify_if_new_plate(mirrordir, mirrored_plates, processed_plates, metadata_string):
     new_plates_names = [ plate for plate in mirrored_plates if plate not in processed_plates ]
     new_plates = []
     for plate in new_plates_names:
         platedir = mirrordir + "/" + plate
         metadata_file = [ file for file in os.listdir(platedir) if ".csv" in file]
-        metadata_file = [ platedir + "/" + file for file in metadata_file if "seq_" in file ]
+        metadata_file = [ platedir + "/" + file for file in metadata_file if metadata_string in file ]
         if len(metadata_file) != 1:
             sys.exit("ERROR: found " + str(len(metadata_file)) + " metadata files in mirrored directory " + platedir)
         metadata_file = metadata_file[0]
@@ -201,7 +202,7 @@ def get_pseudoanon_names(outdir):
 
 
 def find_ethid(sample_number, match_table):
-    return match_table.loc[match_table["Sample number"]==str(sample_number)]["ethid"].to_string(index=False)
+    return match_table.loc[match_table["Sample number"]==str(sample_number)]["ethid"].to_string(index=False).strip()
 
 # Script
 if __name__ == '__main__':
@@ -209,8 +210,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='fetch the primers positions on the reference',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--outdir', required=True, type=str, help='the path to the output directory')
-    #parser.add_argument('--metadatadir', required=True, type=str, help='the path to the directory where the metadata are mirrored')
+    #parser.add_argument('--metadatalist', required=True, type=str, help='Tab-delimited table containing three columns: "metadata_string" containing the string to use to fetch the metadata files, "id_column" containing the name of the column containing the IDs, "sep" containing the separator used in the file')
     parser.add_argument('--mirrordir', required=True, type=str, help='the directory containing all raw data samples, one folder per sample')
+    parser.add_argument('--ctrl_neg_prefix', required=True, type=str, help='the prefix to use to detect negative controls')
+    parser.add_argument('--ctrl_pos_prefix', required=True, type=str, help='the prefix to use to detect positive controls')
+    parser.add_argument('--metadata_string', required=True, type=str, help='the string to use to find the metadata files')
 
     args = parser.parse_args()
 
@@ -225,7 +229,7 @@ if __name__ == '__main__':
     anon = get_pseudoanon_names(args.outdir)
 
     #new_plates = verify_if_new_plate(args.metadatadir, processed_plates)
-    new_plates = verify_if_new_plate(args.mirrordir, mirrored_plates, processed_plates)
+    new_plates = verify_if_new_plate(args.mirrordir, mirrored_plates, processed_plates, args.metadata_string)
     if len(new_plates) == 0:
         print("No new plate found.")
         print("NEW = the plate has not been pseudo-anonymized before")
@@ -247,7 +251,7 @@ if __name__ == '__main__':
         newsamples = generate_new_ethids(anon, sample)
         newsamples = newsamples.rename(columns={0: "Sample number", 1: "ethid"})
         newsamples["Sample number"] = newsamples["Sample number"].astype(str)
-        newsamples = pd.concat([newsamples, find_controls(newsamples, args.ctrl_neg_prefix, args.ctrl_pos_prefix, args.mirrordir, plate)])
+        newsamples = pd.concat([newsamples, find_controls(args.ctrl_neg_prefix, args.ctrl_pos_prefix, args.mirrordir, plate)])
         sample = newsamples["Sample number"].tolist()
         if len(newsamples.index) > 0:
             create_plate_directory(plate, args.outdir)

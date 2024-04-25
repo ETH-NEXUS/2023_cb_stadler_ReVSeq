@@ -52,7 +52,10 @@ case "$1" in
                 python \
                         ${scriptdir}/pseudoanonymize_sample_names.py \
                         --mirrordir ${sampledir} \
-                        --outdir ${anonymizeddir} #\
+                        --outdir ${anonymizeddir} \
+                        --ctrl_neg_prefix ${ctrl_neg_prefix} \
+                        --ctrl_pos_prefix ${ctrl_pos_prefix} \
+                        --metadata_string ${metadata_string}
                         #--metadatadir ${metadatadir}
         ;;
         dryrun)
@@ -67,7 +70,9 @@ case "$1" in
                                 --configfile ${snakemake_config} \
                                 --config plate=${plate} \
                                 sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
-                                -n
+                                -n --notemp --until bwa
+                else
+                        echo "$(date) The plate has been already analysed (file ${anonymizeddir}/${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
                 fi
                      ;;
         runpipeline)
@@ -80,7 +85,7 @@ case "$1" in
                                 -c${threads} \
                                 --configfile ${snakemake_config} \
                                 --config plate=${plate} \
-                                sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv --notemp --until multiqc_trimmed
+                                sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv --rerun-incomplete --notemp
                 else
                         echo "$(date) The plate has been already analysed (file ${anonymizeddir}/${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
                 fi

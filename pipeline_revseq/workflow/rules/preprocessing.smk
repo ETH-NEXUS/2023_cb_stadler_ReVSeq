@@ -6,8 +6,8 @@ def find_input_fastq_lanes_r1(wildcards):
     #"return a list of all input fastq files available for one sample. Handles multi-lane data"
     mate = "R1"
     sample = str(wildcards.sample)
-    matches = pd.read_table(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv")
-    snumber = int(matches[matches["ethid"] == sample]["Sample number"].to_string(index=False))
+    matches = pd.read_table(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv", dtype=str)
+    snumber = (matches[matches["ethid"] == sample]["Sample number"].to_string(index=False).strip())
     sample_table = sample_map[sample_map["sample"] == sample]
     sample_lanes = sample_table["lane"].tolist()
     sample_lanes.sort()
@@ -27,8 +27,8 @@ def find_input_fastq_lanes_r2(wildcards):
     #"return a list of all input fastq files available for one sample. Handles multi-lane data"
     mate = "R2"
     sample = str(wildcards.sample)
-    matches = pd.read_table(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv")
-    snumber = int(matches[matches["ethid"] == sample]["Sample number"].to_string(index=False))
+    matches = pd.read_table(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv", dtype=str)
+    snumber = (matches[matches["ethid"] == sample]["Sample number"].to_string(index=False))
     sample_table = sample_map[sample_map["sample"] == sample]
     sample_lanes = sample_table["lane"].tolist()
     sample_lanes.sort()
@@ -36,11 +36,8 @@ def find_input_fastq_lanes_r2(wildcards):
     total_samples = os.listdir(config["inputOutput"]["input_fastqs"]+"/"+config["plate"])
     for lane in sample_lanes:
         all_samples = [ file for file in total_samples if str(snumber) in file ]
-        print(all_samples)
         lanefile = [ file for file in all_samples if lane in file ]
-        print(lanefile)
         raw = [ file for file in lanefile if mate in file ]
-        print(raw)
         if len(raw) == 0:
             sys.exit("ERROR: can't find raw file for sample " + str(snumber) + " lane " + lane + " mate " + mate)
         fastq_files.append(config["inputOutput"]["input_fastqs"]+"/"+config["plate"]+"/"+raw[0])
@@ -152,11 +149,19 @@ rule cutadapt:
             exit 1
         fi
         original_sample_name=$(grep {params.sample} {params.anonymization_table} | awk '{{print $1}}')
-        adapter1=$(grep ${{original_sample_name}} ${{samplesheet}} | awk -F ',' '{{print $5}}')
-        adapter2=$(grep ${{original_sample_name}} ${{samplesheet}} | awk -F ',' '{{print $7}}')
-
+        adapter1=$(grep ${{original_sample_name}} "${{samplesheet}}" | awk -F ',' '{{print $5}}')
+        adapter2=$(grep ${{original_sample_name}} "${{samplesheet}}" | awk -F ',' '{{print $7}}')
+        
+        # Sometimes we don't receive adapters for a sample
+        adapter_opt=""
+        if [ ${{adapter1}} ]; then
+            adapter_opt="${{adapter_opt}} -b ${{adapter1}}"
+        fi
+        if [ ${{adapter2}} ]; then
+            adapter_opt="${{adapter_opt}} -b ${{adapter2}}"
+        fi
         cutadapt \
-        -b ${{adapter1}} -b ${{adapter2}} -b {params.adapter_default} \
+        ${{adapter_opt}} -b {params.adapter_default} \
         -O {params.min_length} \
         -o {output.r1} \
         -p {output.r2} \
