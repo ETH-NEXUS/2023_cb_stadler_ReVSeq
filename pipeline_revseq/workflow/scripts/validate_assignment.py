@@ -68,7 +68,8 @@ if __name__ == '__main__':
                 if len(name) == 0:
                     sys.exit("ERROR: no common virus name found for "+virus+" in the match table!")
                 name = name.to_string(index=False).strip()
-                common_names.append(name)
+                if name not in common_names:
+                    common_names.append(name)
             for name in common_names:
                 if name not in count_table['name'].to_list():
                     sys.exit("ERROR: no common virus name found for "+name+" in the count table!")
