@@ -38,15 +38,21 @@ def fetch_coverage(genome_res):
 
 
 def get_dp(depth, value, aggregated_stats, ref_table):
-    dp_colname = "DP" + str(value)
-    aggregated_stats[dp_colname] = "0%"
+    dp_colname = "DP"
+    aggregated_stats[dp_colname] = ""
     for i in aggregated_stats.index:
+        dp_string = ""
         ref_id = ref_table.loc[ref_table["name"] == i, "id"].values[0]
-        if ref_id in depth[0].unique():
-            depth_filtered = depth.loc[depth[0] == ref_id]
-            aggregated_stats.loc[aggregated_stats.index == i, dp_colname] = f'{len(depth_filtered.loc[depth[2] > value])/len(depth_filtered)*100:.2f}'+"%"
-        else:
-            aggregated_stats.loc[aggregated_stats.index == i, dp_colname] = "0%"
+        for j in range(1, value+1):
+            if ref_id in depth[0].unique():
+                depth_filtered = depth.loc[depth[0] == ref_id][2].tolist()
+                depth_dp = [ v for v in depth_filtered if v >= j]
+                dp_value =len(depth_dp)/len(depth_filtered)
+                dp_value = '%.2f' % dp_value
+            else:
+                dp_value = "0.00"
+            dp_string = dp_string + str(j) + ":" + dp_value + ";"
+        aggregated_stats.loc[aggregated_stats.index == i, dp_colname] = dp_string
     return aggregated_stats
 
 
@@ -66,6 +72,7 @@ if __name__ == '__main__':
     parser.add_argument('--genome_res', required=True, type=str, help='The genome_results.txt file as output by qualimap bamqc')
     parser.add_argument('--coverage_threshold', required=True, type=int, help='The minimum average coverage allowed for assignment')
     parser.add_argument('--readnum_threshold', required=True, type=int, help='The minimum number of reads allowed for coverage calculation')
+    parser.add_argument('--dp_limit', required=True, type=int, help="The highest DP to report. All DPs from 1 to this values will be included in the table")
 
     args = parser.parse_args()
 
@@ -76,11 +83,10 @@ if __name__ == '__main__':
     idxstats = pd.read_table(args.idxstats, header=None)
     idxstats = idxstats.rename(columns={0: "id", 1: "length", 2: "aligned", 3: "unaligned"})
     taxon = pd.read_csv(args.taxon_table, index_col=0)
-    empty_depth = 0
     try:
         depth = pd.read_table(args.depth_table, header=None)
     except pandas.errors.EmptyDataError:
-        empty_depth = 1
+        depth = pd.DataFrame(columns=[0, 1, 2])
 
     with open(args.counts) as f:
         counts = int(f.readline().strip())
@@ -119,14 +125,7 @@ if __name__ == '__main__':
     aggregated_stats.loc[aggregated_stats['coverage'] < args.coverage_threshold, "coverage_status"] = "FAILED"
     aggregated_stats = aggregated_stats.merge(taxon, right_index=True, left_index=True, how="left")
 
-    if empty_depth == 0:
-        aggregated_stats = get_dp(depth, 1, aggregated_stats, refs)
-        aggregated_stats = get_dp(depth, 2, aggregated_stats, refs)
-        aggregated_stats = get_dp(depth, 20, aggregated_stats, refs)
-    else:
-        aggregated_stats["DP1"] = "0%"
-        aggregated_stats["DP2"] = "0%"
-        aggregated_stats["DP20"] = "0%"
+    aggregated_stats = get_dp(depth, 20, aggregated_stats, refs)
 
     aggregated_stats.to_csv(args.out_prefix + "substrain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])

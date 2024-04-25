@@ -78,8 +78,8 @@ def get_alternative_tops(inputdir, sample, dirname, top_strain_name, filter_alte
 
 def create_line(df, linetype, sample, alternative_outliers):
     if linetype == "substrain":
-        names = ["substrain_name", "aligned_reads_substrain", "reference_length", "coverage", "rpkm_substrain", "rpkm_proportions_substrain", "outlier_substrain", "percentile_threshold_substrain", "readnum_threshold", "readnum_status", "coverage_threshold", "coverage_status", "taxon_id", "scientific_name", "DP1", "DP2", "DP20", "alternative_outliers_substrain", "sample"]
-        names_ordered = ["sample", "substrain_name", "taxon_id", "scientific_name", "reference_length", "aligned_reads_substrain", "readnum_threshold", "readnum_status", "coverage", "coverage_threshold", "coverage_status", "DP1", "DP2", "DP20", "rpkm_substrain", "rpkm_proportions_substrain", "outlier_substrain", "percentile_threshold_substrain", "alternative_outliers_substrain"]
+        names = ["substrain_name", "aligned_reads_substrain", "reference_length", "coverage", "rpkm_substrain", "rpkm_proportions_substrain", "outlier_substrain", "percentile_threshold_substrain", "readnum_threshold", "readnum_status", "coverage_threshold", "coverage_status", "taxon_id", "scientific_name", "DP", "alternative_outliers_substrain", "sample"]
+        names_ordered = ["sample", "substrain_name", "taxon_id", "scientific_name", "reference_length", "aligned_reads_substrain", "readnum_threshold", "readnum_status", "coverage", "coverage_threshold", "coverage_status", "DP", "rpkm_substrain", "rpkm_proportions_substrain", "outlier_substrain", "percentile_threshold_substrain", "alternative_outliers_substrain"]
         df['alternative_outliers_substrain'] = alternative_outliers
         df["sample"] = sample
     elif linetype == "strain":
