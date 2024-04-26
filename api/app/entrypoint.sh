@@ -12,6 +12,9 @@ python manage.py initadmin
 python manage.py db init
 
 
+
+
+
 if [ "$DJANGO_DEBUG" == "True" ]; then
   python manage.py runserver 0.0.0.0:${PORT}
   # python -m uvicorn ldm.asgi:application \

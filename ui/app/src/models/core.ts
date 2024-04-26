@@ -52,9 +52,10 @@ export interface SampleCount {
   percentile_threshold: string
   tax_id: number
   scientific_name: string
-  DP20: string
-  DP1: string
-  DP2: string
+  DP: string
+  consensus_fraction_n: string
+  consensus_number_n: string
+
   normcounts?: number
   strain?: string
   pseudonymized_id?: string

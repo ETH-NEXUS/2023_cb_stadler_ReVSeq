@@ -20,7 +20,7 @@ import_columns:
   percentile_threshold: percentile_threshold
   tax_id: tax_id
   scientific_name: scientific_name
-  DP20: DP20
-  DP1: DP1
-  DP2: DP2
+  DP: DP
+  consensus_number_n: consensus_number_n
+  consensus_fraction_n: consensus_fraction_n
 

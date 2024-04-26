@@ -73,15 +73,15 @@ class Command(BaseCommand):
                 submitted_jobs = [j for j in jobs if j['status'] == 'SUBMITTED']
                 queued_jobs = [j for j in jobs if j['status'] == 'QUEUED']
                 running_jobs = [j for j in jobs if j['status'] == 'RUNNING']
-                print(f"There are {len(submitted_jobs)} submitted jobs, {len(queued_jobs)} queued jobs, and {len(running_jobs)} running jobs")
+                print(
+                    f"There are {len(submitted_jobs)} submitted jobs, {len(queued_jobs)} queued jobs, and {len(running_jobs)} running jobs")
                 for job in submitted_jobs:
                     self.release_job(RELEASE_JOB_ENDPOINT, job['id'])
                     print(f"Released job {job['id']}")
-                continue_releasing = queued_jobs or running_jobs or submitted_jobs
+                continue_releasing = queued_jobs or running_jobs
                 time.sleep(30)
         except Exception as e:
             print(f"An error occurred: {e}")
-
 
     def upload_ser(self):
         samples = Sample.objects.filter(job_id__isnull=True, valid=True)
@@ -92,10 +92,17 @@ class Command(BaseCommand):
                 continue
 
             payload = self._create_ser_payload(sample, sample_counts)
+            print(f"Payload: {payload}")
 
-            files = File.objects.filter(sample=sample)
             response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
                                                 message=f'SER for {sample} uploaded successfully')
+            files = File.objects.filter(sample=sample)
+            # TODO: we need two files here: consensus.fa und chromosome file, both gzipped
+            analysis_files = []
+            consensus_fa_file = files.filter(type__postfix='.fa').first()
+            gzipped_consensus_fa_file = consensus_fa_file
+            # if accession id comes, it worked
+
             job_id = response['id']
             sample.job_id = job_id
             sample.save()
@@ -103,11 +110,8 @@ class Command(BaseCommand):
             self.upload_analysis_job_and_files(job_id, sample, files)
             self.job_ids.append(job_id)
 
-
-        self._release_jobs_loop(ANALYSIS_JOBS_ENDPOINT)
         self._release_jobs_loop(JOBS_ENDPOINT)
-
-
+        self._release_jobs_loop(ANALYSIS_JOBS_ENDPOINT)
 
     def _create_ser_payload(self, sample, sample_counts):
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
@@ -116,6 +120,7 @@ class Command(BaseCommand):
         metadata = Metadata.objects.filter(sample=sample).first()
         collection_date = metadata.ent_date.strftime("%Y-%m-%d")
         geo_location = metadata.prescriber
+        coverage = sorted_sample_counts[0].coverage
 
         sample_alias = f"revseq_sample_{sample.pseudonymized_id}_{now}"
         experiment_alias = f"revseq_experiment_{sample.pseudonymized_id}_{now}"
@@ -140,10 +145,22 @@ class Command(BaseCommand):
                     'alias': experiment_alias,
                     'sample_alias': sample_alias
                 },
+                'run': {
+                    'alias': f"revseq_run_{sample.pseudonymized_id}_{now}",
+                    'experiment_alias': experiment_alias,
+                    'file': _files
+                },
+                'analysis': {
+                    'name': f"analysis_{sample.pseudonymized_id}_{now}",
+                    'coverage': coverage,
+
+                }
 
             },
             'files': _files
         }
+
+
 
     def upload_analysis_job_and_files(self, job_id, sample, files):
         payload = {'template': 'default', 'data': {}, 'job': job_id}
@@ -159,7 +176,9 @@ class Command(BaseCommand):
 
     def upload_analysis_files(self, analysis_job_id, files):
         for file in files:
-            payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": 'FASTA'}
+            # file types: FASTA und CHROMOSOME_LIST
+            # TODO: if it is a chromosome file, file type is CHROMOSOME_LIST
+            payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": 'FASTA'} #
             self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
                                      message=f'Analysis file {file} uploaded successfully')
 
