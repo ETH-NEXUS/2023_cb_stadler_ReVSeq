@@ -82,14 +82,14 @@ export const columnsSampleCount: SampleCountsTableColumns[] = [
     sortable: true,
     field: 'rpkm_proportions',
   },
-  {
-    name: 'normcounts',
-    required: true,
-    label: 'Normalized counts',
-    align: 'center',
-    sortable: true,
-    field: 'normcounts',
-  },
+  // {
+  //   name: 'normcounts',
+  //   required: true,
+  //   label: 'Normalized counts',
+  //   align: 'center',
+  //   sortable: true,
+  //   field: 'normcounts',
+  // },
   {
     name: 'outlier',
     required: true,
@@ -153,32 +153,32 @@ export const columnsSampleCount: SampleCountsTableColumns[] = [
   },
 
   {
-    name: 'DP20',
+    name: 'DP',
     required: true,
-    label: 'DP20',
+    label: 'DP',
     align: 'center',
     sortable: true,
-    field: 'DP20',
+    field: 'DP',
   }
   ,
 
   {
-    name: 'DP1',
+    name: 'consensus_fraction_n',
     required: true,
-    label: 'DP1',
+    label: 'consensus_fraction_n',
     align: 'center',
     sortable: true,
-    field: 'DP1',
+    field: 'consensus_fraction_n',
   }
   ,
-
   {
-    name: 'DP2',
+    name: 'consensus_number_n',
     required: true,
-    label: 'DP2',
+    label: 'consensus_number_n',
     align: 'center',
     sortable: true,
-    field: 'DP2',
+    field: 'consensus_number_n',
   }
+
 
 ]

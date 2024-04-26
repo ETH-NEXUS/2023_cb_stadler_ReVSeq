@@ -102,9 +102,9 @@ class SampleCountSerializers(serializers.ModelSerializer):
             "percentile_threshold",
             "tax_id",
             "scientific_name",
-            "DP20",
-            "DP1",
-            "DP2",
+            "DP",
+            "consensus_number_n",
+            "consensus_fraction_n",
 
         )
 

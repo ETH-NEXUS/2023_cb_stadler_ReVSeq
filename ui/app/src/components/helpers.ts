@@ -2,6 +2,7 @@ import {TableDataSampleCounts, TableDataMetadata} from 'src/models/tables'
 import {SampleCount, Metadata} from 'src/models/core'
 
 export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSampleCounts[] => {
+  console.log('sampleCounts', sampleCounts)
   return sampleCounts.map(sampleCount => {
     return {
       pseudonymized_id: sampleCount.sample
@@ -22,9 +23,9 @@ export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSa
       percentile_threshold: sampleCount.percentile_threshold,
       tax_id: sampleCount.tax_id,
       scientific_name: sampleCount.scientific_name,
-      DP20: sampleCount.DP20,
-      DP1: sampleCount.DP1,
-      DP2: sampleCount.DP2,
+      DP: sampleCount.DP,
+      consensus_fraction_n: sampleCount.consensus_fraction_n,
+      consensus_number_n: sampleCount.consensus_number_n,
     }
   })
 }

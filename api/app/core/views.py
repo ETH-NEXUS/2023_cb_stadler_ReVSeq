@@ -78,7 +78,7 @@ class SampleViewSet(viewsets.ModelViewSet):
         filters.DjangoFilterBackend,
         drf_filters.OrderingFilter,
     )
-    filterset_fields = ("plate__barcode", "pseudonymized_id")
+    filterset_fields = ("plate__barcode", "pseudonymized_id", "control")
 
     http_method_names = ["get", "head", "options"]
 
@@ -213,17 +213,13 @@ class SampleCountViewSet(viewsets.ModelViewSet):
                 "rpkm": 0,
                 "rpkm_proportions": 0,
                 "normcounts": 0,
-                "outlier": False,
-                "qc_status": "",
                 "coverage_threshold": 0,
                 "coverage": 0,
-                "coverage_status": "",
-                "readnum_status": "",
                 "readnum_threshold": 0,
-                "percentile_threshold": "",
-                "DP20": "",
-                "scientific_name": "",
-                "tax_id": "",
+
+
+
+
             }
         )
         strains = {}
@@ -235,16 +231,10 @@ class SampleCountViewSet(viewsets.ModelViewSet):
             strains[strain].length += item.length
             strains[strain].rpkm += item.rpkm
             strains[strain].rpkm_proportions += item.rpkm_proportions
-            strains[strain].outlier = item.outlier
+            strains[strain].normcounts += item.normcounts
             strains[strain].coverage_threshold = item.coverage_threshold
             strains[strain].coverage += item.coverage
-            strains[strain].coverage_status = item.coverage_status
-            strains[strain].readnum_status = item.readnum_status
             strains[strain].readnum_threshold +=item.readnum_threshold
-            strains[strain].percentile_threshold = item.percentile_threshold
-            strains[strain].DP20 = item.DP20
-            strains[strain].scientific_name = item.substrain.scientific_name
-            strains[strain].tax_id = item.substrain.taxon_id
 
 
 

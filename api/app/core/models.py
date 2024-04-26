@@ -20,13 +20,15 @@ class Well(models.Model):
 
 
 class Sample(models.Model):
-    sample_number = models.TextField(unique=True)
-    well = models.ForeignKey(Well, on_delete=models.CASCADE)
+    sample_number = models.TextField(null=True, blank=True)
+    well = models.ForeignKey(Well, on_delete=models.CASCADE, null=True, blank=True)
     pseudonymized_id = models.TextField(unique=True, null=True)
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
     job_id = models.IntegerField(null=True, blank=True)
     analysis_job_id = models.IntegerField(null=True, blank=True)
     valid = models.BooleanField(null=True, blank=True, default=True)
+    control = models.BooleanField(null=True, blank=True, default=False)
+    control_type = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
         return self.pseudonymized_id
@@ -106,9 +108,9 @@ class SampleCount(models.Model):
     percentile_threshold = models.TextField(null=True, blank=True)
     tax_id = models.IntegerField(null=True, blank=True)
     scientific_name = models.TextField(null=True, blank=True)
-    DP20 = models.TextField(null=True, blank=True)
-    DP1 = models.TextField(null=True, blank=True)
-    DP2 = models.TextField(null=True, blank=True)
+    DP = models.TextField(null=True, blank=True)
+    consensus_number_n = models.TextField(null=True, blank=True)
+    consensus_fraction_n = models.TextField(null=True, blank=True)
 
 
 

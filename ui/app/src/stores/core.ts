@@ -46,7 +46,7 @@ export const useCoreStore = defineStore('core', () => {
       tableData.value.forEach(item => {
 
         const strain_sampleId = item.substrain.strain.name + '__' + item.sample.pseudonymized_id
-        const strain = item.substrain.strain.name
+        // const strain = item.substrain.strain.name
         const substrain = item.substrain
         const existingData = mappedData.get(strain_sampleId) || {
           aligned: 0,
@@ -75,9 +75,7 @@ export const useCoreStore = defineStore('core', () => {
           normcounts: existingData.normcounts + item.normcounts,
           coverage_threshold:  item.coverage_threshold,
           coverage: existingData.coverage + item.coverage,
-          coverage_status: item.coverage_status,
           readnum_threshold:  item.readnum_threshold,
-          readnum_status: item.readnum_status,
           percentile_threshold: item.percentile_threshold,
           outlier: item.outlier,
           plate: item.plate.barcode,

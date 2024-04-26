@@ -1,6 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Card from 'primevue/card'
+
+</script>
 
 <template>
+  <Card>
+    <template #title> Simple Card </template>
+    <template #content>
+        <p class="m-0">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
+            quas!
+        </p>
+    </template>
+</Card>
   <section class="tw-pt-12 tw-pb-14">
     <div class="tw-container tw-px-4 tw-mx-auto">
       <div class="tw-max-w-3xl tw-mx-auto">
