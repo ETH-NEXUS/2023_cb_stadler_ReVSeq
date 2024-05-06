@@ -70,7 +70,7 @@ case "$1" in
                                 --configfile ${snakemake_config} \
                                 --config plate=${plate} \
                                 sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
-                                -n --notemp --until bwa
+                                -n --notemp
                 else
                         echo "$(date) The plate has been already analysed (file ${anonymizeddir}/${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
                 fi

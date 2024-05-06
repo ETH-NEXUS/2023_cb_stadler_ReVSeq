@@ -68,7 +68,7 @@ tools:
     # Table containing the matches between substrain name and taxon
     taxon: /data/pipeline/resources/substrain_taxon_lookup.csv
     # Wether to filter or not the alternative strains and substrains based on the same thresholds used to assign the top
-    filter_alternatives: False
+    filter_alternatives: 0
     # The maximum DP to be reported. The DP field will contain all DPs from 1 to this limit
     dp_limit: 20
   validate_assignment:

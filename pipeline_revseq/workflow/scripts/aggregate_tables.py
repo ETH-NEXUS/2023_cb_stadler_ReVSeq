@@ -55,7 +55,7 @@ def get_alternative_tops(inputdir, sample, dirname, top_strain_name, filter_alte
         sys.exit("ERROR: multiple matches for the top strain. This should never happen")
     outliers.remove(matches[0])
     for item in outliers:
-        if filter_alternatives:
+        if filter_alternatives == 1:
             if (item[1] < readnum_threshold) or (item[3] < coverage_threshold):
                 print("Filtered out alternative outlier "+str(item)+" for not hitting the read number or coverage thresholds")
                 continue
@@ -94,7 +94,7 @@ def create_line(df, linetype, sample, alternative_outliers):
     return df
 
 
-def get_assigned_panel(metadata, top_strain, match_table):
+def get_assigned_panel(metadata, match_table, sample):
     metadata = metadata.loc[metadata['ethid'] == sample ]
     metadata = metadata.to_dict(orient='list')
     positive = []
@@ -111,7 +111,11 @@ def get_assigned_panel(metadata, top_strain, match_table):
             positive.append(key.split(" ")[0])
     positive_name = []
     for virus in positive:
-        positive_name.append(match_table.loc[match_table["panel_name"] == virus]["strain_name"].to_string(index=False))
+        new_name = match_table.loc[match_table["panel_name"] == virus]["strain_name"].to_string(index=False).strip()
+        if new_name not in positive_name:
+            positive_name.append(match_table.loc[match_table["panel_name"] == virus]["strain_name"].to_string(index=False).strip())
+        else:
+            print("WARNING: found two identical positive panel matches for " + new_name + " in sample " + sample + ". Please verify that this is caused by the patient being tested with two overlapping panels")
     return positive_name
 
 
@@ -144,7 +148,7 @@ if __name__ == '__main__':
     parser.add_argument('--sample_map', required=True, type=str, help='Sample map file containing all sample names')
     parser.add_argument('--pseudoanon_metadata', required=True, type=str, help='Metadata table including the pseudonymized sample names')
     parser.add_argument('--match_table', required=True, type=str, help='TSV matching the panel code with the common virus name used in the pipeline')
-    parser.add_argument('--filter_alternatives', required=False, type=bool, default=False, help='Should we filter the alternative outliers using the same readnum and coverage thresholds used for the QC of the top outlier?')
+    parser.add_argument('--filter_alternatives', required=False, type=int, default=False, help='Should we filter the alternative outliers using the same readnum and coverage thresholds used for the QC of the top outlier? 0=No, 1=Yes')
     parser.add_argument('--readnum_threshold', required=True, type=int, help='The read number threshold to apply to the alternative outliers')
     parser.add_argument('--coverage_threshold', required=True, type=int, help='The coverage threshold to apply to the alternative outliers')
     parser.add_argument('--controls', required=True, type=str, help='The strings necessary to detect the controls. Comma separated')
@@ -172,10 +176,10 @@ if __name__ == '__main__':
         for string in ctrl_strings:
             if string in sample:
                 ctrl_type = string
-        print(ctrl_type)
         if ctrl_type == "":
-            top_strain["panel_assignment"] = ';'.join(get_assigned_panel(metadata, top_strain, match_table))
+            top_strain["panel_assignment"] = ';'.join(get_assigned_panel(metadata, match_table, sample))
         else:
+            print(ctrl_type)
             top_strain["panel_assignment"] = ";".join("")
         top_strain = create_line(top_strain, "strain", sample, alternative_outliers_strain)
         try:

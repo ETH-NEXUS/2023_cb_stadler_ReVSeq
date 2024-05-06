@@ -40,13 +40,14 @@ if __name__ == '__main__':
     else:
         sys.exit("Error: cannot recognize the value assigned to 'consensus_type': " + args.consensus_type)
 
-    if len(filter_values) != 0:
-        for strain in filter_values:
-            if assignment.loc[assignment["name"] == filter_values[0]]["coverage_status"].item() == "FAILED":
-                filter_values.remove(strain)
+#    if len(filter_values) != 0:
+#        for strain in filter_values:
+#            if assignment.loc[assignment["name"] == strain]["coverage_status"].item() == "FAILED":
+#                filter_values.remove(strain)
 
-    if assignment["readnum_status"][0] != "PASSED":
-        filter_values = []
+#    if assignment["readnum_status"][0] != "PASSED":
+#        filter_values = []
+    assignment = assignment.loc[assignment["name"].isin(filter_values)]
     regions = refs.loc[refs["substrain_name"].isin(filter_values)]["id"].to_list()
 
     consensus = SeqIO.parse(open(args.consensus),'fasta')
