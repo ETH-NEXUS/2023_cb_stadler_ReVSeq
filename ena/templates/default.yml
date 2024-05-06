@@ -45,7 +45,7 @@ experiment:
   insert_size: 250
   library_construction_protocol: "None"
   platform: illumina
-  instrument_model: Illumina NextSeq 500
+  instrument_model: NextSeq 500
 
 #
 run:
@@ -56,6 +56,6 @@ run:
 analysis:
   name: analysis_{}
   assembly_type: clone
-  coverage: 3.7  # it is in the sample_counts (there will be another column named coverage)
-  program: TODO
+  coverage: 3.7  # should be taken from the most expressed substrain
+  program: BCFtools
   platform: TODO

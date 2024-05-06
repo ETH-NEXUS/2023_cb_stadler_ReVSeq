@@ -24,11 +24,17 @@ Import logic:
    - Imports sample-related files and performs necessary validations.
    - If any error occurs, it logs the error and prints the traceback.
 """
+import glob
 import os
-from datetime import datetime
 import re
-from django.core.management.base import BaseCommand
+import sys
 import traceback
+from datetime import datetime
+
+from django.core.management.base import BaseCommand
+
+import config.get_config as config
+from core.helpers import read_csv_file, txt_to_list, compute_checksum
 from core.models import (
     SampleCount,
     Sample,
@@ -40,21 +46,15 @@ from core.models import (
     File,
     FileType,
 )
-
-import config.get_config as config
-import sys
-import glob
-from core.helpers import read_csv_file, txt_to_list, compute_checksum
 from helpers.color_log import logger
-
-
-
 
 EMPTY_SAMPLES_GLOB = "*empty_samples*.txt"
 META_DATA_GLOB = "*metadata*.csv"
 SAMPLE_DIR_GLOB = "sample_*"
 COUNT_TABLE_GLOB = "*count_table*.tsv"
 PIPELINE_VIRSION_GLOB = "*pipeline_version*.txt"
+CONTROL_DIR_GLOB = "sample_*-KO{neg,pos}"
+
 
 
 class Command(BaseCommand):
@@ -94,7 +94,7 @@ class Command(BaseCommand):
                     matching_file_type = ft
                     break
             if not matching_file_type:
-                logger.error(f"File type for {basename} not found")
+                logger.warning(f"File type for {basename} not found")
 
             file, _ = File.objects.update_or_create(
                 path=filepath,
@@ -117,7 +117,8 @@ class Command(BaseCommand):
                 self.__process_file(file[0], sample=sample)
 
     def __locate_plate_files(self, import_dir):
-        print("----------------------------Import dir content--------------------------------------", os.listdir(import_dir))
+        print("----------------------------Import dir content--------------------------------------",
+              os.listdir(import_dir))
         metadata_file = glob.glob(os.path.join(import_dir, META_DATA_GLOB))[0]
         empty_samples_file = glob.glob(os.path.join(import_dir, EMPTY_SAMPLES_GLOB))[0]
         pipline_version_file = glob.glob(
@@ -197,16 +198,27 @@ class Command(BaseCommand):
     ------------------------------------- DEALING WITH COUNTS ----------------------------------------
     """
 
-    def counts(self, plate, columns, counts_file):
+    def counts(self, plate, columns, counts_file, control=False, control_sample_id=None, control_type=None):
         """
         Process the counts file to create SampleCount object.
         :param counts_file: Path to the counts file
+        :param columns: Columns to extract from the counts file
+        :param plate: Plate object representing the processed plate
+        :param control: Boolean indicating if the counts are for a control sample
+        :param control_sample_is: The control sample id
+        :param control_type: The control type
         :return: None
         """
+        if control:
+            Sample.objects.update_or_create(pseudonymized_id=control_sample_id,
+                                            control=True,
+                                            control_type=control_type)
+            sample_id = control_sample_id
+        else:
+            sample_id = os.path.basename(counts_file).split("_")[0]
+            if sample_id not in self.sample_id_dict:
+                raise ValueError(f"Sample {sample_id} does not exist in the metadata file")
         data = read_csv_file(counts_file)
-        sample_id = os.path.basename(counts_file).split("_")[0]
-        if sample_id not in self.sample_id_dict:
-            raise ValueError(f"Sample {sample_id} does not exist in the metadata file")
         try:
             sample = Sample.objects.get(pseudonymized_id=sample_id)
 
@@ -234,9 +246,9 @@ class Command(BaseCommand):
                         percentile_threshold=item[columns.percentile_threshold],
                         tax_id=int(item[columns.tax_id]),
                         scientific_name=item[columns.scientific_name],
-                        DP20=item[columns.DP20],
-                        DP1=item[columns.DP1],
-                        DP2=item[columns.DP2],
+                        DP=item[columns.DP] if columns.DP in item else None,
+                        consensus_number_n=item[columns.consensus_number_n] if columns.consensus_number_n in item else None,
+                        consensus_fraction_n=item[columns.consensus_fraction_n] if columns.consensus_fraction_n in item else None,
                     )
                     self.sample_id_dict[sample_id] = True
                     if _:
@@ -288,8 +300,14 @@ class Command(BaseCommand):
             if metadata_file and empty_samples_file:
                 columns = config.read_config("import_columns")
                 plate = self.metadata(columns, metadata_file)
-
-                sample_dirs = glob.glob(os.path.join(import_dir, SAMPLE_DIR_GLOB))
+                all_dirs = glob.glob(os.path.join(import_dir, SAMPLE_DIR_GLOB))
+                sample_dirs = []
+                control_dirs = []
+                for d in all_dirs:
+                    if d.endswith('KOneg') or d.endswith('KOpos'):
+                        control_dirs.append(d)
+                    else:
+                        sample_dirs.append(d)
                 for sample_dir in sample_dirs:
                     logger.debug(
                         f"---------------- IMPORTING COUNTS FOR {sample_dir} ---------------- \n"
@@ -304,6 +322,25 @@ class Command(BaseCommand):
                         f"---------------- IMPORTING SAMPLE-RELATED FILES FOR THE SAMPLE {sample_dir} ---------------- \n"
                     )
                     self.__process_sample_files(sample_dir, sample)
+
+                for control_dir in control_dirs:
+                    logger.debug(f"----------------------- IMPORTING CONTROLS {control_dir} -----------------------\n")
+                    if control_dir.endswith('pos'):
+                        control_type = 'pos'
+                        control_sample_id = f"control_pos_{plate.barcode}"
+                    else:
+                        control_sample_id = f"control_neg_{plate.barcode}"
+                        control_type = 'neg'
+                    current_count_table_file = glob.glob(
+                        os.path.join(control_dir, COUNT_TABLE_GLOB)
+                    )[0]
+                    self.counts(plate, columns, current_count_table_file, control=True,
+                                control_sample_id=control_sample_id, control_type=control_type)
+                    sample = Sample.objects.get(pseudonymized_id=control_sample_id, control=True,
+                                                control_type=control_type)
+
+
+                    self.__process_sample_files(control_dir, sample)
 
                 logger.debug(
                     f"\n --------------- IMPORTING PLATE-RELATED FILES FOR THE PLATE {plate} -------------------- \n"

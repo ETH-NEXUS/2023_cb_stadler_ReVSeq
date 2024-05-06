@@ -32,16 +32,17 @@ class WellAdmin(ModelAdmin):
 
 @admin.register(Sample)
 class SampleAdmin(ModelAdmin):
-    list_display = ("pseudonymized_id", 'valid', "sample_number", "well", "job_id")
+    list_display = ("pseudonymized_id", 'valid', "sample_number", "well", "job_id", "control")
     search_fields = ("sample_number", "pseudonymized_id", "well__location")
     list_filter_submit = True
-    list_filter = ("plate__barcode",)
+    list_filter = ("plate__barcode", "control", "control_type")
 
 
 @admin.register(SampleFile)
 class SampleFileAdmin(ModelAdmin):
     list_display = ("sample", "file_type", "file")
     search_fields = ("sample__sample_id", "file_type", "file")
+
 
 
 @admin.register(Strain)
