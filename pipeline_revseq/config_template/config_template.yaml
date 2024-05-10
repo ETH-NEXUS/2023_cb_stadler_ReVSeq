@@ -33,9 +33,9 @@ tools:
     # to the major strains available in the panel
     lookup: "/data/pipeline/resources/strain_substrain_lookup.csv"
     # String to search for positive controls
-    pos: "KOpos"
+    pos: "KOpos,KoPos"
     # String to search for negative controls
-    neg: "KOneg"
+    neg: "KOneg,KoNeg"
   bwa:
     # Threads to assign to bwa
     threads: 4

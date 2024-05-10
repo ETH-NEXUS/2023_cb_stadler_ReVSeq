@@ -153,22 +153,34 @@ rule cutadapt:
         adapter2=$(grep ${{original_sample_name}} "${{samplesheet}}" | awk -F ',' '{{print $7}}')
         
         # Sometimes we don't receive adapters for a sample
-        adapter_opt=""
-        if [ ${{adapter1}} ]; then
-            adapter_opt="${{adapter_opt}} -b ${{adapter1}}"
+        if [ ${{adapter1}} ] || [[ ${{adapter2}} ]]; then
+            adapter_opt=""
+            if [ ${{adapter1}} ]; then
+                adapter_opt="${{adapter_opt}} -b ${{adapter1}}"
+            fi
+            if [ ${{adapter2}} ]; then
+                adapter_opt="${{adapter_opt}} -b ${{adapter2}}"
+            fi
+            cutadapt \
+            ${{adapter_opt}} -b {params.adapter_default} \
+            -O {params.min_length} \
+            -o {output.r1} \
+            -p {output.r2} \
+            -j {threads} \
+            -m {params.min_length} \
+            {input.r1} \
+            {input.r2} 2> >(tee {log.errfile} >&2)
+        else
+            cutadapt \
+            -b {params.adapter_default} \
+            -O {params.min_length} \
+            -o {output.r1} \
+            -p {output.r2} \
+            -j {threads} \
+            -m {params.min_length} \
+            {input.r1} \
+            {input.r2} 2> >(tee {log.errfile} >&2)
         fi
-        if [ ${{adapter2}} ]; then
-            adapter_opt="${{adapter_opt}} -b ${{adapter2}}"
-        fi
-        cutadapt \
-        ${{adapter_opt}} -b {params.adapter_default} \
-        -O {params.min_length} \
-        -o {output.r1} \
-        -p {output.r2} \
-        -j {threads} \
-        -m {params.min_length} \
-        {input.r1} \
-        {input.r2} 2> >(tee {log.errfile} >&2)
         """
 
 #rule trim_primers:

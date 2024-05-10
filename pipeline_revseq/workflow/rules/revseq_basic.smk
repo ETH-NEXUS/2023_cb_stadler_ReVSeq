@@ -300,6 +300,8 @@ rule postprocess_consensus:
         ref = config["resources"]["reference_table"],
         consensus_type = config["tools"]["consensus"]["consensus_type"],
         lookup = config["tools"]["general"]["lookup"],
+        reference = config["resources"]["reference_table"],
+        readcount = rules.remove_duplicates.output.readcount,
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.err.log",
@@ -315,11 +317,13 @@ rule postprocess_consensus:
         --assignment {input.assignment} \
         --consensus {input.all_consensus} \
         --consensus_type {params.consensus_type} \
+        --readcount {params.readcount} \
         --output {output.consensus} 2> >(tee {log.errfile} >&2)
         
         gzip -c {output.consensus} > {output.consensus_gzip}
 
         python workflow/scripts/count_n.py \
         --input {output.consensus} \
-        --output {output.count_n}
+        --output {output.count_n} \
+        --bed {params.reference}
         """

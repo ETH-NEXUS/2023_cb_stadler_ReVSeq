@@ -26,9 +26,11 @@ rule gather_results_samples:
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_results_sample/{sample}_gather_results.err.log",
     benchmark:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/gather_results_sample/{sample}_gather_results.benchmark"
+    conda:
+        "../envs/python.yaml"
     shell:
         """
-        ln -s {input.assignment} {output.assignment}
+        python workflow/scripts/add_consensus_info.py --assignment {input.assignment} --consensus_n {input.count_n} --output {output.assignment}
         ln -s {input.rawr1} {output.rawr1}
         ln -s {input.rawr2} {output.rawr2}
         ln -s {input.bam} {output.bam}

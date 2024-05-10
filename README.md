@@ -60,7 +60,7 @@ The pipeline is divided in the four major areas: `preprocessing`, `basic pipelin
 -  `preprocessing`: prepare the raw data for the bioinformatics analysis
   - `merge_lanes`: merge the raw data from multiple lanes in a single fastq file
   - `bwa_index`: index the merged host-virus reference sequences for use with BWA
-  - `trim_galore`: trim primers from the raw sequences and filter reads by quality (default) and by read length (minimum 80bp after trimming)
+  - `cutadapt`: trim primers and adapters from the raw sequences and filter reads by quality (default) and by read length (minimum 80bp after trimming). Adapters are trimmed based on an optional metadata file. If the file is absent, no adapter trimming is performed
 - `dehumanization`: remove human reads from the dataset
   - `bwa`: align the trimmed reads to the merged host-virus referenece sequences using BWA
   - `dh_postprocess`: sort and index alignments
@@ -76,6 +76,8 @@ The pipeline is divided in the four major areas: `preprocessing`, `basic pipelin
   - `idxstats`: compute and report index stats and aligned reads counts for the deduplicated alignments
   - `assign_virus`: assign the virus(es) more likely to be present in the sample. More details on the custom method available in the next paragraph
   - `validate_assignment`: compare the virus assignment with the results available from the screening panels and add the validation to the report
+  - `consensus`: create the consensus sequence for all available references using BCFTools. Any position with coverage below the minimum coverage defined in the configuration yaml file is masked with a 'N' character
+  - `postprocess_consensus`: filter the consensus to keep only the references of interest. Count the statistics of the consensus (number of Ns, proportion of Ns)
 - `qc`: Quality control steps and report
   - `fastq_raw`: quality control of raw reads using FastQC
   - `fastqc_merged`: quality control of lane-merged reads using FastQC
@@ -84,6 +86,11 @@ The pipeline is divided in the four major areas: `preprocessing`, `basic pipelin
   - `rseqc`: quality control of the deduplicated alignments using rseqc
   - `qualimap`: quality control of the deduplicated alignments using qualimap
   - `multiqc`: collecting and reporting all previous QC steps using multiQC
+- `upload`: functions to upload results on the database and on Viollier's FTP server
+  - `gather_results_samples`: processes the assignment table to add the consensus statistics. Gather all sample-related files for upload in a single directory
+  - `gather_results_plate`: Gather all plate-related files for upload in a single directory
+  - `push_to_db`: use ReVSeqDataLoader to upload the gathered data to the database
+  - `viollier_upload`: upload the gathered data to Viollier's SFTP server
   
 A rulegraph showing how these steps are connected is available in `images/revseq_pipeline_rulegraph.pdf`
 
