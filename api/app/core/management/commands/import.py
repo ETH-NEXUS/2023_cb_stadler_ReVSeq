@@ -57,6 +57,16 @@ CONTROL_DIR_GLOB = "sample_*-KO{neg,pos}"
 
 
 
+def parse_date(date_str):
+    for fmt in ("%Y-%m-%d", "%d.%m.%Y", "%d.%m.%y", "%Y.%m.%d", "%y.%m.%d"):
+        try:
+            return datetime.strptime(date_str, fmt)
+        except ValueError:
+            continue
+    raise ValueError(f"Date {date_str} from is not in an expected format")
+
+
+
 class Command(BaseCommand):
     sample_id_dict = {}
     stats = {
@@ -151,8 +161,8 @@ class Command(BaseCommand):
         return data
 
     def __create_metadata(self, item, plate, well, sample):
-        order_date = datetime.strptime(item["Order date"], "%Y-%m-%d")
-        ent_date = datetime.strptime(item["ent date"], "%Y-%m-%d")
+        order_date = parse_date(item["Order date"])  # datetime.strptime(item["Order date"], "%Y-%m-%d")
+        ent_date = parse_date(item["ent date"])     # datetime.strptime(item["ent date"], "%Y-%m-%d")
         treatment_type = item["treatment_type"] if item["treatment_type"] else None
         data = self.__extract_panels(item)
         metadata, _ = Metadata.objects.update_or_create(
@@ -211,6 +221,7 @@ class Command(BaseCommand):
         """
         if control:
             Sample.objects.update_or_create(pseudonymized_id=control_sample_id,
+                                            plate=plate,
                                             control=True,
                                             control_type=control_type)
             sample_id = control_sample_id

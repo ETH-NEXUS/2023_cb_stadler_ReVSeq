@@ -47,7 +47,7 @@ class SampleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sample
-        fields = ("well", "pseudonymized_id", "plate", "files")
+        fields = ("well", "pseudonymized_id", "plate", "files", "control", "control_type")
 
 
 class StrainSerializer(serializers.ModelSerializer):
