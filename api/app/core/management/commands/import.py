@@ -221,6 +221,7 @@ class Command(BaseCommand):
         """
         if control:
             Sample.objects.update_or_create(pseudonymized_id=control_sample_id,
+                                            plate=plate,
                                             control=True,
                                             control_type=control_type)
             sample_id = control_sample_id
