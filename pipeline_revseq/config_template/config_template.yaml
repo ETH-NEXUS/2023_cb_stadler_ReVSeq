@@ -36,6 +36,8 @@ tools:
     pos: "KOpos,KoPos"
     # String to search for negative controls
     neg: "KOneg,KoNeg"
+    # String to search for mouthwash samples
+    mouthwash: "MouthWash"
   bwa:
     # Threads to assign to bwa
     threads: 4

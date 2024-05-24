@@ -14,7 +14,7 @@ def find_input_fastq_lanes_r1(wildcards):
     fastq_files = []
     total_samples = os.listdir(config["inputOutput"]["input_fastqs"]+"/"+config["plate"])
     for lane in sample_lanes:
-        all_samples = [ file for file in total_samples if str(snumber) in file ]
+        all_samples = [ file for file in total_samples if str(snumber)+"_" in file ]
         lanefile = [ file for file in all_samples if lane in file ]
         raw = [ file for file in lanefile if mate in file ]
         if len(raw) == 0:
@@ -35,7 +35,7 @@ def find_input_fastq_lanes_r2(wildcards):
     fastq_files = []
     total_samples = os.listdir(config["inputOutput"]["input_fastqs"]+"/"+config["plate"])
     for lane in sample_lanes:
-        all_samples = [ file for file in total_samples if str(snumber) in file ]
+        all_samples = [ file for file in total_samples if str(snumber)+"_" in file ]
         lanefile = [ file for file in all_samples if lane in file ]
         raw = [ file for file in lanefile if mate in file ]
         if len(raw) == 0:

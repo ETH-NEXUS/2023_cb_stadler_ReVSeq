@@ -103,6 +103,30 @@ case "$1" in
                         --unlock \
                         -n
         ;;
+        list_temp_files)
+                cd ${pipelinedir}
+                plate=$2
+                        snakemake \
+                        --use-conda \
+                        --rerun-triggers mtime \
+                        -c${threads} \
+                        --configfile ${snakemake_config} \
+                        --config plate=${plate} \
+                        sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
+                        --delete-temp-output -n
+        ;;
+        delete_temp_files)
+                cd ${pipelinedir}
+                plate=$2
+                        snakemake \
+                        --use-conda \
+                        --rerun-triggers mtime \
+                        -c${threads} \
+                        --configfile ${snakemake_config} \
+                        --config plate=${plate} \
+                        sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
+                        --delete-temp-output
+        ;;
         *)
                 echo "$(date) Unkown sub-command ${1}" > /dev/stderr
                 exit 2

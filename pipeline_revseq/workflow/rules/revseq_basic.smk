@@ -216,6 +216,7 @@ rule validate_assignment:
         match_table = config["tools"]["validate_assignment"]["match_table"],
         ctrl_pos = config["tools"]["general"]["pos"],
         ctrl_neg = config["tools"]["general"]["neg"],
+        mouthwash = config["tools"]["general"]["mouthwash"],
         plate = config["plate"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/validate_assignment/{sample}_validation.out.log",
@@ -232,7 +233,7 @@ rule validate_assignment:
             --ethid {wildcards.sample} \
             --match_table {params.match_table} \
             --count_table {input.assignment} \
-            --controls {params.ctrl_pos},{params.ctrl_neg} \
+            --exceptions {params.ctrl_pos},{params.ctrl_neg},{params.mouthwash} \
             --plate {params.plate} \
             --output {output.validation}  2> >(tee {log.errfile} >&2)
         """

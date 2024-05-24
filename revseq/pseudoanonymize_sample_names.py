@@ -46,6 +46,8 @@ def generate_new_ethids(anon_df, all_samples):
     newsamples = []
     for samplename in all_samples:
         newethid = generate_id()
+        if len(str(samplename).split("-")) == 3:
+            newethid = "MouthWash-"+newethid
         if len(anon_df) > 0:
             while (newethid in anon_df) and any(newethid == sublist[1] for sublist in newsamples):
                 newethid = generate_id()
@@ -57,9 +59,12 @@ def generate_new_ethids(anon_df, all_samples):
     newsamples = pd.DataFrame(newsamples)
     return newsamples
 
+
 def find_controls(ctrl_neg_prefix, ctrl_pos_prefix, mirrordir, plate):
-    ctrl_pos = glob.glob(mirrordir+"/"+plate+"/"+ctrl_pos_prefix+"*")
-    ctrl_neg = glob.glob(mirrordir+"/"+plate+"/"+ctrl_neg_prefix+"*")
+    ctrl_pos = [ glob.glob(mirrordir+"/"+plate+"/"+pos+"*") for pos in ctrl_pos_prefix.split(",") ]
+    ctrl_pos = [ x for xs in ctrl_pos for x in xs ]
+    ctrl_neg = [ glob.glob(mirrordir+"/"+plate+"/"+neg+"*") for neg in ctrl_neg_prefix.split(",") ]
+    ctrl_neg = [ x for xs in ctrl_neg for x in xs ]
     all_ctrls = []
     all_ctrls.extend(ctrl_pos)
     all_ctrls.extend(ctrl_neg)
@@ -74,7 +79,6 @@ def find_controls(ctrl_neg_prefix, ctrl_pos_prefix, mirrordir, plate):
     print("Found "+str(len((ctrl_count)))+" controls: "+str(ctrl_count))
     ctrl_name = [ element for element in ctrl_count]
     ctrl_ethid = [ plate+"-"+element.replace("_", "-") for element in ctrl_count ]
-
     ctrls = pd.DataFrame({"Sample number": ctrl_name, "ethid": ctrl_ethid})
     return ctrls
 
@@ -133,41 +137,38 @@ def create_sample_map(samples, outdir):
     lanes = lanes.rename(columns={0: "sample", 1: "lane"})
     return lanes
 
-#def verify_if_new_plate(metadatadir, processed_plates):
-#    metadata_subdirs = os.listdir(metadatadir)
-#    metadata_files = [ metadatadir + "/" + subdir + "/" + os.listdir(metadatadir + "/" + subdir)[0] for subdir in metadata_subdirs ]
-#    new_plates = []
-#    for file in metadata_files:
-#        with open(file) as f:
-#            metadata = f.read().splitlines()
-#        try:
-#            plate = metadata[1].split(";")[4]
-#        except indexError:
-#            sys.exit("ERROR: the metadata table " + file + " is either empty or truncated")
-#        if plate not in processed_plates:
-#            new_plates.append([plate, file])
-#    return new_plates
+
+def load_metadata(mirrordir, metadata_string, plate):
+    platedir = mirrordir + "/" + plate
+    metadata_file = [ file for file in os.listdir(platedir) if ".csv" in file]
+    metadata_file = [ platedir + "/" + file for file in metadata_file if metadata_string in file ]
+    if len(metadata_file) > 1:
+        sys.exit("ERROR: found " + str(len(metadata_file)) + " metadata files in mirrored directory " + platedir)
+    if len(metadata_file) == 0:
+        print("WARNING: no metadata found for plate " + plate + ". Skipping...")
+        return 0
+    metadata_file = metadata_file[0]
+    with open(metadata_file) as f:
+        metadata = f.read().splitlines()
+    return [metadata, metadata_file]
 
 
 def verify_if_new_plate(mirrordir, mirrored_plates, processed_plates, metadata_string):
     new_plates_names = [ plate for plate in mirrored_plates if plate not in processed_plates ]
     new_plates = []
     for plate in new_plates_names:
-        platedir = mirrordir + "/" + plate
-        metadata_file = [ file for file in os.listdir(platedir) if ".csv" in file]
-        metadata_file = [ platedir + "/" + file for file in metadata_file if metadata_string in file ]
-        if len(metadata_file) != 1:
-            sys.exit("ERROR: found " + str(len(metadata_file)) + " metadata files in mirrored directory " + platedir)
-        metadata_file = metadata_file[0]
-        with open(metadata_file) as f:
-            metadata = f.read().splitlines()
+        metadata = load_metadata(mirrordir, metadata_string, plate)
+        if metadata == 0:
+            continue
+        metadata_file = metadata[1]
+        metadata = metadata[0]
         try:
             metadata_plate = metadata[1].split(";")[4]
             metadata_plate = metadata_plate.replace('"', '')
         except indexError:
-            sys.exit("ERROR: the metadata table " + file + " is either empty or truncated")
+            sys.exit("ERROR: the metadata table for plate " + plate + " is either empty or truncated")
         if metadata_plate != plate:
-            sys.exit("ERROR: the metadata table " + file + " lists a different plate than the directory name")
+            sys.exit("ERROR: the metadata table for plate " + plate + " lists a different plate than the directory name")
         new_plates.append([plate,metadata_file])
     return new_plates
 
@@ -204,6 +205,23 @@ def get_pseudoanon_names(outdir):
 def find_ethid(sample_number, match_table):
     return match_table.loc[match_table["Sample number"]==str(sample_number)]["ethid"].to_string(index=False).strip()
 
+
+def detect_mouthwash_samples(new_complete_plates, mirrordir):
+    complete_plates = {}
+    for plate,data in new_complete_plates.items():
+        files = os.listdir(mirrordir + "/" + plate)
+        for sample in files:
+            substrings = sample.split("-")
+            if len(substrings) != 3 or len(substrings[0]) != 1 or substrings[0].isnumeric() or len(substrings[1]) != 1 or (not substrings[1].isnumeric()):
+                continue
+            substrings[2] = substrings[2].split("_")[0]
+            name = "-".join(substrings)
+            if name not in data[0]:
+                data[0].append(name)
+        complete_plates[plate] = data
+    return complete_plates
+
+
 # Script
 if __name__ == '__main__':
     # Parse input args
@@ -212,8 +230,8 @@ if __name__ == '__main__':
     parser.add_argument('--outdir', required=True, type=str, help='the path to the output directory')
     #parser.add_argument('--metadatalist', required=True, type=str, help='Tab-delimited table containing three columns: "metadata_string" containing the string to use to fetch the metadata files, "id_column" containing the name of the column containing the IDs, "sep" containing the separator used in the file')
     parser.add_argument('--mirrordir', required=True, type=str, help='the directory containing all raw data samples, one folder per sample')
-    parser.add_argument('--ctrl_neg_prefix', required=True, type=str, help='the prefix to use to detect negative controls')
-    parser.add_argument('--ctrl_pos_prefix', required=True, type=str, help='the prefix to use to detect positive controls')
+    parser.add_argument('--ctrl_neg_prefix', required=True, type=str, help='the prefixes to use to detect negative controls, comma separated')
+    parser.add_argument('--ctrl_pos_prefix', required=True, type=str, help='the prefixes to use to detect positive controls, comma separated')
     parser.add_argument('--metadata_string', required=True, type=str, help='the string to use to find the metadata files')
 
     args = parser.parse_args()
@@ -236,16 +254,17 @@ if __name__ == '__main__':
         sys.exit()
 
     new_complete_plates = verify_if_complete_plate(new_plates, args.mirrordir)
+    complete_plates = detect_mouthwash_samples(new_complete_plates, args.mirrordir)
 
-    if len(new_complete_plates) == 0:
+    if len(complete_plates) == 0:
         print("There are new plates but none appears to be complete yet")
         print("COMPLETE = the raw data in the mirror show at least one R1 and one R2 file for each sample listed in the metadata.")
         sys.exit()
     
-    print("Found new plates to process: " + str(new_plates))
+    print("Found new plates to process: " + str(complete_plates.keys()))
     print("Beginning pseudo-anonymization")
 
-    for plate,data in new_complete_plates.items():
+    for plate,data in complete_plates.items():
         sample = data[0]
         file = data[1]
         newsamples = generate_new_ethids(anon, sample)
@@ -268,7 +287,7 @@ if __name__ == '__main__':
 
             metadata = pd.read_csv(file, sep=";")
             metadata["Sample number"] = metadata["Sample number"].astype(str)
-            metadata = pd.merge(metadata, newsamples, on="Sample number")
+            metadata = pd.merge(metadata, newsamples, on="Sample number", how="outer")
             metadata = metadata.rename(columns={"Spital: Ambulant/Stanionär": "treatment_type"})
             metadata.to_csv(args.outdir + "/" + plate + "/" + plate + "_metadata.csv", sep=";", index=None)
 
