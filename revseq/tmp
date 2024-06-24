@@ -1,0 +1,7528 @@
+Calculating consensus for all outlier strains
+writing the consensus
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 13:57:24 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 1455648
+Number of valid reads: 1455648
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 1455648
+Num mapped first of pair: 727824
+Num mapped second of pair: 727824
+Num singletons: 0
+Time taken to analyze reads: 5
+Computing descriptors...
+numberOfMappedBases: 102430551
+referenceSize: 596713
+numberOfSequencedBases: 102423670
+numberOfAs: 33190523
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 5
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Calculating consensus for all outlier strains
+writing the consensus
+application/gzip
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for qFQ9kJ_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for qFQ9kJ_merged_R2.fastq.gz
+Analysis complete for BP3DjK_merged_R1.fastq.gz
+application/gzip
+Analysis complete for BP3DjK_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for sJfkNn_merged_R1.fastq.gz
+application/gzip
+Analysis complete for oKbCeC_merged_R1.fastq.gz
+application/gzip
+Analysis complete for sJfkNn_merged_R2.fastq.gz
+Analysis complete for oKbCeC_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for 39xr8K_merged_R1.fastq.gz
+Analysis complete for JqBYLh_merged_R1.fastq.gz
+application/gzip
+application/gzip
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 13:59:47 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 213234
+Number of valid reads: 213234
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 213234
+Num mapped first of pair: 106617
+Num mapped second of pair: 106617
+Num singletons: 0
+Time taken to analyze reads: 1
+Computing descriptors...
+numberOfMappedBases: 14098905
+referenceSize: 596713
+numberOfSequencedBases: 14095170
+numberOfAs: 3691938
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 1
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Analysis complete for 39xr8K_merged_R2.fastq.gz
+Analysis complete for JqBYLh_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for wfEdma_merged_R1.fastq.gz
+Analysis complete for apjzjY_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for wfEdma_merged_R2.fastq.gz
+Analysis complete for apjzjY_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for AqTpPL_merged_R1.fastq.gz
+Analysis complete for q8yvBm_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for AqTpPL_merged_R2.fastq.gz
+Analysis complete for q8yvBm_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for A7c6LH_merged_R1.fastq.gz
+Analysis complete for Kr6366_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for A7c6LH_merged_R2.fastq.gz
+Analysis complete for Kr6366_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for yEmM7C_merged_R1.fastq.gz
+Analysis complete for 9eyPAv_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for yEmM7C_merged_R2.fastq.gz
+Analysis complete for 9eyPAv_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for PBuuXq_merged_R1.fastq.gz
+application/gzip
+Analysis complete for eDDeFg_merged_R1.fastq.gz
+application/gzip
+Analysis complete for PBuuXq_merged_R2.fastq.gz
+Analysis complete for eDDeFg_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for qyxpsA_merged_R1.fastq.gz
+application/gzip
+Analysis complete for ctWvEg_merged_R1.fastq.gz
+application/gzip
+Analysis complete for qyxpsA_merged_R2.fastq.gz
+Analysis complete for ctWvEg_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for JBeRmh_merged_R1.fastq.gz
+application/gzip
+Analysis complete for 6RgJcf_merged_R1.fastq.gz
+application/gzip
+Analysis complete for JBeRmh_merged_R2.fastq.gz
+Analysis complete for 6RgJcf_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for TUofv5_merged_R1.fastq.gz
+application/gzip
+Analysis complete for 2wNhZ6_merged_R1.fastq.gz
+application/gzip
+Analysis complete for TUofv5_merged_R2.fastq.gz
+Analysis complete for 2wNhZ6_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for gUyqiB_merged_R1.fastq.gz
+application/gzip
+Analysis complete for Kouapg_merged_R1.fastq.gz
+application/gzip
+Analysis complete for gUyqiB_merged_R2.fastq.gz
+Analysis complete for Kouapg_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for yBzeB4_merged_R1.fastq.gz
+Analysis complete for 5yo4pw_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for yBzeB4_merged_R2.fastq.gz
+Analysis complete for 5yo4pw_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for wxqbsV_merged_R1.fastq.gz
+Analysis complete for E85caa_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for E85caa_merged_R2.fastq.gz
+Analysis complete for wxqbsV_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for rRB3bA_merged_R1.fastq.gz
+Analysis complete for on2kE2_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for rRB3bA_merged_R2.fastq.gz
+Analysis complete for on2kE2_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for kGZ6QJ_merged_R1.fastq.gz
+Analysis complete for A4kPrC_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for kGZ6QJ_merged_R2.fastq.gz
+Analysis complete for A4kPrC_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for x9cG2s_merged_R1.fastq.gz
+application/gzip
+Analysis complete for 5ejFCt_merged_R1.fastq.gz
+application/gzip
+Analysis complete for x9cG2s_merged_R2.fastq.gz
+Analysis complete for 5ejFCt_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for gJTbaX_merged_R1.fastq.gz
+Analysis complete for HDpbN3_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for gJTbaX_merged_R2.fastq.gz
+Analysis complete for HDpbN3_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for Yt4sDc_merged_R1.fastq.gz
+Analysis complete for mr63Tu_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for Yt4sDc_merged_R2.fastq.gz
+Analysis complete for mr63Tu_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for MjqpEV_merged_R1.fastq.gz
+Analysis complete for 87SFKH_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for MjqpEV_merged_R2.fastq.gz
+Analysis complete for 87SFKH_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for UeeCfY_merged_R1.fastq.gz
+Analysis complete for PQ5aTg_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for UeeCfY_merged_R2.fastq.gz
+Analysis complete for PQ5aTg_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for SnHdeU_merged_R1.fastq.gz
+application/gzip
+Analysis complete for VnXdYZ_merged_R1.fastq.gz
+application/gzip
+Analysis complete for SnHdeU_merged_R2.fastq.gz
+Analysis complete for VnXdYZ_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for Wastewater-Qc3yJ6_merged_R1.fastq.gz
+Analysis complete for 2YkySW_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for Wastewater-Qc3yJ6_merged_R2.fastq.gz
+Analysis complete for 2YkySW_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for gUJuDm_merged_R1.fastq.gz
+Analysis complete for LMD6ho_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for gUJuDm_merged_R2.fastq.gz
+Analysis complete for LMD6ho_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for xEyU4h_merged_R1.fastq.gz
+Analysis complete for Wastewater-YgVANr_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for xEyU4h_merged_R2.fastq.gz
+Analysis complete for Wastewater-YgVANr_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for xLUZia_merged_R1.fastq.gz
+application/gzip
+Analysis complete for bRA5R7_merged_R1.fastq.gz
+application/gzip
+Analysis complete for xLUZia_merged_R2.fastq.gz
+Analysis complete for bRA5R7_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for hf53FC_merged_R1.fastq.gz
+application/gzip
+Analysis complete for Wastewater-sJ7LES_merged_R1.fastq.gz
+application/gzip
+Analysis complete for hf53FC_merged_R2.fastq.gz
+Analysis complete for Wastewater-sJ7LES_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for 4tGPY7_merged_R1.fastq.gz
+application/gzip
+Analysis complete for UQY8X6_merged_R1.fastq.gz
+application/gzip
+Analysis complete for 4tGPY7_merged_R2.fastq.gz
+Analysis complete for UQY8X6_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for 26nhBT_merged_R1.fastq.gz
+application/gzip
+Analysis complete for gxCe5X_merged_R1.fastq.gz
+application/gzip
+Analysis complete for 26nhBT_merged_R2.fastq.gz
+Analysis complete for gxCe5X_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for uGN5sK_merged_R1.fastq.gz
+application/gzip
+Analysis complete for Qw6j9Q_merged_R1.fastq.gz
+Analysis complete for uGN5sK_merged_R2.fastq.gz
+application/gzip
+Analysis complete for Qw6j9Q_merged_R2.fastq.gz
+application/gzip
+Analysis complete for Wastewater-XWr4MW_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for bKw5aQ_merged_R1.fastq.gz
+Analysis complete for Wastewater-XWr4MW_merged_R2.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for bKw5aQ_merged_R2.fastq.gz
+Analysis complete for 5DzhxH_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for 5DzhxH_merged_R2.fastq.gz
+Analysis complete for ztFGoy_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for ztFGoy_merged_R2.fastq.gz
+Analysis complete for vtujVi_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for vtujVi_merged_R2.fastq.gz
+Analysis complete for KvvZnz_merged_R1.fastq.gz
+application/gzip
+Analysis complete for KvvZnz_merged_R2.fastq.gz
+application/gzip
+Analysis complete for gSCvvQ_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for gSCvvQ_merged_R2.fastq.gz
+Analysis complete for Yg94Uo_merged_R1.fastq.gz
+application/gzip
+Analysis complete for Yg94Uo_merged_R2.fastq.gz
+application/gzip
+Analysis complete for Fxdj4V_merged_R1.fastq.gz
+application/gzip
+application/gzip
+Analysis complete for wPZK2N_merged_R1.fastq.gz
+Analysis complete for Fxdj4V_merged_R2.fastq.gz
+application/gzip
+Analysis complete for wPZK2N_merged_R2.fastq.gz
+application/gzip
+Analysis complete for RVSeqPlate10-KoNeg_merged_R1.fastq.gz
+null
+application/gzip
+Analysis complete for RVSeqPlate10-KoNeg_merged_R2.fastq.gz
+null
+Analysis complete for ar4p3m_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for 3p7s5a_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for ar4p3m_bam_to_fastq_r2.fastq
+null
+Analysis complete for 3p7s5a_bam_to_fastq_r2.fastq
+null
+Analysis complete for RVSeqPlate10-KoPos_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for 9qnCXK_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for RVSeqPlate10-KoPos_bam_to_fastq_r2.fastq
+Analysis complete for 9qnCXK_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b TATGTAGTCA -b CATTAGTGCG -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/amRv2M/cutadapt/amRv2M_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/amRv2M/cutadapt/amRv2M_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/amRv2M/merge_lanes/amRv2M_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/amRv2M/merge_lanes/amRv2M_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 26.505 s (4.948 µs/read; 12.13 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          5,356,356
+  Read 1 with adapter:                  61,282 (1.1%)
+
+== Read fate breakdown ==
+Pairs that were too short:              21,069 (0.4%)
+Pairs written (passing filters):     5,335,287 (99.6%)
+
+Total basepairs processed:   785,179,232 bp
+  Read 1:   392,582,529 bp
+  Read 2:   392,596,703 bp
+Total written (filtered):    780,756,160 bp (99.4%)
+  Read 1:   389,707,468 bp
+  Read 2:   391,048,692 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TATGTAGTCA; Type: variable 5'/3'; Length: 10; Trimmed: 51848 times
+1002 times, it overlapped the 5' end of a read
+50846 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	27	20.4	0	0 27
+10	975	5.1	1	2 973
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	201	20.4	0	0 201
+10	1806	5.1	1	3 1803
+11	482	5.1	1	1 481
+12	292	5.1	1	2 290
+13	384	5.1	1	1 383
+14	301	5.1	1	1 300
+15	535	5.1	1	2 533
+16	381	5.1	1	0 381
+17	622	5.1	1	0 622
+18	157	5.1	1	0 157
+19	361	5.1	1	1 360
+20	809	5.1	1	1 808
+21	558	5.1	1	0 558
+22	261	5.1	1	0 261
+23	700	5.1	1	0 700
+24	80	5.1	1	0 80
+25	221	5.1	1	0 221
+26	1099	5.1	1	6 1093
+27	195	5.1	1	0 195
+28	1198	5.1	1	5 1193
+29	235	5.1	1	0 235
+30	1721	5.1	1	2 1719
+31	195	5.1	1	0 195
+32	736	5.1	1	0 736
+33	191	5.1	1	0 191
+34	117	5.1	1	0 117
+35	1944	5.1	1	1 1943
+36	616	5.1	1	1 615
+37	2000	5.1	1	9 1991
+38	86	5.1	1	0 86
+39	1259	5.1	1	3 1256
+40	704	5.1	1	1 703
+41	663	5.1	1	1 662
+42	690	5.1	1	0 690
+43	428	5.1	1	0 428
+44	554	5.1	1	2 552
+45	310	5.1	1	0 310
+46	1301	5.1	1	1 1300
+47	1081	5.1	1	0 1081
+48	3114	5.1	1	0 3114
+49	440	5.1	1	0 440
+50	500	5.1	1	0 500
+51	1392	5.1	1	0 1392
+52	1151	5.1	1	0 1151
+53	1710	5.1	1	1 1709
+54	482	5.1	1	3 479
+55	1212	5.1	1	0 1212
+56	415	5.1	1	1 414
+57	1989	5.1	1	0 1989
+58	1154	5.1	1	3 1151
+59	234	5.1	1	0 234
+60	183	5.1	1	1 182
+61	349	5.1	1	0 349
+62	330	5.1	1	0 330
+63	282	5.1	1	0 282
+64	1472	5.1	1	0 1472
+65	871	5.1	1	1 870
+66	318	5.1	1	0 318
+67	257	5.1	1	0 257
+68	1779	5.1	1	1 1778
+69	1121	5.1	1	0 1121
+70	1624	5.1	1	0 1624
+71	113	5.1	1	3 110
+72	2611	5.1	1	26 2585
+73	269	5.1	1	0 269
+
+
+=== First read: Adapter 2 ===
+
+Sequence: CATTAGTGCG; Type: variable 5'/3'; Length: 10; Trimmed: 8720 times
+59 times, it overlapped the 5' end of a read
+8661 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	5	20.4	0	0 5
+10	53	5.1	1	0 53
+11	1	5.1	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	8	20.4	0	0 8
+10	40	5.1	1	0 40
+11	181	5.1	1	0 181
+12	307	5.1	1	0 307
+13	15	5.1	1	0 15
+14	6	5.1	1	0 6
+15	79	5.1	1	0 79
+16	115	5.1	1	0 115
+17	25	5.1	1	0 25
+18	235	5.1	1	0 235
+19	13	5.1	1	0 13
+20	50	5.1	1	0 50
+21	13	5.1	1	0 13
+22	22	5.1	1	0 22
+23	54	5.1	1	0 54
+24	117	5.1	1	0 117
+25	214	5.1	1	0 214
+26	102	5.1	1	0 102
+27	155	5.1	1	0 155
+28	721	5.1	1	0 721
+29	34	5.1	1	0 34
+30	215	5.1	1	0 215
+31	117	5.1	1	0 117
+32	177	5.1	1	0 177
+33	56	5.1	1	0 56
+34	79	5.1	1	0 79
+35	44	5.1	1	0 44
+36	474	5.1	1	0 474
+37	183	5.1	1	0 183
+38	122	5.1	1	0 122
+39	500	5.1	1	1 499
+40	582	5.1	1	0 582
+41	270	5.1	1	0 270
+42	16	5.1	1	0 16
+43	9	5.1	1	0 9
+44	75	5.1	1	0 75
+45	38	5.1	1	0 38
+46	56	5.1	1	0 56
+47	68	5.1	1	0 68
+48	113	5.1	1	0 113
+49	67	5.1	1	0 67
+50	124	5.1	1	0 124
+51	107	5.1	1	0 107
+52	5	5.1	1	0 5
+53	29	5.1	1	0 29
+54	104	5.1	1	0 104
+55	24	5.1	1	0 24
+56	6	5.1	1	0 6
+57	91	5.1	1	0 91
+58	100	5.1	1	0 100
+59	276	5.1	1	0 276
+60	49	5.1	1	0 49
+61	35	5.1	1	0 35
+62	47	5.1	1	0 47
+63	32	5.1	1	0 32
+64	202	5.1	1	0 202
+65	96	5.1	1	0 96
+66	60	5.1	1	0 60
+67	206	5.1	1	0 206
+68	158	5.1	1	0 158
+69	54	5.1	1	0 54
+70	19	5.1	1	0 19
+71	239	5.1	1	0 239
+72	815	5.1	1	0 815
+73	16	5.1	1	0 16
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 714 times
+1 times, it overlapped the 5' end of a read
+713 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	1	1.3	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	6	1.3	1	0 6
+12	5	0.3	1	0 5
+13	46	0.3	1	0 46
+14	16	0.3	1	0 16
+15	17	0.3	1	5 12
+16	22	0.3	1	7 15
+17	49	0.3	1	5 44
+18	25	0.3	1	5 20
+19	55	0.3	1	13 42
+20	40	0.3	1	6 34
+21	25	0.3	1	7 18
+22	37	0.3	1	6 31
+23	28	0.3	1	8 20
+24	33	0.3	1	9 24
+25	17	0.3	1	3 14
+26	10	0.3	1	1 9
+27	12	0.3	1	1 11
+28	16	0.3	1	2 14
+29	11	0.3	1	1 10
+30	7	0.3	1	1 6
+31	24	0.3	1	4 20
+32	17	0.3	1	3 14
+33	34	0.3	1	6 28
+34	6	0.3	1	1 5
+35	6	0.3	1	1 5
+36	4	0.3	1	1 3
+37	8	0.3	1	2 6
+38	6	0.3	1	0 6
+39	7	0.3	1	1 6
+40	5	0.3	1	0 5
+41	10	0.3	1	0 10
+42	6	0.3	1	0 6
+43	2	0.3	1	1 1
+44	5	0.3	1	2 3
+45	8	0.3	1	3 5
+46	4	0.3	1	1 3
+47	2	0.3	1	1 1
+48	2	0.3	1	0 2
+49	2	0.3	1	0 2
+50	3	0.3	1	0 3
+51	6	0.3	1	0 6
+52	1	0.3	1	0 1
+53	6	0.3	1	0 6
+55	3	0.3	1	0 3
+56	1	0.3	1	0 1
+57	3	0.3	1	1 2
+58	4	0.3	1	0 4
+59	1	0.3	1	0 1
+61	1	0.3	1	0 1
+63	2	0.3	1	0 2
+64	7	0.3	1	0 7
+65	21	0.3	1	0 21
+66	6	0.3	1	0 6
+68	2	0.3	1	0 2
+70	7	0.3	1	0 7
+71	2	0.3	1	0 2
+72	1	0.3	1	0 1
+73	1	0.3	1	0 1
+application/gzip
+Analysis complete for amRv2M_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for amRv2M_R2_trimmed.fq.gz
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b TGTCGCTGGT -b AGTCAGACGA -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/BP3DjK/cutadapt/BP3DjK_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/BP3DjK/cutadapt/BP3DjK_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/BP3DjK/merge_lanes/BP3DjK_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/BP3DjK/merge_lanes/BP3DjK_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 26.209 s (4.729 µs/read; 12.69 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          5,541,641
+  Read 1 with adapter:                  10,758 (0.2%)
+
+== Read fate breakdown ==
+Pairs that were too short:               2,940 (0.1%)
+Pairs written (passing filters):     5,538,701 (99.9%)
+
+Total basepairs processed:   804,480,953 bp
+  Read 1:   402,216,983 bp
+  Read 2:   402,263,970 bp
+Total written (filtered):    803,822,167 bp (99.9%)
+  Read 1:   401,770,589 bp
+  Read 2:   402,051,578 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TGTCGCTGGT; Type: variable 5'/3'; Length: 10; Trimmed: 7452 times
+237 times, it overlapped the 5' end of a read
+7215 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+10	237	5.3	1	0 237
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	19	21.1	0	0 19
+10	71	5.3	1	22 49
+11	43	5.3	1	14 29
+12	119	5.3	1	5 114
+13	41	5.3	1	0 41
+14	118	5.3	1	0 118
+15	43	5.3	1	0 43
+16	62	5.3	1	1 61
+17	77	5.3	1	0 77
+18	29	5.3	1	0 29
+19	227	5.3	1	1 226
+20	338	5.3	1	0 338
+21	54	5.3	1	2 52
+22	45	5.3	1	0 45
+23	244	5.3	1	0 244
+24	42	5.3	1	0 42
+25	75	5.3	1	0 75
+26	37	5.3	1	0 37
+27	280	5.3	1	0 280
+28	313	5.3	1	0 313
+29	41	5.3	1	0 41
+30	199	5.3	1	0 199
+31	23	5.3	1	0 23
+32	17	5.3	1	0 17
+33	162	5.3	1	0 162
+34	228	5.3	1	0 228
+35	24	5.3	1	0 24
+36	161	5.3	1	1 160
+37	25	5.3	1	0 25
+38	27	5.3	1	0 27
+39	18	5.3	1	0 18
+40	153	5.3	1	0 153
+41	59	5.3	1	1 58
+42	44	5.3	1	0 44
+43	166	5.3	1	0 166
+44	80	5.3	1	1 79
+45	36	5.3	1	1 35
+46	38	5.3	1	20 18
+47	13	5.3	1	0 13
+48	27	5.3	1	1 26
+49	33	5.3	1	12 21
+50	127	5.3	1	1 126
+51	899	5.3	1	8 891
+52	25	5.3	1	1 24
+53	23	5.3	1	0 23
+54	24	5.3	1	1 23
+55	14	5.3	1	0 14
+56	26	5.3	1	0 26
+57	120	5.3	1	0 120
+58	368	5.3	1	0 368
+59	25	5.3	1	0 25
+60	80	5.3	1	0 80
+61	35	5.3	1	0 35
+62	19	5.3	1	0 19
+63	29	5.3	1	0 29
+64	32	5.3	1	1 31
+65	1185	5.3	1	0 1185
+66	15	5.3	1	0 15
+67	31	5.3	1	0 31
+68	20	5.3	1	0 20
+69	20	5.3	1	0 20
+70	84	5.3	1	0 84
+71	38	5.3	1	0 38
+72	63	5.3	1	0 63
+73	62	5.3	1	0 62
+
+
+=== First read: Adapter 2 ===
+
+Sequence: AGTCAGACGA; Type: variable 5'/3'; Length: 10; Trimmed: 1359 times
+38 times, it overlapped the 5' end of a read
+1321 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	20	21.1	0	0 20
+10	18	5.3	1	0 18
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	10	21.1	0	0 10
+10	27	5.3	1	0 27
+11	27	5.3	1	0 27
+12	25	5.3	1	0 25
+13	15	5.3	1	0 15
+14	26	5.3	1	0 26
+15	21	5.3	1	0 21
+16	22	5.3	1	0 22
+17	15	5.3	1	0 15
+18	23	5.3	1	0 23
+19	34	5.3	1	1 33
+20	17	5.3	1	0 17
+21	18	5.3	1	0 18
+22	21	5.3	1	0 21
+23	25	5.3	1	0 25
+24	24	5.3	1	0 24
+25	18	5.3	1	0 18
+26	17	5.3	1	0 17
+27	14	5.3	1	0 14
+28	28	5.3	1	0 28
+29	19	5.3	1	0 19
+30	28	5.3	1	0 28
+31	36	5.3	1	0 36
+32	18	5.3	1	0 18
+33	16	5.3	1	0 16
+34	28	5.3	1	0 28
+35	20	5.3	1	0 20
+36	15	5.3	1	0 15
+37	23	5.3	1	0 23
+38	16	5.3	1	0 16
+39	21	5.3	1	1 20
+40	15	5.3	1	0 15
+41	34	5.3	1	1 33
+42	18	5.3	1	1 17
+43	16	5.3	1	0 16
+44	20	5.3	1	0 20
+45	28	5.3	1	0 28
+46	23	5.3	1	0 23
+47	24	5.3	1	0 24
+48	16	5.3	1	0 16
+49	20	5.3	1	0 20
+50	18	5.3	1	0 18
+51	13	5.3	1	0 13
+52	19	5.3	1	0 19
+53	20	5.3	1	0 20
+54	22	5.3	1	0 22
+55	19	5.3	1	0 19
+56	17	5.3	1	0 17
+57	13	5.3	1	0 13
+58	18	5.3	1	0 18
+59	16	5.3	1	0 16
+60	17	5.3	1	0 17
+61	17	5.3	1	0 17
+62	15	5.3	1	0 15
+63	24	5.3	1	0 24
+64	16	5.3	1	0 16
+65	38	5.3	1	0 38
+66	6	5.3	1	0 6
+67	26	5.3	1	0 26
+68	19	5.3	1	0 19
+69	22	5.3	1	0 22
+70	14	5.3	1	0 14
+71	2	5.3	1	0 2
+72	14	5.3	1	0 14
+73	35	5.3	1	0 35
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 1947 times
+2 times, it overlapped the 5' end of a read
+1945 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	2	1.3	1	0 2
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	11	1.3	1	0 11
+12	6	0.3	1	0 6
+13	86	0.3	1	1 85
+14	27	0.3	1	0 27
+15	38	0.3	1	6 32
+16	25	0.3	1	3 22
+17	112	0.3	1	10 102
+18	69	0.3	1	18 51
+19	129	0.3	1	42 87
+20	91	0.3	1	16 75
+21	31	0.3	1	11 20
+22	89	0.3	1	21 68
+23	95	0.3	1	20 75
+24	76	0.3	1	11 65
+25	36	0.3	1	8 28
+26	25	0.3	1	7 18
+27	12	0.3	1	2 10
+28	59	0.3	1	13 46
+29	28	0.3	1	3 25
+30	31	0.3	1	4 27
+31	72	0.3	1	15 57
+32	103	0.3	1	25 78
+33	254	0.3	1	47 207
+34	27	0.3	1	6 21
+35	18	0.3	1	3 15
+36	20	0.3	1	3 17
+37	21	0.3	1	2 19
+38	25	0.3	1	4 21
+39	35	0.3	1	8 27
+40	4	0.3	1	0 4
+41	8	0.3	1	1 7
+42	11	0.3	1	1 10
+43	42	0.3	1	8 34
+44	27	0.3	1	7 20
+45	18	0.3	1	1 17
+46	11	0.3	1	1 10
+47	5	0.3	1	0 5
+48	8	0.3	1	0 8
+49	5	0.3	1	0 5
+50	4	0.3	1	0 4
+51	8	0.3	1	0 8
+52	10	0.3	1	0 10
+53	7	0.3	1	0 7
+54	9	0.3	1	0 9
+55	5	0.3	1	0 5
+56	8	0.3	1	0 8
+57	7	0.3	1	0 7
+58	3	0.3	1	0 3
+59	4	0.3	1	0 4
+60	3	0.3	1	0 3
+61	5	0.3	1	1 4
+62	6	0.3	1	0 6
+63	7	0.3	1	0 7
+64	13	0.3	1	0 13
+65	11	0.3	1	1 10
+66	17	0.3	1	0 17
+67	4	0.3	1	0 4
+68	5	0.3	1	0 5
+69	3	0.3	1	0 3
+70	7	0.3	1	0 7
+71	7	0.3	1	0 7
+72	1	0.3	1	0 1
+73	1	0.3	1	0 1
+application/gzip
+Analysis complete for BP3DjK_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for BP3DjK_R2_trimmed.fq.gz
+null
+Analysis complete for amRv2M_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for amRv2M_bam_to_fastq_r2.fastq
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 14:31:58 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 978258
+Number of valid reads: 978258
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 978258
+Num mapped first of pair: 489129
+Num mapped second of pair: 489129
+Num singletons: 0
+Time taken to analyze reads: 3
+Computing descriptors...
+numberOfMappedBases: 67472336
+referenceSize: 596713
+numberOfSequencedBases: 67458705
+numberOfAs: 16353570
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 4
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Calculating consensus for all outlier strains
+writing the consensus
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b GATCAAGGCA -b ATTAACAAGG -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/Uph9U3/cutadapt/Uph9U3_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/Uph9U3/cutadapt/Uph9U3_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/Uph9U3/merge_lanes/Uph9U3_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/Uph9U3/merge_lanes/Uph9U3_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 22.969 s (4.838 µs/read; 12.40 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          4,747,425
+  Read 1 with adapter:                  88,183 (1.9%)
+
+== Read fate breakdown ==
+Pairs that were too short:              27,555 (0.6%)
+Pairs written (passing filters):     4,719,870 (99.4%)
+
+Total basepairs processed:   696,955,614 bp
+  Read 1:   348,474,452 bp
+  Read 2:   348,481,162 bp
+Total written (filtered):    691,167,627 bp (99.2%)
+  Read 1:   344,712,877 bp
+  Read 2:   346,454,750 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: GATCAAGGCA; Type: variable 5'/3'; Length: 10; Trimmed: 14134 times
+752 times, it overlapped the 5' end of a read
+13382 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	422	18.1	0	0 422
+10	321	4.5	1	3 318
+11	9	4.5	1	0 9
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	1895	18.1	0	0 1895
+10	136	4.5	1	7 129
+11	38	4.5	1	8 30
+12	147	4.5	1	4 143
+13	66	4.5	1	0 66
+14	90	4.5	1	3 87
+15	312	4.5	1	1 311
+16	54	4.5	1	2 52
+17	114	4.5	1	1 113
+18	73	4.5	1	0 73
+19	63	4.5	1	0 63
+20	224	4.5	1	2 222
+21	41	4.5	1	0 41
+22	177	4.5	1	0 177
+23	92	4.5	1	1 91
+24	267	4.5	1	0 267
+25	65	4.5	1	2 63
+26	121	4.5	1	0 121
+27	62	4.5	1	0 62
+28	455	4.5	1	0 455
+29	47	4.5	1	0 47
+30	160	4.5	1	1 159
+31	151	4.5	1	0 151
+32	48	4.5	1	0 48
+33	72	4.5	1	0 72
+34	68	4.5	1	1 67
+35	131	4.5	1	1 130
+36	129	4.5	1	1 128
+37	113	4.5	1	0 113
+38	97	4.5	1	0 97
+39	98	4.5	1	2 96
+40	585	4.5	1	0 585
+41	64	4.5	1	1 63
+42	37	4.5	1	6 31
+43	37	4.5	1	0 37
+44	126	4.5	1	0 126
+45	211	4.5	1	0 211
+46	380	4.5	1	3 377
+47	117	4.5	1	0 117
+48	99	4.5	1	8 91
+49	256	4.5	1	1 255
+50	102	4.5	1	1 101
+51	76	4.5	1	0 76
+52	63	4.5	1	0 63
+53	101	4.5	1	1 100
+54	201	4.5	1	1 200
+55	34	4.5	1	0 34
+56	91	4.5	1	2 89
+57	116	4.5	1	1 115
+58	108	4.5	1	1 107
+59	298	4.5	1	12 286
+60	739	4.5	1	3 736
+61	120	4.5	1	1 119
+62	61	4.5	1	0 61
+63	65	4.5	1	1 64
+64	538	4.5	1	4 534
+65	190	4.5	1	0 190
+66	38	4.5	1	0 38
+67	207	4.5	1	1 206
+68	146	4.5	1	1 145
+69	2293	4.5	1	3 2290
+70	74	4.5	1	0 74
+71	20	4.5	1	0 20
+72	62	4.5	1	0 62
+73	121	4.5	1	0 121
+
+
+=== First read: Adapter 2 ===
+
+Sequence: ATTAACAAGG; Type: variable 5'/3'; Length: 10; Trimmed: 73312 times
+1979 times, it overlapped the 5' end of a read
+71333 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	1188	18.1	0	0 1188
+10	447	4.5	1	3 444
+11	344	4.5	1	0 344
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	1486	18.1	0	0 1486
+10	925	4.5	1	0 925
+11	1226	4.5	1	3 1223
+12	1350	4.5	1	1 1349
+13	1214	4.5	1	3 1211
+14	603	4.5	1	0 603
+15	1595	4.5	1	1 1594
+16	2958	4.5	1	1 2957
+17	586	4.5	1	0 586
+18	639	4.5	1	0 639
+19	1779	4.5	1	0 1779
+20	1401	4.5	1	5 1396
+21	1098	4.5	1	3 1095
+22	1741	4.5	1	0 1741
+23	943	4.5	1	0 943
+24	853	4.5	1	0 853
+25	1856	4.5	1	2 1854
+26	349	4.5	1	1 348
+27	685	4.5	1	5 680
+28	521	4.5	1	2 519
+29	1113	4.5	1	0 1113
+30	1098	4.5	1	3 1095
+31	1074	4.5	1	5 1069
+32	862	4.5	1	0 862
+33	1600	4.5	1	0 1600
+34	454	4.5	1	0 454
+35	686	4.5	1	1 685
+36	1354	4.5	1	1 1353
+37	829	4.5	1	0 829
+38	597	4.5	1	1 596
+39	454	4.5	1	2 452
+40	543	4.5	1	2 541
+41	1749	4.5	1	1 1748
+42	1384	4.5	1	0 1384
+43	1335	4.5	1	1 1334
+44	1034	4.5	1	0 1034
+45	786	4.5	1	0 786
+46	597	4.5	1	3 594
+47	1965	4.5	1	2 1963
+48	533	4.5	1	3 530
+49	1457	4.5	1	0 1457
+50	1283	4.5	1	1 1282
+51	1224	4.5	1	2 1222
+52	657	4.5	1	0 657
+53	225	4.5	1	1 224
+54	1193	4.5	1	0 1193
+55	1494	4.5	1	1 1493
+56	462	4.5	1	0 462
+57	1075	4.5	1	0 1075
+58	363	4.5	1	1 362
+59	838	4.5	1	5 833
+60	764	4.5	1	2 762
+61	400	4.5	1	0 400
+62	1364	4.5	1	1 1363
+63	905	4.5	1	0 905
+64	1034	4.5	1	0 1034
+65	396	4.5	1	0 396
+66	667	4.5	1	2 665
+67	1012	4.5	1	0 1012
+68	404	4.5	1	0 404
+69	1633	4.5	1	1 1632
+70	2102	4.5	1	1 2101
+71	946	4.5	1	0 946
+72	4722	4.5	1	2 4720
+73	858	4.5	1	6 852
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 737 times
+4 times, it overlapped the 5' end of a read
+733 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	3	1.1	1	0 3
+13	1	0.3	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+12	3	0.3	1	0 3
+13	21	0.3	1	0 21
+14	8	0.3	1	0 8
+15	12	0.3	1	0 12
+16	10	0.3	1	1 9
+17	21	0.3	1	3 18
+18	25	0.3	1	5 20
+19	29	0.3	1	6 23
+20	21	0.3	1	5 16
+21	10	0.3	1	2 8
+22	23	0.3	1	4 19
+23	19	0.3	1	3 16
+24	17	0.3	1	3 14
+25	13	0.3	1	2 11
+26	11	0.3	1	0 11
+27	13	0.3	1	1 12
+28	25	0.3	1	2 23
+29	5	0.3	1	0 5
+30	11	0.3	1	1 10
+31	23	0.3	1	5 18
+32	21	0.3	1	3 18
+33	39	0.3	1	6 33
+34	15	0.3	1	3 12
+35	15	0.3	1	1 14
+36	7	0.3	1	0 7
+37	17	0.3	1	1 16
+38	9	0.3	1	0 9
+39	12	0.3	1	2 10
+40	10	0.3	1	0 10
+41	15	0.3	1	2 13
+42	22	0.3	1	2 20
+43	7	0.3	1	1 6
+44	13	0.3	1	2 11
+45	20	0.3	1	0 20
+46	10	0.3	1	0 10
+47	11	0.3	1	1 10
+48	4	0.3	1	0 4
+49	2	0.3	1	0 2
+50	5	0.3	1	0 5
+51	10	0.3	1	0 10
+52	2	0.3	1	0 2
+53	5	0.3	1	0 5
+54	8	0.3	1	0 8
+55	4	0.3	1	0 4
+56	10	0.3	1	0 10
+57	7	0.3	1	0 7
+58	7	0.3	1	0 7
+59	7	0.3	1	0 7
+60	4	0.3	1	0 4
+61	9	0.3	1	1 8
+62	7	0.3	1	0 7
+63	6	0.3	1	0 6
+64	17	0.3	1	0 17
+65	9	0.3	1	0 9
+66	24	0.3	1	0 24
+68	2	0.3	1	0 2
+70	6	0.3	1	0 6
+71	10	0.3	1	0 10
+72	3	0.3	1	0 3
+73	2	0.3	1	0 2
+application/gzip
+Analysis complete for Uph9U3_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for Uph9U3_R2_trimmed.fq.gz
+null
+Analysis complete for BP3DjK_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for BP3DjK_bam_to_fastq_r2.fastq
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 14:40:37 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 1931956
+Number of valid reads: 1931956
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 1931956
+Num mapped first of pair: 965978
+Num mapped second of pair: 965978
+Num singletons: 0
+Time taken to analyze reads: 6
+Computing descriptors...
+numberOfMappedBases: 134889148
+referenceSize: 596713
+numberOfSequencedBases: 134850330
+numberOfAs: 45723462
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 6
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Calculating consensus for all outlier strains
+writing the consensus
+null
+Analysis complete for Uph9U3_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for Uph9U3_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b CTGTTGGTCC -b AACGGTCTAT -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/HsBVJN/cutadapt/HsBVJN_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/HsBVJN/cutadapt/HsBVJN_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/HsBVJN/merge_lanes/HsBVJN_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/HsBVJN/merge_lanes/HsBVJN_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 20.978 s (4.912 µs/read; 12.21 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          4,270,308
+  Read 1 with adapter:                  17,258 (0.4%)
+
+== Read fate breakdown ==
+Pairs that were too short:               6,598 (0.2%)
+Pairs written (passing filters):     4,263,710 (99.8%)
+
+Total basepairs processed:   626,075,167 bp
+  Read 1:   313,033,054 bp
+  Read 2:   313,042,113 bp
+Total written (filtered):    624,781,728 bp (99.8%)
+  Read 1:   312,225,996 bp
+  Read 2:   312,555,732 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: CTGTTGGTCC; Type: variable 5'/3'; Length: 10; Trimmed: 3811 times
+103 times, it overlapped the 5' end of a read
+3708 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	3	16.3	0	0 3
+10	100	4.1	1	0 100
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	3	16.3	0	0 3
+10	14	4.1	1	0 14
+11	799	4.1	1	2 797
+12	14	4.1	1	1 13
+13	136	4.1	1	0 136
+14	5	4.1	1	0 5
+15	19	4.1	1	0 19
+16	18	4.1	1	0 18
+17	691	4.1	1	0 691
+18	136	4.1	1	0 136
+19	73	4.1	1	0 73
+20	6	4.1	1	0 6
+21	7	4.1	1	0 7
+22	4	4.1	1	0 4
+23	179	4.1	1	0 179
+24	19	4.1	1	0 19
+25	10	4.1	1	0 10
+26	13	4.1	1	0 13
+27	36	4.1	1	0 36
+28	14	4.1	1	0 14
+29	368	4.1	1	0 368
+30	5	4.1	1	0 5
+31	7	4.1	1	0 7
+32	6	4.1	1	0 6
+33	33	4.1	1	0 33
+34	39	4.1	1	0 39
+35	66	4.1	1	0 66
+36	233	4.1	1	0 233
+37	23	4.1	1	0 23
+38	47	4.1	1	0 47
+39	6	4.1	1	0 6
+40	32	4.1	1	1 31
+41	8	4.1	1	0 8
+42	38	4.1	1	0 38
+43	37	4.1	1	0 37
+44	8	4.1	1	0 8
+45	31	4.1	1	0 31
+46	55	4.1	1	2 53
+47	5	4.1	1	0 5
+48	162	4.1	1	1 161
+49	11	4.1	1	1 10
+50	5	4.1	1	0 5
+51	8	4.1	1	1 7
+52	8	4.1	1	0 8
+53	25	4.1	1	0 25
+54	19	4.1	1	0 19
+55	34	4.1	1	0 34
+56	8	4.1	1	0 8
+57	7	4.1	1	0 7
+58	9	4.1	1	0 9
+59	4	4.1	1	0 4
+60	10	4.1	1	0 10
+61	8	4.1	1	0 8
+62	34	4.1	1	0 34
+63	14	4.1	1	1 13
+64	6	4.1	1	0 6
+65	10	4.1	1	0 10
+66	38	4.1	1	0 38
+67	4	4.1	1	0 4
+68	13	4.1	1	0 13
+69	7	4.1	1	0 7
+70	8	4.1	1	0 8
+71	6	4.1	1	0 6
+72	4	4.1	1	0 4
+73	3	4.1	1	0 3
+
+
+=== First read: Adapter 2 ===
+
+Sequence: AACGGTCTAT; Type: variable 5'/3'; Length: 10; Trimmed: 6549 times
+15 times, it overlapped the 5' end of a read
+6534 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+10	15	4.1	1	0 15
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	9	16.3	0	0 9
+10	31	4.1	1	0 31
+11	34	4.1	1	0 34
+12	51	4.1	1	2 49
+13	102	4.1	1	1 101
+14	21	4.1	1	1 20
+15	29	4.1	1	0 29
+16	29	4.1	1	0 29
+17	184	4.1	1	2 182
+18	95	4.1	1	0 95
+19	19	4.1	1	0 19
+20	44	4.1	1	0 44
+21	32	4.1	1	0 32
+22	121	4.1	1	1 120
+23	2	4.1	1	0 2
+24	2	4.1	1	0 2
+25	11	4.1	1	0 11
+26	406	4.1	1	0 406
+27	1022	4.1	1	0 1022
+28	55	4.1	1	0 55
+29	3	4.1	1	0 3
+30	39	4.1	1	0 39
+31	47	4.1	1	0 47
+32	2	4.1	1	0 2
+33	136	4.1	1	1 135
+34	6	4.1	1	0 6
+35	3	4.1	1	0 3
+36	137	4.1	1	0 137
+37	171	4.1	1	0 171
+38	132	4.1	1	0 132
+39	6	4.1	1	0 6
+40	10	4.1	1	0 10
+41	62	4.1	1	0 62
+42	2	4.1	1	0 2
+43	140	4.1	1	0 140
+44	38	4.1	1	0 38
+45	13	4.1	1	0 13
+46	209	4.1	1	0 209
+47	879	4.1	1	0 879
+48	6	4.1	1	0 6
+49	38	4.1	1	0 38
+50	19	4.1	1	0 19
+51	85	4.1	1	1 84
+52	3	4.1	1	0 3
+53	104	4.1	1	0 104
+54	43	4.1	1	0 43
+55	43	4.1	1	0 43
+56	100	4.1	1	0 100
+57	12	4.1	1	0 12
+58	78	4.1	1	0 78
+59	19	4.1	1	0 19
+60	226	4.1	1	0 226
+61	20	4.1	1	0 20
+62	1	4.1	1	0 1
+63	36	4.1	1	0 36
+64	19	4.1	1	0 19
+65	23	4.1	1	0 23
+66	4	4.1	1	0 4
+67	575	4.1	1	0 575
+68	11	4.1	1	0 11
+69	29	4.1	1	0 29
+70	360	4.1	1	0 360
+71	312	4.1	1	0 312
+72	6	4.1	1	0 6
+73	28	4.1	1	0 28
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 6898 times
+0 times, it overlapped the 5' end of a read
+6898 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	136	1.0	1	0 136
+12	25	0.3	1	0 25
+13	378	0.3	1	0 378
+14	17	0.3	1	0 17
+15	46	0.3	1	1 45
+16	9	0.3	1	3 6
+17	22	0.3	1	5 17
+18	17	0.3	1	7 10
+19	32	0.3	1	11 21
+20	44	0.3	1	1 43
+21	66	0.3	1	1 65
+22	29	0.3	1	6 23
+23	78	0.3	1	2 76
+24	19	0.3	1	5 14
+25	10	0.3	1	3 7
+26	25	0.3	1	0 25
+27	3	0.3	1	0 3
+28	91	0.3	1	0 91
+29	36	0.3	1	1 35
+30	6	0.3	1	0 6
+31	12	0.3	1	5 7
+32	20	0.3	1	1 19
+33	62	0.3	1	7 55
+34	15	0.3	1	3 12
+36	1	0.3	1	0 1
+37	3	0.3	1	0 3
+38	4	0.3	1	0 4
+39	3	0.3	1	0 3
+40	10	0.3	1	3 7
+41	2	0.3	1	0 2
+42	12	0.3	1	4 8
+43	17	0.3	1	4 13
+44	106	0.3	1	0 106
+45	6	0.3	1	1 5
+46	1	0.3	1	1
+48	1	0.3	1	0 1
+49	4	0.3	1	0 4
+50	1087	0.3	1	0 1087
+51	2	0.3	1	0 2
+52	3	0.3	1	0 3
+53	6	0.3	1	0 6
+54	6	0.3	1	0 6
+55	1895	0.3	1	0 1895
+56	733	0.3	1	0 733
+57	109	0.3	1	0 109
+58	11	0.3	1	0 11
+59	4	0.3	1	0 4
+60	358	0.3	1	0 358
+61	14	0.3	1	0 14
+62	182	0.3	1	0 182
+63	7	0.3	1	0 7
+64	1	0.3	1	0 1
+65	378	0.3	1	0 378
+66	654	0.3	1	0 654
+68	17	0.3	1	0 17
+70	12	0.3	1	0 12
+71	48	0.3	1	0 48
+72	3	0.3	1	0 3
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+application/gzip
+Wed Jun 12 14:43:43 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 1554596
+Number of valid reads: 1554596
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 1554596
+Num mapped first of pair: 777298
+Num mapped second of pair: 777298
+Num singletons: 0
+Time taken to analyze reads: 5
+Computing descriptors...
+numberOfMappedBases: 111563291
+referenceSize: 596713
+numberOfSequencedBases: 111530254
+numberOfAs: 36657529
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 6
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Analysis complete for HsBVJN_R1_trimmed.fq.gz
+Calculating consensus for all outlier strains
+writing the consensus
+application/gzip
+Analysis complete for HsBVJN_R2_trimmed.fq.gz
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b CCTGTCTGTC -b TCACAACAGT -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/3CuPYs/cutadapt/3CuPYs_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/3CuPYs/cutadapt/3CuPYs_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/3CuPYs/merge_lanes/3CuPYs_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/3CuPYs/merge_lanes/3CuPYs_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 18.993 s (4.777 µs/read; 12.56 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,976,199
+  Read 1 with adapter:                  39,452 (1.0%)
+
+== Read fate breakdown ==
+Pairs that were too short:              15,158 (0.4%)
+Pairs written (passing filters):     3,961,041 (99.6%)
+
+Total basepairs processed:   582,596,978 bp
+  Read 1:   291,234,955 bp
+  Read 2:   291,362,023 bp
+Total written (filtered):    579,562,991 bp (99.5%)
+  Read 1:   289,312,997 bp
+  Read 2:   290,249,994 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: CCTGTCTGTC; Type: variable 5'/3'; Length: 10; Trimmed: 19082 times
+194 times, it overlapped the 5' end of a read
+18888 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	113	15.2	0	0 113
+10	79	3.8	1	0 79
+11	2	3.8	1	0 2
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	8	15.2	0	0 8
+10	126	3.8	1	1 125
+11	49	3.8	1	3 46
+12	72	3.8	1	2 70
+13	375	3.8	1	4 371
+14	106	3.8	1	0 106
+15	259	3.8	1	1 258
+16	177	3.8	1	0 177
+17	59	3.8	1	0 59
+18	374	3.8	1	2 372
+19	77	3.8	1	2 75
+20	97	3.8	1	1 96
+21	141	3.8	1	1 140
+22	151	3.8	1	0 151
+23	60	3.8	1	2 58
+24	337	3.8	1	1 336
+25	169	3.8	1	1 168
+26	48	3.8	1	0 48
+27	52	3.8	1	0 52
+28	194	3.8	1	1 193
+29	85	3.8	1	2 83
+30	126	3.8	1	0 126
+31	235	3.8	1	0 235
+32	329	3.8	1	0 329
+33	318	3.8	1	0 318
+34	78	3.8	1	0 78
+35	903	3.8	1	0 903
+36	149	3.8	1	0 149
+37	57	3.8	1	2 55
+38	122	3.8	1	0 122
+39	711	3.8	1	2 709
+40	402	3.8	1	0 402
+41	82	3.8	1	0 82
+42	882	3.8	1	2 880
+43	228	3.8	1	1 227
+44	251	3.8	1	1 250
+45	79	3.8	1	2 77
+46	502	3.8	1	3 499
+47	56	3.8	1	2 54
+48	930	3.8	1	1 929
+49	115	3.8	1	3 112
+50	108	3.8	1	0 108
+51	326	3.8	1	1 325
+52	64	3.8	1	1 63
+53	548	3.8	1	2 546
+54	219	3.8	1	2 217
+55	566	3.8	1	1 565
+56	151	3.8	1	1 150
+57	543	3.8	1	1 542
+58	1451	3.8	1	1 1450
+59	358	3.8	1	0 358
+60	163	3.8	1	0 163
+61	1513	3.8	1	3 1510
+62	256	3.8	1	4 252
+63	691	3.8	1	1 690
+64	204	3.8	1	2 202
+65	234	3.8	1	0 234
+66	238	3.8	1	0 238
+67	193	3.8	1	1 192
+68	432	3.8	1	0 432
+69	58	3.8	1	0 58
+70	284	3.8	1	0 284
+71	354	3.8	1	0 354
+72	204	3.8	1	1 203
+73	159	3.8	1	0 159
+
+
+=== First read: Adapter 2 ===
+
+Sequence: TCACAACAGT; Type: variable 5'/3'; Length: 10; Trimmed: 7502 times
+76 times, it overlapped the 5' end of a read
+7426 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	36	15.2	0	0 36
+10	40	3.8	1	1 39
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	64	15.2	0	0 64
+10	65	3.8	1	0 65
+11	69	3.8	1	1 68
+12	121	3.8	1	1 120
+13	58	3.8	1	0 58
+14	64	3.8	1	0 64
+15	38	3.8	1	0 38
+16	107	3.8	1	0 107
+17	60	3.8	1	1 59
+18	55	3.8	1	1 54
+19	134	3.8	1	0 134
+20	52	3.8	1	1 51
+21	35	3.8	1	0 35
+22	40	3.8	1	0 40
+23	56	3.8	1	1 55
+24	45	3.8	1	1 44
+25	79	3.8	1	0 79
+26	52	3.8	1	2 50
+27	87	3.8	1	1 86
+28	64	3.8	1	1 63
+29	45	3.8	1	1 44
+30	58	3.8	1	2 56
+31	59	3.8	1	1 58
+32	58	3.8	1	1 57
+33	164	3.8	1	1 163
+34	120	3.8	1	0 120
+35	1453	3.8	1	1 1452
+36	56	3.8	1	1 55
+37	44	3.8	1	1 43
+38	182	3.8	1	1 181
+39	49	3.8	1	2 47
+40	46	3.8	1	1 45
+41	94	3.8	1	0 94
+42	52	3.8	1	0 52
+43	1161	3.8	1	0 1161
+44	64	3.8	1	1 63
+45	83	3.8	1	0 83
+46	45	3.8	1	1 44
+47	48	3.8	1	0 48
+48	85	3.8	1	0 85
+49	61	3.8	1	0 61
+50	44	3.8	1	1 43
+51	90	3.8	1	1 89
+52	44	3.8	1	0 44
+53	66	3.8	1	1 65
+54	59	3.8	1	0 59
+55	51	3.8	1	0 51
+56	44	3.8	1	0 44
+57	86	3.8	1	1 85
+58	69	3.8	1	1 68
+59	47	3.8	1	1 46
+60	89	3.8	1	0 89
+61	72	3.8	1	0 72
+62	169	3.8	1	2 167
+63	74	3.8	1	1 73
+64	53	3.8	1	1 52
+65	113	3.8	1	0 113
+66	41	3.8	1	0 41
+67	185	3.8	1	0 185
+68	26	3.8	1	0 26
+69	142	3.8	1	0 142
+70	83	3.8	1	1 82
+71	129	3.8	1	3 126
+72	219	3.8	1	0 219
+73	59	3.8	1	0 59
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 12868 times
+19 times, it overlapped the 5' end of a read
+12849 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+12	19	0.2	1	0 19
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	276	0.9	1	0 276
+12	68	0.2	1	0 68
+13	55	0.2	1	0 55
+14	32	0.2	1	0 32
+15	793	0.2	1	1 792
+16	11	0.2	1	4 7
+17	949	0.2	1	4 945
+18	131	0.2	1	6 125
+19	150	0.2	1	12 138
+20	98	0.2	1	4 94
+21	168	0.2	1	5 163
+22	347	0.2	1	4 343
+23	290	0.2	1	11 279
+24	64	0.2	1	10 54
+25	59	0.2	1	4 55
+26	489	0.2	1	3 486
+27	137	0.2	1	1 136
+28	37	0.2	1	3 34
+29	182	0.2	1	0 182
+30	119	0.2	1	2 117
+31	37	0.2	1	8 29
+32	146	0.2	1	1 145
+33	178	0.2	1	14 164
+34	116	0.2	1	4 112
+35	25	0.2	1	1 24
+36	22	0.2	1	0 22
+37	84	0.2	1	2 82
+38	42	0.2	1	0 42
+39	111	0.2	1	5 106
+40	81	0.2	1	1 80
+41	99	0.2	1	1 98
+42	59	0.2	1	2 57
+43	210	0.2	1	0 210
+44	219	0.2	1	1 218
+45	35	0.2	1	1 34
+46	20	0.2	1	0 20
+47	286	0.2	1	0 286
+48	10	0.2	1	1 9
+49	592	0.2	1	0 592
+50	84	0.2	1	0 84
+51	396	0.2	1	1 395
+52	356	0.2	1	0 356
+53	75	0.2	1	0 75
+54	43	0.2	1	0 43
+55	16	0.2	1	0 16
+56	1917	0.2	1	0 1917
+57	4	0.2	1	0 4
+58	18	0.2	1	0 18
+59	54	0.2	1	0 54
+60	319	0.2	1	0 319
+61	17	0.2	1	0 17
+62	314	0.2	1	0 314
+63	7	0.2	1	0 7
+64	116	0.2	1	1 115
+65	1212	0.2	1	0 1212
+66	545	0.2	1	1 544
+67	52	0.2	1	0 52
+68	178	0.2	1	0 178
+69	73	0.2	1	0 73
+70	20	0.2	1	1 19
+71	90	0.2	1	0 90
+72	115	0.2	1	0 115
+73	1	0.2	1	0 1
+application/gzip
+Analysis complete for 3CuPYs_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for 3CuPYs_R2_trimmed.fq.gz
+null
+Analysis complete for HsBVJN_bam_to_fastq_r1.fastq
+test
+null
+null
+Analysis complete for HsBVJN_bam_to_fastq_r2.fastq
+Analysis complete for 3CuPYs_bam_to_fastq_r1.fastq
+test
+null
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 14:57:34 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 886794
+Number of valid reads: 886794
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 886794
+Num mapped first of pair: 443397
+Num mapped second of pair: 443397
+Num singletons: 0
+Time taken to analyze reads: 3
+Computing descriptors...
+numberOfMappedBases: 63436828
+referenceSize: 596713
+numberOfSequencedBases: 63413624
+numberOfAs: 19761671
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 3
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Analysis complete for 3CuPYs_bam_to_fastq_r2.fastq
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 14:57:51 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 690292
+Number of valid reads: 690292
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 690292
+Num mapped first of pair: 345146
+Num mapped second of pair: 345146
+Num singletons: 0
+Time taken to analyze reads: 3
+Computing descriptors...
+numberOfMappedBases: 48937107
+referenceSize: 596713
+numberOfSequencedBases: 48934786
+numberOfAs: 16156795
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 3
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Calculating consensus for all outlier strains
+writing the consensus
+Calculating consensus for all outlier strains
+writing the consensus
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b CTGCGAGCCA -b TGGCCGGATT -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/N4Rs6b/cutadapt/N4Rs6b_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/N4Rs6b/cutadapt/N4Rs6b_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/N4Rs6b/merge_lanes/N4Rs6b_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/N4Rs6b/merge_lanes/N4Rs6b_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 19.083 s (4.947 µs/read; 12.13 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,857,755
+  Read 1 with adapter:                  17,691 (0.5%)
+
+== Read fate breakdown ==
+Pairs that were too short:               4,634 (0.1%)
+Pairs written (passing filters):     3,853,121 (99.9%)
+
+Total basepairs processed:   560,168,170 bp
+  Read 1:   280,103,769 bp
+  Read 2:   280,064,401 bp
+Total written (filtered):    559,101,960 bp (99.8%)
+  Read 1:   279,374,486 bp
+  Read 2:   279,727,474 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: CTGCGAGCCA; Type: variable 5'/3'; Length: 10; Trimmed: 10066 times
+147 times, it overlapped the 5' end of a read
+9919 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	31	14.7	0	0 31
+10	102	3.7	1	1 101
+11	14	3.7	1	0 14
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	114	14.7	0	0 114
+10	216	3.7	1	9 207
+11	182	3.7	1	9 173
+12	180	3.7	1	4 176
+13	163	3.7	1	4 159
+14	167	3.7	1	2 165
+15	133	3.7	1	1 132
+16	177	3.7	1	1 176
+17	147	3.7	1	0 147
+18	143	3.7	1	1 142
+19	183	3.7	1	1 182
+20	163	3.7	1	3 160
+21	203	3.7	1	1 202
+22	163	3.7	1	1 162
+23	138	3.7	1	1 137
+24	136	3.7	1	3 133
+25	155	3.7	1	0 155
+26	154	3.7	1	1 153
+27	160	3.7	1	2 158
+28	140	3.7	1	0 140
+29	143	3.7	1	0 143
+30	136	3.7	1	0 136
+31	151	3.7	1	1 150
+32	152	3.7	1	0 152
+33	145	3.7	1	2 143
+34	151	3.7	1	1 150
+35	136	3.7	1	1 135
+36	126	3.7	1	0 126
+37	183	3.7	1	0 183
+38	156	3.7	1	0 156
+39	143	3.7	1	0 143
+40	145	3.7	1	2 143
+41	157	3.7	1	0 157
+42	142	3.7	1	3 139
+43	155	3.7	1	0 155
+44	160	3.7	1	1 159
+45	130	3.7	1	1 129
+46	162	3.7	1	3 159
+47	156	3.7	1	1 155
+48	150	3.7	1	1 149
+49	164	3.7	1	1 163
+50	168	3.7	1	3 165
+51	166	3.7	1	2 164
+52	128	3.7	1	3 125
+53	169	3.7	1	2 167
+54	156	3.7	1	0 156
+55	132	3.7	1	0 132
+56	141	3.7	1	0 141
+57	153	3.7	1	3 150
+58	132	3.7	1	1 131
+59	155	3.7	1	1 154
+60	135	3.7	1	0 135
+61	169	3.7	1	0 169
+62	178	3.7	1	1 177
+63	152	3.7	1	0 152
+64	188	3.7	1	1 187
+65	171	3.7	1	1 170
+66	229	3.7	1	0 229
+67	97	3.7	1	0 97
+68	115	3.7	1	2 113
+69	90	3.7	1	0 90
+70	100	3.7	1	0 100
+71	146	3.7	1	1 145
+72	151	3.7	1	0 151
+73	138	3.7	1	1 137
+
+
+=== First read: Adapter 2 ===
+
+Sequence: TGGCCGGATT; Type: variable 5'/3'; Length: 10; Trimmed: 3373 times
+21 times, it overlapped the 5' end of a read
+3352 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	1	14.7	0	0 1
+10	19	3.7	1	1 18
+11	1	3.7	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	21	14.7	0	0 21
+10	46	3.7	1	2 44
+11	101	3.7	1	1 100
+12	60	3.7	1	0 60
+13	56	3.7	1	5 51
+14	50	3.7	1	0 50
+15	62	3.7	1	0 62
+16	52	3.7	1	0 52
+17	57	3.7	1	0 57
+18	39	3.7	1	2 37
+19	47	3.7	1	1 46
+20	72	3.7	1	0 72
+21	47	3.7	1	0 47
+22	56	3.7	1	1 55
+23	53	3.7	1	1 52
+24	50	3.7	1	3 47
+25	62	3.7	1	2 60
+26	67	3.7	1	0 67
+27	64	3.7	1	0 64
+28	44	3.7	1	0 44
+29	56	3.7	1	1 55
+30	48	3.7	1	0 48
+31	59	3.7	1	1 58
+32	38	3.7	1	0 38
+33	47	3.7	1	0 47
+34	66	3.7	1	2 64
+35	58	3.7	1	0 58
+36	72	3.7	1	2 70
+37	45	3.7	1	0 45
+38	34	3.7	1	0 34
+39	52	3.7	1	0 52
+40	45	3.7	1	1 44
+41	63	3.7	1	0 63
+42	69	3.7	1	0 69
+43	36	3.7	1	0 36
+44	58	3.7	1	0 58
+45	45	3.7	1	0 45
+46	51	3.7	1	0 51
+47	40	3.7	1	1 39
+48	60	3.7	1	1 59
+49	78	3.7	1	1 77
+50	74	3.7	1	1 73
+51	35	3.7	1	0 35
+52	62	3.7	1	0 62
+53	38	3.7	1	0 38
+54	60	3.7	1	0 60
+55	60	3.7	1	0 60
+56	56	3.7	1	1 55
+57	55	3.7	1	0 55
+58	36	3.7	1	0 36
+59	47	3.7	1	0 47
+60	40	3.7	1	1 39
+61	35	3.7	1	0 35
+62	54	3.7	1	0 54
+63	50	3.7	1	1 49
+64	86	3.7	1	0 86
+65	77	3.7	1	0 77
+66	44	3.7	1	0 44
+67	26	3.7	1	0 26
+68	29	3.7	1	0 29
+69	50	3.7	1	2 48
+70	75	3.7	1	1 74
+71	8	3.7	1	0 8
+72	13	3.7	1	0 13
+73	16	3.7	1	0 16
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 4252 times
+5 times, it overlapped the 5' end of a read
+4247 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	3	0.9	1	0 3
+12	2	0.2	1	0 2
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	28	0.9	1	0 28
+12	26	0.2	1	0 26
+13	114	0.2	1	1 113
+14	81	0.2	1	0 81
+15	92	0.2	1	11 81
+16	69	0.2	1	4 65
+17	194	0.2	1	18 176
+18	121	0.2	1	15 106
+19	198	0.2	1	35 163
+20	120	0.2	1	16 104
+21	63	0.2	1	12 51
+22	108	0.2	1	12 96
+23	130	0.2	1	15 115
+24	126	0.2	1	22 104
+25	86	0.2	1	14 72
+26	96	0.2	1	10 86
+27	70	0.2	1	7 63
+28	134	0.2	1	14 120
+29	57	0.2	1	3 54
+30	80	0.2	1	8 72
+31	87	0.2	1	9 78
+32	120	0.2	1	16 104
+33	217	0.2	1	34 183
+34	79	0.2	1	11 68
+35	38	0.2	1	1 37
+36	46	0.2	1	1 45
+37	58	0.2	1	9 49
+38	63	0.2	1	1 62
+39	62	0.2	1	2 60
+40	64	0.2	1	6 58
+41	123	0.2	1	12 111
+42	50	0.2	1	3 47
+43	53	0.2	1	1 52
+44	51	0.2	1	1 50
+45	62	0.2	1	1 61
+46	56	0.2	1	2 54
+47	36	0.2	1	0 36
+48	53	0.2	1	0 53
+49	31	0.2	1	0 31
+50	31	0.2	1	1 30
+51	38	0.2	1	0 38
+52	45	0.2	1	1 44
+53	29	0.2	1	1 28
+54	30	0.2	1	0 30
+55	56	0.2	1	0 56
+56	56	0.2	1	0 56
+57	22	0.2	1	0 22
+58	25	0.2	1	0 25
+59	30	0.2	1	0 30
+60	44	0.2	1	1 43
+61	48	0.2	1	0 48
+62	51	0.2	1	1 50
+63	44	0.2	1	0 44
+64	82	0.2	1	0 82
+65	48	0.2	1	0 48
+66	96	0.2	1	0 96
+67	12	0.2	1	0 12
+68	18	0.2	1	0 18
+69	12	0.2	1	0 12
+70	29	0.2	1	0 29
+71	36	0.2	1	0 36
+72	16	0.2	1	0 16
+73	7	0.2	1	0 7
+application/gzip
+null
+Analysis complete for N4Rs6b_bam_to_fastq_r1.fastq
+Analysis complete for N4Rs6b_R1_trimmed.fq.gz
+test
+null
+Analysis complete for N4Rs6b_bam_to_fastq_r2.fastq
+application/gzip
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 15:16:46 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 196
+Number of valid reads: 196
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 196
+Num mapped first of pair: 98
+Num mapped second of pair: 98
+Num singletons: 0
+Time taken to analyze reads: 0
+Computing descriptors...
+numberOfMappedBases: 12610
+referenceSize: 596713
+numberOfSequencedBases: 12610
+numberOfAs: 3866
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 0
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Analysis complete for N4Rs6b_R2_trimmed.fq.gz
+Calculating consensus for all outlier strains
+writing the consensus
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b CTTGCCATTA -b CCTTCGTGAT -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/EYQGUT/cutadapt/EYQGUT_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/EYQGUT/cutadapt/EYQGUT_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/EYQGUT/merge_lanes/EYQGUT_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/EYQGUT/merge_lanes/EYQGUT_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 18.183 s (5.009 µs/read; 11.98 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,629,831
+  Read 1 with adapter:                  16,188 (0.4%)
+
+== Read fate breakdown ==
+Pairs that were too short:               3,767 (0.1%)
+Pairs written (passing filters):     3,626,064 (99.9%)
+
+Total basepairs processed:   530,827,758 bp
+  Read 1:   265,403,647 bp
+  Read 2:   265,424,111 bp
+Total written (filtered):    529,892,713 bp (99.8%)
+  Read 1:   264,744,242 bp
+  Read 2:   265,148,471 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: CTTGCCATTA; Type: variable 5'/3'; Length: 10; Trimmed: 9179 times
+35 times, it overlapped the 5' end of a read
+9144 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	10	13.8	0	0 10
+10	24	3.5	1	2 22
+11	1	3.5	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	132	13.8	0	0 132
+10	192	3.5	1	2 190
+11	92	3.5	1	2 90
+12	255	3.5	1	2 253
+13	93	3.5	1	0 93
+14	58	3.5	1	0 58
+15	113	3.5	1	1 112
+16	37	3.5	1	0 37
+17	49	3.5	1	0 49
+18	129	3.5	1	0 129
+19	62	3.5	1	0 62
+20	150	3.5	1	0 150
+21	103	3.5	1	0 103
+22	368	3.5	1	0 368
+23	23	3.5	1	0 23
+24	31	3.5	1	0 31
+25	864	3.5	1	0 864
+26	81	3.5	1	0 81
+27	130	3.5	1	0 130
+28	51	3.5	1	0 51
+29	288	3.5	1	1 287
+30	72	3.5	1	0 72
+31	21	3.5	1	1 20
+32	295	3.5	1	0 295
+33	88	3.5	1	1 87
+34	15	3.5	1	0 15
+35	309	3.5	1	1 308
+36	157	3.5	1	0 157
+37	44	3.5	1	0 44
+38	44	3.5	1	0 44
+39	57	3.5	1	0 57
+40	165	3.5	1	2 163
+41	54	3.5	1	0 54
+42	36	3.5	1	0 36
+43	178	3.5	1	0 178
+44	88	3.5	1	0 88
+45	94	3.5	1	1 93
+46	34	3.5	1	1 33
+47	37	3.5	1	0 37
+48	43	3.5	1	0 43
+49	370	3.5	1	0 370
+50	141	3.5	1	1 140
+51	41	3.5	1	0 41
+52	379	3.5	1	0 379
+53	123	3.5	1	0 123
+54	182	3.5	1	0 182
+55	50	3.5	1	0 50
+56	192	3.5	1	0 192
+57	28	3.5	1	0 28
+58	87	3.5	1	0 87
+59	73	3.5	1	0 73
+60	148	3.5	1	0 148
+61	23	3.5	1	0 23
+62	223	3.5	1	0 223
+63	531	3.5	1	0 531
+64	60	3.5	1	0 60
+65	456	3.5	1	0 456
+66	402	3.5	1	0 402
+67	54	3.5	1	0 54
+68	3	3.5	1	0 3
+69	13	3.5	1	0 13
+70	124	3.5	1	0 124
+71	102	3.5	1	0 102
+72	203	3.5	1	0 203
+73	4	3.5	1	1 3
+
+
+=== First read: Adapter 2 ===
+
+Sequence: CCTTCGTGAT; Type: variable 5'/3'; Length: 10; Trimmed: 6239 times
+386 times, it overlapped the 5' end of a read
+5853 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	14	13.8	0	0 14
+10	371	3.5	1	0 371
+11	1	3.5	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	13	13.8	0	0 13
+10	37	3.5	1	0 37
+11	83	3.5	1	1 82
+12	89	3.5	1	0 89
+13	23	3.5	1	0 23
+14	350	3.5	1	0 350
+15	9	3.5	1	0 9
+16	26	3.5	1	0 26
+17	169	3.5	1	2 167
+18	11	3.5	1	0 11
+19	170	3.5	1	0 170
+20	42	3.5	1	0 42
+21	53	3.5	1	0 53
+22	57	3.5	1	0 57
+23	13	3.5	1	0 13
+24	20	3.5	1	0 20
+25	329	3.5	1	1 328
+26	583	3.5	1	4 579
+27	51	3.5	1	1 50
+28	45	3.5	1	0 45
+29	27	3.5	1	0 27
+30	29	3.5	1	0 29
+31	49	3.5	1	1 48
+32	27	3.5	1	1 26
+33	399	3.5	1	1 398
+34	41	3.5	1	0 41
+35	30	3.5	1	0 30
+36	35	3.5	1	0 35
+37	358	3.5	1	2 356
+38	28	3.5	1	0 28
+39	16	3.5	1	0 16
+40	25	3.5	1	0 25
+41	22	3.5	1	1 21
+42	41	3.5	1	0 41
+43	200	3.5	1	0 200
+44	447	3.5	1	0 447
+45	41	3.5	1	0 41
+46	24	3.5	1	0 24
+47	12	3.5	1	0 12
+48	267	3.5	1	1 266
+49	20	3.5	1	1 19
+50	42	3.5	1	0 42
+51	346	3.5	1	0 346
+52	17	3.5	1	0 17
+53	271	3.5	1	0 271
+54	7	3.5	1	0 7
+55	30	3.5	1	1 29
+56	31	3.5	1	0 31
+57	9	3.5	1	0 9
+58	14	3.5	1	0 14
+59	74	3.5	1	0 74
+60	19	3.5	1	0 19
+61	22	3.5	1	0 22
+62	333	3.5	1	0 333
+63	37	3.5	1	0 37
+64	17	3.5	1	0 17
+65	26	3.5	1	0 26
+66	49	3.5	1	0 49
+67	40	3.5	1	0 40
+68	3	3.5	1	0 3
+69	72	3.5	1	1 71
+70	14	3.5	1	0 14
+71	13	3.5	1	0 13
+72	43	3.5	1	0 43
+73	13	3.5	1	0 13
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 770 times
+0 times, it overlapped the 5' end of a read
+770 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	4	0.9	1	0 4
+12	1	0.2	1	0 1
+13	37	0.2	1	0 37
+14	13	0.2	1	0 13
+15	15	0.2	1	1 14
+16	14	0.2	1	4 10
+17	54	0.2	1	14 40
+18	32	0.2	1	7 25
+19	55	0.2	1	16 39
+20	42	0.2	1	8 34
+21	29	0.2	1	4 25
+22	45	0.2	1	7 38
+23	23	0.2	1	5 18
+24	38	0.2	1	6 32
+25	11	0.2	1	3 8
+26	10	0.2	1	1 9
+27	8	0.2	1	2 6
+28	37	0.2	1	7 30
+29	6	0.2	1	3 3
+30	12	0.2	1	1 11
+31	17	0.2	1	3 14
+32	27	0.2	1	3 24
+33	60	0.2	1	13 47
+34	16	0.2	1	8 8
+35	3	0.2	1	0 3
+36	1	0.2	1	0 1
+37	3	0.2	1	1 2
+38	13	0.2	1	2 11
+39	12	0.2	1	0 12
+40	3	0.2	1	1 2
+41	6	0.2	1	1 5
+42	9	0.2	1	2 7
+43	8	0.2	1	0 8
+44	20	0.2	1	4 16
+45	8	0.2	1	2 6
+46	13	0.2	1	1 12
+47	4	0.2	1	0 4
+49	2	0.2	1	0 2
+50	2	0.2	1	0 2
+51	3	0.2	1	0 3
+52	2	0.2	1	1 1
+54	1	0.2	1	0 1
+55	4	0.2	1	0 4
+56	2	0.2	1	0 2
+57	8	0.2	1	0 8
+58	6	0.2	1	0 6
+59	2	0.2	1	0 2
+60	3	0.2	1	0 3
+61	1	0.2	1	0 1
+62	1	0.2	1	0 1
+63	1	0.2	1	0 1
+64	1	0.2	1	0 1
+65	7	0.2	1	0 7
+66	5	0.2	1	0 5
+68	1	0.2	1	0 1
+69	7	0.2	1	0 7
+70	1	0.2	1	0 1
+71	1	0.2	1	0 1
+application/gzip
+Analysis complete for EYQGUT_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for EYQGUT_R2_trimmed.fq.gz
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b ACAAGTGGAC -b AACATCGCGC -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/iAMjS3/cutadapt/iAMjS3_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/iAMjS3/cutadapt/iAMjS3_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/iAMjS3/merge_lanes/iAMjS3_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/iAMjS3/merge_lanes/iAMjS3_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 18.352 s (4.885 µs/read; 12.28 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,757,130
+  Read 1 with adapter:                  19,496 (0.5%)
+
+== Read fate breakdown ==
+Pairs that were too short:               5,105 (0.1%)
+Pairs written (passing filters):     3,752,025 (99.9%)
+
+Total basepairs processed:   538,217,294 bp
+  Read 1:   269,052,730 bp
+  Read 2:   269,164,564 bp
+Total written (filtered):    537,054,418 bp (99.8%)
+  Read 1:   268,257,879 bp
+  Read 2:   268,796,539 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: ACAAGTGGAC; Type: variable 5'/3'; Length: 10; Trimmed: 13116 times
+113 times, it overlapped the 5' end of a read
+13003 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	86	14.3	0	0 86
+10	21	3.6	1	0 21
+11	6	3.6	1	0 6
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	100	14.3	0	0 100
+10	221	3.6	1	4 217
+11	197	3.6	1	21 176
+12	165	3.6	1	11 154
+13	272	3.6	1	3 269
+14	202	3.6	1	4 198
+15	227	3.6	1	3 224
+16	135	3.6	1	7 128
+17	216	3.6	1	1 215
+18	141	3.6	1	5 136
+19	161	3.6	1	1 160
+20	150	3.6	1	3 147
+21	135	3.6	1	3 132
+22	141	3.6	1	0 141
+23	343	3.6	1	3 340
+24	666	3.6	1	2 664
+25	143	3.6	1	1 142
+26	251	3.6	1	6 245
+27	356	3.6	1	1 355
+28	131	3.6	1	2 129
+29	188	3.6	1	1 187
+30	178	3.6	1	1 177
+31	173	3.6	1	4 169
+32	131	3.6	1	2 129
+33	320	3.6	1	2 318
+34	270	3.6	1	5 265
+35	153	3.6	1	3 150
+36	270	3.6	1	2 268
+37	292	3.6	1	0 292
+38	163	3.6	1	1 162
+39	154	3.6	1	3 151
+40	119	3.6	1	3 116
+41	149	3.6	1	2 147
+42	142	3.6	1	1 141
+43	123	3.6	1	0 123
+44	135	3.6	1	4 131
+45	159	3.6	1	7 152
+46	328	3.6	1	91 237
+47	218	3.6	1	8 210
+48	171	3.6	1	4 167
+49	259	3.6	1	56 203
+50	156	3.6	1	1 155
+51	191	3.6	1	20 171
+52	124	3.6	1	7 117
+53	132	3.6	1	1 131
+54	184	3.6	1	2 182
+55	205	3.6	1	1 204
+56	240	3.6	1	1 239
+57	127	3.6	1	0 127
+58	121	3.6	1	0 121
+59	120	3.6	1	0 120
+60	192	3.6	1	0 192
+61	156	3.6	1	4 152
+62	218	3.6	1	0 218
+63	190	3.6	1	1 189
+64	80	3.6	1	1 79
+65	268	3.6	1	3 265
+66	137	3.6	1	0 137
+67	403	3.6	1	4 399
+68	192	3.6	1	1 191
+69	138	3.6	1	7 131
+70	389	3.6	1	8 381
+71	123	3.6	1	2 121
+72	350	3.6	1	2 348
+73	119	3.6	1	1 118
+
+
+=== First read: Adapter 2 ===
+
+Sequence: AACATCGCGC; Type: variable 5'/3'; Length: 10; Trimmed: 1466 times
+13 times, it overlapped the 5' end of a read
+1453 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	10	14.3	0	0 10
+10	3	3.6	1	0 3
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	5	14.3	0	0 5
+10	19	3.6	1	0 19
+11	23	3.6	1	0 23
+12	39	3.6	1	0 39
+13	25	3.6	1	0 25
+14	22	3.6	1	0 22
+15	20	3.6	1	0 20
+16	18	3.6	1	1 17
+17	28	3.6	1	0 28
+18	15	3.6	1	0 15
+19	22	3.6	1	0 22
+20	23	3.6	1	0 23
+21	16	3.6	1	0 16
+22	35	3.6	1	1 34
+23	39	3.6	1	0 39
+24	38	3.6	1	0 38
+25	14	3.6	1	0 14
+26	19	3.6	1	0 19
+27	18	3.6	1	0 18
+28	24	3.6	1	0 24
+29	16	3.6	1	0 16
+30	45	3.6	1	0 45
+31	21	3.6	1	0 21
+32	22	3.6	1	0 22
+33	15	3.6	1	0 15
+34	18	3.6	1	1 17
+35	24	3.6	1	0 24
+36	21	3.6	1	0 21
+37	28	3.6	1	0 28
+38	22	3.6	1	1 21
+39	23	3.6	1	0 23
+40	19	3.6	1	0 19
+41	29	3.6	1	0 29
+42	25	3.6	1	0 25
+43	16	3.6	1	0 16
+44	14	3.6	1	0 14
+45	34	3.6	1	0 34
+46	20	3.6	1	0 20
+47	42	3.6	1	0 42
+48	12	3.6	1	0 12
+49	15	3.6	1	0 15
+50	43	3.6	1	0 43
+51	14	3.6	1	0 14
+52	24	3.6	1	0 24
+53	25	3.6	1	0 25
+54	24	3.6	1	0 24
+55	15	3.6	1	0 15
+56	16	3.6	1	0 16
+57	24	3.6	1	0 24
+58	23	3.6	1	0 23
+59	37	3.6	1	0 37
+60	26	3.6	1	0 26
+61	16	3.6	1	0 16
+62	9	3.6	1	0 9
+63	5	3.6	1	0 5
+64	13	3.6	1	0 13
+65	10	3.6	1	0 10
+66	9	3.6	1	0 9
+67	18	3.6	1	0 18
+68	23	3.6	1	0 23
+69	45	3.6	1	0 45
+70	54	3.6	1	0 54
+71	17	3.6	1	0 17
+72	15	3.6	1	0 15
+73	5	3.6	1	0 5
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 4914 times
+11 times, it overlapped the 5' end of a read
+4903 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	5	0.9	1	0 5
+12	6	0.2	1	0 6
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	22	0.9	1	0 22
+12	19	0.2	1	0 19
+13	143	0.2	1	0 143
+14	68	0.2	1	0 68
+15	83	0.2	1	8 75
+16	51	0.2	1	7 44
+17	222	0.2	1	20 202
+18	135	0.2	1	26 109
+19	263	0.2	1	66 197
+20	188	0.2	1	42 146
+21	106	0.2	1	23 83
+22	184	0.2	1	24 160
+23	182	0.2	1	49 133
+24	157	0.2	1	31 126
+25	83	0.2	1	7 76
+26	235	0.2	1	11 224
+27	48	0.2	1	7 41
+28	199	0.2	1	29 170
+29	50	0.2	1	9 41
+30	65	0.2	1	10 55
+31	144	0.2	1	29 115
+32	201	0.2	1	41 160
+33	390	0.2	1	88 302
+34	82	0.2	1	9 73
+35	117	0.2	1	16 101
+36	25	0.2	1	1 24
+37	78	0.2	1	11 67
+38	64	0.2	1	9 55
+39	61	0.2	1	6 55
+40	44	0.2	1	3 41
+41	49	0.2	1	3 46
+42	64	0.2	1	7 57
+43	135	0.2	1	23 112
+44	47	0.2	1	4 43
+45	48	0.2	1	6 42
+46	46	0.2	1	3 43
+47	26	0.2	1	0 26
+48	28	0.2	1	0 28
+49	37	0.2	1	0 37
+50	26	0.2	1	0 26
+51	37	0.2	1	0 37
+52	32	0.2	1	3 29
+53	20	0.2	1	0 20
+54	34	0.2	1	0 34
+55	30	0.2	1	1 29
+56	39	0.2	1	0 39
+57	24	0.2	1	0 24
+58	25	0.2	1	0 25
+59	26	0.2	1	0 26
+60	16	0.2	1	0 16
+61	40	0.2	1	0 40
+62	32	0.2	1	0 32
+63	42	0.2	1	2 40
+64	78	0.2	1	0 78
+65	62	0.2	1	0 62
+66	63	0.2	1	1 62
+67	16	0.2	1	0 16
+68	10	0.2	1	0 10
+69	6	0.2	1	0 6
+70	12	0.2	1	0 12
+71	31	0.2	1	0 31
+72	7	0.2	1	0 7
+73	6	0.2	1	0 6
+application/gzip
+Analysis complete for iAMjS3_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for iAMjS3_R2_trimmed.fq.gz
+null
+Analysis complete for EYQGUT_bam_to_fastq_r1.fastq
+test
+null
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 15:23:18 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 403508
+Number of valid reads: 403508
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 403508
+Num mapped first of pair: 201754
+Num mapped second of pair: 201754
+Num singletons: 0
+Time taken to analyze reads: 2
+Computing descriptors...
+numberOfMappedBases: 28281283
+referenceSize: 596713
+numberOfSequencedBases: 28276076
+numberOfAs: 6889393
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 2
+end of bam qc
+Computing report...
+Analysis complete for EYQGUT_bam_to_fastq_r2.fastq
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Calculating consensus for all outlier strains
+writing the consensus
+null
+Analysis complete for iAMjS3_bam_to_fastq_r1.fastq
+test
+null
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 15:33:00 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Analysis complete for iAMjS3_bam_to_fastq_r2.fastq
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 5152
+Number of valid reads: 5152
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 5152
+Num mapped first of pair: 2576
+Num mapped second of pair: 2576
+Num singletons: 0
+Time taken to analyze reads: 0
+Computing descriptors...
+numberOfMappedBases: 354856
+referenceSize: 596713
+numberOfSequencedBases: 354415
+numberOfAs: 107869
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 0
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b GAGTCATAGG -b AGCGCCACAC -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/Kyii3a/cutadapt/Kyii3a_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/Kyii3a/cutadapt/Kyii3a_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/Kyii3a/merge_lanes/Kyii3a_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/Kyii3a/merge_lanes/Kyii3a_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 15.845 s (4.829 µs/read; 12.42 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,281,157
+  Read 1 with adapter:                  17,727 (0.5%)
+
+== Read fate breakdown ==
+Pairs that were too short:               5,561 (0.2%)
+Pairs written (passing filters):     3,275,596 (99.8%)
+
+Total basepairs processed:   480,102,061 bp
+  Read 1:   240,047,729 bp
+  Read 2:   240,054,332 bp
+Total written (filtered):    478,915,628 bp (99.8%)
+  Read 1:   239,269,301 bp
+  Read 2:   239,646,327 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: GAGTCATAGG; Type: variable 5'/3'; Length: 10; Trimmed: 5983 times
+106 times, it overlapped the 5' end of a read
+5877 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	93	12.5	0	0 93
+10	13	3.1	1	0 13
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	23	12.5	0	0 23
+10	191	3.1	1	7 184
+11	54	3.1	1	5 49
+12	85	3.1	1	4 81
+13	189	3.1	1	0 189
+14	217	3.1	1	0 217
+15	121	3.1	1	0 121
+16	43	3.1	1	0 43
+17	50	3.1	1	0 50
+18	27	3.1	1	0 27
+19	110	3.1	1	0 110
+20	69	3.1	1	0 69
+21	157	3.1	1	0 157
+22	291	3.1	1	0 291
+23	85	3.1	1	0 85
+24	72	3.1	1	0 72
+25	458	3.1	1	1 457
+26	52	3.1	1	0 52
+27	109	3.1	1	0 109
+28	80	3.1	1	0 80
+29	37	3.1	1	0 37
+30	329	3.1	1	0 329
+31	14	3.1	1	0 14
+32	218	3.1	1	0 218
+33	71	3.1	1	0 71
+34	336	3.1	1	0 336
+35	119	3.1	1	0 119
+36	170	3.1	1	0 170
+37	41	3.1	1	0 41
+38	3	3.1	1	0 3
+39	74	3.1	1	0 74
+40	51	3.1	1	0 51
+41	53	3.1	1	0 53
+42	33	3.1	1	0 33
+43	27	3.1	1	0 27
+44	134	3.1	1	0 134
+45	23	3.1	1	0 23
+46	106	3.1	1	2 104
+47	66	3.1	1	0 66
+48	45	3.1	1	0 45
+49	4	3.1	1	0 4
+50	21	3.1	1	0 21
+51	11	3.1	1	0 11
+52	120	3.1	1	0 120
+53	52	3.1	1	0 52
+54	94	3.1	1	0 94
+55	53	3.1	1	0 53
+56	20	3.1	1	1 19
+57	27	3.1	1	0 27
+58	19	3.1	1	0 19
+59	12	3.1	1	1 11
+60	151	3.1	1	0 151
+61	88	3.1	1	0 88
+62	146	3.1	1	0 146
+63	29	3.1	1	0 29
+64	86	3.1	1	0 86
+65	53	3.1	1	0 53
+66	16	3.1	1	0 16
+67	8	3.1	1	0 8
+68	55	3.1	1	0 55
+69	35	3.1	1	0 35
+70	278	3.1	1	0 278
+71	53	3.1	1	0 53
+72	11	3.1	1	0 11
+73	2	3.1	1	0 2
+
+
+=== First read: Adapter 2 ===
+
+Sequence: AGCGCCACAC; Type: variable 5'/3'; Length: 10; Trimmed: 2094 times
+4 times, it overlapped the 5' end of a read
+2090 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	4	12.5	0	0 4
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	12	12.5	0	0 12
+10	51	3.1	1	0 51
+11	10	3.1	1	0 10
+12	118	3.1	1	0 118
+13	8	3.1	1	0 8
+14	34	3.1	1	0 34
+15	100	3.1	1	0 100
+16	8	3.1	1	0 8
+17	131	3.1	1	0 131
+18	12	3.1	1	0 12
+19	14	3.1	1	0 14
+20	31	3.1	1	0 31
+21	56	3.1	1	0 56
+22	18	3.1	1	0 18
+23	6	3.1	1	0 6
+24	10	3.1	1	0 10
+25	15	3.1	1	0 15
+26	259	3.1	1	0 259
+27	20	3.1	1	0 20
+28	17	3.1	1	0 17
+29	19	3.1	1	0 19
+30	12	3.1	1	0 12
+31	10	3.1	1	0 10
+32	14	3.1	1	0 14
+33	14	3.1	1	0 14
+34	27	3.1	1	0 27
+35	14	3.1	1	0 14
+36	42	3.1	1	0 42
+37	30	3.1	1	0 30
+38	6	3.1	1	0 6
+39	15	3.1	1	0 15
+40	26	3.1	1	0 26
+41	76	3.1	1	0 76
+42	7	3.1	1	0 7
+43	5	3.1	1	0 5
+44	38	3.1	1	0 38
+45	22	3.1	1	0 22
+46	63	3.1	1	0 63
+47	21	3.1	1	0 21
+48	9	3.1	1	0 9
+49	6	3.1	1	0 6
+50	14	3.1	1	0 14
+51	338	3.1	1	0 338
+52	43	3.1	1	0 43
+53	13	3.1	1	0 13
+54	17	3.1	1	0 17
+55	12	3.1	1	0 12
+56	12	3.1	1	0 12
+57	55	3.1	1	0 55
+58	5	3.1	1	0 5
+59	14	3.1	1	0 14
+60	23	3.1	1	0 23
+61	4	3.1	1	0 4
+62	25	3.1	1	0 25
+63	9	3.1	1	0 9
+64	5	3.1	1	0 5
+65	26	3.1	1	0 26
+66	2	3.1	1	0 2
+67	22	3.1	1	0 22
+68	7	3.1	1	0 7
+69	12	3.1	1	0 12
+70	12	3.1	1	0 12
+71	6	3.1	1	0 6
+72	3	3.1	1	0 3
+73	5	3.1	1	0 5
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 9650 times
+3 times, it overlapped the 5' end of a read
+9647 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	3	0.8	1	0 3
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	103	0.8	1	0 103
+12	31	0.2	1	0 31
+13	49	0.2	1	0 49
+14	25	0.2	1	0 25
+15	514	0.2	1	3 511
+16	5	0.2	1	0 5
+17	461	0.2	1	7 454
+18	87	0.2	1	7 80
+19	142	0.2	1	13 129
+20	117	0.2	1	4 113
+21	126	0.2	1	2 124
+22	223	0.2	1	5 218
+23	186	0.2	1	8 178
+24	69	0.2	1	3 66
+25	42	0.2	1	5 37
+26	404	0.2	1	1 403
+27	100	0.2	1	0 100
+28	14	0.2	1	1 13
+29	84	0.2	1	4 80
+30	180	0.2	1	1 179
+31	18	0.2	1	5 13
+32	79	0.2	1	6 73
+33	173	0.2	1	13 160
+34	70	0.2	1	2 68
+35	24	0.2	1	4 20
+36	21	0.2	1	2 19
+37	75	0.2	1	1 74
+38	21	0.2	1	1 20
+39	22	0.2	1	1 21
+40	36	0.2	1	3 33
+41	67	0.2	1	1 66
+42	52	0.2	1	0 52
+43	145	0.2	1	0 145
+44	95	0.2	1	3 92
+45	10	0.2	1	0 10
+46	10	0.2	1	0 10
+47	199	0.2	1	0 199
+48	25	0.2	1	0 25
+49	557	0.2	1	0 557
+50	123	0.2	1	0 123
+51	379	0.2	1	0 379
+52	321	0.2	1	0 321
+53	90	0.2	1	0 90
+54	48	0.2	1	0 48
+55	9	0.2	1	0 9
+56	1421	0.2	1	0 1421
+57	3	0.2	1	0 3
+58	15	0.2	1	0 15
+59	41	0.2	1	0 41
+60	158	0.2	1	0 158
+61	3	0.2	1	0 3
+62	121	0.2	1	0 121
+63	1	0.2	1	0 1
+64	89	0.2	1	0 89
+65	1379	0.2	1	0 1379
+66	367	0.2	1	0 367
+67	26	0.2	1	0 26
+68	155	0.2	1	0 155
+69	32	0.2	1	0 32
+70	13	0.2	1	0 13
+71	126	0.2	1	0 126
+72	65	0.2	1	0 65
+73	1	0.2	1	0 1
+application/gzip
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for Kyii3a_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for Kyii3a_R2_trimmed.fq.gz
+null
+Analysis complete for Kyii3a_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for Kyii3a_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b CGTCTCATAT -b AGCTACTATA -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/QaoCQV/cutadapt/QaoCQV_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/QaoCQV/cutadapt/QaoCQV_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/QaoCQV/merge_lanes/QaoCQV_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/QaoCQV/merge_lanes/QaoCQV_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 14.285 s (4.203 µs/read; 14.28 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,399,172
+  Read 1 with adapter:                  12,288 (0.4%)
+
+== Read fate breakdown ==
+Pairs that were too short:               3,648 (0.1%)
+Pairs written (passing filters):     3,395,524 (99.9%)
+
+Total basepairs processed:   487,133,037 bp
+  Read 1:   243,533,762 bp
+  Read 2:   243,599,275 bp
+Total written (filtered):    486,350,802 bp (99.8%)
+  Read 1:   243,015,381 bp
+  Read 2:   243,335,421 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: CGTCTCATAT; Type: variable 5'/3'; Length: 10; Trimmed: 1429 times
+8 times, it overlapped the 5' end of a read
+1421 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	1	13.0	0	0 1
+10	7	3.2	1	0 7
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	17	13.0	0	0 17
+10	42	3.2	1	13 29
+11	45	3.2	1	11 34
+12	23	3.2	1	6 17
+13	28	3.2	1	1 27
+14	13	3.2	1	1 12
+15	17	3.2	1	0 17
+16	18	3.2	1	1 17
+17	18	3.2	1	0 18
+18	14	3.2	1	0 14
+19	15	3.2	1	0 15
+20	17	3.2	1	2 15
+21	16	3.2	1	0 16
+22	13	3.2	1	0 13
+23	11	3.2	1	0 11
+24	17	3.2	1	0 17
+25	10	3.2	1	0 10
+26	12	3.2	1	0 12
+27	16	3.2	1	0 16
+28	14	3.2	1	0 14
+29	14	3.2	1	0 14
+30	13	3.2	1	0 13
+31	16	3.2	1	0 16
+32	20	3.2	1	0 20
+33	15	3.2	1	0 15
+34	15	3.2	1	0 15
+35	13	3.2	1	1 12
+36	12	3.2	1	0 12
+37	9	3.2	1	0 9
+38	15	3.2	1	0 15
+39	7	3.2	1	0 7
+40	9	3.2	1	0 9
+41	11	3.2	1	0 11
+42	14	3.2	1	0 14
+43	15	3.2	1	0 15
+44	13	3.2	1	0 13
+45	27	3.2	1	0 27
+46	72	3.2	1	51 21
+47	14	3.2	1	4 10
+48	396	3.2	1	1 395
+49	27	3.2	1	17 10
+50	16	3.2	1	0 16
+51	22	3.2	1	9 13
+52	6	3.2	1	2 4
+53	13	3.2	1	0 13
+54	13	3.2	1	0 13
+55	14	3.2	1	0 14
+56	11	3.2	1	0 11
+57	8	3.2	1	0 8
+58	10	3.2	1	0 10
+59	11	3.2	1	0 11
+60	7	3.2	1	0 7
+61	15	3.2	1	0 15
+62	6	3.2	1	0 6
+63	21	3.2	1	0 21
+64	17	3.2	1	0 17
+65	15	3.2	1	0 15
+66	18	3.2	1	0 18
+67	8	3.2	1	0 8
+68	39	3.2	1	0 39
+69	1	3.2	1	0 1
+70	9	3.2	1	0 9
+71	2	3.2	1	0 2
+72	8	3.2	1	0 8
+73	8	3.2	1	0 8
+
+
+=== First read: Adapter 2 ===
+
+Sequence: AGCTACTATA; Type: variable 5'/3'; Length: 10; Trimmed: 7731 times
+85 times, it overlapped the 5' end of a read
+7646 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	7	13.0	0	0 7
+10	76	3.2	1	0 76
+11	2	3.2	1	0 2
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	19	13.0	0	0 19
+10	164	3.2	1	0 164
+11	90	3.2	1	0 90
+12	91	3.2	1	1 90
+13	99	3.2	1	0 99
+14	445	3.2	1	0 445
+15	65	3.2	1	0 65
+16	170	3.2	1	2 168
+17	52	3.2	1	0 52
+18	87	3.2	1	0 87
+19	181	3.2	1	0 181
+20	143	3.2	1	0 143
+21	218	3.2	1	0 218
+22	163	3.2	1	0 163
+23	60	3.2	1	0 60
+24	101	3.2	1	1 100
+25	108	3.2	1	0 108
+26	214	3.2	1	0 214
+27	81	3.2	1	0 81
+28	114	3.2	1	0 114
+29	64	3.2	1	0 64
+30	94	3.2	1	0 94
+31	90	3.2	1	0 90
+32	93	3.2	1	1 92
+33	253	3.2	1	0 253
+34	113	3.2	1	2 111
+35	91	3.2	1	0 91
+36	52	3.2	1	0 52
+37	52	3.2	1	5 47
+38	62	3.2	1	0 62
+39	183	3.2	1	0 183
+40	70	3.2	1	0 70
+41	169	3.2	1	2 167
+42	156	3.2	1	0 156
+43	44	3.2	1	0 44
+44	155	3.2	1	0 155
+45	27	3.2	1	1 26
+46	81	3.2	1	0 81
+47	83	3.2	1	0 83
+48	157	3.2	1	0 157
+49	75	3.2	1	0 75
+50	309	3.2	1	0 309
+51	35	3.2	1	0 35
+52	35	3.2	1	0 35
+53	59	3.2	1	1 58
+54	156	3.2	1	0 156
+55	201	3.2	1	0 201
+56	83	3.2	1	0 83
+57	47	3.2	1	0 47
+58	160	3.2	1	0 160
+59	112	3.2	1	0 112
+60	25	3.2	1	0 25
+61	66	3.2	1	2 64
+62	188	3.2	1	0 188
+63	117	3.2	1	0 117
+64	203	3.2	1	0 203
+65	388	3.2	1	0 388
+66	46	3.2	1	0 46
+67	72	3.2	1	4 68
+68	188	3.2	1	3 185
+69	54	3.2	1	0 54
+70	131	3.2	1	1 130
+71	40	3.2	1	0 40
+72	42	3.2	1	0 42
+73	60	3.2	1	0 60
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 3128 times
+0 times, it overlapped the 5' end of a read
+3128 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	7	0.8	1	0 7
+12	8	0.2	1	0 8
+13	88	0.2	1	0 88
+14	38	0.2	1	0 38
+15	49	0.2	1	4 45
+16	24	0.2	1	2 22
+17	147	0.2	1	21 126
+18	83	0.2	1	17 66
+19	192	0.2	1	49 143
+20	92	0.2	1	13 79
+21	52	0.2	1	12 40
+22	99	0.2	1	19 80
+23	127	0.2	1	31 96
+24	99	0.2	1	15 84
+25	43	0.2	1	7 36
+26	38	0.2	1	8 30
+27	20	0.2	1	7 13
+28	51	0.2	1	5 46
+29	32	0.2	1	6 26
+30	41	0.2	1	8 33
+31	79	0.2	1	11 68
+32	105	0.2	1	26 79
+33	274	0.2	1	68 206
+34	55	0.2	1	8 47
+35	26	0.2	1	8 18
+36	18	0.2	1	3 15
+37	42	0.2	1	8 34
+38	8	0.2	1	0 8
+39	19	0.2	1	4 15
+40	8	0.2	1	2 6
+41	8	0.2	1	1 7
+42	22	0.2	1	6 16
+43	37	0.2	1	9 28
+44	48	0.2	1	11 37
+45	24	0.2	1	3 21
+46	15	0.2	1	3 12
+47	3	0.2	1	0 3
+48	13	0.2	1	1 12
+49	4	0.2	1	0 4
+50	8	0.2	1	0 8
+51	6	0.2	1	1 5
+52	8	0.2	1	0 8
+53	7	0.2	1	0 7
+54	5	0.2	1	0 5
+55	5	0.2	1	1 4
+56	6	0.2	1	0 6
+57	7	0.2	1	1 6
+58	15	0.2	1	0 15
+59	10	0.2	1	0 10
+60	9	0.2	1	0 9
+61	3	0.2	1	0 3
+62	6	0.2	1	0 6
+63	7	0.2	1	0 7
+64	163	0.2	1	0 163
+65	692	0.2	1	1 691
+66	21	0.2	1	1 20
+67	4	0.2	1	0 4
+68	3	0.2	1	0 3
+69	3	0.2	1	0 3
+71	2	0.2	1	0 2
+application/gzip
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 15:39:08 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 768238
+Number of valid reads: 768238
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 768238
+Num mapped first of pair: 384119
+Num mapped second of pair: 384119
+Num singletons: 0
+Time taken to analyze reads: 3
+Computing descriptors...
+numberOfMappedBases: 54359176
+referenceSize: 596713
+numberOfSequencedBases: 54356809
+numberOfAs: 17899985
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 3
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Analysis complete for QaoCQV_R1_trimmed.fq.gz
+application/gzip
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for QaoCQV_R2_trimmed.fq.gz
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b AACCATAGAA -b CCATCTCGCC -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/Dq37e8/cutadapt/Dq37e8_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/Dq37e8/cutadapt/Dq37e8_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/Dq37e8/merge_lanes/Dq37e8_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/Dq37e8/merge_lanes/Dq37e8_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 15.781 s (4.999 µs/read; 12.00 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,157,116
+  Read 1 with adapter:                  22,084 (0.7%)
+
+== Read fate breakdown ==
+Pairs that were too short:               7,942 (0.3%)
+Pairs written (passing filters):     3,149,174 (99.7%)
+
+Total basepairs processed:   462,306,830 bp
+  Read 1:   231,150,388 bp
+  Read 2:   231,156,442 bp
+Total written (filtered):    460,691,095 bp (99.7%)
+  Read 1:   230,116,599 bp
+  Read 2:   230,574,496 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: AACCATAGAA; Type: variable 5'/3'; Length: 10; Trimmed: 18363 times
+102 times, it overlapped the 5' end of a read
+18261 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	11	12.0	0	0 11
+10	86	3.0	1	2 84
+11	5	3.0	1	0 5
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	200	12.0	0	0 200
+10	246	3.0	1	9 237
+11	162	3.0	1	8 154
+12	169	3.0	1	1 168
+13	271	3.0	1	2 269
+14	248	3.0	1	0 248
+15	362	3.0	1	0 362
+16	133	3.0	1	1 132
+17	188	3.0	1	2 186
+18	221	3.0	1	2 219
+19	103	3.0	1	2 101
+20	341	3.0	1	2 339
+21	145	3.0	1	0 145
+22	143	3.0	1	2 141
+23	295	3.0	1	1 294
+24	58	3.0	1	1 57
+25	148	3.0	1	1 147
+26	75	3.0	1	1 74
+27	437	3.0	1	2 435
+28	122	3.0	1	4 118
+29	517	3.0	1	4 513
+30	313	3.0	1	1 312
+31	186	3.0	1	2 184
+32	197	3.0	1	2 195
+33	44	3.0	1	0 44
+34	444	3.0	1	1 443
+35	135	3.0	1	1 134
+36	226	3.0	1	0 226
+37	462	3.0	1	1 461
+38	268	3.0	1	0 268
+39	385	3.0	1	2 383
+40	176	3.0	1	5 171
+41	481	3.0	1	0 481
+42	102	3.0	1	0 102
+43	112	3.0	1	0 112
+44	217	3.0	1	0 217
+45	362	3.0	1	1 361
+46	575	3.0	1	2 573
+47	103	3.0	1	0 103
+48	407	3.0	1	2 405
+49	203	3.0	1	1 202
+50	607	3.0	1	0 607
+51	202	3.0	1	0 202
+52	312	3.0	1	3 309
+53	236	3.0	1	0 236
+54	259	3.0	1	1 258
+55	187	3.0	1	0 187
+56	1373	3.0	1	0 1373
+57	574	3.0	1	0 574
+58	287	3.0	1	0 287
+59	542	3.0	1	0 542
+60	203	3.0	1	2 201
+61	117	3.0	1	1 116
+62	582	3.0	1	1 581
+63	312	3.0	1	2 310
+64	218	3.0	1	1 217
+65	112	3.0	1	0 112
+66	95	3.0	1	1 94
+67	232	3.0	1	1 231
+68	666	3.0	1	1 665
+69	748	3.0	1	1 747
+70	109	3.0	1	0 109
+71	102	3.0	1	0 102
+72	27	3.0	1	0 27
+73	177	3.0	1	0 177
+
+
+=== First read: Adapter 2 ===
+
+Sequence: CCATCTCGCC; Type: variable 5'/3'; Length: 10; Trimmed: 2347 times
+34 times, it overlapped the 5' end of a read
+2313 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	20	12.0	0	0 20
+10	12	3.0	1	0 12
+11	2	3.0	1	0 2
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	10	12.0	0	0 10
+10	15	3.0	1	0 15
+11	30	3.0	1	0 30
+12	94	3.0	1	0 94
+13	39	3.0	1	0 39
+14	21	3.0	1	0 21
+15	33	3.0	1	1 32
+16	61	3.0	1	0 61
+17	74	3.0	1	0 74
+18	72	3.0	1	0 72
+19	44	3.0	1	1 43
+20	68	3.0	1	0 68
+21	34	3.0	1	0 34
+22	34	3.0	1	0 34
+23	29	3.0	1	0 29
+24	81	3.0	1	0 81
+25	23	3.0	1	2 21
+26	50	3.0	1	0 50
+27	26	3.0	1	0 26
+28	53	3.0	1	0 53
+29	28	3.0	1	0 28
+30	22	3.0	1	0 22
+31	44	3.0	1	0 44
+32	41	3.0	1	1 40
+33	20	3.0	1	1 19
+34	24	3.0	1	0 24
+35	30	3.0	1	0 30
+36	29	3.0	1	0 29
+37	19	3.0	1	0 19
+38	33	3.0	1	0 33
+39	24	3.0	1	0 24
+40	25	3.0	1	0 25
+41	30	3.0	1	0 30
+42	26	3.0	1	1 25
+43	35	3.0	1	0 35
+44	22	3.0	1	0 22
+45	40	3.0	1	0 40
+46	54	3.0	1	0 54
+47	29	3.0	1	0 29
+48	29	3.0	1	0 29
+49	21	3.0	1	0 21
+50	19	3.0	1	0 19
+51	20	3.0	1	0 20
+52	34	3.0	1	0 34
+53	20	3.0	1	1 19
+54	28	3.0	1	0 28
+55	28	3.0	1	1 27
+56	23	3.0	1	0 23
+57	32	3.0	1	0 32
+58	41	3.0	1	0 41
+59	86	3.0	1	0 86
+60	41	3.0	1	0 41
+61	37	3.0	1	0 37
+62	17	3.0	1	1 16
+63	16	3.0	1	1 15
+64	18	3.0	1	0 18
+65	29	3.0	1	0 29
+66	43	3.0	1	0 43
+67	78	3.0	1	2 76
+68	25	3.0	1	0 25
+69	26	3.0	1	0 26
+70	66	3.0	1	0 66
+71	34	3.0	1	0 34
+72	24	3.0	1	0 24
+73	12	3.0	1	0 12
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 1374 times
+1 times, it overlapped the 5' end of a read
+1373 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	1	0.8	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	4	0.8	1	0 4
+12	6	0.2	1	0 6
+13	85	0.2	1	0 85
+14	16	0.2	1	0 16
+15	21	0.2	1	2 19
+16	12	0.2	1	2 10
+17	47	0.2	1	8 39
+18	32	0.2	1	7 25
+19	63	0.2	1	10 53
+20	41	0.2	1	10 31
+21	21	0.2	1	8 13
+22	26	0.2	1	4 22
+23	69	0.2	1	3 66
+24	93	0.2	1	7 86
+25	15	0.2	1	4 11
+26	57	0.2	1	2 55
+27	12	0.2	1	3 9
+28	25	0.2	1	6 19
+29	6	0.2	1	1 5
+30	17	0.2	1	1 16
+31	27	0.2	1	5 22
+32	36	0.2	1	5 31
+33	74	0.2	1	19 55
+34	5	0.2	1	2 3
+35	20	0.2	1	2 18
+36	21	0.2	1	2 19
+37	61	0.2	1	0 61
+38	7	0.2	1	1 6
+39	11	0.2	1	0 11
+40	10	0.2	1	2 8
+41	11	0.2	1	0 11
+42	2	0.2	1	0 2
+43	16	0.2	1	4 12
+44	18	0.2	1	2 16
+45	14	0.2	1	2 12
+46	9	0.2	1	1 8
+47	2	0.2	1	0 2
+48	1	0.2	1	0 1
+49	3	0.2	1	0 3
+50	56	0.2	1	0 56
+51	2	0.2	1	0 2
+52	2	0.2	1	0 2
+53	2	0.2	1	0 2
+54	3	0.2	1	0 3
+55	65	0.2	1	0 65
+56	34	0.2	1	0 34
+58	3	0.2	1	0 3
+59	8	0.2	1	1 7
+60	30	0.2	1	0 30
+61	4	0.2	1	0 4
+62	7	0.2	1	0 7
+63	5	0.2	1	0 5
+64	7	0.2	1	0 7
+65	8	0.2	1	0 8
+66	111	0.2	1	0 111
+67	2	0.2	1	0 2
+68	3	0.2	1	0 3
+69	1	0.2	1	0 1
+70	1	0.2	1	0 1
+71	3	0.2	1	0 3
+application/gzip
+Analysis complete for Dq37e8_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for Dq37e8_R2_trimmed.fq.gz
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 15:45:29 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 16500
+Number of valid reads: 16500
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 16500
+Num mapped first of pair: 8250
+Num mapped second of pair: 8250
+Num singletons: 0
+Time taken to analyze reads: 0
+Computing descriptors...
+numberOfMappedBases: 550637
+referenceSize: 596713
+numberOfSequencedBases: 550604
+numberOfAs: 129895
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 1
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+null
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for QaoCQV_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for QaoCQV_bam_to_fastq_r2.fastq
+null
+Analysis complete for Dq37e8_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for Dq37e8_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b GGTAACTCGC -b TCACCAACTT -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/WpJqxj/cutadapt/WpJqxj_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/WpJqxj/cutadapt/WpJqxj_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/WpJqxj/merge_lanes/WpJqxj_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/WpJqxj/merge_lanes/WpJqxj_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 15.382 s (4.891 µs/read; 12.27 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,144,866
+  Read 1 with adapter:                  17,507 (0.6%)
+
+== Read fate breakdown ==
+Pairs that were too short:               5,929 (0.2%)
+Pairs written (passing filters):     3,138,937 (99.8%)
+
+Total basepairs processed:   459,732,216 bp
+  Read 1:   229,850,925 bp
+  Read 2:   229,881,291 bp
+Total written (filtered):    458,504,661 bp (99.7%)
+  Read 1:   229,057,015 bp
+  Read 2:   229,447,646 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: GGTAACTCGC; Type: variable 5'/3'; Length: 10; Trimmed: 1059 times
+21 times, it overlapped the 5' end of a read
+1038 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	13	12.0	0	0 13
+10	8	3.0	1	0 8
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	23	12.0	0	0 23
+10	11	3.0	1	1 10
+11	26	3.0	1	5 21
+12	19	3.0	1	5 14
+13	23	3.0	1	1 22
+14	24	3.0	1	0 24
+15	15	3.0	1	2 13
+16	19	3.0	1	1 18
+17	18	3.0	1	1 17
+18	16	3.0	1	0 16
+19	18	3.0	1	0 18
+20	11	3.0	1	0 11
+21	11	3.0	1	0 11
+22	19	3.0	1	0 19
+23	15	3.0	1	0 15
+24	15	3.0	1	0 15
+25	15	3.0	1	0 15
+26	26	3.0	1	0 26
+27	14	3.0	1	0 14
+28	13	3.0	1	1 12
+29	15	3.0	1	0 15
+30	9	3.0	1	0 9
+31	17	3.0	1	0 17
+32	12	3.0	1	0 12
+33	8	3.0	1	0 8
+34	15	3.0	1	1 14
+35	13	3.0	1	0 13
+36	13	3.0	1	0 13
+37	22	3.0	1	0 22
+38	17	3.0	1	0 17
+39	4	3.0	1	0 4
+40	23	3.0	1	0 23
+41	20	3.0	1	0 20
+42	11	3.0	1	0 11
+43	20	3.0	1	0 20
+44	19	3.0	1	0 19
+45	14	3.0	1	0 14
+46	21	3.0	1	0 21
+47	12	3.0	1	0 12
+48	13	3.0	1	0 13
+49	15	3.0	1	1 14
+50	8	3.0	1	0 8
+51	13	3.0	1	1 12
+52	25	3.0	1	0 25
+53	19	3.0	1	0 19
+54	14	3.0	1	0 14
+55	9	3.0	1	0 9
+56	12	3.0	1	0 12
+57	10	3.0	1	0 10
+58	15	3.0	1	0 15
+59	18	3.0	1	0 18
+60	16	3.0	1	0 16
+61	14	3.0	1	0 14
+62	9	3.0	1	0 9
+63	20	3.0	1	0 20
+64	14	3.0	1	0 14
+65	9	3.0	1	0 9
+66	17	3.0	1	0 17
+67	28	3.0	1	2 26
+68	21	3.0	1	0 21
+69	9	3.0	1	0 9
+70	10	3.0	1	0 10
+71	21	3.0	1	1 20
+72	15	3.0	1	0 15
+73	28	3.0	1	0 28
+
+
+=== First read: Adapter 2 ===
+
+Sequence: TCACCAACTT; Type: variable 5'/3'; Length: 10; Trimmed: 9662 times
+54 times, it overlapped the 5' end of a read
+9608 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	10	12.0	0	0 10
+10	36	3.0	1	0 36
+11	8	3.0	1	0 8
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	40	12.0	0	0 40
+10	125	3.0	1	0 125
+11	133	3.0	1	2 131
+12	138	3.0	1	6 132
+13	129	3.0	1	3 126
+14	162	3.0	1	3 159
+15	151	3.0	1	0 151
+16	129	3.0	1	0 129
+17	116	3.0	1	0 116
+18	96	3.0	1	2 94
+19	171	3.0	1	1 170
+20	129	3.0	1	3 126
+21	115	3.0	1	3 112
+22	220	3.0	1	1 219
+23	89	3.0	1	1 88
+24	109	3.0	1	1 108
+25	197	3.0	1	1 196
+26	195	3.0	1	6 189
+27	214	3.0	1	1 213
+28	379	3.0	1	0 379
+29	73	3.0	1	2 71
+30	231	3.0	1	1 230
+31	123	3.0	1	1 122
+32	151	3.0	1	2 149
+33	234	3.0	1	0 234
+34	336	3.0	1	0 336
+35	148	3.0	1	0 148
+36	197	3.0	1	1 196
+37	168	3.0	1	4 164
+38	197	3.0	1	0 197
+39	117	3.0	1	3 114
+40	100	3.0	1	2 98
+41	121	3.0	1	2 119
+42	220	3.0	1	0 220
+43	324	3.0	1	0 324
+44	101	3.0	1	3 98
+45	80	3.0	1	0 80
+46	189	3.0	1	1 188
+47	244	3.0	1	1 243
+48	109	3.0	1	1 108
+49	141	3.0	1	4 137
+50	94	3.0	1	4 90
+51	171	3.0	1	3 168
+52	152	3.0	1	1 151
+53	85	3.0	1	0 85
+54	113	3.0	1	1 112
+55	86	3.0	1	2 84
+56	130	3.0	1	1 129
+57	111	3.0	1	0 111
+58	344	3.0	1	1 343
+59	209	3.0	1	1 208
+60	95	3.0	1	2 93
+61	116	3.0	1	1 115
+62	194	3.0	1	3 191
+63	144	3.0	1	2 142
+64	132	3.0	1	1 131
+65	133	3.0	1	1 132
+66	52	3.0	1	1 51
+67	95	3.0	1	0 95
+68	60	3.0	1	0 60
+69	82	3.0	1	0 82
+70	95	3.0	1	2 93
+71	57	3.0	1	0 57
+72	99	3.0	1	2 97
+73	118	3.0	1	0 118
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 6786 times
+12 times, it overlapped the 5' end of a read
+6774 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	5	0.7	1	0 5
+12	5	0.2	1	0 5
+13	2	0.2	1	0 2
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	80	0.7	1	0 80
+12	46	0.2	1	0 46
+13	53	0.2	1	0 53
+14	30	0.2	1	0 30
+15	361	0.2	1	1 360
+16	28	0.2	1	1 27
+17	321	0.2	1	10 311
+18	63	0.2	1	6 57
+19	102	0.2	1	10 92
+20	66	0.2	1	10 56
+21	55	0.2	1	2 53
+22	100	0.2	1	0 100
+23	112	0.2	1	9 103
+24	62	0.2	1	7 55
+25	27	0.2	1	2 25
+26	203	0.2	1	0 203
+27	78	0.2	1	1 77
+28	88	0.2	1	3 85
+29	67	0.2	1	1 66
+30	57	0.2	1	0 57
+31	44	0.2	1	6 38
+32	99	0.2	1	6 93
+33	110	0.2	1	15 95
+34	59	0.2	1	3 56
+35	24	0.2	1	2 22
+36	11	0.2	1	1 10
+37	102	0.2	1	1 101
+38	25	0.2	1	1 24
+39	47	0.2	1	1 46
+40	49	0.2	1	0 49
+41	105	0.2	1	0 105
+42	67	0.2	1	1 66
+43	137	0.2	1	7 130
+44	63	0.2	1	0 63
+45	21	0.2	1	1 20
+46	28	0.2	1	1 27
+47	86	0.2	1	0 86
+48	30	0.2	1	1 29
+49	203	0.2	1	0 203
+50	43	0.2	1	0 43
+51	154	0.2	1	0 154
+52	117	0.2	1	0 117
+53	60	0.2	1	0 60
+54	16	0.2	1	0 16
+55	27	0.2	1	1 26
+56	915	0.2	1	0 915
+57	17	0.2	1	0 17
+58	7	0.2	1	0 7
+59	123	0.2	1	0 123
+60	137	0.2	1	0 137
+61	19	0.2	1	0 19
+62	376	0.2	1	0 376
+63	15	0.2	1	0 15
+64	310	0.2	1	0 310
+65	563	0.2	1	0 563
+66	323	0.2	1	0 323
+67	26	0.2	1	0 26
+68	59	0.2	1	1 58
+69	32	0.2	1	0 32
+70	30	0.2	1	0 30
+71	42	0.2	1	0 42
+72	51	0.2	1	0 51
+73	3	0.2	1	0 3
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+application/gzip
+Wed Jun 12 15:51:30 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 286612
+Number of valid reads: 286612
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 286612
+Num mapped first of pair: 143306
+Num mapped second of pair: 143306
+Num singletons: 0
+Time taken to analyze reads: 2
+Computing descriptors...
+numberOfMappedBases: 20493188
+referenceSize: 596713
+numberOfSequencedBases: 20491605
+numberOfAs: 6454405
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 2
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Analysis complete for WpJqxj_R1_trimmed.fq.gz
+Calculating consensus for all outlier strains
+writing the consensus
+application/gzip
+Analysis complete for WpJqxj_R2_trimmed.fq.gz
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b GGTTGCGAGG -b TTGCTCTATT -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/gvJsdn/cutadapt/gvJsdn_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/gvJsdn/cutadapt/gvJsdn_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/gvJsdn/merge_lanes/gvJsdn_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/gvJsdn/merge_lanes/gvJsdn_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 15.078 s (4.899 µs/read; 12.25 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          3,078,086
+  Read 1 with adapter:                  23,933 (0.8%)
+
+== Read fate breakdown ==
+Pairs that were too short:               8,191 (0.3%)
+Pairs written (passing filters):     3,069,895 (99.7%)
+
+Total basepairs processed:   449,705,654 bp
+  Read 1:   224,839,652 bp
+  Read 2:   224,866,002 bp
+Total written (filtered):    448,031,015 bp (99.6%)
+  Read 1:   223,764,255 bp
+  Read 2:   224,266,760 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: GGTTGCGAGG; Type: variable 5'/3'; Length: 10; Trimmed: 2357 times
+58 times, it overlapped the 5' end of a read
+2299 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	35	11.7	0	0 35
+10	23	2.9	1	0 23
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	27	11.7	0	0 27
+10	52	2.9	1	16 36
+11	25	2.9	1	3 22
+12	34	2.9	1	1 33
+13	25	2.9	1	1 24
+14	18	2.9	1	0 18
+15	16	2.9	1	1 15
+16	22	2.9	1	0 22
+17	22	2.9	1	0 22
+18	20	2.9	1	0 20
+19	19	2.9	1	1 18
+20	25	2.9	1	0 25
+21	16	2.9	1	0 16
+22	27	2.9	1	2 25
+23	44	2.9	1	0 44
+24	28	2.9	1	0 28
+25	30	2.9	1	1 29
+26	23	2.9	1	0 23
+27	20	2.9	1	0 20
+28	23	2.9	1	0 23
+29	113	2.9	1	0 113
+30	28	2.9	1	0 28
+31	20	2.9	1	0 20
+32	20	2.9	1	0 20
+33	16	2.9	1	0 16
+34	39	2.9	1	0 39
+35	28	2.9	1	0 28
+36	22	2.9	1	3 19
+37	36	2.9	1	0 36
+38	45	2.9	1	0 45
+39	25	2.9	1	0 25
+40	22	2.9	1	0 22
+41	26	2.9	1	0 26
+42	28	2.9	1	0 28
+43	41	2.9	1	1 40
+44	23	2.9	1	0 23
+45	32	2.9	1	0 32
+46	29	2.9	1	1 28
+47	13	2.9	1	0 13
+48	26	2.9	1	0 26
+49	40	2.9	1	0 40
+50	29	2.9	1	0 29
+51	33	2.9	1	0 33
+52	28	2.9	1	0 28
+53	24	2.9	1	0 24
+54	16	2.9	1	0 16
+55	31	2.9	1	1 30
+56	27	2.9	1	0 27
+57	172	2.9	1	0 172
+58	26	2.9	1	0 26
+59	27	2.9	1	0 27
+60	165	2.9	1	0 165
+61	23	2.9	1	0 23
+62	23	2.9	1	0 23
+63	45	2.9	1	0 45
+64	33	2.9	1	1 32
+65	178	2.9	1	0 178
+66	26	2.9	1	1 25
+67	35	2.9	1	0 35
+68	60	2.9	1	0 60
+69	65	2.9	1	0 65
+70	10	2.9	1	0 10
+71	4	2.9	1	0 4
+72	9	2.9	1	0 9
+73	22	2.9	1	0 22
+
+
+=== First read: Adapter 2 ===
+
+Sequence: TTGCTCTATT; Type: variable 5'/3'; Length: 10; Trimmed: 20333 times
+43 times, it overlapped the 5' end of a read
+20290 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	7	11.7	0	0 7
+10	35	2.9	1	2 33
+11	1	2.9	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	73	11.7	0	0 73
+10	178	2.9	1	1 177
+11	1093	2.9	1	1 1092
+12	169	2.9	1	1 168
+13	387	2.9	1	2 385
+14	131	2.9	1	1 130
+15	118	2.9	1	1 117
+16	249	2.9	1	0 249
+17	260	2.9	1	2 258
+18	305	2.9	1	2 303
+19	188	2.9	1	0 188
+20	294	2.9	1	1 293
+21	116	2.9	1	2 114
+22	424	2.9	1	2 422
+23	114	2.9	1	0 114
+24	219	2.9	1	2 217
+25	160	2.9	1	2 158
+26	424	2.9	1	0 424
+27	1270	2.9	1	2 1268
+28	137	2.9	1	3 134
+29	152	2.9	1	2 150
+30	347	2.9	1	0 347
+31	265	2.9	1	1 264
+32	416	2.9	1	0 416
+33	319	2.9	1	2 317
+34	220	2.9	1	1 219
+35	149	2.9	1	1 148
+36	146	2.9	1	1 145
+37	778	2.9	1	2 776
+38	154	2.9	1	1 153
+39	229	2.9	1	0 229
+40	196	2.9	1	1 195
+41	186	2.9	1	3 183
+42	1036	2.9	1	0 1036
+43	438	2.9	1	0 438
+44	256	2.9	1	2 254
+45	104	2.9	1	1 103
+46	419	2.9	1	1 418
+47	158	2.9	1	1 157
+48	176	2.9	1	1 175
+49	218	2.9	1	2 216
+50	121	2.9	1	2 119
+51	136	2.9	1	0 136
+52	123	2.9	1	4 119
+53	299	2.9	1	0 299
+54	154	2.9	1	4 150
+55	240	2.9	1	1 239
+56	187	2.9	1	2 185
+57	215	2.9	1	3 212
+58	556	2.9	1	2 554
+59	840	2.9	1	1 839
+60	113	2.9	1	0 113
+61	686	2.9	1	2 684
+62	1236	2.9	1	0 1236
+63	222	2.9	1	1 221
+64	117	2.9	1	1 116
+65	270	2.9	1	1 269
+66	706	2.9	1	0 706
+67	91	2.9	1	0 91
+68	172	2.9	1	3 169
+69	165	2.9	1	0 165
+70	112	2.9	1	2 110
+71	648	2.9	1	5 643
+72	129	2.9	1	0 129
+73	81	2.9	1	0 81
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 1243 times
+2 times, it overlapped the 5' end of a read
+1241 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+12	1	0.2	1	0 1
+13	1	0.2	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	10	0.7	1	0 10
+12	6	0.2	1	0 6
+13	32	0.2	1	0 32
+14	14	0.2	1	0 14
+15	30	0.2	1	5 25
+16	13	0.2	1	0 13
+17	42	0.2	1	5 37
+18	37	0.2	1	11 26
+19	52	0.2	1	12 40
+20	41	0.2	1	9 32
+21	25	0.2	1	3 22
+22	22	0.2	1	3 19
+23	44	0.2	1	9 35
+24	40	0.2	1	2 38
+25	20	0.2	1	3 17
+26	34	0.2	1	2 32
+27	19	0.2	1	1 18
+28	44	0.2	1	3 41
+29	21	0.2	1	3 18
+30	19	0.2	1	2 17
+31	23	0.2	1	3 20
+32	38	0.2	1	10 28
+33	80	0.2	1	11 69
+34	10	0.2	1	0 10
+35	14	0.2	1	1 13
+36	17	0.2	1	0 17
+37	37	0.2	1	2 35
+38	14	0.2	1	3 11
+39	23	0.2	1	2 21
+40	11	0.2	1	0 11
+41	22	0.2	1	0 22
+42	21	0.2	1	2 19
+43	16	0.2	1	1 15
+44	17	0.2	1	3 14
+45	9	0.2	1	1 8
+46	16	0.2	1	0 16
+47	19	0.2	1	0 19
+48	13	0.2	1	0 13
+49	7	0.2	1	0 7
+50	8	0.2	1	0 8
+51	11	0.2	1	0 11
+52	9	0.2	1	0 9
+53	8	0.2	1	0 8
+54	15	0.2	1	0 15
+55	13	0.2	1	0 13
+56	23	0.2	1	0 23
+57	9	0.2	1	0 9
+58	10	0.2	1	0 10
+59	10	0.2	1	0 10
+60	9	0.2	1	0 9
+61	18	0.2	1	0 18
+62	13	0.2	1	0 13
+63	6	0.2	1	0 6
+64	31	0.2	1	0 31
+65	13	0.2	1	0 13
+66	20	0.2	1	0 20
+67	4	0.2	1	0 4
+68	10	0.2	1	0 10
+69	5	0.2	1	0 5
+70	10	0.2	1	0 10
+71	7	0.2	1	0 7
+72	5	0.2	1	0 5
+73	2	0.2	1	0 2
+application/gzip
+Analysis complete for gvJsdn_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for gvJsdn_R2_trimmed.fq.gz
+null
+Analysis complete for WpJqxj_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for WpJqxj_bam_to_fastq_r2.fastq
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 16:03:16 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 411034
+Number of valid reads: 411034
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 411034
+Num mapped first of pair: 205517
+Num mapped second of pair: 205517
+Num singletons: 0
+Time taken to analyze reads: 2
+Computing descriptors...
+numberOfMappedBases: 29222203
+referenceSize: 596713
+numberOfSequencedBases: 29220903
+numberOfAs: 9529023
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 2
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Calculating consensus for all outlier strains
+writing the consensus
+null
+Analysis complete for gvJsdn_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for gvJsdn_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b CTTGTACACC -b AAGCGCGCTT -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/Vr7xC7/cutadapt/Vr7xC7_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/Vr7xC7/cutadapt/Vr7xC7_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/Vr7xC7/merge_lanes/Vr7xC7_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/Vr7xC7/merge_lanes/Vr7xC7_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 14.183 s (4.822 µs/read; 12.44 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          2,941,075
+  Read 1 with adapter:                  25,406 (0.9%)
+
+== Read fate breakdown ==
+Pairs that were too short:               6,137 (0.2%)
+Pairs written (passing filters):     2,934,938 (99.8%)
+
+Total basepairs processed:   420,867,282 bp
+  Read 1:   210,400,643 bp
+  Read 2:   210,466,639 bp
+Total written (filtered):    419,394,718 bp (99.7%)
+  Read 1:   209,365,093 bp
+  Read 2:   210,029,625 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: CTTGTACACC; Type: variable 5'/3'; Length: 10; Trimmed: 14982 times
+969 times, it overlapped the 5' end of a read
+14013 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	53	11.2	0	0 53
+10	916	2.8	1	2 914
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	144	11.2	0	0 144
+10	148	2.8	1	12 136
+11	303	2.8	1	21 282
+12	195	2.8	1	7 188
+13	62	2.8	1	3 59
+14	49	2.8	1	1 48
+15	252	2.8	1	2 250
+16	408	2.8	1	0 408
+17	262	2.8	1	1 261
+18	199	2.8	1	0 199
+19	196	2.8	1	0 196
+20	88	2.8	1	0 88
+21	131	2.8	1	0 131
+22	287	2.8	1	4 283
+23	594	2.8	1	1 593
+24	60	2.8	1	0 60
+25	137	2.8	1	0 137
+26	76	2.8	1	0 76
+27	308	2.8	1	0 308
+28	42	2.8	1	0 42
+29	146	2.8	1	0 146
+30	324	2.8	1	0 324
+31	253	2.8	1	0 253
+32	132	2.8	1	3 129
+33	699	2.8	1	1 698
+34	75	2.8	1	1 74
+35	176	2.8	1	1 175
+36	147	2.8	1	0 147
+37	118	2.8	1	0 118
+38	1119	2.8	1	2 1117
+39	376	2.8	1	0 376
+40	278	2.8	1	2 276
+41	132	2.8	1	0 132
+42	564	2.8	1	0 564
+43	443	2.8	1	0 443
+44	37	2.8	1	0 37
+45	300	2.8	1	2 298
+46	208	2.8	1	5 203
+47	176	2.8	1	1 175
+48	334	2.8	1	1 333
+49	66	2.8	1	0 66
+50	38	2.8	1	0 38
+51	218	2.8	1	1 217
+52	230	2.8	1	0 230
+53	71	2.8	1	0 71
+54	123	2.8	1	0 123
+55	382	2.8	1	2 380
+56	140	2.8	1	0 140
+57	79	2.8	1	0 79
+58	383	2.8	1	3 380
+59	207	2.8	1	0 207
+60	48	2.8	1	0 48
+61	146	2.8	1	0 146
+62	56	2.8	1	0 56
+63	123	2.8	1	0 123
+64	365	2.8	1	0 365
+65	99	2.8	1	2 97
+66	89	2.8	1	2 87
+67	109	2.8	1	0 109
+68	28	2.8	1	0 28
+69	108	2.8	1	0 108
+70	72	2.8	1	0 72
+71	116	2.8	1	0 116
+72	681	2.8	1	1 680
+73	58	2.8	1	0 58
+
+
+=== First read: Adapter 2 ===
+
+Sequence: AAGCGCGCTT; Type: variable 5'/3'; Length: 10; Trimmed: 8164 times
+7 times, it overlapped the 5' end of a read
+8157 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+10	7	2.8	1	0 7
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	17	11.2	0	0 17
+10	36	2.8	1	0 36
+11	49	2.8	1	0 49
+12	283	2.8	1	0 283
+13	133	2.8	1	0 133
+14	101	2.8	1	0 101
+15	75	2.8	1	0 75
+16	19	2.8	1	0 19
+17	124	2.8	1	0 124
+18	38	2.8	1	0 38
+19	112	2.8	1	0 112
+20	112	2.8	1	0 112
+21	111	2.8	1	0 111
+22	54	2.8	1	0 54
+23	28	2.8	1	0 28
+24	70	2.8	1	0 70
+25	292	2.8	1	0 292
+26	51	2.8	1	0 51
+27	48	2.8	1	0 48
+28	127	2.8	1	1 126
+29	116	2.8	1	0 116
+30	259	2.8	1	0 259
+31	41	2.8	1	0 41
+32	128	2.8	1	1 127
+33	28	2.8	1	0 28
+34	20	2.8	1	0 20
+35	225	2.8	1	0 225
+36	61	2.8	1	0 61
+37	328	2.8	1	0 328
+38	171	2.8	1	0 171
+39	38	2.8	1	0 38
+40	60	2.8	1	1 59
+41	87	2.8	1	0 87
+42	101	2.8	1	0 101
+43	375	2.8	1	0 375
+44	200	2.8	1	0 200
+45	454	2.8	1	1 453
+46	71	2.8	1	0 71
+47	85	2.8	1	0 85
+48	200	2.8	1	0 200
+49	114	2.8	1	0 114
+50	81	2.8	1	0 81
+51	514	2.8	1	0 514
+52	145	2.8	1	0 145
+53	40	2.8	1	0 40
+54	210	2.8	1	0 210
+55	35	2.8	1	0 35
+56	100	2.8	1	0 100
+57	169	2.8	1	0 169
+58	38	2.8	1	0 38
+59	104	2.8	1	0 104
+60	117	2.8	1	0 117
+61	297	2.8	1	0 297
+62	124	2.8	1	0 124
+63	76	2.8	1	0 76
+64	98	2.8	1	0 98
+65	32	2.8	1	0 32
+66	141	2.8	1	0 141
+67	257	2.8	1	0 257
+68	158	2.8	1	0 158
+69	59	2.8	1	0 59
+70	85	2.8	1	0 85
+71	222	2.8	1	0 222
+72	2	2.8	1	0 2
+73	11	2.8	1	0 11
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 2260 times
+1 times, it overlapped the 5' end of a read
+2259 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	1	0.7	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	9	0.7	1	0 9
+12	4	0.2	1	0 4
+13	70	0.2	1	1 69
+14	23	0.2	1	0 23
+15	36	0.2	1	7 29
+16	31	0.2	1	9 22
+17	122	0.2	1	28 94
+18	83	0.2	1	28 55
+19	177	0.2	1	52 125
+20	101	0.2	1	21 80
+21	60	0.2	1	19 41
+22	112	0.2	1	23 89
+23	117	0.2	1	25 92
+24	106	0.2	1	22 84
+25	40	0.2	1	8 32
+26	31	0.2	1	8 23
+27	21	0.2	1	6 15
+28	77	0.2	1	15 62
+29	33	0.2	1	8 25
+30	46	0.2	1	11 35
+31	88	0.2	1	25 63
+32	142	0.2	1	31 111
+33	287	0.2	1	70 217
+34	84	0.2	1	18 66
+35	5	0.2	1	0 5
+36	15	0.2	1	3 12
+37	56	0.2	1	5 51
+38	24	0.2	1	9 15
+39	22	0.2	1	3 19
+40	20	0.2	1	5 15
+41	10	0.2	1	2 8
+42	43	0.2	1	9 34
+43	60	0.2	1	14 46
+44	28	0.2	1	8 20
+45	17	0.2	1	8 9
+46	14	0.2	1	0 14
+47	8	0.2	1	1 7
+48	1	0.2	1	0 1
+49	3	0.2	1	0 3
+50	2	0.2	1	0 2
+51	3	0.2	1	0 3
+52	4	0.2	1	0 4
+53	1	0.2	1	0 1
+55	1	0.2	1	0 1
+56	3	0.2	1	0 3
+59	1	0.2	1	0 1
+62	4	0.2	1	0 4
+63	2	0.2	1	0 2
+64	4	0.2	1	0 4
+66	3	0.2	1	0 3
+67	1	0.2	1	0 1
+70	1	0.2	1	0 1
+71	3	0.2	1	0 3
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+application/gzip
+Wed Jun 12 16:04:41 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 622462
+Number of valid reads: 622462
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 622462
+Num mapped first of pair: 311231
+Num mapped second of pair: 311231
+Num singletons: 0
+Time taken to analyze reads: 2
+Computing descriptors...
+numberOfMappedBases: 44053217
+referenceSize: 596713
+numberOfSequencedBases: 44051115
+numberOfAs: 14152421
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 3
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Analysis complete for Vr7xC7_R1_trimmed.fq.gz
+application/gzip
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for Vr7xC7_R2_trimmed.fq.gz
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b CTAGTGCTCT -b TACTGTTCCA -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/ENT3qs/cutadapt/ENT3qs_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/ENT3qs/cutadapt/ENT3qs_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/ENT3qs/merge_lanes/ENT3qs_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/ENT3qs/merge_lanes/ENT3qs_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 13.431 s (4.890 µs/read; 12.27 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          2,746,405
+  Read 1 with adapter:                  15,013 (0.5%)
+
+== Read fate breakdown ==
+Pairs that were too short:               4,762 (0.2%)
+Pairs written (passing filters):     2,741,643 (99.8%)
+
+Total basepairs processed:   399,433,136 bp
+  Read 1:   199,743,087 bp
+  Read 2:   199,690,049 bp
+Total written (filtered):    398,444,090 bp (99.8%)
+  Read 1:   199,100,797 bp
+  Read 2:   199,343,293 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: CTAGTGCTCT; Type: variable 5'/3'; Length: 10; Trimmed: 7749 times
+63 times, it overlapped the 5' end of a read
+7686 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	19	10.5	0	0 19
+10	44	2.6	1	0 44
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	67	10.5	0	0 67
+10	131	2.6	1	1 130
+11	270	2.6	1	8 262
+12	45	2.6	1	0 45
+13	290	2.6	1	1 289
+14	212	2.6	1	2 210
+15	130	2.6	1	0 130
+16	176	2.6	1	0 176
+17	251	2.6	1	0 251
+18	222	2.6	1	1 221
+19	27	2.6	1	0 27
+20	50	2.6	1	1 49
+21	101	2.6	1	0 101
+22	138	2.6	1	0 138
+23	222	2.6	1	0 222
+24	62	2.6	1	0 62
+25	103	2.6	1	2 101
+26	27	2.6	1	1 26
+27	58	2.6	1	0 58
+28	179	2.6	1	0 179
+29	330	2.6	1	0 330
+30	81	2.6	1	0 81
+31	105	2.6	1	0 105
+32	281	2.6	1	0 281
+33	191	2.6	1	0 191
+34	61	2.6	1	1 60
+35	89	2.6	1	0 89
+36	64	2.6	1	0 64
+37	141	2.6	1	0 141
+38	35	2.6	1	0 35
+39	87	2.6	1	0 87
+40	134	2.6	1	0 134
+41	62	2.6	1	0 62
+42	180	2.6	1	0 180
+43	93	2.6	1	0 93
+44	47	2.6	1	2 45
+45	123	2.6	1	0 123
+46	62	2.6	1	4 58
+47	100	2.6	1	0 100
+48	98	2.6	1	0 98
+49	95	2.6	1	0 95
+50	59	2.6	1	0 59
+51	97	2.6	1	2 95
+52	135	2.6	1	2 133
+53	56	2.6	1	0 56
+54	70	2.6	1	2 68
+55	151	2.6	1	0 151
+56	43	2.6	1	0 43
+57	120	2.6	1	0 120
+58	105	2.6	1	0 105
+59	28	2.6	1	0 28
+60	81	2.6	1	0 81
+61	198	2.6	1	0 198
+62	18	2.6	1	0 18
+63	59	2.6	1	0 59
+64	137	2.6	1	1 136
+65	141	2.6	1	0 141
+66	190	2.6	1	0 190
+67	57	2.6	1	1 56
+68	163	2.6	1	0 163
+69	83	2.6	1	0 83
+70	102	2.6	1	0 102
+71	194	2.6	1	0 194
+72	148	2.6	1	0 148
+73	31	2.6	1	0 31
+
+
+=== First read: Adapter 2 ===
+
+Sequence: TACTGTTCCA; Type: variable 5'/3'; Length: 10; Trimmed: 6411 times
+2 times, it overlapped the 5' end of a read
+6409 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	1	10.5	0	0 1
+10	1	2.6	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	6	10.5	0	0 6
+10	60	2.6	1	3 57
+11	71	2.6	1	0 71
+12	519	2.6	1	1 518
+13	32	2.6	1	0 32
+14	33	2.6	1	0 33
+15	61	2.6	1	0 61
+16	67	2.6	1	1 66
+17	119	2.6	1	3 116
+18	43	2.6	1	0 43
+19	174	2.6	1	0 174
+20	67	2.6	1	2 65
+21	77	2.6	1	0 77
+22	56	2.6	1	0 56
+23	143	2.6	1	1 142
+24	30	2.6	1	0 30
+25	18	2.6	1	0 18
+26	17	2.6	1	1 16
+27	39	2.6	1	2 37
+28	29	2.6	1	0 29
+29	43	2.6	1	0 43
+30	54	2.6	1	0 54
+31	172	2.6	1	1 171
+32	49	2.6	1	0 49
+33	273	2.6	1	0 273
+34	278	2.6	1	1 277
+35	31	2.6	1	0 31
+36	20	2.6	1	0 20
+37	17	2.6	1	1 16
+38	72	2.6	1	0 72
+39	124	2.6	1	0 124
+40	26	2.6	1	0 26
+41	92	2.6	1	0 92
+42	73	2.6	1	0 73
+43	12	2.6	1	0 12
+44	54	2.6	1	0 54
+45	17	2.6	1	1 16
+46	81	2.6	1	0 81
+47	112	2.6	1	0 112
+48	120	2.6	1	0 120
+49	169	2.6	1	1 168
+50	242	2.6	1	0 242
+51	22	2.6	1	0 22
+52	45	2.6	1	0 45
+53	22	2.6	1	0 22
+54	28	2.6	1	0 28
+55	184	2.6	1	1 183
+56	318	2.6	1	0 318
+57	17	2.6	1	0 17
+58	77	2.6	1	0 77
+59	272	2.6	1	1 271
+60	14	2.6	1	0 14
+61	59	2.6	1	0 59
+62	41	2.6	1	0 41
+63	59	2.6	1	0 59
+64	104	2.6	1	0 104
+65	129	2.6	1	0 129
+66	163	2.6	1	1 162
+67	166	2.6	1	2 164
+68	93	2.6	1	1 92
+69	337	2.6	1	1 336
+70	130	2.6	1	0 130
+71	30	2.6	1	0 30
+72	240	2.6	1	0 240
+73	67	2.6	1	0 67
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 853 times
+0 times, it overlapped the 5' end of a read
+853 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	1	0.7	1	0 1
+12	1	0.2	1	0 1
+13	39	0.2	1	0 39
+14	15	0.2	1	0 15
+15	11	0.2	1	0 11
+16	16	0.2	1	4 12
+17	46	0.2	1	5 41
+18	38	0.2	1	15 23
+19	65	0.2	1	15 50
+20	42	0.2	1	11 31
+21	15	0.2	1	3 12
+22	33	0.2	1	4 29
+23	47	0.2	1	11 36
+24	29	0.2	1	4 25
+25	24	0.2	1	7 17
+26	16	0.2	1	6 10
+27	8	0.2	1	3 5
+28	21	0.2	1	1 20
+29	14	0.2	1	6 8
+30	7	0.2	1	3 4
+31	33	0.2	1	9 24
+32	65	0.2	1	13 52
+33	74	0.2	1	14 60
+34	13	0.2	1	0 13
+35	4	0.2	1	1 3
+36	5	0.2	1	1 4
+37	8	0.2	1	3 5
+38	10	0.2	1	1 9
+39	6	0.2	1	3 3
+40	8	0.2	1	0 8
+41	5	0.2	1	2 3
+42	24	0.2	1	3 21
+43	1	0.2	1	0 1
+44	9	0.2	1	1 8
+45	19	0.2	1	9 10
+46	12	0.2	1	1 11
+47	3	0.2	1	1 2
+48	1	0.2	1	0 1
+49	1	0.2	1	0 1
+50	1	0.2	1	0 1
+51	3	0.2	1	0 3
+52	3	0.2	1	0 3
+53	1	0.2	1	1
+54	3	0.2	1	0 3
+56	4	0.2	1	0 4
+57	2	0.2	1	1 1
+58	6	0.2	1	0 6
+59	3	0.2	1	0 3
+60	4	0.2	1	0 4
+61	2	0.2	1	0 2
+62	4	0.2	1	0 4
+63	2	0.2	1	0 2
+64	5	0.2	1	0 5
+65	3	0.2	1	0 3
+66	7	0.2	1	0 7
+67	2	0.2	1	0 2
+68	3	0.2	1	0 3
+69	1	0.2	1	1
+72	4	0.2	1	0 4
+73	1	0.2	1	0 1
+application/gzip
+Analysis complete for ENT3qs_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for ENT3qs_R2_trimmed.fq.gz
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 16:09:33 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 1394
+Number of valid reads: 1394
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 1394
+Num mapped first of pair: 697
+Num mapped second of pair: 697
+Num singletons: 0
+Time taken to analyze reads: 0
+Computing descriptors...
+numberOfMappedBases: 95990
+referenceSize: 596713
+numberOfSequencedBases: 95961
+numberOfAs: 31169
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 0
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+null
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for Vr7xC7_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for Vr7xC7_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b ACCGTTACAA -b TCGCTATGAG -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/b3vnfe/cutadapt/b3vnfe_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/b3vnfe/cutadapt/b3vnfe_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/b3vnfe/merge_lanes/b3vnfe_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/b3vnfe/merge_lanes/b3vnfe_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 13.459 s (4.895 µs/read; 12.26 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          2,749,721
+  Read 1 with adapter:                  10,753 (0.4%)
+
+== Read fate breakdown ==
+Pairs that were too short:               2,410 (0.1%)
+Pairs written (passing filters):     2,747,311 (99.9%)
+
+Total basepairs processed:   396,404,460 bp
+  Read 1:   198,183,324 bp
+  Read 2:   198,221,136 bp
+Total written (filtered):    395,812,628 bp (99.9%)
+  Read 1:   197,765,453 bp
+  Read 2:   198,047,175 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: ACCGTTACAA; Type: variable 5'/3'; Length: 10; Trimmed: 3343 times
+10 times, it overlapped the 5' end of a read
+3333 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	9	10.5	0	0 9
+10	1	2.6	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	15	10.5	0	0 15
+10	95	2.6	1	22 73
+11	65	2.6	1	17 48
+12	30	2.6	1	5 25
+13	42	2.6	1	3 39
+14	26	2.6	1	0 26
+15	54	2.6	1	1 53
+16	81	2.6	1	0 81
+17	42	2.6	1	2 40
+18	39	2.6	1	0 39
+19	10	2.6	1	1 9
+20	15	2.6	1	1 14
+21	77	2.6	1	0 77
+22	90	2.6	1	0 90
+23	15	2.6	1	0 15
+24	16	2.6	1	0 16
+25	20	2.6	1	0 20
+26	68	2.6	1	0 68
+27	26	2.6	1	0 26
+28	47	2.6	1	0 47
+29	59	2.6	1	0 59
+30	43	2.6	1	0 43
+31	23	2.6	1	0 23
+32	159	2.6	1	0 159
+33	25	2.6	1	0 25
+34	20	2.6	1	0 20
+35	16	2.6	1	0 16
+36	61	2.6	1	0 61
+37	15	2.6	1	0 15
+38	182	2.6	1	1 181
+39	87	2.6	1	0 87
+40	33	2.6	1	0 33
+41	24	2.6	1	0 24
+42	21	2.6	1	0 21
+43	20	2.6	1	0 20
+44	42	2.6	1	0 42
+45	170	2.6	1	0 170
+46	32	2.6	1	4 28
+47	91	2.6	1	5 86
+48	10	2.6	1	1 9
+49	251	2.6	1	5 246
+50	72	2.6	1	0 72
+51	27	2.6	1	2 25
+52	13	2.6	1	0 13
+53	41	2.6	1	0 41
+54	146	2.6	1	1 145
+55	8	2.6	1	0 8
+56	92	2.6	1	0 92
+57	13	2.6	1	0 13
+58	34	2.6	1	0 34
+59	89	2.6	1	0 89
+60	74	2.6	1	0 74
+61	94	2.6	1	0 94
+62	23	2.6	1	0 23
+63	20	2.6	1	0 20
+64	8	2.6	1	0 8
+65	32	2.6	1	0 32
+66	34	2.6	1	0 34
+67	97	2.6	1	0 97
+68	36	2.6	1	0 36
+69	7	2.6	1	0 7
+70	6	2.6	1	0 6
+71	92	2.6	1	1 91
+72	12	2.6	1	0 12
+73	6	2.6	1	0 6
+
+
+=== First read: Adapter 2 ===
+
+Sequence: TCGCTATGAG; Type: variable 5'/3'; Length: 10; Trimmed: 5437 times
+39 times, it overlapped the 5' end of a read
+5398 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	31	10.5	0	0 31
+10	8	2.6	1	0 8
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	67	10.5	0	0 67
+10	110	2.6	1	0 110
+11	241	2.6	1	0 241
+12	87	2.6	1	0 87
+13	48	2.6	1	0 48
+14	81	2.6	1	0 81
+15	98	2.6	1	0 98
+16	64	2.6	1	1 63
+17	33	2.6	1	0 33
+18	218	2.6	1	0 218
+19	277	2.6	1	0 277
+20	176	2.6	1	0 176
+21	41	2.6	1	0 41
+22	46	2.6	1	1 45
+23	104	2.6	1	0 104
+24	137	2.6	1	0 137
+25	135	2.6	1	0 135
+26	29	2.6	1	0 29
+27	42	2.6	1	0 42
+28	73	2.6	1	0 73
+29	133	2.6	1	0 133
+30	162	2.6	1	1 161
+31	48	2.6	1	0 48
+32	73	2.6	1	0 73
+33	33	2.6	1	0 33
+34	184	2.6	1	0 184
+35	106	2.6	1	0 106
+36	50	2.6	1	0 50
+37	115	2.6	1	0 115
+38	48	2.6	1	0 48
+39	145	2.6	1	0 145
+40	127	2.6	1	0 127
+41	65	2.6	1	0 65
+42	87	2.6	1	0 87
+43	36	2.6	1	0 36
+44	59	2.6	1	0 59
+45	44	2.6	1	0 44
+46	77	2.6	1	0 77
+47	89	2.6	1	0 89
+48	65	2.6	1	0 65
+49	90	2.6	1	0 90
+50	45	2.6	1	0 45
+51	37	2.6	1	0 37
+52	47	2.6	1	0 47
+53	52	2.6	1	0 52
+54	47	2.6	1	0 47
+55	145	2.6	1	0 145
+56	72	2.6	1	0 72
+57	125	2.6	1	0 125
+58	39	2.6	1	0 39
+59	67	2.6	1	0 67
+60	32	2.6	1	0 32
+61	41	2.6	1	0 41
+62	155	2.6	1	0 155
+63	51	2.6	1	0 51
+64	23	2.6	1	0 23
+65	107	2.6	1	0 107
+66	47	2.6	1	0 47
+67	53	2.6	1	0 53
+68	45	2.6	1	0 45
+69	40	2.6	1	1 39
+70	73	2.6	1	0 73
+71	41	2.6	1	0 41
+72	40	2.6	1	0 40
+73	31	2.6	1	0 31
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 1973 times
+4 times, it overlapped the 5' end of a read
+1969 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	1	0.7	1	0 1
+12	3	0.2	1	0 3
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	4	0.7	1	0 4
+12	3	0.2	1	0 3
+13	68	0.2	1	1 67
+14	16	0.2	1	0 16
+15	42	0.2	1	5 37
+16	20	0.2	1	0 20
+17	119	0.2	1	14 105
+18	70	0.2	1	18 52
+19	130	0.2	1	24 106
+20	119	0.2	1	23 96
+21	43	0.2	1	4 39
+22	99	0.2	1	14 85
+23	85	0.2	1	19 66
+24	86	0.2	1	20 66
+25	38	0.2	1	9 29
+26	35	0.2	1	6 29
+27	25	0.2	1	8 17
+28	47	0.2	1	9 38
+29	34	0.2	1	9 25
+30	38	0.2	1	6 32
+31	44	0.2	1	14 30
+32	106	0.2	1	20 86
+33	202	0.2	1	38 164
+34	42	0.2	1	14 28
+35	52	0.2	1	13 39
+36	17	0.2	1	4 13
+37	10	0.2	1	0 10
+38	20	0.2	1	6 14
+39	13	0.2	1	3 10
+40	19	0.2	1	2 17
+41	25	0.2	1	3 22
+42	23	0.2	1	5 18
+43	24	0.2	1	5 19
+44	30	0.2	1	6 24
+45	27	0.2	1	7 20
+46	18	0.2	1	4 14
+47	8	0.2	1	0 8
+48	15	0.2	1	0 15
+49	8	0.2	1	0 8
+50	6	0.2	1	0 6
+51	5	0.2	1	0 5
+52	10	0.2	1	0 10
+53	8	0.2	1	1 7
+54	3	0.2	1	0 3
+55	3	0.2	1	0 3
+56	20	0.2	1	0 20
+57	2	0.2	1	0 2
+58	4	0.2	1	0 4
+59	9	0.2	1	0 9
+60	6	0.2	1	0 6
+61	2	0.2	1	0 2
+62	3	0.2	1	2 1
+63	4	0.2	1	0 4
+64	12	0.2	1	0 12
+65	11	0.2	1	0 11
+66	11	0.2	1	0 11
+67	4	0.2	1	0 4
+68	3	0.2	1	0 3
+69	6	0.2	1	0 6
+70	1	0.2	1	0 1
+71	7	0.2	1	0 7
+72	5	0.2	1	0 5
+application/gzip
+Analysis complete for b3vnfe_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for b3vnfe_R2_trimmed.fq.gz
+null
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+Analysis complete for ENT3qs_bam_to_fastq_r1.fastq
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 16:14:50 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 76808
+Number of valid reads: 76808
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 76808
+Num mapped first of pair: 38404
+Num mapped second of pair: 38404
+Num singletons: 0
+Time taken to analyze reads: 1
+Computing descriptors...
+numberOfMappedBases: 5241067
+referenceSize: 596713
+numberOfSequencedBases: 5239848
+numberOfAs: 1337840
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 1
+end of bam qc
+Computing report...
+Writing HTML report...
+test
+null
+HTML report created successfully
+
+Finished
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for ENT3qs_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b AGTCAGACGA -b TGTCGCTGGT -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/RgZWrD/cutadapt/RgZWrD_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/RgZWrD/cutadapt/RgZWrD_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/RgZWrD/merge_lanes/RgZWrD_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/RgZWrD/merge_lanes/RgZWrD_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 12.983 s (4.666 µs/read; 12.86 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          2,782,209
+  Read 1 with adapter:                  23,897 (0.9%)
+
+== Read fate breakdown ==
+Pairs that were too short:               6,417 (0.2%)
+Pairs written (passing filters):     2,775,792 (99.8%)
+
+Total basepairs processed:   394,579,140 bp
+  Read 1:   197,254,287 bp
+  Read 2:   197,324,853 bp
+Total written (filtered):    393,125,048 bp (99.6%)
+  Read 1:   196,257,589 bp
+  Read 2:   196,867,459 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: AGTCAGACGA; Type: variable 5'/3'; Length: 10; Trimmed: 8172 times
+59 times, it overlapped the 5' end of a read
+8113 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	17	10.6	0	0 17
+10	37	2.7	1	0 37
+11	5	2.7	1	0 5
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	220	10.6	0	0 220
+10	252	2.7	1	46 206
+11	115	2.7	1	28 87
+12	127	2.7	1	9 118
+13	46	2.7	1	9 37
+14	44	2.7	1	3 41
+15	77	2.7	1	0 77
+16	87	2.7	1	3 84
+17	109	2.7	1	0 109
+18	73	2.7	1	0 73
+19	150	2.7	1	1 149
+20	66	2.7	1	0 66
+21	41	2.7	1	0 41
+22	26	2.7	1	1 25
+23	45	2.7	1	0 45
+24	43	2.7	1	0 43
+25	27	2.7	1	0 27
+26	83	2.7	1	0 83
+27	60	2.7	1	0 60
+28	54	2.7	1	0 54
+29	121	2.7	1	0 121
+30	764	2.7	1	4 760
+31	50	2.7	1	1 49
+32	38	2.7	1	0 38
+33	96	2.7	1	0 96
+34	57	2.7	1	1 56
+35	281	2.7	1	0 281
+36	115	2.7	1	0 115
+37	248	2.7	1	0 248
+38	163	2.7	1	1 162
+39	44	2.7	1	0 44
+40	246	2.7	1	0 246
+41	23	2.7	1	0 23
+42	92	2.7	1	0 92
+43	158	2.7	1	0 158
+44	64	2.7	1	0 64
+45	494	2.7	1	7 487
+46	192	2.7	1	111 81
+47	77	2.7	1	10 67
+48	75	2.7	1	7 68
+49	97	2.7	1	68 29
+50	32	2.7	1	0 32
+51	227	2.7	1	25 202
+52	155	2.7	1	2 153
+53	89	2.7	1	0 89
+54	206	2.7	1	0 206
+55	34	2.7	1	0 34
+56	27	2.7	1	0 27
+57	28	2.7	1	0 28
+58	324	2.7	1	0 324
+59	373	2.7	1	1 372
+60	37	2.7	1	0 37
+61	148	2.7	1	1 147
+62	24	2.7	1	0 24
+63	33	2.7	1	0 33
+64	78	2.7	1	0 78
+65	54	2.7	1	1 53
+66	20	2.7	1	0 20
+67	575	2.7	1	1 574
+68	71	2.7	1	0 71
+69	100	2.7	1	0 100
+70	41	2.7	1	0 41
+71	11	2.7	1	0 11
+72	44	2.7	1	0 44
+73	142	2.7	1	0 142
+
+
+=== First read: Adapter 2 ===
+
+Sequence: TGTCGCTGGT; Type: variable 5'/3'; Length: 10; Trimmed: 12344 times
+32 times, it overlapped the 5' end of a read
+12312 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	1	10.6	0	0 1
+10	31	2.7	1	0 31
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	26	10.6	0	0 26
+10	506	2.7	1	1 505
+11	61	2.7	1	0 61
+12	496	2.7	1	0 496
+13	376	2.7	1	1 375
+14	119	2.7	1	0 119
+15	54	2.7	1	0 54
+16	142	2.7	1	0 142
+17	23	2.7	1	0 23
+18	258	2.7	1	0 258
+19	461	2.7	1	0 461
+20	150	2.7	1	0 150
+21	99	2.7	1	0 99
+22	76	2.7	1	0 76
+23	25	2.7	1	0 25
+24	122	2.7	1	0 122
+25	88	2.7	1	0 88
+26	374	2.7	1	1 373
+27	210	2.7	1	0 210
+28	139	2.7	1	0 139
+29	90	2.7	1	0 90
+30	562	2.7	1	1 561
+31	245	2.7	1	0 245
+32	55	2.7	1	0 55
+33	51	2.7	1	0 51
+34	392	2.7	1	0 392
+35	50	2.7	1	0 50
+36	63	2.7	1	0 63
+37	160	2.7	1	0 160
+38	102	2.7	1	0 102
+39	109	2.7	1	0 109
+40	33	2.7	1	0 33
+41	431	2.7	1	0 431
+42	136	2.7	1	1 135
+43	63	2.7	1	0 63
+44	172	2.7	1	0 172
+45	259	2.7	1	0 259
+46	483	2.7	1	0 483
+47	555	2.7	1	1 554
+48	32	2.7	1	0 32
+49	119	2.7	1	0 119
+50	23	2.7	1	0 23
+51	406	2.7	1	0 406
+52	97	2.7	1	0 97
+53	287	2.7	1	0 287
+54	401	2.7	1	0 401
+55	263	2.7	1	1 262
+56	59	2.7	1	0 59
+57	34	2.7	1	0 34
+58	70	2.7	1	1 69
+59	453	2.7	1	0 453
+60	288	2.7	1	0 288
+61	55	2.7	1	0 55
+62	213	2.7	1	0 213
+63	39	2.7	1	0 39
+64	879	2.7	1	0 879
+65	155	2.7	1	0 155
+66	27	2.7	1	0 27
+67	40	2.7	1	0 40
+68	35	2.7	1	0 35
+69	40	2.7	1	0 40
+70	386	2.7	1	0 386
+71	54	2.7	1	0 54
+72	18	2.7	1	0 18
+73	23	2.7	1	0 23
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 3381 times
+0 times, it overlapped the 5' end of a read
+3381 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	15	0.7	1	0 15
+12	8	0.2	1	0 8
+13	100	0.2	1	2 98
+14	34	0.2	1	0 34
+15	59	0.2	1	10 49
+16	61	0.2	1	9 52
+17	266	0.2	1	18 248
+18	113	0.2	1	36 77
+19	192	0.2	1	48 144
+20	128	0.2	1	20 108
+21	72	0.2	1	15 57
+22	119	0.2	1	23 96
+23	162	0.2	1	35 127
+24	140	0.2	1	31 109
+25	64	0.2	1	12 52
+26	81	0.2	1	10 71
+27	26	0.2	1	7 19
+28	97	0.2	1	23 74
+29	28	0.2	1	4 24
+30	107	0.2	1	9 98
+31	115	0.2	1	29 86
+32	180	0.2	1	37 143
+33	370	0.2	1	74 296
+34	49	0.2	1	11 38
+35	73	0.2	1	17 56
+36	31	0.2	1	7 24
+37	48	0.2	1	10 38
+38	9	0.2	1	2 7
+39	43	0.2	1	5 38
+40	24	0.2	1	6 18
+41	37	0.2	1	8 29
+42	36	0.2	1	5 31
+43	58	0.2	1	7 51
+44	50	0.2	1	19 31
+45	52	0.2	1	22 30
+46	19	0.2	1	2 17
+47	14	0.2	1	1 13
+48	26	0.2	1	1 25
+49	30	0.2	1	0 30
+50	7	0.2	1	0 7
+51	3	0.2	1	0 3
+52	9	0.2	1	0 9
+53	6	0.2	1	0 6
+54	5	0.2	1	0 5
+55	6	0.2	1	0 6
+56	65	0.2	1	0 65
+57	8	0.2	1	1 7
+58	5	0.2	1	0 5
+59	3	0.2	1	0 3
+60	51	0.2	1	0 51
+61	11	0.2	1	0 11
+62	1	0.2	1	0 1
+63	10	0.2	1	0 10
+64	9	0.2	1	0 9
+65	9	0.2	1	0 9
+66	11	0.2	1	0 11
+67	4	0.2	1	1 3
+68	3	0.2	1	0 3
+69	2	0.2	1	0 2
+70	3	0.2	1	0 3
+71	10	0.2	1	0 10
+72	3	0.2	1	0 3
+73	1	0.2	1	0 1
+application/gzip
+Analysis complete for RgZWrD_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for RgZWrD_R2_trimmed.fq.gz
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 16:20:01 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 13508
+Number of valid reads: 13508
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 13508
+Num mapped first of pair: 6754
+Num mapped second of pair: 6754
+Num singletons: 0
+Time taken to analyze reads: 0
+Computing descriptors...
+numberOfMappedBases: 957379
+referenceSize: 596713
+numberOfSequencedBases: 956148
+numberOfAs: 292253
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 0
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+null
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for b3vnfe_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for b3vnfe_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b GTGACACGCA -b GTCCGTAAGC -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/dJPLxU/cutadapt/dJPLxU_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/dJPLxU/cutadapt/dJPLxU_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/dJPLxU/merge_lanes/dJPLxU_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/dJPLxU/merge_lanes/dJPLxU_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 12.388 s (4.836 µs/read; 12.41 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          2,561,799
+  Read 1 with adapter:                   7,547 (0.3%)
+
+== Read fate breakdown ==
+Pairs that were too short:               1,821 (0.1%)
+Pairs written (passing filters):     2,559,978 (99.9%)
+
+Total basepairs processed:   369,014,937 bp
+  Read 1:   184,495,365 bp
+  Read 2:   184,519,572 bp
+Total written (filtered):    368,585,148 bp (99.9%)
+  Read 1:   184,197,215 bp
+  Read 2:   184,387,933 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: GTGACACGCA; Type: variable 5'/3'; Length: 10; Trimmed: 3518 times
+83 times, it overlapped the 5' end of a read
+3435 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	40	9.8	0	0 40
+10	41	2.4	1	1 40
+11	2	2.4	1	0 2
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	33	9.8	0	0 33
+10	74	2.4	1	15 59
+11	66	2.4	1	9 57
+12	50	2.4	1	8 42
+13	64	2.4	1	3 61
+14	75	2.4	1	0 75
+15	55	2.4	1	1 54
+16	57	2.4	1	0 57
+17	51	2.4	1	0 51
+18	48	2.4	1	2 46
+19	48	2.4	1	0 48
+20	60	2.4	1	1 59
+21	41	2.4	1	0 41
+22	48	2.4	1	2 46
+23	50	2.4	1	2 48
+24	48	2.4	1	1 47
+25	47	2.4	1	0 47
+26	68	2.4	1	0 68
+27	37	2.4	1	0 37
+28	61	2.4	1	0 61
+29	52	2.4	1	0 52
+30	57	2.4	1	1 56
+31	38	2.4	1	1 37
+32	61	2.4	1	1 60
+33	50	2.4	1	0 50
+34	68	2.4	1	1 67
+35	43	2.4	1	1 42
+36	42	2.4	1	0 42
+37	51	2.4	1	0 51
+38	50	2.4	1	0 50
+39	37	2.4	1	0 37
+40	54	2.4	1	0 54
+41	56	2.4	1	0 56
+42	44	2.4	1	0 44
+43	63	2.4	1	0 63
+44	49	2.4	1	0 49
+45	58	2.4	1	1 57
+46	45	2.4	1	2 43
+47	57	2.4	1	0 57
+48	58	2.4	1	0 58
+49	49	2.4	1	0 49
+50	51	2.4	1	0 51
+51	47	2.4	1	4 43
+52	37	2.4	1	0 37
+53	44	2.4	1	0 44
+54	59	2.4	1	0 59
+55	55	2.4	1	1 54
+56	51	2.4	1	0 51
+57	55	2.4	1	3 52
+58	40	2.4	1	0 40
+59	56	2.4	1	0 56
+60	49	2.4	1	1 48
+61	70	2.4	1	0 70
+62	62	2.4	1	1 61
+63	54	2.4	1	0 54
+64	68	2.4	1	0 68
+65	62	2.4	1	0 62
+66	68	2.4	1	2 66
+67	46	2.4	1	0 46
+68	56	2.4	1	2 54
+69	61	2.4	1	0 61
+70	40	2.4	1	0 40
+71	68	2.4	1	0 68
+72	52	2.4	1	0 52
+73	21	2.4	1	0 21
+
+
+=== First read: Adapter 2 ===
+
+Sequence: GTCCGTAAGC; Type: variable 5'/3'; Length: 10; Trimmed: 1230 times
+50 times, it overlapped the 5' end of a read
+1180 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	23	9.8	0	0 23
+10	24	2.4	1	0 24
+11	3	2.4	1	0 3
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	18	9.8	0	0 18
+10	7	2.4	1	0 7
+11	20	2.4	1	0 20
+12	14	2.4	1	0 14
+13	19	2.4	1	0 19
+14	17	2.4	1	0 17
+15	14	2.4	1	0 14
+16	15	2.4	1	0 15
+17	17	2.4	1	0 17
+18	27	2.4	1	0 27
+19	17	2.4	1	0 17
+20	13	2.4	1	0 13
+21	17	2.4	1	0 17
+22	19	2.4	1	0 19
+23	47	2.4	1	0 47
+24	16	2.4	1	0 16
+25	27	2.4	1	0 27
+26	26	2.4	1	0 26
+27	13	2.4	1	0 13
+28	13	2.4	1	0 13
+29	16	2.4	1	0 16
+30	15	2.4	1	0 15
+31	12	2.4	1	1 11
+32	14	2.4	1	0 14
+33	16	2.4	1	0 16
+34	30	2.4	1	0 30
+35	13	2.4	1	0 13
+36	17	2.4	1	0 17
+37	13	2.4	1	0 13
+38	14	2.4	1	0 14
+39	11	2.4	1	0 11
+40	19	2.4	1	0 19
+41	13	2.4	1	0 13
+42	17	2.4	1	0 17
+43	10	2.4	1	0 10
+44	21	2.4	1	0 21
+45	19	2.4	1	0 19
+46	16	2.4	1	0 16
+47	24	2.4	1	0 24
+48	14	2.4	1	0 14
+49	16	2.4	1	0 16
+50	15	2.4	1	0 15
+51	11	2.4	1	0 11
+52	21	2.4	1	0 21
+53	69	2.4	1	0 69
+54	18	2.4	1	0 18
+55	15	2.4	1	0 15
+56	18	2.4	1	0 18
+57	10	2.4	1	0 10
+58	11	2.4	1	0 11
+59	15	2.4	1	0 15
+60	24	2.4	1	0 24
+61	16	2.4	1	0 16
+62	29	2.4	1	0 29
+63	22	2.4	1	0 22
+64	42	2.4	1	0 42
+65	18	2.4	1	0 18
+66	23	2.4	1	0 23
+67	31	2.4	1	0 31
+68	10	2.4	1	0 10
+69	15	2.4	1	0 15
+70	7	2.4	1	0 7
+71	5	2.4	1	0 5
+72	12	2.4	1	0 12
+73	7	2.4	1	0 7
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 2799 times
+2 times, it overlapped the 5' end of a read
+2797 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+12	2	0.2	1	0 2
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	11	0.6	1	0 11
+12	14	0.2	1	0 14
+13	98	0.2	1	2 96
+14	34	0.2	1	0 34
+15	56	0.2	1	8 48
+16	45	0.2	1	4 41
+17	131	0.2	1	16 115
+18	87	0.2	1	20 67
+19	176	0.2	1	36 140
+20	112	0.2	1	29 83
+21	44	0.2	1	8 36
+22	95	0.2	1	14 81
+23	114	0.2	1	21 93
+24	97	0.2	1	19 78
+25	65	0.2	1	4 61
+26	49	0.2	1	8 41
+27	35	0.2	1	7 28
+28	83	0.2	1	16 67
+29	30	0.2	1	7 23
+30	61	0.2	1	10 51
+31	87	0.2	1	22 65
+32	91	0.2	1	17 74
+33	210	0.2	1	31 179
+34	47	0.2	1	7 40
+35	52	0.2	1	5 47
+36	38	0.2	1	3 35
+37	42	0.2	1	10 32
+38	47	0.2	1	6 41
+39	28	0.2	1	3 25
+40	44	0.2	1	4 40
+41	40	0.2	1	4 36
+42	45	0.2	1	5 40
+43	37	0.2	1	3 34
+44	34	0.2	1	6 28
+45	30	0.2	1	4 26
+46	36	0.2	1	2 34
+47	22	0.2	1	0 22
+48	15	0.2	1	0 15
+49	15	0.2	1	0 15
+50	10	0.2	1	0 10
+51	17	0.2	1	0 17
+52	23	0.2	1	0 23
+53	12	0.2	1	1 11
+54	21	0.2	1	0 21
+55	6	0.2	1	0 6
+56	22	0.2	1	0 22
+57	11	0.2	1	0 11
+58	12	0.2	1	0 12
+59	19	0.2	1	0 19
+60	17	0.2	1	0 17
+61	23	0.2	1	0 23
+62	17	0.2	1	0 17
+63	20	0.2	1	0 20
+64	44	0.2	1	2 42
+65	20	0.2	1	0 20
+66	23	0.2	1	1 22
+67	10	0.2	1	0 10
+68	6	0.2	1	0 6
+69	9	0.2	1	0 9
+70	11	0.2	1	0 11
+71	29	0.2	1	0 29
+72	9	0.2	1	0 9
+73	9	0.2	1	0 9
+application/gzip
+Analysis complete for dJPLxU_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for dJPLxU_R2_trimmed.fq.gz
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 16:24:59 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 11250
+Number of valid reads: 11250
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 11250
+Num mapped first of pair: 5625
+Num mapped second of pair: 5625
+Num singletons: 0
+Time taken to analyze reads: 0
+Computing descriptors...
+numberOfMappedBases: 782787
+referenceSize: 596713
+numberOfSequencedBases: 782742
+numberOfAs: 256500
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 0
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+null
+Analysis complete for RgZWrD_bam_to_fastq_r1.fastq
+Calculating consensus for all outlier strains
+writing the consensus
+test
+null
+Analysis complete for RgZWrD_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b GCATAAGCTT -b TGCGACGGAA -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/P9mWJr/cutadapt/P9mWJr_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/P9mWJr/cutadapt/P9mWJr_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/P9mWJr/merge_lanes/P9mWJr_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/P9mWJr/merge_lanes/P9mWJr_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 12.159 s (5.007 µs/read; 11.98 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          2,428,551
+  Read 1 with adapter:                   8,699 (0.4%)
+
+== Read fate breakdown ==
+Pairs that were too short:               3,018 (0.1%)
+Pairs written (passing filters):     2,425,533 (99.9%)
+
+Total basepairs processed:   355,234,928 bp
+  Read 1:   177,606,654 bp
+  Read 2:   177,628,274 bp
+Total written (filtered):    354,620,147 bp (99.8%)
+  Read 1:   177,213,052 bp
+  Read 2:   177,407,095 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: GCATAAGCTT; Type: variable 5'/3'; Length: 10; Trimmed: 3213 times
+145 times, it overlapped the 5' end of a read
+3068 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	19	9.3	0	0 19
+10	105	2.3	1	3 102
+11	21	2.3	1	0 21
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	15	9.3	0	0 15
+10	55	2.3	1	7 48
+11	53	2.3	1	3 50
+12	51	2.3	1	5 46
+13	53	2.3	1	1 52
+14	82	2.3	1	1 81
+15	56	2.3	1	0 56
+16	88	2.3	1	3 85
+17	41	2.3	1	0 41
+18	40	2.3	1	0 40
+19	49	2.3	1	0 49
+20	28	2.3	1	0 28
+21	35	2.3	1	1 34
+22	61	2.3	1	0 61
+23	35	2.3	1	2 33
+24	41	2.3	1	0 41
+25	67	2.3	1	0 67
+26	58	2.3	1	0 58
+27	60	2.3	1	0 60
+28	52	2.3	1	0 52
+29	43	2.3	1	0 43
+30	111	2.3	1	1 110
+31	54	2.3	1	0 54
+32	47	2.3	1	0 47
+33	42	2.3	1	2 40
+34	30	2.3	1	0 30
+35	43	2.3	1	0 43
+36	56	2.3	1	0 56
+37	54	2.3	1	0 54
+38	45	2.3	1	0 45
+39	39	2.3	1	0 39
+40	39	2.3	1	0 39
+41	31	2.3	1	1 30
+42	31	2.3	1	1 30
+43	34	2.3	1	0 34
+44	76	2.3	1	0 76
+45	33	2.3	1	0 33
+46	37	2.3	1	0 37
+47	44	2.3	1	1 43
+48	50	2.3	1	2 48
+49	46	2.3	1	0 46
+50	40	2.3	1	0 40
+51	54	2.3	1	0 54
+52	27	2.3	1	0 27
+53	39	2.3	1	0 39
+54	36	2.3	1	1 35
+55	63	2.3	1	2 61
+56	45	2.3	1	2 43
+57	53	2.3	1	1 52
+58	49	2.3	1	0 49
+59	22	2.3	1	1 21
+60	46	2.3	1	1 45
+61	67	2.3	1	0 67
+62	47	2.3	1	1 46
+63	40	2.3	1	1 39
+64	52	2.3	1	1 51
+65	22	2.3	1	0 22
+66	69	2.3	1	2 67
+67	36	2.3	1	0 36
+68	28	2.3	1	1 27
+69	31	2.3	1	1 30
+70	29	2.3	1	0 29
+71	29	2.3	1	0 29
+72	85	2.3	1	2 83
+73	54	2.3	1	0 54
+
+
+=== First read: Adapter 2 ===
+
+Sequence: TGCGACGGAA; Type: variable 5'/3'; Length: 10; Trimmed: 1490 times
+4 times, it overlapped the 5' end of a read
+1486 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	3	9.3	0	0 3
+10	1	2.3	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	15	9.3	0	0 15
+10	37	2.3	1	0 37
+11	36	2.3	1	0 36
+12	26	2.3	1	2 24
+13	48	2.3	1	0 48
+14	10	2.3	1	0 10
+15	14	2.3	1	0 14
+16	34	2.3	1	0 34
+17	12	2.3	1	0 12
+18	25	2.3	1	0 25
+19	32	2.3	1	0 32
+20	23	2.3	1	0 23
+21	29	2.3	1	0 29
+22	14	2.3	1	1 13
+23	21	2.3	1	0 21
+24	18	2.3	1	0 18
+25	8	2.3	1	0 8
+26	15	2.3	1	0 15
+27	16	2.3	1	0 16
+28	16	2.3	1	0 16
+29	13	2.3	1	0 13
+30	12	2.3	1	0 12
+31	28	2.3	1	0 28
+32	12	2.3	1	0 12
+33	9	2.3	1	0 9
+34	35	2.3	1	0 35
+35	47	2.3	1	0 47
+36	20	2.3	1	0 20
+37	50	2.3	1	0 50
+38	11	2.3	1	0 11
+39	14	2.3	1	0 14
+40	30	2.3	1	0 30
+41	79	2.3	1	0 79
+42	16	2.3	1	0 16
+43	23	2.3	1	0 23
+44	6	2.3	1	0 6
+45	7	2.3	1	0 7
+46	60	2.3	1	0 60
+47	18	2.3	1	0 18
+48	16	2.3	1	0 16
+49	33	2.3	1	0 33
+50	19	2.3	1	0 19
+51	23	2.3	1	0 23
+52	12	2.3	1	0 12
+53	21	2.3	1	0 21
+54	19	2.3	1	0 19
+55	20	2.3	1	0 20
+56	28	2.3	1	0 28
+57	35	2.3	1	0 35
+58	9	2.3	1	0 9
+59	6	2.3	1	0 6
+60	13	2.3	1	0 13
+61	76	2.3	1	0 76
+62	22	2.3	1	0 22
+63	12	2.3	1	0 12
+64	10	2.3	1	0 10
+65	43	2.3	1	0 43
+66	9	2.3	1	0 9
+67	28	2.3	1	0 28
+68	11	2.3	1	0 11
+69	15	2.3	1	0 15
+70	40	2.3	1	0 40
+71	7	2.3	1	0 7
+72	11	2.3	1	0 11
+73	9	2.3	1	0 9
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 3996 times
+5 times, it overlapped the 5' end of a read
+3991 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	4	0.6	1	0 4
+12	1	0.1	1	0 1
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	32	0.6	1	0 32
+12	18	0.1	1	0 18
+13	41	0.1	1	0 41
+14	35	0.1	1	0 35
+15	81	0.1	1	1 80
+16	18	0.1	1	0 18
+17	129	0.1	1	7 122
+18	56	0.1	1	9 47
+19	120	0.1	1	13 107
+20	45	0.1	1	1 44
+21	37	0.1	1	2 35
+22	88	0.1	1	3 85
+23	55	0.1	1	1 54
+24	53	0.1	1	5 48
+25	27	0.1	1	2 25
+26	145	0.1	1	2 143
+27	36	0.1	1	0 36
+28	23	0.1	1	0 23
+29	60	0.1	1	2 58
+30	67	0.1	1	0 67
+31	37	0.1	1	9 28
+32	51	0.1	1	5 46
+33	101	0.1	1	10 91
+34	27	0.1	1	3 24
+35	32	0.1	1	4 28
+36	12	0.1	1	0 12
+37	139	0.1	1	3 136
+38	19	0.1	1	3 16
+39	26	0.1	1	2 24
+40	34	0.1	1	1 33
+41	85	0.1	1	2 83
+42	76	0.1	1	2 74
+43	31	0.1	1	0 31
+44	37	0.1	1	2 35
+45	12	0.1	1	2 10
+46	29	0.1	1	2 27
+47	44	0.1	1	0 44
+48	21	0.1	1	0 21
+49	52	0.1	1	0 52
+50	24	0.1	1	0 24
+51	58	0.1	1	0 58
+52	95	0.1	1	0 95
+53	107	0.1	1	0 107
+54	15	0.1	1	0 15
+55	8	0.1	1	0 8
+56	250	0.1	1	0 250
+57	10	0.1	1	0 10
+58	33	0.1	1	0 33
+59	86	0.1	1	0 86
+60	68	0.1	1	0 68
+61	12	0.1	1	0 12
+62	141	0.1	1	0 141
+63	11	0.1	1	0 11
+64	113	0.1	1	0 113
+65	291	0.1	1	0 291
+66	339	0.1	1	0 339
+67	90	0.1	1	0 90
+68	38	0.1	1	0 38
+69	4	0.1	1	0 4
+70	15	0.1	1	0 15
+71	42	0.1	1	0 42
+72	109	0.1	1	0 109
+73	1	0.1	1	0 1
+application/gzip
+Analysis complete for P9mWJr_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for P9mWJr_R2_trimmed.fq.gz
+FAIL
+null
+Analysis complete for dJPLxU_bam_to_fastq_r1.fastq
+test
+null
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for dJPLxU_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b ACACAGGTGG -b ACAACGCTCA -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/wgoGjP/cutadapt/wgoGjP_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/wgoGjP/cutadapt/wgoGjP_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/wgoGjP/merge_lanes/wgoGjP_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/wgoGjP/merge_lanes/wgoGjP_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 11.919 s (4.871 µs/read; 12.32 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          2,446,985
+  Read 1 with adapter:                  33,265 (1.4%)
+
+== Read fate breakdown ==
+Pairs that were too short:              11,318 (0.5%)
+Pairs written (passing filters):     2,435,667 (99.5%)
+
+Total basepairs processed:   352,020,253 bp
+  Read 1:   175,968,041 bp
+  Read 2:   176,052,212 bp
+Total written (filtered):    349,705,666 bp (99.3%)
+  Read 1:   174,472,531 bp
+  Read 2:   175,233,135 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: ACACAGGTGG; Type: variable 5'/3'; Length: 10; Trimmed: 19152 times
+229 times, it overlapped the 5' end of a read
+18923 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	93	9.3	0	0 93
+10	119	2.3	1	63 56
+11	17	2.3	1	0 17
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	124	9.3	0	0 124
+10	233	2.3	1	53 180
+11	227	2.3	1	35 192
+12	150	2.3	1	8 142
+13	415	2.3	1	126 289
+14	383	2.3	1	23 360
+15	148	2.3	1	14 134
+16	539	2.3	1	26 513
+17	306	2.3	1	47 259
+18	175	2.3	1	27 148
+19	511	2.3	1	59 452
+20	345	2.3	1	5 340
+21	319	2.3	1	134 185
+22	205	2.3	1	30 175
+23	381	2.3	1	45 336
+24	335	2.3	1	46 289
+25	156	2.3	1	15 141
+26	233	2.3	1	133 100
+27	367	2.3	1	16 351
+28	194	2.3	1	11 183
+29	111	2.3	1	4 107
+30	170	2.3	1	24 146
+31	101	2.3	1	2 99
+32	214	2.3	1	73 141
+33	110	2.3	1	6 104
+34	205	2.3	1	3 202
+35	220	2.3	1	3 217
+36	91	2.3	1	1 90
+37	163	2.3	1	3 160
+38	165	2.3	1	26 139
+39	207	2.3	1	23 184
+40	383	2.3	1	11 372
+41	386	2.3	1	189 197
+42	119	2.3	1	8 111
+43	118	2.3	1	10 108
+44	150	2.3	1	3 147
+45	242	2.3	1	5 237
+46	398	2.3	1	19 379
+47	184	2.3	1	29 155
+48	237	2.3	1	45 192
+49	349	2.3	1	82 267
+50	164	2.3	1	13 151
+51	710	2.3	1	419 291
+52	242	2.3	1	35 207
+53	409	2.3	1	104 305
+54	199	2.3	1	3 196
+55	267	2.3	1	13 254
+56	639	2.3	1	335 304
+57	118	2.3	1	11 107
+58	345	2.3	1	203 142
+59	386	2.3	1	37 349
+60	92	2.3	1	2 90
+61	556	2.3	1	271 285
+62	399	2.3	1	10 389
+63	404	2.3	1	134 270
+64	274	2.3	1	57 217
+65	132	2.3	1	1 131
+66	113	2.3	1	44 69
+67	156	2.3	1	11 145
+68	281	2.3	1	21 260
+69	1383	2.3	1	404 979
+70	309	2.3	1	15 294
+71	751	2.3	1	581 170
+72	458	2.3	1	40 418
+73	67	2.3	1	0 67
+
+
+=== First read: Adapter 2 ===
+
+Sequence: ACAACGCTCA; Type: variable 5'/3'; Length: 10; Trimmed: 11779 times
+107 times, it overlapped the 5' end of a read
+11672 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	4	9.3	0	0 4
+10	101	2.3	1	0 101
+11	2	2.3	1	0 2
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	234	9.3	0	0 234
+10	109	2.3	1	0 109
+11	125	2.3	1	2 123
+12	252	2.3	1	0 252
+13	119	2.3	1	0 119
+14	227	2.3	1	0 227
+15	49	2.3	1	0 49
+16	78	2.3	1	0 78
+17	263	2.3	1	0 263
+18	170	2.3	1	5 165
+19	146	2.3	1	0 146
+20	93	2.3	1	0 93
+21	105	2.3	1	0 105
+22	187	2.3	1	1 186
+23	77	2.3	1	0 77
+24	117	2.3	1	4 113
+25	295	2.3	1	0 295
+26	30	2.3	1	0 30
+27	523	2.3	1	2 521
+28	109	2.3	1	0 109
+29	211	2.3	1	0 211
+30	448	2.3	1	2 446
+31	103	2.3	1	0 103
+32	351	2.3	1	0 351
+33	127	2.3	1	0 127
+34	33	2.3	1	1 32
+35	94	2.3	1	0 94
+36	526	2.3	1	2 524
+37	47	2.3	1	0 47
+38	126	2.3	1	0 126
+39	101	2.3	1	0 101
+40	347	2.3	1	0 347
+41	46	2.3	1	1 45
+42	217	2.3	1	1 216
+43	327	2.3	1	1 326
+44	138	2.3	1	0 138
+45	103	2.3	1	0 103
+46	232	2.3	1	0 232
+47	216	2.3	1	0 216
+48	223	2.3	1	1 222
+49	135	2.3	1	0 135
+50	185	2.3	1	0 185
+51	63	2.3	1	0 63
+52	274	2.3	1	0 274
+53	37	2.3	1	0 37
+54	478	2.3	1	0 478
+55	51	2.3	1	2 49
+56	106	2.3	1	0 106
+57	112	2.3	1	0 112
+58	345	2.3	1	2 343
+59	48	2.3	1	0 48
+60	53	2.3	1	1 52
+61	156	2.3	1	1 155
+62	398	2.3	1	0 398
+63	81	2.3	1	0 81
+64	37	2.3	1	0 37
+65	78	2.3	1	0 78
+66	113	2.3	1	0 113
+67	311	2.3	1	0 311
+68	83	2.3	1	0 83
+69	167	2.3	1	0 167
+70	259	2.3	1	1 258
+71	492	2.3	1	0 492
+72	275	2.3	1	1 274
+73	11	2.3	1	0 11
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 2334 times
+2 times, it overlapped the 5' end of a read
+2332 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+11	2	0.6	1	0 2
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	8	0.6	1	0 8
+12	10	0.1	1	0 10
+13	88	0.1	1	3 85
+14	30	0.1	1	0 30
+15	38	0.1	1	6 32
+16	35	0.1	1	7 28
+17	108	0.1	1	13 95
+18	69	0.1	1	25 44
+19	130	0.1	1	30 100
+20	101	0.1	1	23 78
+21	39	0.1	1	4 35
+22	83	0.1	1	11 72
+23	99	0.1	1	22 77
+24	124	0.1	1	20 104
+25	47	0.1	1	8 39
+26	38	0.1	1	3 35
+27	22	0.1	1	4 18
+28	62	0.1	1	14 48
+29	18	0.1	1	2 16
+30	33	0.1	1	3 30
+31	73	0.1	1	19 54
+32	94	0.1	1	13 81
+33	199	0.1	1	35 164
+34	32	0.1	1	3 29
+35	56	0.1	1	11 45
+36	6	0.1	1	1 5
+37	144	0.1	1	5 139
+38	18	0.1	1	5 13
+39	34	0.1	1	5 29
+40	34	0.1	1	7 27
+41	19	0.1	1	2 17
+42	30	0.1	1	1 29
+43	34	0.1	1	6 28
+44	40	0.1	1	9 31
+45	31	0.1	1	3 28
+46	19	0.1	1	3 16
+47	14	0.1	1	1 13
+48	5	0.1	1	0 5
+49	12	0.1	1	0 12
+50	9	0.1	1	0 9
+51	5	0.1	1	0 5
+52	5	0.1	1	0 5
+53	5	0.1	1	0 5
+54	10	0.1	1	1 9
+55	10	0.1	1	0 10
+56	6	0.1	1	0 6
+57	10	0.1	1	0 10
+58	13	0.1	1	0 13
+59	4	0.1	1	0 4
+60	7	0.1	1	1 6
+61	9	0.1	1	0 9
+62	8	0.1	1	0 8
+63	10	0.1	1	0 10
+64	22	0.1	1	0 22
+65	77	0.1	1	0 77
+66	22	0.1	1	0 22
+67	2	0.1	1	0 2
+68	5	0.1	1	0 5
+69	3	0.1	1	0 3
+70	4	0.1	1	0 4
+71	6	0.1	1	0 6
+72	3	0.1	1	0 3
+73	1	0.1	1	0 1
+application/gzip
+Analysis complete for wgoGjP_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for wgoGjP_R2_trimmed.fq.gz
+null
+Analysis complete for P9mWJr_bam_to_fastq_r1.fastq
+test
+null
+Analysis complete for P9mWJr_bam_to_fastq_r2.fastq
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 16:44:28 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 384722
+Number of valid reads: 384722
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 384722
+Num mapped first of pair: 192361
+Num mapped second of pair: 192361
+Num singletons: 0
+Time taken to analyze reads: 2
+Computing descriptors...
+numberOfMappedBases: 27366631
+referenceSize: 596713
+numberOfSequencedBases: 27365810
+numberOfAs: 8893599
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 2
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+Calculating consensus for all outlier strains
+writing the consensus
+null
+Analysis complete for wgoGjP_bam_to_fastq_r1.fastq
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 16:44:51 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 23102
+Number of valid reads: 23102
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 23102
+Num mapped first of pair: 11551
+Num mapped second of pair: 11551
+Num singletons: 0
+Time taken to analyze reads: 0
+Computing descriptors...
+numberOfMappedBases: 1548559
+referenceSize: 596713
+numberOfSequencedBases: 1548177
+numberOfAs: 403908
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 1
+end of bam qc
+Computing report...
+Writing HTML report...
+test
+null
+HTML report created successfully
+
+Finished
+Analysis complete for wgoGjP_bam_to_fastq_r2.fastq
+This is cutadapt 4.7 with Python 3.10.13
+Command line parameters: -b TCAGAAGGCG -b TATGATGGCC -b CTGTCTCTTATA -O 20 -o /data/revseq/results/results/RVSeqPlate10/Wastewater-qGrLCp/cutadapt/Wastewater-qGrLCp_R1_trimmed.fq.gz -p /data/revseq/results/results/RVSeqPlate10/Wastewater-qGrLCp/cutadapt/Wastewater-qGrLCp_R2_trimmed.fq.gz -j 5 -m 20 /data/revseq/results/results/RVSeqPlate10/Wastewater-qGrLCp/merge_lanes/Wastewater-qGrLCp_merged_R1.fastq.gz /data/revseq/results/results/RVSeqPlate10/Wastewater-qGrLCp/merge_lanes/Wastewater-qGrLCp_merged_R2.fastq.gz
+Processing paired-end reads on 5 cores ...
+Finished in 11.787 s (4.980 µs/read; 12.05 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          2,366,740
+  Read 1 with adapter:                  16,908 (0.7%)
+
+== Read fate breakdown ==
+Pairs that were too short:               6,823 (0.3%)
+Pairs written (passing filters):     2,359,917 (99.7%)
+
+Total basepairs processed:   343,117,910 bp
+  Read 1:   171,548,226 bp
+  Read 2:   171,569,684 bp
+Total written (filtered):    341,830,783 bp (99.6%)
+  Read 1:   170,756,811 bp
+  Read 2:   171,073,972 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCAGAAGGCG; Type: variable 5'/3'; Length: 10; Trimmed: 12946 times
+100 times, it overlapped the 5' end of a read
+12846 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	13	9.0	0	0 13
+10	26	2.3	1	2 24
+11	61	2.3	1	0 61
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	52	9.0	0	0 52
+10	88	2.3	1	17 71
+11	119	2.3	1	10 109
+12	150	2.3	1	4 146
+13	73	2.3	1	3 70
+14	93	2.3	1	4 89
+15	1294	2.3	1	0 1294
+16	83	2.3	1	0 83
+17	70	2.3	1	2 68
+18	67	2.3	1	0 67
+19	737	2.3	1	0 737
+20	58	2.3	1	1 57
+21	62	2.3	1	0 62
+22	145	2.3	1	0 145
+23	81	2.3	1	1 80
+24	68	2.3	1	1 67
+25	75	2.3	1	0 75
+26	64	2.3	1	0 64
+27	102	2.3	1	2 100
+28	88	2.3	1	0 88
+29	52	2.3	1	0 52
+30	90	2.3	1	2 88
+31	165	2.3	1	1 164
+32	482	2.3	1	0 482
+33	48	2.3	1	1 47
+34	92	2.3	1	0 92
+35	50	2.3	1	2 48
+36	114	2.3	1	0 114
+37	141	2.3	1	0 141
+38	199	2.3	1	1 198
+39	136	2.3	1	0 136
+40	264	2.3	1	2 262
+41	92	2.3	1	1 91
+42	212	2.3	1	0 212
+43	126	2.3	1	3 123
+44	92	2.3	1	1 91
+45	105	2.3	1	1 104
+46	85	2.3	1	2 83
+47	160	2.3	1	0 160
+48	120	2.3	1	0 120
+49	237	2.3	1	1 236
+50	116	2.3	1	0 116
+51	288	2.3	1	2 286
+52	96	2.3	1	0 96
+53	109	2.3	1	1 108
+54	104	2.3	1	1 103
+55	148	2.3	1	1 147
+56	141	2.3	1	0 141
+57	733	2.3	1	0 733
+58	211	2.3	1	2 209
+59	92	2.3	1	2 90
+60	148	2.3	1	0 148
+61	106	2.3	1	3 103
+62	346	2.3	1	3 343
+63	448	2.3	1	0 448
+64	283	2.3	1	2 281
+65	207	2.3	1	0 207
+66	63	2.3	1	0 63
+67	83	2.3	1	1 82
+68	54	2.3	1	1 53
+69	230	2.3	1	0 230
+70	498	2.3	1	0 498
+71	171	2.3	1	2 169
+72	913	2.3	1	0 913
+73	627	2.3	1	0 627
+
+
+=== First read: Adapter 2 ===
+
+Sequence: TATGATGGCC; Type: variable 5'/3'; Length: 10; Trimmed: 2967 times
+33 times, it overlapped the 5' end of a read
+2934 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 10
+No. of allowed errors:
+1-9 bp: 0; 10 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+9	9	9.0	0	0 9
+10	24	2.3	1	0 24
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+9	5	9.0	0	0 5
+10	18	2.3	1	0 18
+11	32	2.3	1	0 32
+12	42	2.3	1	0 42
+13	71	2.3	1	0 71
+14	57	2.3	1	0 57
+15	34	2.3	1	0 34
+16	41	2.3	1	0 41
+17	38	2.3	1	0 38
+18	60	2.3	1	0 60
+19	33	2.3	1	0 33
+20	47	2.3	1	0 47
+21	37	2.3	1	0 37
+22	41	2.3	1	1 40
+23	76	2.3	1	2 74
+24	54	2.3	1	0 54
+25	38	2.3	1	0 38
+26	43	2.3	1	0 43
+27	37	2.3	1	0 37
+28	45	2.3	1	0 45
+29	53	2.3	1	0 53
+30	48	2.3	1	0 48
+31	41	2.3	1	0 41
+32	43	2.3	1	0 43
+33	43	2.3	1	0 43
+34	51	2.3	1	0 51
+35	37	2.3	1	0 37
+36	35	2.3	1	0 35
+37	37	2.3	1	0 37
+38	37	2.3	1	1 36
+39	24	2.3	1	0 24
+40	24	2.3	1	1 23
+41	35	2.3	1	0 35
+42	35	2.3	1	0 35
+43	57	2.3	1	0 57
+44	45	2.3	1	1 44
+45	31	2.3	1	0 31
+46	76	2.3	1	3 73
+47	44	2.3	1	0 44
+48	30	2.3	1	1 29
+49	42	2.3	1	0 42
+50	36	2.3	1	0 36
+51	87	2.3	1	0 87
+52	29	2.3	1	0 29
+53	36	2.3	1	0 36
+54	41	2.3	1	1 40
+55	46	2.3	1	0 46
+56	38	2.3	1	2 36
+57	43	2.3	1	0 43
+58	30	2.3	1	0 30
+59	34	2.3	1	0 34
+60	48	2.3	1	1 47
+61	48	2.3	1	0 48
+62	51	2.3	1	0 51
+63	31	2.3	1	1 30
+64	35	2.3	1	1 34
+65	41	2.3	1	1 40
+66	31	2.3	1	1 30
+67	58	2.3	1	1 57
+68	58	2.3	1	3 55
+69	58	2.3	1	1 57
+70	144	2.3	1	0 144
+71	76	2.3	1	3 73
+72	52	2.3	1	0 52
+73	66	2.3	1	0 66
+
+
+=== First read: Adapter 3 ===
+
+Sequence: CTGTCTCTTATA; Type: variable 5'/3'; Length: 12; Trimmed: 995 times
+0 times, it overlapped the 5' end of a read
+995 times, it overlapped the 3' end or was within the read
+
+Minimum overlap: 12
+No. of allowed errors:
+1-9 bp: 0; 10-12 bp: 1
+
+Overview of removed sequences (5')
+length	count	expect	max.err	error counts
+
+
+
+Overview of removed sequences (3' or within)
+length	count	expect	max.err	error counts
+11	3	0.6	1	0 3
+12	2	0.1	1	0 2
+13	42	0.1	1	0 42
+14	16	0.1	1	0 16
+15	19	0.1	1	2 17
+16	12	0.1	1	4 8
+17	55	0.1	1	7 48
+18	40	0.1	1	13 27
+19	66	0.1	1	18 48
+20	63	0.1	1	14 49
+21	17	0.1	1	3 14
+22	60	0.1	1	11 49
+23	48	0.1	1	12 36
+24	31	0.1	1	6 25
+25	13	0.1	1	0 13
+26	15	0.1	1	3 12
+27	7	0.1	1	4 3
+28	31	0.1	1	4 27
+29	9	0.1	1	1 8
+30	24	0.1	1	3 21
+31	31	0.1	1	8 23
+32	57	0.1	1	11 46
+33	128	0.1	1	22 106
+34	12	0.1	1	5 7
+35	19	0.1	1	4 15
+36	3	0.1	1	0 3
+37	13	0.1	1	2 11
+38	9	0.1	1	2 7
+39	4	0.1	1	1 3
+40	10	0.1	1	1 9
+41	8	0.1	1	1 7
+42	17	0.1	1	5 12
+43	10	0.1	1	3 7
+44	11	0.1	1	5 6
+45	6	0.1	1	2 4
+46	8	0.1	1	1 7
+47	7	0.1	1	3 4
+48	2	0.1	1	0 2
+49	1	0.1	1	0 1
+50	2	0.1	1	0 2
+51	3	0.1	1	0 3
+52	2	0.1	1	0 2
+53	4	0.1	1	0 4
+54	2	0.1	1	0 2
+55	3	0.1	1	0 3
+56	2	0.1	1	0 2
+57	5	0.1	1	0 5
+58	2	0.1	1	0 2
+59	1	0.1	1	0 1
+60	2	0.1	1	0 2
+61	1	0.1	1	0 1
+62	3	0.1	1	0 3
+64	7	0.1	1	0 7
+65	7	0.1	1	0 7
+66	9	0.1	1	0 9
+67	4	0.1	1	0 4
+68	5	0.1	1	0 5
+71	2	0.1	1	0 2
+application/gzip
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for Wastewater-qGrLCp_R1_trimmed.fq.gz
+application/gzip
+Analysis complete for Wastewater-qGrLCp_R2_trimmed.fq.gz
+PASS
+Java memory size is set to 1200M
+Launching application...
+
+QualiMap v.2.2.2-dev
+Built on 2019-11-11 14:05
+
+Selected tool: bamqc
+Available memory (Mb): 35
+Max memory (Mb): 1258
+Wed Jun 12 16:48:16 UTC 2024		WARNING	Output folder already exists, the results will be saved there
+
+Starting bam qc....
+Loading sam header...
+Loading locator...
+Loading reference...
+Number of windows: 400, effective number of windows: 517
+Chunk of reads size: 1000
+Number of threads: 8
+Initializing regions from /data/pipeline/resources/RespiratoryVirus.20200409.bed.....
+Found 118 regions
+Filling region references... 
+Processed 51 out of 517 windows...
+Processed 102 out of 517 windows...
+Processed 153 out of 517 windows...
+Processed 204 out of 517 windows...
+Processed 255 out of 517 windows...
+Processed 306 out of 517 windows...
+Processed 357 out of 517 windows...
+Processed 408 out of 517 windows...
+Processed 459 out of 517 windows...
+Processed 510 out of 517 windows...
+Total processed windows:517
+Number of reads: 1068
+Number of valid reads: 1068
+Number of correct strand reads:0
+
+Inside of regions...
+Num mapped reads: 1068
+Num mapped first of pair: 534
+Num mapped second of pair: 534
+Num singletons: 0
+Time taken to analyze reads: 0
+Computing descriptors...
+numberOfMappedBases: 64555
+referenceSize: 596713
+numberOfSequencedBases: 64533
+numberOfAs: 17515
+Computing per chromosome statistics...
+Computing histograms...
+Overall analysis time: 0
+end of bam qc
+Computing report...
+Writing HTML report...
+HTML report created successfully
+
+Finished
+null
+Analysis complete for Wastewater-qGrLCp_bam_to_fastq_r1.fastq
+test
+null
+Calculating consensus for all outlier strains
+writing the consensus
+Analysis complete for Wastewater-qGrLCp_bam_to_fastq_r2.fastq
