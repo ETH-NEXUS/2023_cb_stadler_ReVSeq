@@ -217,6 +217,7 @@ rule validate_assignment:
         ctrl_pos = config["tools"]["general"]["pos"],
         ctrl_neg = config["tools"]["general"]["neg"],
         mouthwash = config["tools"]["general"]["mouthwash"],
+        wastewater = config["tools"]["general"]["wastewater"],
         plate = config["plate"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/validate_assignment/{sample}_validation.out.log",
@@ -233,7 +234,7 @@ rule validate_assignment:
             --ethid {wildcards.sample} \
             --match_table {params.match_table} \
             --count_table {input.assignment} \
-            --exceptions {params.ctrl_pos},{params.ctrl_neg},{params.mouthwash} \
+            --exceptions {params.ctrl_pos},{params.ctrl_neg},{params.mouthwash},{params.wastewater} \
             --plate {params.plate} \
             --output {output.validation}  2> >(tee {log.errfile} >&2)
         """
@@ -263,6 +264,7 @@ rule consensus:
         calls_norm_filt_indels = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm_filt_indel.bcf",
         all_consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa",
         low_cov_bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_low_coverage_sites.bed",
+        all_cov_bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_coverage.bed",
     params:
         ref = config["resources"]["reference"],
         mincov = config["tools"]["consensus"]["minimum_coverage"],
@@ -281,7 +283,8 @@ rule consensus:
             bcftools filter --IndelGap 5 -Ob -o {output.calls_norm_filt_indels}
             bcftools index -o {output.calls_norm_filt_indels}.csi {output.calls_norm_filt_indels}
 
-            bedtools genomecov -ibam {input.bam} -bga | awk '$4 < {params.mincov}' > {output.low_cov_bed}
+            bedtools genomecov -ibam {input.bam} -bga > {output.all_cov_bed}
+            cat {output.all_cov_bed} | awk '$4 < {params.mincov}' > {output.low_cov_bed}
 
             # apply variants to create consensus sequence
             bcftools consensus {output.calls_norm_filt_indels} -f {params.ref} -m {output.low_cov_bed} > {output.all_consensus}
@@ -293,9 +296,11 @@ rule postprocess_consensus:
         all_consensus = rules.consensus.output.all_consensus,
         assignment = rules.assign_virus.output.table,
         qualimap_qc = rules.qualimap_filtered.output.qc_status,
+        all_cov_bed = rules.consensus.output.all_cov_bed,
     output:
         consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa",
         consensus_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa.gz",
+        #consensus_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus_cds.fa",
         count_n = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_count_n.txt",
     params:
         ref = config["resources"]["reference_table"],
@@ -303,6 +308,8 @@ rule postprocess_consensus:
         lookup = config["tools"]["general"]["lookup"],
         reference = config["resources"]["reference_table"],
         readcount = rules.remove_duplicates.output.readcount,
+        mincov = config["tools"]["consensus"]["minimum_coverage"],
+        cds = config["tools"]["consensus"]["cds_bed"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.err.log",
@@ -323,8 +330,12 @@ rule postprocess_consensus:
         
         gzip -c {output.consensus} > {output.consensus_gzip}
 
+
+
         python workflow/scripts/count_n.py \
         --input {output.consensus} \
         --output {output.count_n} \
-        --bed {params.reference}
+        --bed {params.reference} \
+        --coverage {input.all_cov_bed} \
+        --threshold {params.mincov}
         """

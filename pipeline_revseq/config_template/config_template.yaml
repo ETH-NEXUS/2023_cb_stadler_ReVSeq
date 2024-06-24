@@ -38,6 +38,8 @@ tools:
     neg: "KOneg,KoNeg"
     # String to search for mouthwash samples
     mouthwash: "MouthWash"
+    # String to search for Wastewater samples
+    wastewater: "Wastewater"
   bwa:
     # Threads to assign to bwa
     threads: 4
@@ -88,6 +90,8 @@ tools:
     # Minimum coverage required to report a base in the consensus sequence.
     # Any position with lower coverage is reported as N
     minimum_coverage: 10
+    # Bed file containing the positions of all CDS regions
+    cds_bed: "/data/pipeline/resources/cds.bed"
   postprocess_consensus:
     # Maximum fraction of Ns allowed in a consensus before it's flagged as failed in the status report of the tool
     max_n: 0.2

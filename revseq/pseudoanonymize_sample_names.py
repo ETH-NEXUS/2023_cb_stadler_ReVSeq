@@ -48,6 +48,8 @@ def generate_new_ethids(anon_df, all_samples):
         newethid = generate_id()
         if len(str(samplename).split("-")) == 3:
             newethid = "MouthWash-"+newethid
+        if str(samplename).split("_")[0] == "Wastewater":
+            newethid = "Wastewater-"+newethid
         if len(anon_df) > 0:
             while (newethid in anon_df) and any(newethid == sublist[1] for sublist in newsamples):
                 newethid = generate_id()
@@ -212,10 +214,24 @@ def detect_mouthwash_samples(new_complete_plates, mirrordir):
         files = os.listdir(mirrordir + "/" + plate)
         for sample in files:
             substrings = sample.split("-")
-            if len(substrings) != 3 or len(substrings[0]) != 1 or substrings[0].isnumeric() or len(substrings[1]) != 1 or (not substrings[1].isnumeric()):
+            if len(substrings) != 3 or len(substrings[0]) != 1 or substrings[0].isnumeric() or len(substrings[1]) > 2 or (not substrings[1].isnumeric()):
                 continue
             substrings[2] = substrings[2].split("_")[0]
             name = "-".join(substrings)
+            if name not in data[0]:
+                data[0].append(name)
+        complete_plates[plate] = data
+    return complete_plates
+
+def detect_wastewater_samples(new_complete_plates, mirrordir):
+    complete_plates = {}
+    for plate,data in new_complete_plates.items():
+        files = os.listdir(mirrordir + "/" + plate)
+        for sample in files:
+            substrings = sample.split("_")
+            if substrings[0] != "Wastewater":
+                continue
+            name = substrings[0] + "_" + substrings[1]
             if name not in data[0]:
                 data[0].append(name)
         complete_plates[plate] = data
@@ -255,6 +271,7 @@ if __name__ == '__main__':
 
     new_complete_plates = verify_if_complete_plate(new_plates, args.mirrordir)
     complete_plates = detect_mouthwash_samples(new_complete_plates, args.mirrordir)
+    complete_plates = detect_wastewater_samples(new_complete_plates, args.mirrordir)
 
     if len(complete_plates) == 0:
         print("There are new plates but none appears to be complete yet")

@@ -24,7 +24,12 @@ if __name__ == '__main__':
 
     matches = pd.read_table(args.pseudoanon_table, dtype=str)
 
-    sample_name = (args.lanefiles[0].split("/")[-1].split("_")[0])
+    if "Wastewater" in args.lanefiles[0]:
+        basename = (args.lanefiles[0].split("/")[-1].split("_")[0])
+        number = (args.lanefiles[0].split("/")[-1].split("_")[1])
+        sample_name = basename + "_" + number
+    else:
+        sample_name = (args.lanefiles[0].split("/")[-1].split("_")[0])
     pseudoanon = matches.loc[matches['Sample number'] == sample_name]["ethid"]
     if len(pseudoanon) == 0:
         sys.exit("ERROR: cannot find a match for sample " + sample_name + " in the pseudoanonymization table.")
