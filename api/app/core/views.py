@@ -4,7 +4,7 @@ from django_filters import rest_framework as filters
 from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 
-from .models import SampleCount, Plate, Substrain, Metadata, Sample, File
+from .models import SampleCount, Plate, Substrain, Metadata, Sample, File, CDSPositions
 from .serializers import (
     SampleCountSerializers,
     PlateSerializer,
@@ -13,6 +13,7 @@ from .serializers import (
     AggregatedCountSerializer,
     SampleSerializer,
     FileSerializer,
+CDSPositionsSerializer
 )
 from rest_framework import viewsets
 from rest_framework import filters as drf_filters
@@ -371,6 +372,28 @@ class SubstrainViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Substrain.objects.all()
     serializer_class = SubstrainSerializer
     http_method_names = ["get", "head", "options"]
+
+
+class CDSPositionsViewSet(viewsets.ModelViewSet):
+    """
+    API Endpoint: CDS Positions
+
+    """
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = CDSPositions.objects.all()
+    serializer_class = CDSPositionsSerializer
+    http_method_names = ["get", "head", "options"]
+
+    filter_backends = (
+        filters.DjangoFilterBackend,
+        drf_filters.OrderingFilter,
+    )
+
+    filterset_fields = (
+        "sample__pseudonymized_id",
+    )
+
 
 
 

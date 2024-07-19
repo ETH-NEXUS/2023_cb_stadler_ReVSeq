@@ -24,3 +24,10 @@ import_columns:
   consensus_number_n: consensus_number_n
   consensus_fraction_n: consensus_fraction_n
 
+metadata_table_fields:
+  order_date: "Order date"
+  ent_date: "ent date"
+  treatment_type: "treatment_type"
+  prescriber: "Prescriber canton"
+
+

@@ -16,6 +16,7 @@ from core.views import (
     download_file,
     FileViewSet,
     ImportResultsView,
+CDSPositionsViewSet
 )
 from rest_framework.routers import DefaultRouter
 
@@ -32,6 +33,7 @@ router.register(r"plates", PlateViewSet, basename="plates")
 router.register(r"substrains", SubstrainViewSet, basename="substrains")
 router.register(r"samples", SampleViewSet, basename="samples")
 router.register(r"files", FileViewSet, basename="files")
+router.register(r"cdspositions", CDSPositionsViewSet, basename="cdspositions")
 
 urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),

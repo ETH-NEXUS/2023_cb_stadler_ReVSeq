@@ -11,3 +11,6 @@ def read_config(what="import_columns", file_name="config.yml"):
         config = yaml.safe_load(file)
 
     return EasyDict(config[what])
+
+# /data/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/resources/cds/cds.bed
+# sudo scp aesche@revseq.nexus.ethz.ch:/data/revseq/2023_cb_stadler_ReVSeq/pipeline_revseq/resources/cds/cds.bed .

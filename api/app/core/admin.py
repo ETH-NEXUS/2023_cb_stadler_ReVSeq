@@ -11,11 +11,18 @@ from .models import (
     Metadata,
     FileType,
     File,
+CDSPositions
 )
 from unfold.admin import ModelAdmin
 
 
 # Register your models here.
+
+@admin.register(CDSPositions)
+class CDSPositionsAdmin(ModelAdmin):
+    list_display = ("gen_bank_id", "cds_start", "cds_end")
+    search_fields = ("gen_bank_id", )
+
 
 
 @admin.register(Plate)
