@@ -42,6 +42,7 @@ from core.models import (
     Panel,
     File,
     FileType,
+CDSCount,
 )
 from helpers.color_log import logger
 import config.get_config as config
@@ -56,8 +57,9 @@ CONTROL_DIR_GLOB = "sample_*-KO{neg,pos}"
 # consensus files
 
 CONSENSUS_FA_GLOB = "*_consensus.fa"
-CONSENSUS_CDS_GLOB = "*__consensus_cds.fa"
+CONSENSUS_CDS_GLOB = "*_consensus_cds.fa"
 CONSENSUS_COUNTS_GLOB = "*_count_n_cds.txt"
+COVERAGE_N_GLOB = "*_count_n.txt"
 
 
 class Importer:
@@ -106,12 +108,6 @@ class Importer:
             logger.error(f"File with path {filepath} does not exist")
             logger.error(ex)
 
-    def __process_sample_files(self, sample_dir, sample):
-        file_types = FileType.objects.all()
-        for file_type in file_types:
-            file = glob.glob(os.path.join(sample_dir, f"*{file_type.postfix}*"))
-            if file:
-                self.process_file(file[0], sample=sample)
 
     @staticmethod
     def locate_plate_files(import_dir):
@@ -126,7 +122,41 @@ class Importer:
         else:
             raise ValueError("Could not locate metadata and empty_samples files")
 
+    def __process_consensus_files(self, sample_count, sample_dir):
+        logger.info(f"Processing consensus files for {sample_count}")
+        consensus_fa = glob.glob(os.path.join(sample_dir, CONSENSUS_FA_GLOB))
+        consensus_cds = glob.glob(os.path.join(sample_dir, CONSENSUS_CDS_GLOB))
+        coverage_n_file = glob.glob(os.path.join(sample_dir, COVERAGE_N_GLOB))
+        consensus_counts = glob.glob(os.path.join(sample_dir, CONSENSUS_COUNTS_GLOB))
 
+        sample_count.consensus = consensus_fa[0] if consensus_fa else None
+        sample_count.consensus_cds = consensus_cds[0] if consensus_cds else None
+        sample_count.mean_coverage_non_N_positions = coverage_n_file[0] if coverage_n_file else None
+        sample_count.save()
+
+        for line in txt_to_list(consensus_counts[0])[1:]:
+            line_list = line.split("\t")
+            defaults = {
+                "fraction_n": float(line_list[4]),
+                "mean_cov_non_n_positions": float(line_list[5]),
+            }
+            CDSCount.objects.update_or_create(
+                sample=sample_count.sample,
+                substrain=sample_count.substrain,
+                CDS_name=line_list[2],
+                number_n=line_list[3],
+                defaults=defaults,
+
+            )
+
+
+
+    def __process_sample_files(self, sample_dir, sample):
+        file_types = FileType.objects.all()
+        for file_type in file_types:
+            file = glob.glob(os.path.join(sample_dir, f"*{file_type.postfix}*"))
+            if file:
+                self.process_file(file[0], sample=sample)
 
     """
     ------------------------------------- DEALING WITH METADATA ----------------------------------------
@@ -195,7 +225,7 @@ class Importer:
             self.sample_id_dict[
                 item[columns.pseudonymized_id]
             ] = False  # later on, we will check, if all samples have been imported
-            logger.info(f"Creating metadata for {sample} in the well {well}")
+            # logger.info(f"Creating metadata for {sample} in the well {well}")
             self.__create_metadata(item, plate, well, sample)
         return plate
 
@@ -203,14 +233,7 @@ class Importer:
         ------------------------------------- DEALING WITH COUNTS ----------------------------------------
     """
 
-    def __process_consensus_files(self, sample_count, sample_dir):
-        consensus_fa = glob.glob(os.path.join(sample_dir, CONSENSUS_FA_GLOB))
-        consensus_cds = glob.glob(os.path.join(sample_dir, CONSENSUS_CDS_GLOB))
-        consensus_counts = glob.glob(os.path.join(sample_dir, CONSENSUS_COUNTS_GLOB))
-        sample_count.consensus = consensus_fa[0] if consensus_fa else None
-        sample_count.consensus_cds = consensus_cds[0] if consensus_cds else None
 
-        pass
 
     def counts(self, plate, columns, counts_file, sample_dir, control=False, control_sample_id=None, control_type=None):
         """
@@ -306,7 +329,8 @@ class Importer:
     def __collect_dirs(self, import_dir):
         all_dirs = glob.glob(os.path.join(import_dir, SAMPLE_DIR_GLOB))
         for d in all_dirs:
-            if d.endswith('KOneg') or d.endswith('KOpos'):
+            logger.debug(f"Processing directory {d}")
+            if d.lower().endswith('koneg') or d.lower().endswith('kopos'):
                 self.control_dirs.append(d)
             else:
                 self.sample_dirs.append(d)
@@ -325,7 +349,7 @@ class Importer:
                 plate = self.create_plate_and_metadata(columns, metadata_file)
                 self.__collect_dirs(import_dir)
                 for sample_dir in self.sample_dirs:
-                    logger.debug(
+                    logger.title(
                         f"---------------- IMPORTING COUNTS FOR {sample_dir} ---------------- \n"
                     )
                     current_count_table_file = glob.glob(
@@ -334,13 +358,13 @@ class Importer:
                     self.counts(plate, columns, current_count_table_file,  sample_dir)
                     sample_id = os.path.basename(sample_dir).split("_")[1]
                     sample = Sample.objects.get(pseudonymized_id=sample_id)
-                    logger.debug(
+                    logger.title(
                         f"---------------- IMPORTING SAMPLE-RELATED FILES FOR THE SAMPLE {sample_dir} ---------------- \n"
                     )
                     self.__process_sample_files(sample_dir, sample)
 
                 for control_dir in self.control_dirs:
-                    logger.debug(f"----------------------- IMPORTING CONTROLS {control_dir} -----------------------\n")
+                    logger.title(f"----------------------- IMPORTING CONTROLS {control_dir} -----------------------\n")
                     if control_dir.endswith('pos'):
                         control_type = 'pos'
                         control_sample_id = f"control_pos_{plate.barcode}"
@@ -356,14 +380,14 @@ class Importer:
                                                 control_type=control_type)
                     self.__process_sample_files(control_dir, sample)
 
-                logger.debug(
+                logger.title(
                     f"\n --------------- IMPORTING PLATE-RELATED FILES FOR THE PLATE {plate} -------------------- \n"
                 )
                 self.process_file(empty_samples_file, plate=plate)
                 self.process_file(metadata_file, plate=plate)
                 self.process_file(pipline_version_file, plate=plate)
 
-                logger.debug(
+                logger.title(
                     "\n\n --------  CHECKING FOR MISSING SAMPLES...  ------------ \n"
                 )
                 self.check_imported_samples(empty_samples_file)

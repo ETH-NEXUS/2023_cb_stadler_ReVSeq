@@ -11,12 +11,18 @@ from .models import (
     Metadata,
     FileType,
     File,
-CDSPositions
+CDSPositions,
+CDSCount
 )
 from unfold.admin import ModelAdmin
 
 
 # Register your models here.
+
+@admin.register(CDSCount)
+class CDSCountAdmin(ModelAdmin):
+    list_display = ("sample", "CDS_name", "CDS_name")
+    search_fields = ("substrain", "sample", "CDS_name" )
 
 @admin.register(CDSPositions)
 class CDSPositionsAdmin(ModelAdmin):

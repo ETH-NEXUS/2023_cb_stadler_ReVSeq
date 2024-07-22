@@ -26,6 +26,12 @@ export const createSampleCountsData = (sampleCounts: SampleCount[]): TableDataSa
       DP: sampleCount.DP,
       consensus_fraction_n: sampleCount.consensus_fraction_n,
       consensus_number_n: sampleCount.consensus_number_n,
+      consensus: sampleCount.consensus,
+      consensus_cds: sampleCount.consensus_cds,
+      mean_coverage_non_N_positions: sampleCount.mean_coverage_non_N_positions,
+
+
+
     }
   })
 }

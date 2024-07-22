@@ -178,7 +178,32 @@ export const columnsSampleCount: SampleCountsTableColumns[] = [
     align: 'center',
     sortable: true,
     field: 'consensus_number_n',
-  }
+  },
+  {
+    name: 'consensus',
+    required: true,
+    label: 'Consensus',
+    align: 'center',
+    sortable: true,
+    field: 'consensus',
+  },
+  {
+    name: 'consensus_cds',
+    required: true,
+    label: 'Consensus CDS',
+    align: 'center',
+    sortable: true,
+    field: 'consensus_cds',
+  },
+  {
+    name: 'mean_coverage_non_N_positions',
+    required: true,
+    label: 'Mean coverage non N positions',
+    align: 'center',
+    sortable: true,
+    field: 'mean_coverage_non_N_positions',
+  },
+
 
 
 ]

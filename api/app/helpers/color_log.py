@@ -1,5 +1,14 @@
 import logging
 
+TITLE_LEVEL_NUM = 25
+logging.addLevelName(TITLE_LEVEL_NUM, "TITLE")
+
+def title(self, message, *args, **kws):
+    if self.isEnabledFor(TITLE_LEVEL_NUM):
+        self._log(TITLE_LEVEL_NUM, message, args, **kws)
+
+logging.Logger.title = title
+
 
 class CustomFormatter(logging.Formatter):
     grey = "\x1b[38;20m"
@@ -9,8 +18,9 @@ class CustomFormatter(logging.Formatter):
     bold_red = "\x1b[31;1m"
     magenta = "\x1b[35;20m"
     green = "\x1b[32;20m"
+    pink = "\x1b[95;20m"
     reset = "\x1b[0m"
-    format = "%(name)s:  %(levelname)s ----- %(message)s)"
+    format = "%(name)s:  %(levelname)s ----- %(message)s"
 
     FORMATS = {
         logging.DEBUG: magenta + format + reset,
@@ -18,6 +28,7 @@ class CustomFormatter(logging.Formatter):
         logging.WARNING: yellow + format + reset,
         logging.ERROR: red + format + reset,
         logging.CRITICAL: bold_red + format + reset,
+        TITLE_LEVEL_NUM: pink + format + reset,  # Adding TITLE level
     }
 
     def format(self, record):

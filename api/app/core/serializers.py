@@ -9,7 +9,8 @@ from .models import (
     Metadata,
     File,
     FileType,
-CDSPositions
+CDSPositions,
+CDSCount
 )
 
 from rest_framework import serializers
@@ -113,6 +114,7 @@ class SampleCountSerializers(serializers.ModelSerializer):
             "consensus_fraction_n",
             "consensus",
             "consensus_cds",
+            "mean_coverage_non_N_positions"
 
         )
 
@@ -177,3 +179,9 @@ class AggregatedCountSerializer(serializers.Serializer):
 
     class Meta:
         fields = ("sample", "strains")
+
+
+class CDSCountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CDSCount
+        fields = "__all__"

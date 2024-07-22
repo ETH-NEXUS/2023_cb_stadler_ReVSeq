@@ -55,6 +55,9 @@ export interface SampleCount {
   DP: string
   consensus_fraction_n: string
   consensus_number_n: string
+  consensus: string
+  consensus_cds: string
+  mean_coverage_non_N_positions: string
 
   normcounts?: number
   strain?: string

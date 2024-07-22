@@ -43,7 +43,6 @@ def compute_checksum(file_path):
 
 
 def parse_date(date_str):
-    print(f"parse_date: {date_str}")
     for fmt in ("%Y-%m-%d", "%d.%m.%Y", "%d.%m.%y", "%Y.%m.%d", "%y.%m.%d"):
         try:
             return datetime.strptime(date_str, fmt)
