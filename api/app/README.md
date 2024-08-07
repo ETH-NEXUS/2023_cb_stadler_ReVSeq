@@ -34,6 +34,17 @@ http://localhost:8010/api/samples/?control=true
 
 ## Import
 
-```bash
+
 
 ```
+## Transfer data from server
+
+To transfer only the files that do not start with "sample_" from the remote directory, you can use a combination of scp and rsync commands. 
+Unfortunately, scp alone does not support excluding files based on patterns, but rsync does.
+
+```bash
+rsync -avz --exclude='sample_*' aesche@revseq.nexus.ethz.ch:/data/revseq/results/gather_results/RVSeqPlate10/ /Users/aesche/git/2023_cb_stadler_ReVSeq/data/RVSeqPlate10/
+    
+```
+
+scp aesche@revseq.nexus.ethz.ch:/data/revseq/results/gather_results/RVSeqPlate10/RVSeqPlate10_empty_samples.txt /Users/aesche/git/2023_cb_stadler_ReVSeq/data/RVSeqPlate10/

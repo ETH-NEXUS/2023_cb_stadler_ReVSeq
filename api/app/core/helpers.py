@@ -1,7 +1,7 @@
 import os
 import csv
 import hashlib
-
+from datetime import datetime
 
 def list_files(startpath):
     for root, dirs, files in os.walk(startpath):
@@ -38,3 +38,14 @@ def compute_checksum(file_path):
             sha256_hash.update(byte_block)
 
     return sha256_hash.hexdigest()
+
+
+
+
+def parse_date(date_str):
+    for fmt in ("%Y-%m-%d", "%d.%m.%Y", "%d.%m.%y", "%Y.%m.%d", "%y.%m.%d"):
+        try:
+            return datetime.strptime(date_str, fmt)
+        except ValueError:
+            continue
+    raise ValueError(f"Date {date_str} from is not in an expected format")

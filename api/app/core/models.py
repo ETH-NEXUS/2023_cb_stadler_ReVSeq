@@ -111,6 +111,9 @@ class SampleCount(models.Model):
     DP = models.TextField(null=True, blank=True)
     consensus_number_n = models.TextField(null=True, blank=True)
     consensus_fraction_n = models.TextField(null=True, blank=True)
+    consensus = models.TextField(null=True, blank=True)
+    consensus_cds = models.TextField(null=True, blank=True)
+    mean_coverage_non_N_positions =  models.TextField(null=True, blank=True)
 
 
 
@@ -123,8 +126,30 @@ class Metadata(models.Model):
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True, related_name=related_name)
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True, related_name=related_name)
     well = models.ForeignKey(Well, on_delete=models.CASCADE, null=True, related_name=related_name)
-    prescriber = models.CharField(max_length=20)
-    order_date = models.DateField()
-    ent_date = models.DateField()
-    treatment_type = models.CharField(max_length=20, null=True)
+    prescriber = models.CharField(max_length=20, null=True, blank=True)
+
+    order_date = models.DateField(null=True, blank=True)
+    ent_date = models.DateField(null=True, blank=True)
+    treatment_type = models.CharField(max_length=20, null=True, blank=True)
     data = models.JSONField(null=True, default=list)
+
+class CDSPositions(models.Model):
+    gen_bank_id = models.TextField()
+    cds_start = models.IntegerField()
+    cds_end = models.IntegerField()
+
+    def __str__(self):
+        return self.gen_bank_id + " " + str(self.cds_start) + " " + str(self.cds_end)
+
+class CDSCount(models.Model):
+    related_name = "cdscounts"
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, null=True, related_name=related_name)
+    substrain = models.ForeignKey(
+        Substrain, on_delete=models.CASCADE, null=True, related_name=related_name
+    )
+    CDS_name = models.TextField()
+    number_n = models.TextField()
+    fraction_n = models.FloatField()
+    mean_cov_non_n_positions = models.FloatField()
+
+
