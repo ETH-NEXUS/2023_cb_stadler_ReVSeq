@@ -1,0 +1,16 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_004907.1 1 1025
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=130760
+NC_004907.1	RefSeq	region	1	1025	.	+	.	ID=NC_004907.1:1..1025;Dbxref=taxon:130760;Name=7;collection-date=1999;country=Hong Kong:Kowloon;gbkey=Src;mol_type=viral cRNA;segment=7;strain=A/Hong Kong/1073/99 (H9N2)
+NC_004907.1	RefSeq	gene	33	1014	.	+	.	ID=gene-FLUAVAHHH9N2s7gp1;Dbxref=GeneID:1461002;Name=M2;gbkey=Gene;gene=M2;gene_biotype=protein_coding;locus_tag=FLUAVAHHH9N2s7gp1
+NC_004907.1	RefSeq	exon	33	59	.	+	.	ID=id-FLUAVAHHH9N2s7gp1-1;Parent=gene-FLUAVAHHH9N2s7gp1;Dbxref=GeneID:1461002;exon_number=1;gbkey=exon;gene=M2;locus_tag=FLUAVAHHH9N2s7gp1;number=1
+NC_004907.1	RefSeq	intron	60	747	.	+	.	ID=id-FLUAVAHHH9N2s7gp1;Parent=gene-FLUAVAHHH9N2s7gp1;Dbxref=GeneID:1461002;exon_number=1;gbkey=intron;gene=M2;locus_tag=FLUAVAHHH9N2s7gp1;number=1
+NC_004907.1	RefSeq	CDS	33	59	.	+	0	ID=cds-NP_859035.1;Parent=gene-FLUAVAHHH9N2s7gp1;Dbxref=InterPro:IPR002089,GenBank:NP_859035.1,GeneID:1461002;Name=NP_859035.1;gbkey=CDS;gene=M2;locus_tag=FLUAVAHHH9N2s7gp1;product=matrix protein 2;protein_id=NP_859035.1
+NC_004907.1	RefSeq	CDS	748	1014	.	+	0	ID=cds-NP_859035.1;Parent=gene-FLUAVAHHH9N2s7gp1;Dbxref=InterPro:IPR002089,GenBank:NP_859035.1,GeneID:1461002;Name=NP_859035.1;gbkey=CDS;gene=M2;locus_tag=FLUAVAHHH9N2s7gp1;product=matrix protein 2;protein_id=NP_859035.1
+NC_004907.1	RefSeq	exon	748	1014	.	+	.	ID=id-FLUAVAHHH9N2s7gp1-2;Parent=gene-FLUAVAHHH9N2s7gp1;Dbxref=GeneID:1461002;exon_number=2;gbkey=exon;gene=M2;locus_tag=FLUAVAHHH9N2s7gp1;number=2
+NC_004907.1	RefSeq	gene	33	791	.	+	.	ID=gene-FLUAVAHHH9N2s7gp2;Dbxref=GeneID:1461001;Name=M1;gbkey=Gene;gene=M1;gene_biotype=protein_coding;locus_tag=FLUAVAHHH9N2s7gp2
+NC_004907.1	RefSeq	CDS	33	791	.	+	0	ID=cds-NP_859036.1;Parent=gene-FLUAVAHHH9N2s7gp2;Dbxref=GOA:Q77MF0,InterPro:IPR001561,UniProtKB/TrEMBL:Q77MF0,GenBank:NP_859036.1,GeneID:1461001;Name=NP_859036.1;gbkey=CDS;gene=M1;locus_tag=FLUAVAHHH9N2s7gp2;product=matrix protein 1;protein_id=NP_859036.1
+NC_004907.1	RefSeq	exon	33	791	.	+	.	ID=id-FLUAVAHHH9N2s7gp2-1;Parent=gene-FLUAVAHHH9N2s7gp2;Dbxref=GeneID:1461001;exon_number=1;gbkey=exon;gene=M1;locus_tag=FLUAVAHHH9N2s7gp2;number=1
+

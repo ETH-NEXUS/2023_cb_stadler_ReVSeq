@@ -1,0 +1,15 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_004906.1 1 890
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=130760
+NC_004906.1	RefSeq	region	1	890	.	+	.	ID=NC_004906.1:1..890;Dbxref=taxon:130760;Name=8;country=Hong Kong:Kowloon;gbkey=Src;mol_type=viral cRNA;segment=8;serotype=H9N2;strain=A/Hong Kong/1073/99
+NC_004906.1	RefSeq	gene	27	864	.	+	.	ID=gene-FLUAVAHHH9N2s8gp1;Dbxref=GeneID:4036374;Name=NEP;gbkey=Gene;gene=NEP;gene_biotype=protein_coding;gene_synonym=NS2;locus_tag=FLUAVAHHH9N2s8gp1
+NC_004906.1	RefSeq	exon	27	56	.	+	.	ID=id-FLUAVAHHH9N2s8gp1-1;Parent=gene-FLUAVAHHH9N2s8gp1;Dbxref=GeneID:4036374;exon_number=1;gbkey=exon;gene=NEP;locus_tag=FLUAVAHHH9N2s8gp1;number=1
+NC_004906.1	RefSeq	intron	57	528	.	+	.	ID=id-FLUAVAHHH9N2s8gp1;Parent=gene-FLUAVAHHH9N2s8gp1;Dbxref=GeneID:4036374;exon_number=1;gbkey=intron;gene=NEP;locus_tag=FLUAVAHHH9N2s8gp1;number=1
+NC_004906.1	RefSeq	CDS	27	56	.	+	0	ID=cds-YP_581750.1;Parent=gene-FLUAVAHHH9N2s8gp1;Dbxref=GOA:Q9DHF8,InterPro:IPR000256,InterPro:IPR000968,UniProtKB/TrEMBL:Q9DHF8,GenBank:YP_581750.1,GeneID:4036374;Name=YP_581750.1;gbkey=CDS;gene=NEP;locus_tag=FLUAVAHHH9N2s8gp1;product=nuclear export protein;protein_id=YP_581750.1
+NC_004906.1	RefSeq	CDS	529	864	.	+	0	ID=cds-YP_581750.1;Parent=gene-FLUAVAHHH9N2s8gp1;Dbxref=GOA:Q9DHF8,InterPro:IPR000256,InterPro:IPR000968,UniProtKB/TrEMBL:Q9DHF8,GenBank:YP_581750.1,GeneID:4036374;Name=YP_581750.1;gbkey=CDS;gene=NEP;locus_tag=FLUAVAHHH9N2s8gp1;product=nuclear export protein;protein_id=YP_581750.1
+NC_004906.1	RefSeq	exon	529	864	.	+	.	ID=id-FLUAVAHHH9N2s8gp1-2;Parent=gene-FLUAVAHHH9N2s8gp1;Dbxref=GeneID:4036374;exon_number=2;gbkey=exon;gene=NEP;locus_tag=FLUAVAHHH9N2s8gp1;number=2
+NC_004906.1	RefSeq	gene	27	719	.	+	.	ID=gene-FLUAVAHHH9N2s8gp2;Dbxref=GeneID:1460995;Name=NS1;gbkey=Gene;gene=NS1;gene_biotype=protein_coding;locus_tag=FLUAVAHHH9N2s8gp2
+NC_004906.1	RefSeq	CDS	27	719	.	+	0	ID=cds-NP_859034.1;Parent=gene-FLUAVAHHH9N2s8gp2;Dbxref=GOA:Q9DHF7,InterPro:IPR000256,UniProtKB/TrEMBL:Q9DHF7,GenBank:NP_859034.1,GeneID:1460995;Name=NP_859034.1;gbkey=CDS;gene=NS1;locus_tag=FLUAVAHHH9N2s8gp2;product=nonstructural protein 1;protein_id=NP_859034.1
+

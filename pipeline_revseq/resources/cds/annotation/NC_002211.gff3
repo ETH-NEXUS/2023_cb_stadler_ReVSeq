@@ -1,0 +1,12 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_002211.1 1 1096
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=518987
+NC_002211.1	RefSeq	region	1	1096	.	+	.	ID=NC_002211.1:1..1096;Dbxref=taxon:518987;Name=8;gbkey=Src;genome=genomic;mol_type=viral cRNA;segment=8;strain=B/Lee/1940
+NC_002211.1	RefSeq	gene	43	1066	.	+	.	ID=gene-FLUBVsRNA-8gp2;Dbxref=GeneID:26824007;Name=NEP;gbkey=Gene;gene=NEP;gene_biotype=protein_coding;gene_synonym=NS2;locus_tag=FLUBVsRNA-8gp2
+NC_002211.1	RefSeq	CDS	43	75	.	+	0	ID=cds-NP_056665.1;Parent=gene-FLUBVsRNA-8gp2;Dbxref=GenBank:NP_056665.1,GeneID:26824007;Name=NP_056665.1;gbkey=CDS;gene=NEP;locus_tag=FLUBVsRNA-8gp2;product=nonstructural protein NS-2;protein_id=NP_056665.1
+NC_002211.1	RefSeq	CDS	731	1066	.	+	0	ID=cds-NP_056665.1;Parent=gene-FLUBVsRNA-8gp2;Dbxref=GenBank:NP_056665.1,GeneID:26824007;Name=NP_056665.1;gbkey=CDS;gene=NEP;locus_tag=FLUBVsRNA-8gp2;product=nonstructural protein NS-2;protein_id=NP_056665.1
+NC_002211.1	RefSeq	gene	43	888	.	+	.	ID=gene-FLUBVsRNA-8gp1;Dbxref=GeneID:26824008;Name=NS1;gbkey=Gene;gene=NS1;gene_biotype=protein_coding;locus_tag=FLUBVsRNA-8gp1
+NC_002211.1	RefSeq	CDS	43	888	.	+	0	ID=cds-NP_056666.1;Parent=gene-FLUBVsRNA-8gp1;Dbxref=GenBank:NP_056666.1,GeneID:26824008;Name=NP_056666.1;gbkey=CDS;gene=NS1;locus_tag=FLUBVsRNA-8gp1;product=nonstructural protein NS-1;protein_id=NP_056666.1
+

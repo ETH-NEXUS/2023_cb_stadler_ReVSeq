@@ -1,0 +1,41 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_002645.1 1 27317
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11137
+NC_002645.1	RefSeq	region	1	27317	.	+	.	ID=NC_002645.1:1..27317;Dbxref=taxon:11137;clone=inf-1;gbkey=Src;genome=genomic;mol_type=genomic RNA
+NC_002645.1	RefSeq	five_prime_UTR	1	292	.	+	.	ID=id-NC_002645.1:1..292;gbkey=5'UTR
+NC_002645.1	RefSeq	gene	293	20568	.	+	.	ID=gene-HCoV229Egp1;Dbxref=GeneID:918764;Name=HCoV229Egp1;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HCoV229Egp1
+NC_002645.1	RefSeq	CDS	293	12520	.	+	0	ID=cds-NP_073549.1;Parent=gene-HCoV229Egp1;Dbxref=GenBank:NP_073549.1,GeneID:918764;Name=NP_073549.1;gbkey=CDS;locus_tag=HCoV229Egp1;product=replicase polyprotein 1ab;protein_id=NP_073549.1
+NC_002645.1	RefSeq	CDS	12520	20568	.	+	0	ID=cds-NP_073549.1;Parent=gene-HCoV229Egp1;Dbxref=GenBank:NP_073549.1,GeneID:918764;Name=NP_073549.1;gbkey=CDS;locus_tag=HCoV229Egp1;product=replicase polyprotein 1ab;protein_id=NP_073549.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	293	625	.	+	.	ID=id-NP_073549.1:1..111;Note=PL1-PRO cleavage product;Parent=cds-NP_073549.1;gbkey=Prot;product=leader protein p9;protein_id=NP_835344.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	626	2983	.	+	.	ID=id-NP_073549.1:112..897;Note=counterpart of MHV p65;Parent=cds-NP_073549.1;gbkey=Prot;product=p87;protein_id=NP_835357.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	2984	7744	.	+	.	ID=id-NP_073549.1:898..2484;Note=contains papain-like proteinase 1 domain (PL1-PRO)%2C papain-like proteinase 2 domain (PL2-PRO)%2C predicted phosphoesterase (similar to the Appr-1'-p processing enzyme)%2C and putative metal- and membrane binding Y domain;Parent=cds-NP_073549.1;gbkey=Prot;product=coronavirus p195/p210 protein (nsp1);protein_id=NP_835345.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	7745	9187	.	+	.	ID=id-NP_073549.1:2485..2965;Parent=cds-NP_073549.1;gbkey=Prot;product=p44;protein_id=NP_835358.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	9188	10093	.	+	.	ID=id-NP_073549.1:2966..3267;Parent=cds-NP_073549.1;gbkey=Prot;product=putative coronavirus nsp2 (3CL-PRO);protein_id=NP_835346.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	10094	10930	.	+	.	ID=id-NP_073549.1:3268..3546;Note=hydrophobic domain;Parent=cds-NP_073549.1;gbkey=Prot;product=putative coronavirus nsp3 (HD2);protein_id=NP_835347.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	10931	11179	.	+	.	ID=id-NP_073549.1:3547..3629;Parent=cds-NP_073549.1;gbkey=Prot;product=putative coronavirus nsp4;protein_id=NP_835348.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	11180	11764	.	+	.	ID=id-NP_073549.1:3630..3824;Parent=cds-NP_073549.1;gbkey=Prot;product=putative coronavirus nsp5;protein_id=NP_835349.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	11765	12091	.	+	.	ID=id-NP_073549.1:3825..3933;Parent=cds-NP_073549.1;gbkey=Prot;product=putative coronavirus nsp6;protein_id=NP_835350.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	12092	12496	.	+	.	ID=id-NP_073549.1:3934..4068;Parent=cds-NP_073549.1;gbkey=Prot;product=formerly known as growth-factor-like protein;protein_id=NP_835351.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	12497	12520	.	+	.	ID=id-NP_073549.1:4069..4995;Parent=cds-NP_073549.1;gbkey=Prot;product=RNA-dependent RNA polymerase;protein_id=NP_835352.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	12520	15276	.	+	.	ID=id-NP_073549.1:4069..4995;Parent=cds-NP_073549.1;gbkey=Prot;product=RNA-dependent RNA polymerase;protein_id=NP_835352.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	15277	17067	.	+	.	ID=id-NP_073549.1:4996..5592;Note=metal-binding domain%2C NTPase/helicase domain;Parent=cds-NP_073549.1;gbkey=Prot;product=putative coronavirus nsp10 (MB%2C NTPase/HEL);protein_id=NP_835353.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	17068	18621	.	+	.	ID=id-NP_073549.1:5593..6110;Parent=cds-NP_073549.1;gbkey=Prot;product=putative coronavirus nsp11;protein_id=NP_835354.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	18622	19665	.	+	.	ID=id-NP_073549.1:6111..6458;Parent=cds-NP_073549.1;gbkey=Prot;product=putative coronavirus nsp12;protein_id=NP_835355.1
+NC_002645.1	RefSeq	mature_protein_region_of_CDS	19666	20565	.	+	.	ID=id-NP_073549.1:6459..6758;Parent=cds-NP_073549.1;gbkey=Prot;product=putative coronavirus nsp13;protein_id=NP_835356.1
+NC_002645.1	RefSeq	CDS	293	12550	.	+	0	ID=cds-NP_073550.1;Parent=gene-HCoV229Egp1;Dbxref=GenBank:NP_073550.1,GeneID:918764;Name=NP_073550.1;gbkey=CDS;locus_tag=HCoV229Egp1;product=replicase polyprotein 1a;protein_id=NP_073550.1
+NC_002645.1	RefSeq	gene	20570	24091	.	+	.	ID=gene-HCoV229Egp2;Dbxref=GeneID:918758;Name=S;gbkey=Gene;gene=S;gene_biotype=protein_coding;locus_tag=HCoV229Egp2
+NC_002645.1	RefSeq	CDS	20570	24091	.	+	0	ID=cds-NP_073551.1;Parent=gene-HCoV229Egp2;Dbxref=GenBank:NP_073551.1,GeneID:918758;Name=NP_073551.1;gbkey=CDS;gene=S;locus_tag=HCoV229Egp2;product=surface glycoprotein;protein_id=NP_073551.1
+NC_002645.1	RefSeq	gene	24091	24492	.	+	.	ID=gene-HCoV229Egp3;Dbxref=GeneID:918759;Name=4a;gbkey=Gene;gene=4a;gene_biotype=protein_coding;locus_tag=HCoV229Egp3
+NC_002645.1	RefSeq	CDS	24091	24492	.	+	0	ID=cds-NP_073552.1;Parent=gene-HCoV229Egp3;Dbxref=GenBank:NP_073552.1,GeneID:918759;Name=NP_073552.1;gbkey=CDS;gene=4a;locus_tag=HCoV229Egp3;product=4a protein;protein_id=NP_073552.1
+NC_002645.1	RefSeq	gene	24482	24748	.	+	.	ID=gene-HCoV229Egp4;Dbxref=GeneID:918760;Name=4b;gbkey=Gene;gene=4b;gene_biotype=protein_coding;locus_tag=HCoV229Egp4
+NC_002645.1	RefSeq	CDS	24482	24748	.	+	0	ID=cds-NP_073553.1;Parent=gene-HCoV229Egp4;Dbxref=GenBank:NP_073553.1,GeneID:918760;Name=NP_073553.1;gbkey=CDS;gene=4b;locus_tag=HCoV229Egp4;product=4b protein;protein_id=NP_073553.1
+NC_002645.1	RefSeq	gene	24750	24983	.	+	.	ID=gene-HCoV229Egp5;Dbxref=GeneID:918761;Name=E;gbkey=Gene;gene=E;gene_biotype=protein_coding;locus_tag=HCoV229Egp5
+NC_002645.1	RefSeq	CDS	24750	24983	.	+	0	ID=cds-NP_073554.1;Parent=gene-HCoV229Egp5;Dbxref=GenBank:NP_073554.1,GeneID:918761;Name=NP_073554.1;Note=structural protein%3B E protein;gbkey=CDS;gene=E;locus_tag=HCoV229Egp5;product=envelope protein;protein_id=NP_073554.1
+NC_002645.1	RefSeq	gene	24995	25672	.	+	.	ID=gene-HCoV229Egp6;Dbxref=GeneID:918762;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding;locus_tag=HCoV229Egp6
+NC_002645.1	RefSeq	CDS	24995	25672	.	+	0	ID=cds-NP_073555.1;Parent=gene-HCoV229Egp6;Dbxref=GenBank:NP_073555.1,GeneID:918762;Name=NP_073555.1;gbkey=CDS;gene=M;locus_tag=HCoV229Egp6;product=membrane protein;protein_id=NP_073555.1
+NC_002645.1	RefSeq	gene	25686	26855	.	+	.	ID=gene-HCoV229Egp7;Dbxref=GeneID:918763;Name=N;gbkey=Gene;gene=N;gene_biotype=protein_coding;locus_tag=HCoV229Egp7
+NC_002645.1	RefSeq	CDS	25686	26855	.	+	0	ID=cds-NP_073556.1;Parent=gene-HCoV229Egp7;Dbxref=GenBank:NP_073556.1,GeneID:918763;Name=NP_073556.1;gbkey=CDS;gene=N;locus_tag=HCoV229Egp7;product=nucleocapsid protein;protein_id=NP_073556.1
+NC_002645.1	RefSeq	three_prime_UTR	26856	27317	.	+	.	ID=id-NC_002645.1:26856..27317;gbkey=3'UTR
+

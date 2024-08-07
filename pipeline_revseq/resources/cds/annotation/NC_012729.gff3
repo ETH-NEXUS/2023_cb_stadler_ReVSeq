@@ -1,0 +1,18 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_012729.2 1 5104
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1511883
+NC_012729.2	RefSeq	region	1	5104	.	+	.	ID=NC_012729.2:1..5104;Dbxref=taxon:1511883;collection-date=10-Apr-2007;country=Nigeria;gbkey=Src;genome=genomic;isolation-source=stool;mol_type=genomic DNA;nat-host=Homo sapiens;strain=HBoV4-NI-385
+NC_012729.2	RefSeq	gene	162	2560	.	+	.	ID=gene-HBoV4_gp1;Dbxref=GeneID:7922604;Name=NS2;gbkey=Gene;gene=NS2;gene_biotype=protein_coding;locus_tag=HBoV4_gp1
+NC_012729.2	RefSeq	CDS	162	2073	.	+	0	ID=cds-YP_002916059.1;Parent=gene-HBoV4_gp1;Dbxref=GenBank:YP_002916059.1,GeneID:7922604;Name=YP_002916059.1;gbkey=CDS;gene=NS2;locus_tag=HBoV4_gp1;product=non structural protein NS2;protein_id=YP_002916059.1
+NC_012729.2	RefSeq	CDS	2142	2560	.	+	2	ID=cds-YP_002916059.1;Parent=gene-HBoV4_gp1;Dbxref=GenBank:YP_002916059.1,GeneID:7922604;Name=YP_002916059.1;gbkey=CDS;gene=NS2;locus_tag=HBoV4_gp1;product=non structural protein NS2;protein_id=YP_002916059.1
+NC_012729.2	RefSeq	gene	162	2084	.	+	.	ID=gene-HBoV4_gp2;Dbxref=GeneID:7922600;Name=NS1;gbkey=Gene;gene=NS1;gene_biotype=protein_coding;locus_tag=HBoV4_gp2
+NC_012729.2	RefSeq	CDS	162	2084	.	+	0	ID=cds-YP_002916060.1;Parent=gene-HBoV4_gp2;Dbxref=GenBank:YP_002916060.1,GeneID:7922600;Name=YP_002916060.1;gbkey=CDS;gene=NS1;locus_tag=HBoV4_gp2;product=non structural protein NS1;protein_id=YP_002916060.1
+NC_012729.2	RefSeq	gene	2313	2957	.	+	.	ID=gene-HBoV4_gp3;Dbxref=GeneID:7922601;Name=NP1;gbkey=Gene;gene=NP1;gene_biotype=protein_coding;locus_tag=HBoV4_gp3
+NC_012729.2	RefSeq	CDS	2313	2957	.	+	0	ID=cds-YP_002916061.1;Parent=gene-HBoV4_gp3;Dbxref=GenBank:YP_002916061.1,GeneID:7922601;Name=YP_002916061.1;gbkey=CDS;gene=NP1;locus_tag=HBoV4_gp3;product=NP1;protein_id=YP_002916061.1
+NC_012729.2	RefSeq	gene	2944	4956	.	+	.	ID=gene-HBoV4_gp4;Dbxref=GeneID:7922602;Name=VP1;gbkey=Gene;gene=VP1;gene_biotype=protein_coding;locus_tag=HBoV4_gp4
+NC_012729.2	RefSeq	CDS	2944	4956	.	+	0	ID=cds-YP_002916062.1;Parent=gene-HBoV4_gp4;Dbxref=GenBank:YP_002916062.1,GeneID:7922602;Name=YP_002916062.1;gbkey=CDS;gene=VP1;locus_tag=HBoV4_gp4;product=capsid protein VP1;protein_id=YP_002916062.1
+NC_012729.2	RefSeq	gene	3331	4956	.	+	.	ID=gene-HBoV4_gp5;Dbxref=GeneID:7922603;Name=VP2;gbkey=Gene;gene=VP2;gene_biotype=protein_coding;locus_tag=HBoV4_gp5
+NC_012729.2	RefSeq	CDS	3331	4956	.	+	0	ID=cds-YP_002916063.1;Parent=gene-HBoV4_gp5;Dbxref=GenBank:YP_002916063.1,GeneID:7922603;Name=YP_002916063.1;gbkey=CDS;gene=VP2;locus_tag=HBoV4_gp5;product=capsid protein VP2;protein_id=YP_002916063.1
+

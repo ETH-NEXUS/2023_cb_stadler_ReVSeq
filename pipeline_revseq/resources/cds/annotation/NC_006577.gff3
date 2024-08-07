@@ -1,0 +1,54 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_006577.2 1 29926
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=290028
+NC_006577.2	RefSeq	region	1	29926	.	+	.	ID=NC_006577.2:1..29926;Dbxref=taxon:290028;gb-acronym=HCoV-HKU1;gbkey=Src;genome=genomic;genotype=A;isolate=HKU1;isolation-source=patient with pneumonia;mol_type=genomic RNA;nat-host=Homo sapiens
+NC_006577.2	RefSeq	five_prime_UTR	1	205	.	+	.	ID=id-NC_006577.2:1..205;gbkey=5'UTR
+NC_006577.2	RefSeq	gene	206	21753	.	+	.	ID=gene-HCHV1gp1;Dbxref=GeneID:3200429;Name=ORF1ab;gbkey=Gene;gene=ORF1ab;gene_biotype=protein_coding;locus_tag=HCHV1gp1
+NC_006577.2	RefSeq	CDS	206	13600	.	+	0	ID=cds-YP_173236.1;Parent=gene-HCHV1gp1;Dbxref=GenBank:YP_173236.1,GeneID:3200429;Name=YP_173236.1;Note=ORF1ab polyprotein is cleaved to yield the RNA-dependent RNA polymerase and other nonstructural proteins;exception=ribosomal slippage;gbkey=CDS;gene=ORF1ab;locus_tag=HCHV1gp1;product=ORF1ab polyprotein;protein_id=YP_173236.1
+NC_006577.2	RefSeq	CDS	13600	21753	.	+	0	ID=cds-YP_173236.1;Parent=gene-HCHV1gp1;Dbxref=GenBank:YP_173236.1,GeneID:3200429;Name=YP_173236.1;Note=ORF1ab polyprotein is cleaved to yield the RNA-dependent RNA polymerase and other nonstructural proteins;exception=ribosomal slippage;gbkey=CDS;gene=ORF1ab;locus_tag=HCHV1gp1;product=ORF1ab polyprotein;protein_id=YP_173236.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	206	871	.	+	.	ID=id-YP_173236.1:1..222;Note=PL1-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;product=Leader protein;protein_id=YP_460018.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	872	2632	.	+	.	ID=id-YP_173236.1:223..809;Note=PL1-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;product=nsp2;protein_id=YP_459934.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	2633	8719	.	+	.	ID=id-YP_173236.1:810..2838;Note=acidic tandem repeats (ATR)%2C papain-like proteinase 1 domain (PL1pro)%2C Appr-1'-p processing enzyme%2C papain-like proteinase 2 domain (PL2pro) and a hydrophobic domain (HD);Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_740609.2;product=nsp3;protein_id=YP_460024.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	8720	10207	.	+	.	ID=id-YP_173236.1:2839..3334;Note=transmembrane domain;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_001012459.1;product=nsp4 (TM2);protein_id=YP_459935.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	10208	11116	.	+	.	ID=id-YP_173236.1:3335..3637;Note=3CL-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;product=nsp5;protein_id=YP_459936.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	11117	11977	.	+	.	ID=id-YP_173236.1:3638..3924;Note=3CL-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;product=nsp6 (hydrophobic domain);protein_id=YP_460019.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	11978	12253	.	+	.	ID=id-YP_173236.1:3925..4016;Note=3CL-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_740612.1;product=nsp7;protein_id=YP_459938.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	12254	12835	.	+	.	ID=id-YP_173236.1:4017..4210;Note=3CL-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_740613.1;product=nsp8;protein_id=YP_460020.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	12836	13165	.	+	.	ID=id-YP_173236.1:4211..4320;Note=3CL-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_828867.1;product=nsp9;protein_id=YP_459943.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	13166	13576	.	+	.	ID=id-YP_173236.1:4321..4457;Note=3CL-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_740615.1;product=nsp10;protein_id=YP_459939.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	13577	13600	.	+	.	ID=id-YP_173236.1:4458..5385;Note=3CL-PRO cleavage;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_740616.1;product=nsp12;protein_id=YP_459941.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	13600	16359	.	+	.	ID=id-YP_173236.1:4458..5385;Note=3CL-PRO cleavage;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_740616.1;product=nsp12;protein_id=YP_459941.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	16360	18168	.	+	.	ID=id-YP_173236.1:5386..5988;Note=3CL-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_740617.1;product=nsp13;protein_id=YP_459942.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	18169	19731	.	+	.	ID=id-YP_173236.1:5989..6509;Note=3CL-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_740618.1;product=nsp14;protein_id=YP_460021.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	19732	20853	.	+	.	ID=id-YP_173236.1:6510..6883;Note=3CL-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_740619.1;product=nsp15;protein_id=YP_460022.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	20854	21750	.	+	.	ID=id-YP_173236.1:6884..7182;Note=3CL-PRO cleavage product;Parent=cds-YP_173236.1;gbkey=Prot;inference=similar to AA sequence:RefSeq:NP_740620.1;product=nsp16;protein_id=YP_460023.1
+NC_006577.2	RefSeq	CDS	206	13621	.	+	0	ID=cds-YP_009944268.1;Parent=gene-HCHV1gp1;Dbxref=GenBank:YP_009944268.1,GeneID:3200429;Name=YP_009944268.1;Note=ORF1ab polyprotein is cleaved to yield nonstructural proteins;gbkey=CDS;gene=ORF1ab;locus_tag=HCHV1gp1;product=ORF1a polyprotein;protein_id=YP_009944268.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	206	871	.	+	.	ID=id-YP_009944268.1:1..222;Note=PL1-PRO cleavage product;Parent=cds-YP_009944268.1;gbkey=Prot;product=Leader protein;protein_id=YP_009944269.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	872	2632	.	+	.	ID=id-YP_009944268.1:223..809;Note=PL1-PRO cleavage product;Parent=cds-YP_009944268.1;gbkey=Prot;product=nsp2;protein_id=YP_009944270.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	2633	8719	.	+	.	ID=id-YP_009944268.1:810..2838;Note=acidic tandem repeats (ATR)%2C papain-like proteinase 1 domain (PL1pro)%2C Appr-1'-p processing enzyme%2C papain-like proteinase 2 domain (PL2pro) and a hydrophobic domain (HD);Parent=cds-YP_009944268.1;gbkey=Prot;product=nsp3;protein_id=YP_009944271.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	8720	10207	.	+	.	ID=id-YP_009944268.1:2839..3334;Note=transmembrane domain;Parent=cds-YP_009944268.1;gbkey=Prot;product=nsp4 (TM2);protein_id=YP_009944272.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	10208	11116	.	+	.	ID=id-YP_009944268.1:3335..3637;Note=3CL-PRO cleavage product;Parent=cds-YP_009944268.1;gbkey=Prot;product=nsp5;protein_id=YP_009944273.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	11117	11977	.	+	.	ID=id-YP_009944268.1:3638..3924;Note=3CL-PRO cleavage product;Parent=cds-YP_009944268.1;gbkey=Prot;product=nsp6 (hydrophobic domain);protein_id=YP_009944274.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	11978	12253	.	+	.	ID=id-YP_009944268.1:3925..4016;Note=3CL-PRO cleavage product;Parent=cds-YP_009944268.1;gbkey=Prot;product=nsp7;protein_id=YP_009944275.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	12254	12835	.	+	.	ID=id-YP_009944268.1:4017..4210;Note=3CL-PRO cleavage product;Parent=cds-YP_009944268.1;gbkey=Prot;product=nsp8;protein_id=YP_009944276.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	12836	13165	.	+	.	ID=id-YP_009944268.1:4211..4320;Note=3CL-PRO cleavage product;Parent=cds-YP_009944268.1;gbkey=Prot;product=nsp9;protein_id=YP_009944277.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	13166	13576	.	+	.	ID=id-YP_009944268.1:4321..4457;Note=3CL-PRO cleavage product;Parent=cds-YP_009944268.1;gbkey=Prot;product=nsp10;protein_id=YP_009944278.1
+NC_006577.2	RefSeq	mature_protein_region_of_CDS	13577	13618	.	+	.	ID=id-YP_009944268.1:4458..4471;Parent=cds-YP_009944268.1;gbkey=Prot;product=nsp11;protein_id=YP_009944279.1
+NC_006577.2	RefSeq	gene	21773	22933	.	+	.	ID=gene-HCHV1gp2;Dbxref=GeneID:3200425;Name=HE;gbkey=Gene;gene=HE;gene_biotype=protein_coding;locus_tag=HCHV1gp2
+NC_006577.2	RefSeq	CDS	21773	22933	.	+	0	ID=cds-YP_173237.1;Parent=gene-HCHV1gp2;Dbxref=GenBank:YP_173237.1,GeneID:3200425;Name=YP_173237.1;gbkey=CDS;gene=HE;locus_tag=HCHV1gp2;product=hemagglutinin-esterase glycoprotein;protein_id=YP_173237.1
+NC_006577.2	RefSeq	gene	22942	27012	.	+	.	ID=gene-HCHV1gp3;Dbxref=GeneID:3200426;Name=S;gbkey=Gene;gene=S;gene_biotype=protein_coding;locus_tag=HCHV1gp3
+NC_006577.2	RefSeq	CDS	22942	27012	.	+	0	ID=cds-YP_173238.1;Parent=gene-HCHV1gp3;Dbxref=GenBank:YP_173238.1,GeneID:3200426;Name=YP_173238.1;gbkey=CDS;gene=S;locus_tag=HCHV1gp3;product=spike glycoprotein;protein_id=YP_173238.1
+NC_006577.2	RefSeq	gene	27051	27380	.	+	.	ID=gene-HCHV1gp4;Dbxref=GeneID:3200427;Name=orf4;gbkey=Gene;gene=orf4;gene_biotype=protein_coding;locus_tag=HCHV1gp4
+NC_006577.2	RefSeq	CDS	27051	27380	.	+	0	ID=cds-YP_173239.1;Parent=gene-HCHV1gp4;Dbxref=GenBank:YP_173239.1,GeneID:3200427;Name=YP_173239.1;gbkey=CDS;gene=orf4;locus_tag=HCHV1gp4;product=non-structural protein;protein_id=YP_173239.1
+NC_006577.2	RefSeq	gene	27373	27621	.	+	.	ID=gene-HCHV1gp5;Dbxref=GeneID:3200430;Name=E;gbkey=Gene;gene=E;gene_biotype=protein_coding;locus_tag=HCHV1gp5
+NC_006577.2	RefSeq	CDS	27373	27621	.	+	0	ID=cds-YP_173240.1;Parent=gene-HCHV1gp5;Dbxref=GenBank:YP_173240.1,GeneID:3200430;Name=YP_173240.1;gbkey=CDS;gene=E;locus_tag=HCHV1gp5;product=envelope protein;protein_id=YP_173240.1
+NC_006577.2	RefSeq	gene	27633	28304	.	+	.	ID=gene-HCHV1gp6;Dbxref=GeneID:3200428;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding;locus_tag=HCHV1gp6
+NC_006577.2	RefSeq	CDS	27633	28304	.	+	0	ID=cds-YP_173241.1;Parent=gene-HCHV1gp6;Dbxref=GenBank:YP_173241.1,GeneID:3200428;Name=YP_173241.1;gbkey=CDS;gene=M;locus_tag=HCHV1gp6;product=membrane glycoprotein;protein_id=YP_173241.1
+NC_006577.2	RefSeq	gene	28320	29645	.	+	.	ID=gene-HCHV1gp7;Dbxref=GeneID:3200423;Name=N;gbkey=Gene;gene=N;gene_biotype=protein_coding;locus_tag=HCHV1gp7
+NC_006577.2	RefSeq	CDS	28320	29645	.	+	0	ID=cds-YP_173242.1;Parent=gene-HCHV1gp7;Dbxref=GenBank:YP_173242.1,GeneID:3200423;Name=YP_173242.1;gbkey=CDS;gene=N;locus_tag=HCHV1gp7;product=nucleocapsid phosphoprotein;protein_id=YP_173242.1
+NC_006577.2	RefSeq	gene	28342	28959	.	+	.	ID=gene-HCHV1gp8;Dbxref=GeneID:3200424;Name=N2;description=ORF8;gbkey=Gene;gene=N2;gene_biotype=protein_coding;locus_tag=HCHV1gp8
+NC_006577.2	RefSeq	CDS	28342	28959	.	+	0	ID=cds-YP_173243.1;Parent=gene-HCHV1gp8;Dbxref=GenBank:YP_173243.1,GeneID:3200424;Name=YP_173243.1;gbkey=CDS;gene=N2;locus_tag=HCHV1gp8;product=nucleocapsid phosphoprotein 2;protein_id=YP_173243.1
+NC_006577.2	RefSeq	three_prime_UTR	28960	29926	.	+	.	ID=id-NC_006577.2:28960..29926;gbkey=3'UTR
+

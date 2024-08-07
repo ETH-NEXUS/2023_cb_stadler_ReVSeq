@@ -1,0 +1,45 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_003461.1 1 15600
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=12730
+NC_003461.1	RefSeq	region	1	15600	.	+	.	ID=NC_003461.1:1..15600;Dbxref=taxon:12730;gbkey=Src;genome=genomic;mol_type=genomic RNA;old-name=Human parainfluenza virus 1;strain=Washington 1964
+NC_003461.1	RefSeq	gene	56	1737	.	+	.	ID=gene-Hpv1gp01;Dbxref=GeneID:935258;Name=N;gbkey=Gene;gene=N;gene_biotype=protein_coding;locus_tag=Hpv1gp01
+NC_003461.1	RefSeq	mRNA	56	1737	.	+	.	ID=rna-Hpv1gp01;Parent=gene-Hpv1gp01;Dbxref=GeneID:935258;gbkey=mRNA;gene=N;locus_tag=Hpv1gp01;product=nucleoprotein
+NC_003461.1	RefSeq	exon	56	1737	.	+	.	ID=exon-Hpv1gp01-1;Parent=rna-Hpv1gp01;Dbxref=GeneID:935258;gbkey=mRNA;gene=N;locus_tag=Hpv1gp01;product=nucleoprotein
+NC_003461.1	RefSeq	CDS	120	1694	.	+	0	ID=cds-NP_604433.1;Parent=rna-Hpv1gp01;Dbxref=GenBank:NP_604433.1,GeneID:935258;Name=NP_604433.1;gbkey=CDS;gene=N;locus_tag=Hpv1gp01;product=nucleoprotein;protein_id=NP_604433.1
+NC_003461.1	RefSeq	terminator	1726	1737	.	+	.	ID=id-Hpv1gp01;Parent=gene-Hpv1gp01;Dbxref=GeneID:935258;gbkey=regulatory;gene=N;locus_tag=Hpv1gp01;regulatory_class=terminator
+NC_003461.1	RefSeq	gene	1741	3663	.	+	.	ID=gene-Hpv1gp02;Dbxref=GeneID:935260;Name=P;gbkey=Gene;gene=P;gene_biotype=protein_coding;locus_tag=Hpv1gp02
+NC_003461.1	RefSeq	mRNA	1741	3633	.	+	.	ID=rna-Hpv1gp02;Parent=gene-Hpv1gp02;Dbxref=GeneID:935260;Note=also transcript for C' protein%2C C protein%2C Y1 protein%2C and putative Y2 protein;gbkey=mRNA;gene=P;locus_tag=Hpv1gp02;product=phosphoprotein
+NC_003461.1	RefSeq	exon	1741	3633	.	+	.	ID=exon-Hpv1gp02-1;Parent=rna-Hpv1gp02;Dbxref=GeneID:935260;Note=also transcript for C' protein%2C C protein%2C Y1 protein%2C and putative Y2 protein;gbkey=mRNA;gene=P;locus_tag=Hpv1gp02;product=phosphoprotein
+NC_003461.1	RefSeq	CDS	1844	3550	.	+	0	ID=cds-NP_604435.1;Parent=rna-Hpv1gp02;Dbxref=GenBank:NP_604435.1,GeneID:935260;Name=NP_604435.1;gbkey=CDS;gene=P;locus_tag=Hpv1gp02;product=phosphoprotein;protein_id=NP_604435.1
+NC_003461.1	RefSeq	terminator	3622	3633	.	+	.	ID=id-Hpv1gp02;Parent=gene-Hpv1gp02;Dbxref=GeneID:935260;gbkey=regulatory;gene=P;locus_tag=Hpv1gp02;regulatory_class=terminator
+NC_003461.1	RefSeq	gene	1809	2468	.	+	.	ID=gene-Hpv1gp03;Dbxref=GeneID:935259;Name=C';gbkey=Gene;gene=C';gene_biotype=protein_coding;locus_tag=Hpv1gp03
+NC_003461.1	RefSeq	CDS	1809	2468	.	+	0	ID=cds-NP_604434.1;Parent=gene-Hpv1gp03;Dbxref=GenBank:NP_604434.1,GeneID:935259;Name=NP_604434.1;gbkey=CDS;gene=C';locus_tag=Hpv1gp03;product=C' protein;protein_id=NP_604434.1;transl_except=(pos:1809..1811%2Caa:Met)
+NC_003461.1	RefSeq	gene	1854	2468	.	+	.	ID=gene-Hpv1gp04;Dbxref=GeneID:935261;Name=C;gbkey=Gene;gene=C;gene_biotype=protein_coding;locus_tag=Hpv1gp04
+NC_003461.1	RefSeq	CDS	1854	2468	.	+	0	ID=cds-NP_604436.1;Parent=gene-Hpv1gp04;Dbxref=GenBank:NP_604436.1,GeneID:935261;Name=NP_604436.1;gbkey=CDS;gene=C;locus_tag=Hpv1gp04;product=C protein;protein_id=NP_604436.1
+NC_003461.1	RefSeq	gene	1923	2468	.	+	.	ID=gene-Hpv1gp05;Dbxref=GeneID:935262;Name=Y1;gbkey=Gene;gene=Y1;gene_biotype=protein_coding;locus_tag=Hpv1gp05
+NC_003461.1	RefSeq	CDS	1923	2468	.	+	0	ID=cds-NP_604437.1;Parent=gene-Hpv1gp05;Dbxref=GenBank:NP_604437.1,GeneID:935262;Name=NP_604437.1;Note=expressed via a ribosomal shunting mechanism;gbkey=CDS;gene=Y1;locus_tag=Hpv1gp05;product=Y1 protein;protein_id=NP_604437.1
+NC_003461.1	RefSeq	gene	1941	2468	.	+	.	ID=gene-Hpv1gp06;Dbxref=GeneID:935263;Name=Y2;gbkey=Gene;gene=Y2;gene_biotype=protein_coding;locus_tag=Hpv1gp06
+NC_003461.1	RefSeq	CDS	1941	2468	.	+	0	ID=cds-NP_604438.1;Parent=gene-Hpv1gp06;Dbxref=GenBank:NP_604438.1,GeneID:935263;Name=NP_604438.1;Note=expressed via a ribosomal shunting mechanism;gbkey=CDS;gene=Y2;locus_tag=Hpv1gp06;product=putative Y2 protein;protein_id=NP_604438.1;transl_except=(pos:1941..1943%2Caa:Met)
+NC_003461.1	RefSeq	gene	3637	4809	.	+	.	ID=gene-Hpv1gp07;Dbxref=GeneID:935264;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding;locus_tag=Hpv1gp07
+NC_003461.1	RefSeq	mRNA	3637	4809	.	+	.	ID=rna-Hpv1gp07;Parent=gene-Hpv1gp07;Dbxref=GeneID:935264;gbkey=mRNA;gene=M;locus_tag=Hpv1gp07;product=matrix protein
+NC_003461.1	RefSeq	exon	3637	4809	.	+	.	ID=exon-Hpv1gp07-1;Parent=rna-Hpv1gp07;Dbxref=GeneID:935264;gbkey=mRNA;gene=M;locus_tag=Hpv1gp07;product=matrix protein
+NC_003461.1	RefSeq	CDS	3669	4715	.	+	0	ID=cds-NP_604439.1;Parent=rna-Hpv1gp07;Dbxref=GenBank:NP_604439.1,GeneID:935264;Name=NP_604439.1;gbkey=CDS;gene=M;locus_tag=Hpv1gp07;product=matrix protein;protein_id=NP_604439.1
+NC_003461.1	RefSeq	terminator	4798	4809	.	+	.	ID=id-Hpv1gp07;Parent=gene-Hpv1gp07;Dbxref=GeneID:935264;gbkey=regulatory;gene=M;locus_tag=Hpv1gp07;regulatory_class=terminator
+NC_003461.1	RefSeq	gene	4813	6843	.	+	.	ID=gene-Hpv1gp08;Dbxref=GeneID:935265;Name=F;gbkey=Gene;gene=F;gene_biotype=protein_coding;locus_tag=Hpv1gp08
+NC_003461.1	RefSeq	mRNA	4813	6843	.	+	.	ID=rna-Hpv1gp08;Parent=gene-Hpv1gp08;Dbxref=GeneID:935265;gbkey=mRNA;gene=F;locus_tag=Hpv1gp08;product=F glycoprotein
+NC_003461.1	RefSeq	exon	4813	6843	.	+	.	ID=exon-Hpv1gp08-1;Parent=rna-Hpv1gp08;Dbxref=GeneID:935265;gbkey=mRNA;gene=F;locus_tag=Hpv1gp08;product=F glycoprotein
+NC_003461.1	RefSeq	CDS	5088	6755	.	+	0	ID=cds-NP_604440.1;Parent=rna-Hpv1gp08;Dbxref=GenBank:NP_604440.1,GeneID:935265;Name=NP_604440.1;gbkey=CDS;gene=F;locus_tag=Hpv1gp08;product=F glycoprotein;protein_id=NP_604440.1
+NC_003461.1	RefSeq	terminator	6832	6843	.	+	.	ID=id-Hpv1gp08;Parent=gene-Hpv1gp08;Dbxref=GeneID:935265;gbkey=regulatory;gene=F;locus_tag=Hpv1gp08;regulatory_class=terminator
+NC_003461.1	RefSeq	gene	6847	8740	.	+	.	ID=gene-Hpv1gp09;Dbxref=GeneID:935266;Name=HN;gbkey=Gene;gene=HN;gene_biotype=protein_coding;locus_tag=Hpv1gp09
+NC_003461.1	RefSeq	mRNA	6847	8740	.	+	.	ID=rna-Hpv1gp09;Parent=gene-Hpv1gp09;Dbxref=GeneID:935266;gbkey=mRNA;gene=HN;locus_tag=Hpv1gp09;product=HN glycoprotein
+NC_003461.1	RefSeq	exon	6847	8740	.	+	.	ID=exon-Hpv1gp09-1;Parent=rna-Hpv1gp09;Dbxref=GeneID:935266;gbkey=mRNA;gene=HN;locus_tag=Hpv1gp09;product=HN glycoprotein
+NC_003461.1	RefSeq	CDS	6903	8630	.	+	0	ID=cds-NP_604441.1;Parent=rna-Hpv1gp09;Dbxref=GenBank:NP_604441.1,GeneID:935266;Name=NP_604441.1;Note=major antigenic determinant;gbkey=CDS;gene=HN;locus_tag=Hpv1gp09;product=HN glycoprotein;protein_id=NP_604441.1
+NC_003461.1	RefSeq	terminator	8729	8740	.	+	.	ID=id-Hpv1gp09;Parent=gene-Hpv1gp09;Dbxref=GeneID:935266;gbkey=regulatory;gene=HN;locus_tag=Hpv1gp09;regulatory_class=terminator
+NC_003461.1	RefSeq	gene	8744	15543	.	+	.	ID=gene-Hpv1gp10;Dbxref=GeneID:935267;Name=L;gbkey=Gene;gene=L;gene_biotype=protein_coding;locus_tag=Hpv1gp10
+NC_003461.1	RefSeq	mRNA	8744	15543	.	+	.	ID=rna-Hpv1gp10;Parent=gene-Hpv1gp10;Dbxref=GeneID:935267;gbkey=mRNA;gene=L;locus_tag=Hpv1gp10;product=L polymerase protein
+NC_003461.1	RefSeq	exon	8744	15543	.	+	.	ID=exon-Hpv1gp10-1;Parent=rna-Hpv1gp10;Dbxref=GeneID:935267;gbkey=mRNA;gene=L;locus_tag=Hpv1gp10;product=L polymerase protein
+NC_003461.1	RefSeq	CDS	8772	15443	.	+	0	ID=cds-NP_604442.1;Parent=rna-Hpv1gp10;Dbxref=GenBank:NP_604442.1,GeneID:935267;Name=NP_604442.1;gbkey=CDS;gene=L;locus_tag=Hpv1gp10;product=L polymerase protein;protein_id=NP_604442.1
+NC_003461.1	RefSeq	terminator	15532	15543	.	+	.	ID=id-Hpv1gp10;Parent=gene-Hpv1gp10;Dbxref=GeneID:935267;gbkey=regulatory;gene=L;locus_tag=Hpv1gp10;regulatory_class=terminator
+

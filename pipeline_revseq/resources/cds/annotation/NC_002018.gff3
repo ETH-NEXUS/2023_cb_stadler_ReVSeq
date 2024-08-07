@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_002018.1 1 1413
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=211044
+NC_002018.1	RefSeq	region	1	1413	.	+	.	ID=NC_002018.1:1..1413;Dbxref=taxon:211044;Name=6;gbkey=Src;genome=genomic;mol_type=viral cRNA;segment=6;strain=A/Puerto Rico/8/1934(H1N1)
+NC_002018.1	RefSeq	gene	21	1385	.	+	.	ID=gene-FLUAVs6gp1;Dbxref=GeneID:956530;Name=NA;gbkey=Gene;gene=NA;gene_biotype=protein_coding;locus_tag=FLUAVs6gp1
+NC_002018.1	RefSeq	CDS	21	1385	.	+	0	ID=cds-NP_040981.1;Parent=gene-FLUAVs6gp1;Dbxref=GenBank:NP_040981.1,GeneID:956530;Name=NP_040981.1;gbkey=CDS;gene=NA;locus_tag=FLUAVs6gp1;product=neuraminidase;protein_id=NP_040981.1
+

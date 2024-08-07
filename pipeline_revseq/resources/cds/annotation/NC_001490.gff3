@@ -1,0 +1,20 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_001490.1 1 7212
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=12131
+NC_001490.1	RefSeq	region	1	7212	.	+	.	ID=NC_001490.1:1..7212;Dbxref=taxon:12131;gbkey=Src;genome=genomic;mol_type=genomic RNA;note=from MRC Common Cold Unit [1] and American Type Culture Collection [2];old-name=Human rhinovirus 14
+NC_001490.1	RefSeq	gene	629	7168	.	+	.	ID=gene-HRVBgp1;Dbxref=GeneID:1461213;Name=HRVBgp1;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HRVBgp1
+NC_001490.1	RefSeq	CDS	629	7168	.	+	0	ID=cds-NP_041009.1;Parent=gene-HRVBgp1;Dbxref=GenBank:NP_041009.1,GeneID:1461213;Name=NP_041009.1;gbkey=CDS;locus_tag=HRVBgp1;product=polyprotein;protein_id=NP_041009.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	629	835	.	+	.	ID=id-NP_041009.1:1..69;Parent=cds-NP_041009.1;gbkey=Prot;product=1A (VP4);protein_id=NP_740515.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	836	1621	.	+	.	ID=id-NP_041009.1:70..331;Parent=cds-NP_041009.1;gbkey=Prot;product=1B (VP2);protein_id=NP_740516.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	1622	2329	.	+	.	ID=id-NP_041009.1:332..567;Parent=cds-NP_041009.1;gbkey=Prot;product=1C (VP3);protein_id=NP_740517.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	2330	3196	.	+	.	ID=id-NP_041009.1:568..856;Parent=cds-NP_041009.1;gbkey=Prot;product=1D (VP1);protein_id=NP_740518.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	3197	3634	.	+	.	ID=id-NP_041009.1:857..1002;Parent=cds-NP_041009.1;gbkey=Prot;product=2A (P2-A);protein_id=NP_740519.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	3635	3925	.	+	.	ID=id-NP_041009.1:1003..1099;Parent=cds-NP_041009.1;gbkey=Prot;product=2B (P2-B);protein_id=NP_740520.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	3926	4915	.	+	.	ID=id-NP_041009.1:1100..1429;Parent=cds-NP_041009.1;gbkey=Prot;product=2C (P2-C);protein_id=NP_740521.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	4916	5170	.	+	.	ID=id-NP_041009.1:1430..1514;Parent=cds-NP_041009.1;gbkey=Prot;product=3A (P3-A);protein_id=NP_740522.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	5171	5239	.	+	.	ID=id-NP_041009.1:1515..1537;Parent=cds-NP_041009.1;gbkey=Prot;product=3B (VPg);protein_id=NP_740523.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	5240	5785	.	+	.	ID=id-NP_041009.1:1538..1719;Parent=cds-NP_041009.1;gbkey=Prot;product=protease 3C;protein_id=NP_740524.1
+NC_001490.1	RefSeq	mature_protein_region_of_CDS	5786	7165	.	+	.	ID=id-NP_041009.1:1720..2179;Parent=cds-NP_041009.1;gbkey=Prot;product=3D;protein_id=NP_740525.1
+

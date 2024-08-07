@@ -1,0 +1,10 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region CY115183.1 1 1789
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1089607
+CY115183.1	Genbank	region	1	1789	.	+	.	ID=CY115183.1:1..1789;Dbxref=taxon:1089607;Name=4;collection-date=2010;country=USA: Wisconsin;gbkey=Src;lab-host=Egg passage(s);mol_type=viral cRNA;nat-host=human;segment=4;strain=B/Wisconsin/01/2010
+CY115183.1	Genbank	sequence_feature	1	1789	.	+	.	ID=id-CY115183.1:1..1789;Dbxref=IRD:NIGSP_BUCB_00032.HA;gbkey=misc_feature
+CY115183.1	Genbank	gene	4	1758	.	+	.	ID=gene-HA;Name=HA;gbkey=Gene;gene=HA;gene_biotype=protein_coding
+CY115183.1	Genbank	CDS	4	1758	.	+	0	ID=cds-AFH57953.1;Parent=gene-HA;Dbxref=NCBI_GP:AFH57953.1;Name=AFH57953.1;gbkey=CDS;gene=HA;product=hemagglutinin;protein_id=AFH57953.1
+

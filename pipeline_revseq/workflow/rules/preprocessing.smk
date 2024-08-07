@@ -50,8 +50,8 @@ rule merge_lanes:
         r1 =find_input_fastq_lanes_r1,
         r2 =find_input_fastq_lanes_r2,
     output:
-        r1 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz"),
-        r2 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz"),
+        r1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz",
+        r2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz",
     params:
         rawdir = config["inputOutput"]["input_fastqs"],
         pseudoanon_table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/"+config["plate"]+"_pseudoanon_table.tsv",

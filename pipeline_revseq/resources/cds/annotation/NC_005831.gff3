@@ -1,0 +1,23 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_005831.2 1 27553
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=277944
+NC_005831.2	RefSeq	region	1	27553	.	+	.	ID=NC_005831.2:1..27553;Dbxref=taxon:277944;gb-acronym=HCoV-NL63;gbkey=Src;genome=genomic;mol_type=genomic RNA;strain=Amsterdam I
+NC_005831.2	RefSeq	five_prime_UTR	1	286	.	+	.	ID=id-NC_005831.2:1..286;gbkey=5'UTR
+NC_005831.2	RefSeq	gene	287	20475	.	+	.	ID=gene-HCNV63gp1;Dbxref=GeneID:2943501;Name=ORF1ab;gbkey=Gene;gene=ORF1ab;gene_biotype=protein_coding;locus_tag=HCNV63gp1
+NC_005831.2	RefSeq	CDS	287	12439	.	+	0	ID=cds-YP_003766.2;Parent=gene-HCNV63gp1;Dbxref=GenBank:YP_003766.2,GeneID:2943501;Name=YP_003766.2;Note=translated via -1 ribosomal frameshift%3B ORF1ab polyprotein is cleaved to yield the RNA-dependent RNA polymerase and other nonstructural proteins;exception=ribosomal slippage;gbkey=CDS;gene=ORF1ab;locus_tag=HCNV63gp1;product=ORF1ab polyprotein;protein_id=YP_003766.2
+NC_005831.2	RefSeq	CDS	12439	20475	.	+	0	ID=cds-YP_003766.2;Parent=gene-HCNV63gp1;Dbxref=GenBank:YP_003766.2,GeneID:2943501;Name=YP_003766.2;Note=translated via -1 ribosomal frameshift%3B ORF1ab polyprotein is cleaved to yield the RNA-dependent RNA polymerase and other nonstructural proteins;exception=ribosomal slippage;gbkey=CDS;gene=ORF1ab;locus_tag=HCNV63gp1;product=ORF1ab polyprotein;protein_id=YP_003766.2
+NC_005831.2	RefSeq	CDS	287	12469	.	+	0	ID=cds-YP_010229075.1;Parent=gene-HCNV63gp1;Dbxref=GenBank:YP_010229075.1,GeneID:2943501;Name=YP_010229075.1;gbkey=CDS;gene=ORF1ab;locus_tag=HCNV63gp1;product=ORF1a polyprotein;protein_id=YP_010229075.1
+NC_005831.2	RefSeq	gene	20472	24542	.	+	.	ID=gene-HCNV63gp2;Dbxref=GeneID:2943499;Name=HCNV63gp2;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HCNV63gp2
+NC_005831.2	RefSeq	CDS	20472	24542	.	+	0	ID=cds-YP_003767.1;Parent=gene-HCNV63gp2;Dbxref=GenBank:YP_003767.1,GeneID:2943499;Name=YP_003767.1;gbkey=CDS;locus_tag=HCNV63gp2;product=spike protein;protein_id=YP_003767.1
+NC_005831.2	RefSeq	gene	24542	25219	.	+	.	ID=gene-HCNV63gp3;Dbxref=GeneID:2943500;Name=HCNV63gp3;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HCNV63gp3
+NC_005831.2	RefSeq	CDS	24542	25219	.	+	0	ID=cds-YP_003768.1;Parent=gene-HCNV63gp3;Dbxref=GenBank:YP_003768.1,GeneID:2943500;Name=YP_003768.1;gbkey=CDS;locus_tag=HCNV63gp3;product=protein 3;protein_id=YP_003768.1
+NC_005831.2	RefSeq	gene	25200	25433	.	+	.	ID=gene-HCNV63gp4;Dbxref=GeneID:2943502;Name=E;gbkey=Gene;gene=E;gene_biotype=protein_coding;locus_tag=HCNV63gp4
+NC_005831.2	RefSeq	CDS	25200	25433	.	+	0	ID=cds-YP_003769.1;Parent=gene-HCNV63gp4;Dbxref=GenBank:YP_003769.1,GeneID:2943502;Name=YP_003769.1;Note=small membrane protein;gbkey=CDS;gene=E;locus_tag=HCNV63gp4;product=envelope protein;protein_id=YP_003769.1
+NC_005831.2	RefSeq	gene	25442	26122	.	+	.	ID=gene-HCNV63gp5;Dbxref=GeneID:2943503;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding;locus_tag=HCNV63gp5
+NC_005831.2	RefSeq	CDS	25442	26122	.	+	0	ID=cds-YP_003770.1;Parent=gene-HCNV63gp5;Dbxref=GenBank:YP_003770.1,GeneID:2943503;Name=YP_003770.1;gbkey=CDS;gene=M;locus_tag=HCNV63gp5;product=membrane protein;protein_id=YP_003770.1
+NC_005831.2	RefSeq	gene	26133	27266	.	+	.	ID=gene-HCNV63gp6;Dbxref=GeneID:2943504;Name=N;gbkey=Gene;gene=N;gene_biotype=protein_coding;locus_tag=HCNV63gp6
+NC_005831.2	RefSeq	CDS	26133	27266	.	+	0	ID=cds-YP_003771.1;Parent=gene-HCNV63gp6;Dbxref=GenBank:YP_003771.1,GeneID:2943504;Name=YP_003771.1;gbkey=CDS;gene=N;locus_tag=HCNV63gp6;product=nucleocapsid protein;protein_id=YP_003771.1
+NC_005831.2	RefSeq	three_prime_UTR	27267	27553	.	+	.	ID=id-NC_005831.2:27267..27553;gbkey=3'UTR
+

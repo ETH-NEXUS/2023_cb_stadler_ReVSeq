@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_004912.1 1 2225
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=130760
+NC_004912.1	RefSeq	region	1	2225	.	+	.	ID=NC_004912.1:1..2225;Dbxref=taxon:130760;gbkey=Src;genome=genomic;mol_type=genomic RNA;note=subtype H9N2;strain=A/Hong Kong/1073/99
+NC_004912.1	RefSeq	gene	21	2171	.	+	.	ID=gene-FLUAVAHHH9N2s3gp1;Dbxref=GeneID:1461000;Name=pa;gbkey=Gene;gene=pa;gene_biotype=protein_coding;locus_tag=FLUAVAHHH9N2s3gp1
+NC_004912.1	RefSeq	CDS	21	2171	.	+	0	ID=cds-NP_859041.1;Parent=gene-FLUAVAHHH9N2s3gp1;Dbxref=GOA:Q9ICX4,InterPro:IPR001009,UniProtKB/TrEMBL:Q9ICX4,GenBank:NP_859041.1,GeneID:1461000;Name=NP_859041.1;gbkey=CDS;gene=pa;locus_tag=FLUAVAHHH9N2s3gp1;product=polymerase PA;protein_id=NP_859041.1
+

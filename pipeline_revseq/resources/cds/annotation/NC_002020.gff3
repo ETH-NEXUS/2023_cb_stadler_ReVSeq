@@ -1,0 +1,12 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_002020.1 1 890
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=211044
+NC_002020.1	RefSeq	region	1	890	.	+	.	ID=NC_002020.1:1..890;Dbxref=taxon:211044;Name=8;collection-date=1934;country=Puerto Rico;gbkey=Src;genome=genomic;mol_type=viral cRNA;old-name=Influenza A virus (A/Puerto Rico/8/34(H1N1));segment=8;serotype=H1N1;strain=A/Puerto Rico/8/1934
+NC_002020.1	RefSeq	gene	27	864	.	+	.	ID=gene-FLUAVs8gp1;Dbxref=GeneID:956532;Name=NEP;gbkey=Gene;gene=NEP;gene_biotype=protein_coding;gene_synonym=NS2;locus_tag=FLUAVs8gp1
+NC_002020.1	RefSeq	CDS	27	56	.	+	0	ID=cds-NP_040983.1;Parent=gene-FLUAVs8gp1;Dbxref=GenBank:NP_040983.1,GeneID:956532;Name=NP_040983.1;gbkey=CDS;gene=NEP;locus_tag=FLUAVs8gp1;product=nonstructural protein 2;protein_id=NP_040983.1
+NC_002020.1	RefSeq	CDS	529	864	.	+	0	ID=cds-NP_040983.1;Parent=gene-FLUAVs8gp1;Dbxref=GenBank:NP_040983.1,GeneID:956532;Name=NP_040983.1;gbkey=CDS;gene=NEP;locus_tag=FLUAVs8gp1;product=nonstructural protein 2;protein_id=NP_040983.1
+NC_002020.1	RefSeq	gene	27	719	.	+	.	ID=gene-FLUAVs8gp2;Dbxref=GeneID:956533;Name=NS1;gbkey=Gene;gene=NS1;gene_biotype=protein_coding;locus_tag=FLUAVs8gp2
+NC_002020.1	RefSeq	CDS	27	719	.	+	0	ID=cds-NP_040984.1;Parent=gene-FLUAVs8gp2;Dbxref=GenBank:NP_040984.1,GeneID:956533;Name=NP_040984.1;gbkey=CDS;gene=NS1;locus_tag=FLUAVs8gp2;product=nonstructural protein 1;protein_id=NP_040984.1
+

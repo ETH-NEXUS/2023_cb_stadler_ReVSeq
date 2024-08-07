@@ -1,0 +1,12 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KU509703.1 1 1701
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1777792
+KU509703.1	Genbank	region	1	1701	.	+	.	ID=KU509703.1:1..1701;Dbxref=taxon:1777792;Name=4;collection-date=07-Sep-2015;country=USA;gbkey=Src;mol_type=viral cRNA;nat-host=Homo sapiens;note=passage details: E1 (10/08/2015);segment=4;serotype=H1N1;strain=A/Michigan/45/2015
+KU509703.1	Genbank	gene	1	1701	.	+	.	ID=gene-HA;Name=HA;gbkey=Gene;gene=HA;gene_biotype=protein_coding
+KU509703.1	Genbank	CDS	1	1701	.	+	0	ID=cds-AMA11475.1;Parent=gene-HA;Dbxref=NCBI_GP:AMA11475.1;Name=AMA11475.1;gbkey=CDS;gene=HA;product=hemagglutinin;protein_id=AMA11475.1
+KU509703.1	Genbank	signal_peptide_region_of_CDS	1	51	.	+	.	ID=id-AMA11475.1:1..17;Parent=cds-AMA11475.1;gbkey=Prot
+KU509703.1	Genbank	mature_protein_region_of_CDS	52	1032	.	+	.	ID=id-AMA11475.1:18..344;Parent=cds-AMA11475.1;gbkey=Prot;product=HA1
+KU509703.1	Genbank	mature_protein_region_of_CDS	1033	1698	.	+	.	ID=id-AMA11475.1:345..566;Parent=cds-AMA11475.1;gbkey=Prot;product=HA2
+

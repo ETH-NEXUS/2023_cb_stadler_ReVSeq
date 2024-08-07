@@ -1,0 +1,13 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region CY115187.1 1 1063
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1089607
+CY115187.1	Genbank	region	1	1063	.	+	.	ID=CY115187.1:1..1063;Dbxref=taxon:1089607;Name=8;collection-date=2010;country=USA: Wisconsin;gbkey=Src;lab-host=Egg passage(s);mol_type=viral cRNA;nat-host=human;segment=8;strain=B/Wisconsin/01/2010
+CY115187.1	Genbank	sequence_feature	1	1063	.	+	.	ID=id-CY115187.1:1..1063;Dbxref=IRD:NIGSP_BUCB_00032.NS;gbkey=misc_feature
+CY115187.1	Genbank	gene	32	1055	.	+	.	ID=gene-NEP;Name=NEP;gbkey=Gene;gene=NEP;gene_biotype=protein_coding;gene_synonym=NS2
+CY115187.1	Genbank	CDS	32	64	.	+	0	ID=cds-AFH57960.1;Parent=gene-NEP;Dbxref=NCBI_GP:AFH57960.1;Name=AFH57960.1;Note=nonstructural protein 2;gbkey=CDS;gene=NEP;product=nuclear export protein;protein_id=AFH57960.1
+CY115187.1	Genbank	CDS	720	1055	.	+	0	ID=cds-AFH57960.1;Parent=gene-NEP;Dbxref=NCBI_GP:AFH57960.1;Name=AFH57960.1;Note=nonstructural protein 2;gbkey=CDS;gene=NEP;product=nuclear export protein;protein_id=AFH57960.1
+CY115187.1	Genbank	gene	32	877	.	+	.	ID=gene-NS1;Name=NS1;gbkey=Gene;gene=NS1;gene_biotype=protein_coding
+CY115187.1	Genbank	CDS	32	877	.	+	0	ID=cds-AFH57959.1;Parent=gene-NS1;Dbxref=NCBI_GP:AFH57959.1;Name=AFH57959.1;gbkey=CDS;gene=NS1;product=nonstructural protein 1;protein_id=AFH57959.1
+

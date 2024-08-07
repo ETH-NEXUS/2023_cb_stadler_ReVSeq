@@ -1,0 +1,11 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KU509701.1 1 2274
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1777792
+KU509701.1	Genbank	region	1	2274	.	+	.	ID=KU509701.1:1..2274;Dbxref=taxon:1777792;Name=2;collection-date=07-Sep-2015;country=USA;gbkey=Src;mol_type=viral cRNA;nat-host=Homo sapiens;note=passage details: E1 (10/08/2015);segment=2;serotype=H1N1;strain=A/Michigan/45/2015
+KU509701.1	Genbank	gene	1	2274	.	+	.	ID=gene-PB1;Name=PB1;gbkey=Gene;gene=PB1;gene_biotype=protein_coding
+KU509701.1	Genbank	CDS	1	2274	.	+	0	ID=cds-AMA11472.1;Parent=gene-PB1;Dbxref=NCBI_GP:AMA11472.1;Name=AMA11472.1;gbkey=CDS;gene=PB1;product=polymerase PB1;protein_id=AMA11472.1
+KU509701.1	Genbank	gene	95	367	.	+	.	ID=gene-PB1-F2;Name=PB1-F2;gbkey=Gene;gene=PB1-F2;gene_biotype=other
+KU509701.1	Genbank	sequence_feature	95	367	.	+	.	ID=id-PB1-F2;Note=nonfunctional PB1-F2 protein due to mutation;gbkey=misc_feature;gene=PB1-F2
+

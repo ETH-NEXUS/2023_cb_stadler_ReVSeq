@@ -1,0 +1,10 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region CY115188.1 1 2255
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1089607
+CY115188.1	Genbank	region	1	2255	.	+	.	ID=CY115188.1:1..2255;Dbxref=taxon:1089607;Name=3;collection-date=2010;country=USA: Wisconsin;gbkey=Src;lab-host=Egg passage(s);mol_type=viral cRNA;nat-host=human;segment=3;strain=B/Wisconsin/01/2010
+CY115188.1	Genbank	sequence_feature	1	2255	.	+	.	ID=id-CY115188.1:1..2255;Dbxref=IRD:NIGSP_BUCB_00032.PA;gbkey=misc_feature
+CY115188.1	Genbank	gene	10	2190	.	+	.	ID=gene-PA;Name=PA;gbkey=Gene;gene=PA;gene_biotype=protein_coding
+CY115188.1	Genbank	CDS	10	2190	.	+	0	ID=cds-AFH57961.1;Parent=gene-PA;Dbxref=NCBI_GP:AFH57961.1;Name=AFH57961.1;gbkey=CDS;gene=PA;product=polymerase PA;protein_id=AFH57961.1
+

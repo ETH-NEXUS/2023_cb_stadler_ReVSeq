@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_004905.2 1 1557
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=130760
+NC_004905.2	RefSeq	region	1	1557	.	+	.	ID=NC_004905.2:1..1557;Dbxref=taxon:130760;Name=5;collection-date=1999;country=Hong Kong:Kowloon;gbkey=Src;mol_type=viral cRNA;segment=5;serotype=H9N2;strain=A/Hong Kong/1073/99
+NC_004905.2	RefSeq	gene	40	1536	.	+	.	ID=gene-FLUAVAHHH9N2s5gp1;Dbxref=GeneID:4036076;Name=np;gbkey=Gene;gene=np;gene_biotype=protein_coding;locus_tag=FLUAVAHHH9N2s5gp1
+NC_004905.2	RefSeq	CDS	40	1536	.	+	0	ID=cds-YP_581749.1;Parent=gene-FLUAVAHHH9N2s5gp1;Dbxref=GOA:Q9ICY7,InterPro:IPR002141,UniProtKB/TrEMBL:Q9ICY7,GenBank:YP_581749.1,GeneID:4036076;Name=YP_581749.1;gbkey=CDS;gene=np;locus_tag=FLUAVAHHH9N2s5gp1;product=nucleoprotein;protein_id=YP_581749.1
+

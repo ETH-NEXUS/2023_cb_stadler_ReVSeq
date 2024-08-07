@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KC885955.1 1 2209
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1318616
+KC885955.1	Genbank	region	1	2209	.	+	.	ID=KC885955.1:1..2209;Dbxref=taxon:1318616;Name=3;collection-date=03-Apr-2013;country=China;gbkey=Src;genome=genomic;isolation-source=oropharyngeal swab;mol_type=viral cRNA;nat-host=Homo sapiens%3B male;segment=3;serotype=H7N9;strain=A/Zhejiang/DTID-ZJU01/2013
+KC885955.1	Genbank	gene	1	2151	.	+	.	ID=gene-PA;Name=PA;gbkey=Gene;gene=PA;gene_biotype=protein_coding
+KC885955.1	Genbank	CDS	1	2151	.	+	0	ID=cds-AGJ51952.1;Parent=gene-PA;Dbxref=NCBI_GP:AGJ51952.1;Name=AGJ51952.1;gbkey=CDS;gene=PA;product=polymerase PA;protein_id=AGJ51952.1
+

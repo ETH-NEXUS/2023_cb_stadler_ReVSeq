@@ -1,0 +1,21 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_021928.1 1 17052
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11224
+NC_021928.1	RefSeq	region	1	17052	.	+	.	ID=NC_021928.1:1..17052;Dbxref=taxon:11224;collected-by=Fumio Nishikawa;country=Japan;gbkey=Src;genome=genomic;identified-by=Fumio Nishikawa;mol_type=genomic RNA;strain=M-25
+NC_021928.1	RefSeq	gene	101	1756	.	+	.	ID=gene-N696_gp3;Dbxref=GeneID:16488737;Name=NP;gbkey=Gene;gene=NP;gene_biotype=protein_coding;locus_tag=N696_gp3
+NC_021928.1	RefSeq	CDS	101	1756	.	+	0	ID=cds-YP_008378659.1;Parent=gene-N696_gp3;Dbxref=GenBank:YP_008378659.1,GeneID:16488737;Name=YP_008378659.1;gbkey=CDS;gene=NP;locus_tag=N696_gp3;product=nucleocapsid protein;protein_id=YP_008378659.1
+NC_021928.1	RefSeq	gene	2041	3238	.	+	.	ID=gene-N696_gp2;Dbxref=GeneID:16488734;Name=P;gbkey=Gene;gene=P;gene_biotype=protein_coding;locus_tag=N696_gp2
+NC_021928.1	RefSeq	CDS	2041	3238	.	+	0	ID=cds-YP_008378660.1;Parent=gene-N696_gp2;Dbxref=GenBank:YP_008378660.1,GeneID:16488734;Name=YP_008378660.1;Note=viral polymerase adds non-templated G residues;exception=RNA editing;gbkey=CDS;gene=P;locus_tag=N696_gp2;product=phospho protein;protein_id=YP_008378660.1
+NC_021928.1	RefSeq	gene	2041	2730	.	+	.	ID=gene-N696_gp1;Dbxref=GeneID:16488735;Name=V;gbkey=Gene;gene=V;gene_biotype=protein_coding;locus_tag=N696_gp1
+NC_021928.1	RefSeq	CDS	2041	2730	.	+	0	ID=cds-YP_008378661.1;Parent=gene-N696_gp1;Dbxref=GenBank:YP_008378661.1,GeneID:16488735;Name=YP_008378661.1;gbkey=CDS;gene=V;locus_tag=N696_gp1;product=non-structural protein V;protein_id=YP_008378661.1
+NC_021928.1	RefSeq	gene	3531	4679	.	+	.	ID=gene-N696_gp4;Dbxref=GeneID:16488736;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding;locus_tag=N696_gp4
+NC_021928.1	RefSeq	CDS	3531	4679	.	+	0	ID=cds-YP_008378662.1;Parent=gene-N696_gp4;Dbxref=GenBank:YP_008378662.1,GeneID:16488736;Name=YP_008378662.1;gbkey=CDS;gene=M;locus_tag=N696_gp4;product=matrix protein;protein_id=YP_008378662.1
+NC_021928.1	RefSeq	gene	5174	6805	.	+	.	ID=gene-N696_gp5;Dbxref=GeneID:16488733;Name=F;gbkey=Gene;gene=F;gene_biotype=protein_coding;locus_tag=N696_gp5
+NC_021928.1	RefSeq	CDS	5174	6805	.	+	0	ID=cds-YP_008378663.1;Parent=gene-N696_gp5;Dbxref=GenBank:YP_008378663.1,GeneID:16488733;Name=YP_008378663.1;gbkey=CDS;gene=F;locus_tag=N696_gp5;product=fusion protein;protein_id=YP_008378663.1
+NC_021928.1	RefSeq	gene	7522	9246	.	+	.	ID=gene-N696_gp6;Dbxref=GeneID:16488731;Name=HN;gbkey=Gene;gene=HN;gene_biotype=protein_coding;locus_tag=N696_gp6
+NC_021928.1	RefSeq	CDS	7522	9246	.	+	0	ID=cds-YP_008378664.1;Parent=gene-N696_gp6;Dbxref=GenBank:YP_008378664.1,GeneID:16488731;Name=YP_008378664.1;gbkey=CDS;gene=HN;locus_tag=N696_gp6;product=hemagglutinin-neuraminidase;protein_id=YP_008378664.1
+NC_021928.1	RefSeq	gene	9986	16825	.	+	.	ID=gene-N696_gp7;Dbxref=GeneID:16488732;Name=L;gbkey=Gene;gene=L;gene_biotype=protein_coding;locus_tag=N696_gp7
+NC_021928.1	RefSeq	CDS	9986	16825	.	+	0	ID=cds-YP_008378665.1;Parent=gene-N696_gp7;Dbxref=GenBank:YP_008378665.1,GeneID:16488732;Name=YP_008378665.1;gbkey=CDS;gene=L;locus_tag=N696_gp7;product=large protein;protein_id=YP_008378665.1
+

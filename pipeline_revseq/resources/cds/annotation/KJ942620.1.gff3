@@ -1,0 +1,14 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KJ942620.1 1 875
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1321009
+KJ942620.1	Genbank	region	1	875	.	+	.	ID=KJ942620.1:1..875;Dbxref=taxon:1321009;Name=8;collection-date=2012;country=USA: Texas;gbkey=Src;genome=genomic;mol_type=viral cRNA;nat-host=Homo sapiens;segment=8;serotype=H3N2;strain=A/Texas/50/2012
+KJ942620.1	Genbank	five_prime_UTR	1	22	.	+	.	ID=id-KJ942620.1:1..22;gbkey=5'UTR;partial=true;start_range=.,1
+KJ942620.1	Genbank	gene	23	860	.	+	.	ID=gene-L998_47834gpNEP;Name=NEP;gbkey=Gene;gene=NEP;gene_biotype=protein_coding;gene_synonym=NS2;locus_tag=L998_47834gpNEP
+KJ942620.1	Genbank	CDS	23	52	.	+	0	ID=cds-AIE52531.1;Parent=gene-L998_47834gpNEP;Dbxref=NCBI_GP:AIE52531.1;Name=AIE52531.1;gbkey=CDS;gene=NEP;locus_tag=L998_47834gpNEP;product=nuclear export protein;protein_id=AIE52531.1
+KJ942620.1	Genbank	CDS	525	860	.	+	0	ID=cds-AIE52531.1;Parent=gene-L998_47834gpNEP;Dbxref=NCBI_GP:AIE52531.1;Name=AIE52531.1;gbkey=CDS;gene=NEP;locus_tag=L998_47834gpNEP;product=nuclear export protein;protein_id=AIE52531.1
+KJ942620.1	Genbank	gene	23	715	.	+	.	ID=gene-L998_47834gpNS1;Name=NS1;gbkey=Gene;gene=NS1;gene_biotype=protein_coding;locus_tag=L998_47834gpNS1
+KJ942620.1	Genbank	CDS	23	715	.	+	0	ID=cds-AIE52530.1;Parent=gene-L998_47834gpNS1;Dbxref=NCBI_GP:AIE52530.1;Name=AIE52530.1;gbkey=CDS;gene=NS1;locus_tag=L998_47834gpNS1;product=nonstructural protein 1;protein_id=AIE52530.1
+KJ942620.1	Genbank	three_prime_UTR	861	875	.	+	.	ID=id-KJ942620.1:861..875;end_range=875,.;gbkey=3'UTR;partial=true
+

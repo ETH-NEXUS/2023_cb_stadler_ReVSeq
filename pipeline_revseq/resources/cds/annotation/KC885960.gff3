@@ -1,0 +1,12 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KC885960.1 1 864
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1318616
+KC885960.1	Genbank	region	1	864	.	+	.	ID=KC885960.1:1..864;Dbxref=taxon:1318616;Name=8;collection-date=03-Apr-2013;country=China;gbkey=Src;genome=genomic;isolation-source=oropharyngeal swab;mol_type=viral cRNA;nat-host=Homo sapiens%3B male;segment=8;serotype=H7N9;strain=A/Zhejiang/DTID-ZJU01/2013
+KC885960.1	Genbank	gene	1	838	.	+	.	ID=gene-KC885960.1:1..838;description=NEP;gbkey=Gene;gene_biotype=protein_coding;gene_synonym=NS2
+KC885960.1	Genbank	CDS	1	30	.	+	0	ID=cds-AGJ51958.1;Parent=gene-KC885960.1:1..838;Dbxref=NCBI_GP:AGJ51958.1;Name=AGJ51958.1;gbkey=CDS;product=nuclear export protein;protein_id=AGJ51958.1
+KC885960.1	Genbank	CDS	503	838	.	+	0	ID=cds-AGJ51958.1;Parent=gene-KC885960.1:1..838;Dbxref=NCBI_GP:AGJ51958.1;Name=AGJ51958.1;gbkey=CDS;product=nuclear export protein;protein_id=AGJ51958.1
+KC885960.1	Genbank	gene	1	654	.	+	.	ID=gene-KC885960.1:1..654;description=NS1;gbkey=Gene;gene_biotype=protein_coding
+KC885960.1	Genbank	CDS	1	654	.	+	0	ID=cds-AGJ51959.1;Parent=gene-KC885960.1:1..654;Dbxref=NCBI_GP:AGJ51959.1;Name=AGJ51959.1;gbkey=CDS;product=nonstructural protein 1;protein_id=AGJ51959.1
+

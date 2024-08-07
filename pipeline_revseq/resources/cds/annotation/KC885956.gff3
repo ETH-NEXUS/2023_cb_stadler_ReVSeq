@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KC885956.1 1 1710
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1318616
+KC885956.1	Genbank	region	1	1710	.	+	.	ID=KC885956.1:1..1710;Dbxref=taxon:1318616;Name=4;collection-date=03-Apr-2013;country=China;gbkey=Src;genome=genomic;isolation-source=oropharyngeal swab;mol_type=viral cRNA;nat-host=Homo sapiens%3B male;segment=4;serotype=H7N9;strain=A/Zhejiang/DTID-ZJU01/2013
+KC885956.1	Genbank	gene	1	1683	.	+	.	ID=gene-HA;Name=HA;gbkey=Gene;gene=HA;gene_biotype=protein_coding
+KC885956.1	Genbank	CDS	1	1683	.	+	0	ID=cds-AGJ51953.1;Parent=gene-HA;Dbxref=NCBI_GP:AGJ51953.1;Name=AGJ51953.1;gbkey=CDS;gene=HA;product=hemagglutinin;protein_id=AGJ51953.1
+

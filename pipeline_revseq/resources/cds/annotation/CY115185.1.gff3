@@ -1,0 +1,12 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region CY115185.1 1 1512
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1089607
+CY115185.1	Genbank	region	1	1512	.	+	.	ID=CY115185.1:1..1512;Dbxref=taxon:1089607;Name=6;collection-date=2010;country=USA: Wisconsin;gbkey=Src;lab-host=Egg passage(s);mol_type=viral cRNA;nat-host=human;segment=6;strain=B/Wisconsin/01/2010
+CY115185.1	Genbank	sequence_feature	1	1512	.	+	.	ID=id-CY115185.1:1..1512;Dbxref=IRD:NIGSP_BUCB_00032.NA;gbkey=misc_feature
+CY115185.1	Genbank	gene	27	329	.	+	.	ID=gene-NB;Name=NB;gbkey=Gene;gene=NB;gene_biotype=protein_coding
+CY115185.1	Genbank	CDS	27	329	.	+	0	ID=cds-AFH57956.1;Parent=gene-NB;Dbxref=NCBI_GP:AFH57956.1;Name=AFH57956.1;gbkey=CDS;gene=NB;product=NB protein;protein_id=AFH57956.1
+CY115185.1	Genbank	gene	34	1434	.	+	.	ID=gene-NA;Name=NA;gbkey=Gene;gene=NA;gene_biotype=protein_coding
+CY115185.1	Genbank	CDS	34	1434	.	+	0	ID=cds-AFH57957.1;Parent=gene-NA;Dbxref=NCBI_GP:AFH57957.1;Name=AFH57957.1;gbkey=CDS;gene=NA;product=neuraminidase;protein_id=AFH57957.1
+

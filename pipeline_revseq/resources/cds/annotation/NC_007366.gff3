@@ -1,0 +1,12 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_007366.1 1 1762
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=335341
+NC_007366.1	RefSeq	region	1	1762	.	+	.	ID=NC_007366.1:1..1762;Dbxref=taxon:335341;Name=4;collection-date=21-Dec-2004;country=USA: Tompkins County%2C NY;gbkey=Src;genome=genomic;isolation-source=gender:M%3B age:16y;lab-host=RhMK 1 passage(s);mol_type=viral cRNA;nat-host=Homo sapiens;segment=4;serotype=H3N2;strain=A/New York/392/2004
+NC_007366.1	RefSeq	gene	30	1730	.	+	.	ID=gene-FLUAVH3N2_s4p1;Dbxref=GeneID:3655151;Name=HA;gbkey=Gene;gene=HA;gene_biotype=protein_coding;locus_tag=FLUAVH3N2_s4p1
+NC_007366.1	RefSeq	CDS	30	1730	.	+	0	ID=cds-YP_308839.1;Parent=gene-FLUAVH3N2_s4p1;Dbxref=GenBank:YP_308839.1,GeneID:3655151;Name=YP_308839.1;gbkey=CDS;gene=HA;locus_tag=FLUAVH3N2_s4p1;product=hemagglutinin;protein_id=YP_308839.1
+NC_007366.1	RefSeq	signal_peptide_region_of_CDS	30	77	.	+	.	ID=id-YP_308839.1:1..16;Parent=cds-YP_308839.1;gbkey=Prot
+NC_007366.1	RefSeq	mature_protein_region_of_CDS	78	1064	.	+	.	ID=id-YP_308839.1:17..345;Parent=cds-YP_308839.1;gbkey=Prot;product=HA1;protein_id=YP_308875.1
+NC_007366.1	RefSeq	mature_protein_region_of_CDS	1065	1727	.	+	.	ID=id-YP_308839.1:346..566;Parent=cds-YP_308839.1;gbkey=Prot;product=HA2;protein_id=YP_308876.1
+

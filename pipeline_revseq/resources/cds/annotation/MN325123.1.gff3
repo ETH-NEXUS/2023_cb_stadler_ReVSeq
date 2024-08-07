@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region MN325123.1 1 2276
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11520
+MN325123.1	Genbank	region	1	2276	.	+	.	ID=MN325123.1:1..2276;Dbxref=taxon:11520;Name=3;collection-date=19-Jan-2019;country=USA: Washington;gbkey=Src;mol_type=viral cRNA;nat-host=Homo sapiens;note=passage details:C2 (2019-04-07);segment=3;strain=B/Washington/02/2019;type=Victoria
+MN325123.1	Genbank	gene	16	2196	.	+	.	ID=gene-PA;Name=PA;gbkey=Gene;gene=PA;gene_biotype=protein_coding
+MN325123.1	Genbank	CDS	16	2196	.	+	0	ID=cds-QEE04607.1;Parent=gene-PA;Dbxref=NCBI_GP:QEE04607.1;Name=QEE04607.1;gbkey=CDS;gene=PA;product=polymerase PA;protein_id=QEE04607.1
+

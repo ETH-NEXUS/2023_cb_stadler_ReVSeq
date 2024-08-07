@@ -9,6 +9,8 @@ rule gather_results_samples:
         fastqcr2 = rules.fastqc_merged.output.zip2,
         consensus = rules.postprocess_consensus.output.consensus,
         count_n = rules.postprocess_consensus.output.count_n,
+        consensus_cds = rules.consensus_cds.output.consensus_cds,
+        count_n_cds = rules.count_n_cds.output.count_n_cds,
         qc_status = rules.qualimap_filtered.output.qc_status,
     output:
         assignment = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_count_table.tsv",
@@ -21,6 +23,8 @@ rule gather_results_samples:
         consensus = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_consensus.fa",
         complete = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/complete.txt",
         count_n = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_count_n.txt",
+        consensus_cds = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_consensus_cds.fa",
+        count_n_cds = config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_count_n_cds.txt",
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_results_sample/{sample}_gather_results.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_results_sample/{sample}_gather_results.err.log",
@@ -39,6 +43,8 @@ rule gather_results_samples:
             ln -s {input.fastqcr2} {output.fastqcr2}
             ln -s {input.consensus} {output.consensus}
             ln -s {input.count_n} {output.count_n}
+            ln -s {input.consensus_cds} {output.consensus_cds}
+            ln -s {input.count_n_cds} {output.count_n_cds}
             touch {output.complete}
         """
 
@@ -67,6 +73,8 @@ rule gather_results_plate:
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/gather_results_plate/gather_results_plate.err.log",
     benchmark:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/gather_results/gather_results_plate.benchmark"
+    conda:
+        "../envs/python.yaml"
     shell:
         """
         python workflow/scripts/clean_metadata.py --input {input.metadata} --output {output.metadata}

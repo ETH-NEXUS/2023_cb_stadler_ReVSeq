@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KC885958.1 1 1426
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1318616
+KC885958.1	Genbank	region	1	1426	.	+	.	ID=KC885958.1:1..1426;Dbxref=taxon:1318616;Name=6;collection-date=03-Apr-2013;country=China;gbkey=Src;genome=genomic;isolation-source=oropharyngeal swab;mol_type=viral cRNA;nat-host=Homo sapiens%3B male;segment=6;serotype=H7N9;strain=A/Zhejiang/DTID-ZJU01/2013
+KC885958.1	Genbank	gene	1	1398	.	+	.	ID=gene-NA;Name=NA;gbkey=Gene;gene=NA;gene_biotype=protein_coding
+KC885958.1	Genbank	CDS	1	1398	.	+	0	ID=cds-AGJ51955.1;Parent=gene-NA;Dbxref=NCBI_GP:AGJ51955.1;Name=AGJ51955.1;gbkey=CDS;gene=NA;product=neuraminidase;protein_id=AGJ51955.1
+

@@ -1,0 +1,11 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region CY236610.1 1 1154
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1987257
+CY236610.1	Genbank	region	1	1154	.	+	.	ID=CY236610.1:1..1154;Dbxref=taxon:1987257;Name=7;collection-date=25-Feb-2017;country=USA: Colorado;gbkey=Src;mol_type=viral cRNA;nat-host=Homo sapiens%3B gender M%3B age 95;note=passage details: C1 (2017-03-29);segment=7;strain=B/Colorado/06/2017;type=Victoria
+CY236610.1	Genbank	gene	8	754	.	+	.	ID=gene-M1;Name=M1;gbkey=Gene;gene=M1;gene_biotype=protein_coding
+CY236610.1	Genbank	CDS	8	754	.	+	0	ID=cds-ASK81309.1;Parent=gene-M1;Dbxref=NCBI_GP:ASK81309.1;Name=ASK81309.1;gbkey=CDS;gene=M1;product=matrix protein 1;protein_id=ASK81309.1
+CY236610.1	Genbank	gene	754	1083	.	+	.	ID=gene-BM2;Name=BM2;gbkey=Gene;gene=BM2;gene_biotype=protein_coding
+CY236610.1	Genbank	CDS	754	1083	.	+	0	ID=cds-ASK81310.1;Parent=gene-BM2;Dbxref=NCBI_GP:ASK81310.1;Name=ASK81310.1;gbkey=CDS;gene=BM2;product=BM2 protein;protein_id=ASK81310.1
+

@@ -237,6 +237,20 @@ def detect_wastewater_samples(new_complete_plates, mirrordir):
         complete_plates[plate] = data
     return complete_plates
 
+def detect_dnase_samples(new_complete_plates, mirrordir):
+    complete_plates = {}
+    for plate,data in new_complete_plates.items():
+        files = os.listdir(mirrordir + "/" + plate)
+        for sample in files:
+            substrings = sample.split("_")
+            if "DNAse" not in substrings[0]:
+                continue
+            name = substrings[0] + "_" + substrings[1]
+            print(name)
+            if name not in data[0]:
+                data[0].append(name)
+        complete_plates[plate] = data
+    return complete_plates
 
 # Script
 if __name__ == '__main__':
@@ -271,7 +285,8 @@ if __name__ == '__main__':
 
     new_complete_plates = verify_if_complete_plate(new_plates, args.mirrordir)
     complete_plates = detect_mouthwash_samples(new_complete_plates, args.mirrordir)
-    complete_plates = detect_wastewater_samples(new_complete_plates, args.mirrordir)
+    complete_plates = detect_wastewater_samples(complete_plates, args.mirrordir)
+    complete_plates = detect_dnase_samples(complete_plates, args.mirrordir)
 
     if len(complete_plates) == 0:
         print("There are new plates but none appears to be complete yet")

@@ -1,0 +1,11 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_002209.1 1 1557
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=518987
+NC_002209.1	RefSeq	region	1	1557	.	+	.	ID=NC_002209.1:1..1557;Dbxref=taxon:518987;Name=6;gbkey=Src;genome=genomic;mol_type=viral cRNA;segment=6;strain=B/Lee/1940
+NC_002209.1	RefSeq	gene	47	349	.	+	.	ID=gene-FLUBVsRNA-6gp1;Dbxref=GeneID:26824003;Name=NB;gbkey=Gene;gene=NB;gene_biotype=protein_coding;locus_tag=FLUBVsRNA-6gp1
+NC_002209.1	RefSeq	CDS	47	349	.	+	0	ID=cds-NP_056662.1;Parent=gene-FLUBVsRNA-6gp1;Dbxref=GenBank:NP_056662.1,GeneID:26824003;Name=NP_056662.1;gbkey=CDS;gene=NB;locus_tag=FLUBVsRNA-6gp1;product=NB protein;protein_id=NP_056662.1
+NC_002209.1	RefSeq	gene	54	1454	.	+	.	ID=gene-FLUBVsRNA-6gp2;Dbxref=GeneID:26824004;Name=NA;gbkey=Gene;gene=NA;gene_biotype=protein_coding;locus_tag=FLUBVsRNA-6gp2
+NC_002209.1	RefSeq	CDS	54	1454	.	+	0	ID=cds-NP_056663.1;Parent=gene-FLUBVsRNA-6gp2;Dbxref=GenBank:NP_056663.1,GeneID:26824004;Name=NP_056663.1;gbkey=CDS;gene=NA;locus_tag=FLUBVsRNA-6gp2;product=neuraminidase;protein_id=NP_056663.1
+

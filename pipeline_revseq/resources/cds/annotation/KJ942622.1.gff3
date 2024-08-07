@@ -1,0 +1,13 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KJ942622.1 1 2330
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1321009
+KJ942622.1	Genbank	region	1	2330	.	+	.	ID=KJ942622.1:1..2330;Dbxref=taxon:1321009;Name=2;collection-date=2012;country=USA: Texas;gbkey=Src;genome=genomic;mol_type=viral cRNA;nat-host=Homo sapiens;segment=2;serotype=H3N2;strain=A/Texas/50/2012
+KJ942622.1	Genbank	five_prime_UTR	1	24	.	+	.	ID=id-KJ942622.1:1..24;gbkey=5'UTR
+KJ942622.1	Genbank	gene	25	2298	.	+	.	ID=gene-L998_47834gpPB1;Name=PB1;gbkey=Gene;gene=PB1;gene_biotype=protein_coding;locus_tag=L998_47834gpPB1
+KJ942622.1	Genbank	CDS	25	2298	.	+	0	ID=cds-AIE52534.1;Parent=gene-L998_47834gpPB1;Dbxref=NCBI_GP:AIE52534.1;Name=AIE52534.1;gbkey=CDS;gene=PB1;locus_tag=L998_47834gpPB1;product=polymerase PB1;protein_id=AIE52534.1
+KJ942622.1	Genbank	gene	119	391	.	+	.	ID=gene-L998_47834gpPB1-F2;Name=PB1-F2;gbkey=Gene;gene=PB1-F2;gene_biotype=protein_coding;locus_tag=L998_47834gpPB1-F2
+KJ942622.1	Genbank	CDS	119	391	.	+	0	ID=cds-AIE52535.1;Parent=gene-L998_47834gpPB1-F2;Dbxref=NCBI_GP:AIE52535.1;Name=AIE52535.1;gbkey=CDS;gene=PB1-F2;locus_tag=L998_47834gpPB1-F2;product=PB1-F2 protein;protein_id=AIE52535.1
+KJ942622.1	Genbank	three_prime_UTR	2299	2330	.	+	.	ID=id-KJ942622.1:2299..2330;end_range=2330,.;gbkey=3'UTR;partial=true
+

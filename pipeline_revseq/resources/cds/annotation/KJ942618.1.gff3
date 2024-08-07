@@ -1,0 +1,11 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KJ942618.1 1 1462
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1321009
+KJ942618.1	Genbank	region	1	1462	.	+	.	ID=KJ942618.1:1..1462;Dbxref=taxon:1321009;Name=6;collection-date=2012;country=USA: Texas;gbkey=Src;genome=genomic;mol_type=viral cRNA;nat-host=Homo sapiens;segment=6;serotype=H3N2;strain=A/Texas/50/2012
+KJ942618.1	Genbank	five_prime_UTR	1	15	.	+	.	ID=id-KJ942618.1:1..15;gbkey=5'UTR;partial=true;start_range=.,1
+KJ942618.1	Genbank	gene	16	1425	.	+	.	ID=gene-L998_47834gpNA;Name=NA;gbkey=Gene;gene=NA;gene_biotype=protein_coding;locus_tag=L998_47834gpNA
+KJ942618.1	Genbank	CDS	16	1425	.	+	0	ID=cds-AIE52528.1;Parent=gene-L998_47834gpNA;Dbxref=NCBI_GP:AIE52528.1;Name=AIE52528.1;gbkey=CDS;gene=NA;locus_tag=L998_47834gpNA;product=neuraminidase;protein_id=AIE52528.1
+KJ942618.1	Genbank	three_prime_UTR	1426	1462	.	+	.	ID=id-KJ942618.1:1426..1462;gbkey=3'UTR
+

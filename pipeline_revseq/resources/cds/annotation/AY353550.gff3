@@ -1,0 +1,18 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region AY353550.1 1 15225
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=253182
+AY353550.1	Genbank	region	1	15225	.	+	.	ID=AY353550.1:1..15225;Dbxref=taxon:253182;gbkey=Src;mol_type=genomic RNA
+AY353550.1	Genbank	CDS	99	518	.	+	0	ID=cds-AAR14259.1;Dbxref=NCBI_GP:AAR14259.1;Name=AAR14259.1;gbkey=CDS;product=NS1;protein_id=AAR14259.1
+AY353550.1	Genbank	CDS	626	1000	.	+	0	ID=cds-AAR14260.1;Dbxref=NCBI_GP:AAR14260.1;Name=AAR14260.1;gbkey=CDS;product=NS2;protein_id=AAR14260.1
+AY353550.1	Genbank	CDS	1138	2313	.	+	0	ID=cds-AAR14261.1;Dbxref=NCBI_GP:AAR14261.1;Name=AAR14261.1;gbkey=CDS;product=N;protein_id=AAR14261.1
+AY353550.1	Genbank	CDS	2346	3071	.	+	0	ID=cds-AAR14262.1;Dbxref=NCBI_GP:AAR14262.1;Name=AAR14262.1;gbkey=CDS;product=P;protein_id=AAR14262.1
+AY353550.1	Genbank	CDS	3261	4031	.	+	0	ID=cds-AAR14263.1;Dbxref=NCBI_GP:AAR14263.1;Name=AAR14263.1;gbkey=CDS;product=M;protein_id=AAR14263.1
+AY353550.1	Genbank	CDS	4301	4498	.	+	0	ID=cds-AAR14264.1;Dbxref=NCBI_GP:AAR14264.1;Name=AAR14264.1;gbkey=CDS;product=SH;protein_id=AAR14264.1
+AY353550.1	Genbank	CDS	4688	5566	.	+	0	ID=cds-AAR14265.1;Dbxref=NCBI_GP:AAR14265.1;Name=AAR14265.1;gbkey=CDS;product=G;protein_id=AAR14265.1
+AY353550.1	Genbank	CDS	5664	7388	.	+	0	ID=cds-AAR14266.1;Dbxref=NCBI_GP:AAR14266.1;Name=AAR14266.1;gbkey=CDS;product=F;protein_id=AAR14266.1
+AY353550.1	Genbank	CDS	7617	8204	.	+	0	ID=cds-AAR14267.1;Dbxref=NCBI_GP:AAR14267.1;Name=AAR14267.1;gbkey=CDS;product=M2-1;protein_id=AAR14267.1
+AY353550.1	Genbank	CDS	8161	8442	.	+	0	ID=cds-AAR14268.1;Dbxref=NCBI_GP:AAR14268.1;Name=AAR14268.1;gbkey=CDS;product=M2-2;protein_id=AAR14268.1
+AY353550.1	Genbank	CDS	8508	15008	.	+	0	ID=cds-AAR14269.1;Dbxref=NCBI_GP:AAR14269.1;Name=AAR14269.1;gbkey=CDS;product=L;protein_id=AAR14269.1
+

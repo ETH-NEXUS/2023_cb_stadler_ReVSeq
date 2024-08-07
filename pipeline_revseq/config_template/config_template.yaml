@@ -40,6 +40,8 @@ tools:
     mouthwash: "MouthWash"
     # String to search for Wastewater samples
     wastewater: "Wastewater"
+    # String to search for DNAse samples
+    dnase: "DNAse"
   bwa:
     # Threads to assign to bwa
     threads: 4
@@ -91,7 +93,7 @@ tools:
     # Any position with lower coverage is reported as N
     minimum_coverage: 10
     # Bed file containing the positions of all CDS regions
-    cds_bed: "/data/pipeline/resources/cds.bed"
+    cds_bed: "/data/pipeline/resources/cds/cds.bed"
   postprocess_consensus:
     # Maximum fraction of Ns allowed in a consensus before it's flagged as failed in the status report of the tool
     max_n: 0.2

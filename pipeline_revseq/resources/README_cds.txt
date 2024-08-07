@@ -2,21 +2,11 @@
 The file cds.bed contains the CDS annotations for all viruses included in the ReVSeq project.
 
 # Base annotation retrieval
-Data has been downloaded from NCBI using the command line tool "datasets" version 14.3.2.
-The date of download is June 5th 2024.
-Using all available tax IDs, the data has been retrieved with the command
-
-```
-datasets download virus genome taxon <taxon> --include annotation --filename <filename>.zip
-```
-After de-compression, only the files named `data/annotation_report.jsonl` have been kept.
-
-### Exceptions
-- It was not possible to download record NC_004148.2 because it was removed from RefSeq.
-- It was not possible to extract the CDS information from the records NC_011203, NC_009238, CY115156.1, NC_003266, NC_001405, NC_001617, NC_001803.
-- Record MN908947.3 was too large
-In those specific cases, the CDS annotation has been manually retrieved from the NCBI website
+Data has been downloaded from NCBI by navigating to the `nuccore` page for the specific virus ID (e.g. `https://www.ncbi.nlm.nih.gov/nuccore/NC_021928`) and using the download function (i.e. the section `send to` in the top right corner) to download the `complete record` in GFF3 format.
+The date of download is June 24th 2024.
 
 # Downstream
-From the jsonl files, we are interested only in the CDS positions. Script find_cds.py retrieves
-the CDS positions for any jsonl file.
+From the GFF3 files, we are interested only in the CDS positions to create a flat bed file.
+First, BEDOPS 2.4.41 has been used to generate 0-based bed files from the GFF3. Then, grep is used to keep only lines describing a CDS. Bedtools 2.31.1 is used to merge the overlapping CDS entries to flatten the bed files. Finally, all bed files are merged in one reference bed.
+The only exceptions are NC_001490, NC_001617, NC_009996, AB686524, GQ865517, for which we also need to keep the position of the 5'UTR regions, because the 5'UTR region is often used for identification.
+Those strains are Rhino- and Entrero viruses. However, only the Enteroviruses (AB686524, GQ865517) included annotation for the 5'UTR.

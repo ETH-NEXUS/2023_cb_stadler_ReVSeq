@@ -1,0 +1,24 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_001796.2 1 15462
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11216
+NC_001796.2	RefSeq	region	1	15462	.	+	.	ID=NC_001796.2:1..15462;Dbxref=taxon:11216;gbkey=Src;genome=genomic;mol_type=viral cRNA;old-name=Human parainfluenza virus 3
+NC_001796.2	RefSeq	gene	111	1658	.	+	.	ID=gene-HPIV3gp1;Dbxref=GeneID:911955;Name=HPIV3gp1;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HPIV3gp1
+NC_001796.2	RefSeq	CDS	111	1658	.	+	0	ID=cds-NP_067148.1;Parent=gene-HPIV3gp1;Dbxref=GenBank:NP_067148.1,GeneID:911955;Name=NP_067148.1;gbkey=CDS;locus_tag=HPIV3gp1;product=nucleocapsid protein;protein_id=NP_067148.1
+NC_001796.2	RefSeq	gene	1784	3595	.	+	.	ID=gene-HPIV3gp2;Dbxref=GeneID:911956;Name=HPIV3gp2;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HPIV3gp2
+NC_001796.2	RefSeq	CDS	1784	3595	.	+	0	ID=cds-NP_067149.1;Parent=gene-HPIV3gp2;Dbxref=GenBank:NP_067149.1,GeneID:911956;Name=NP_067149.1;gbkey=CDS;locus_tag=HPIV3gp2;product=phosphoprotein;protein_id=NP_067149.1
+NC_001796.2	RefSeq	gene	1784	2903	.	+	.	ID=gene-HPIV3gp3;Dbxref=GeneID:911958;Name=HPIV3gp3;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HPIV3gp3
+NC_001796.2	RefSeq	CDS	1784	2509	.	+	0	ID=cds-NP_599250.1;Parent=gene-HPIV3gp3;Dbxref=GenBank:NP_599250.1,GeneID:911958;Name=NP_599250.1;exception=RNA editing;gbkey=CDS;locus_tag=HPIV3gp3;product=D protein;protein_id=NP_599250.1
+NC_001796.2	RefSeq	CDS	2508	2903	.	+	0	ID=cds-NP_599250.1;Parent=gene-HPIV3gp3;Dbxref=GenBank:NP_599250.1,GeneID:911958;Name=NP_599250.1;exception=RNA editing;gbkey=CDS;locus_tag=HPIV3gp3;product=D protein;protein_id=NP_599250.1
+NC_001796.2	RefSeq	gene	1794	2393	.	+	.	ID=gene-HPIV3gp4;Dbxref=GeneID:911959;Name=HPIV3gp4;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HPIV3gp4
+NC_001796.2	RefSeq	CDS	1794	2393	.	+	0	ID=cds-NP_599251.1;Parent=gene-HPIV3gp4;Dbxref=GenBank:NP_599251.1,GeneID:911959;Name=NP_599251.1;gbkey=CDS;locus_tag=HPIV3gp4;product=C protein;protein_id=NP_599251.1
+NC_001796.2	RefSeq	gene	3753	4814	.	+	.	ID=gene-HPIV3gp5;Dbxref=GeneID:911954;Name=HPIV3gp5;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HPIV3gp5
+NC_001796.2	RefSeq	CDS	3753	4814	.	+	0	ID=cds-NP_067150.1;Parent=gene-HPIV3gp5;Dbxref=GenBank:NP_067150.1,GeneID:911954;Name=NP_067150.1;gbkey=CDS;locus_tag=HPIV3gp5;product=matrix potein;protein_id=NP_067150.1
+NC_001796.2	RefSeq	gene	5072	6691	.	+	.	ID=gene-HPIV3gp6;Dbxref=GeneID:911957;Name=HPIV3gp6;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HPIV3gp6
+NC_001796.2	RefSeq	CDS	5072	6691	.	+	0	ID=cds-NP_067151.1;Parent=gene-HPIV3gp6;Dbxref=GenBank:NP_067151.1,GeneID:911957;Name=NP_067151.1;gbkey=CDS;locus_tag=HPIV3gp6;product=fusion protein;protein_id=NP_067151.1
+NC_001796.2	RefSeq	gene	6806	8530	.	+	.	ID=gene-HPIV3gp7;Dbxref=GeneID:911961;Name=HPIV3gp7;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HPIV3gp7
+NC_001796.2	RefSeq	CDS	6806	8530	.	+	0	ID=cds-NP_067152.1;Parent=gene-HPIV3gp7;Dbxref=GenBank:NP_067152.1,GeneID:911961;Name=NP_067152.1;gbkey=CDS;locus_tag=HPIV3gp7;product=hemagglutinin-neuraminidase;protein_id=NP_067152.1
+NC_001796.2	RefSeq	gene	8646	15347	.	+	.	ID=gene-HPIV3gp8;Dbxref=GeneID:911960;Name=HPIV3gp8;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HPIV3gp8
+NC_001796.2	RefSeq	CDS	8646	15347	.	+	0	ID=cds-NP_067153.2;Parent=gene-HPIV3gp8;Dbxref=GenBank:NP_067153.2,GeneID:911960;Name=NP_067153.2;gbkey=CDS;locus_tag=HPIV3gp8;product=large protein;protein_id=NP_067153.2
+

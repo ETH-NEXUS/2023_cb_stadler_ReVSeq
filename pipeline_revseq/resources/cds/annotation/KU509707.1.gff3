@@ -1,0 +1,12 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KU509707.1 1 863
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1777792
+KU509707.1	Genbank	region	1	863	.	+	.	ID=KU509707.1:1..863;Dbxref=taxon:1777792;Name=8;collection-date=07-Sep-2015;country=USA;gbkey=Src;mol_type=viral cRNA;nat-host=Homo sapiens;note=passage details: E1 (10/08/2015);segment=8;serotype=H1N1;strain=A/Michigan/45/2015
+KU509707.1	Genbank	gene	1	838	.	+	.	ID=gene-NEP;Name=NEP;gbkey=Gene;gene=NEP;gene_biotype=protein_coding;gene_synonym=NS2
+KU509707.1	Genbank	CDS	1	30	.	+	0	ID=cds-AMA11481.1;Parent=gene-NEP;Dbxref=NCBI_GP:AMA11481.1;Name=AMA11481.1;Note=nonstructural protein 2;gbkey=CDS;gene=NEP;product=nuclear export protein;protein_id=AMA11481.1
+KU509707.1	Genbank	CDS	503	838	.	+	0	ID=cds-AMA11481.1;Parent=gene-NEP;Dbxref=NCBI_GP:AMA11481.1;Name=AMA11481.1;Note=nonstructural protein 2;gbkey=CDS;gene=NEP;product=nuclear export protein;protein_id=AMA11481.1
+KU509707.1	Genbank	gene	1	660	.	+	.	ID=gene-NS1;Name=NS1;gbkey=Gene;gene=NS1;gene_biotype=protein_coding
+KU509707.1	Genbank	CDS	1	660	.	+	0	ID=cds-AMA11480.1;Parent=gene-NS1;Dbxref=NCBI_GP:AMA11480.1;Name=AMA11480.1;gbkey=CDS;gene=NS1;product=nonstructural protein 1;protein_id=AMA11480.1
+

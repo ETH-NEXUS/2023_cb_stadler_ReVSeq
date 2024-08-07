@@ -55,7 +55,7 @@ rule all:
         #db_upload
         #config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/db_upload_status",
         #viollier_upload
-        #config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
     output:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/complete.txt",
     shell:

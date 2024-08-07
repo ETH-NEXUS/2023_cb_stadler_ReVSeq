@@ -1,0 +1,25 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region AY391777.1 1 30738
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=31631
+AY391777.1	Genbank	region	1	30738	.	+	.	ID=AY391777.1:1..30738;Dbxref=taxon:31631,ATCC:VR-759;gb-acronym=HCoV-OC43;gbkey=Src;isolate=OC43;mol_type=genomic RNA;note=prototype strain;strain=ATCC VR-759
+AY391777.1	Genbank	CDS	211	13332	.	+	0	ID=cds-AAR01012.1;Dbxref=NCBI_GP:AAR01012.1;Name=AAR01012.1;Note=translated via a -1 ribosomal frameshift%3B ORF 1a/1b;exception=ribosomal slippage;gbkey=CDS;product=replicase polyprotein;protein_id=AAR01012.1
+AY391777.1	Genbank	CDS	13332	21497	.	+	0	ID=cds-AAR01012.1;Dbxref=NCBI_GP:AAR01012.1;Name=AAR01012.1;Note=translated via a -1 ribosomal frameshift%3B ORF 1a/1b;exception=ribosomal slippage;gbkey=CDS;product=replicase polyprotein;protein_id=AAR01012.1
+AY391777.1	Genbank	gene	21507	22343	.	+	.	ID=gene-NS2a;Name=NS2a;gbkey=Gene;gene=NS2a;gene_biotype=protein_coding
+AY391777.1	Genbank	CDS	21507	22343	.	+	0	ID=cds-AAR01013.1;Parent=gene-NS2a;Dbxref=NCBI_GP:AAR01013.1;Name=AAR01013.1;gbkey=CDS;gene=NS2a;product=NS2a protein;protein_id=AAR01013.1
+AY391777.1	Genbank	gene	22355	23629	.	+	.	ID=gene-HE;Name=HE;gbkey=Gene;gene=HE;gene_biotype=protein_coding
+AY391777.1	Genbank	CDS	22355	23629	.	+	0	ID=cds-AAR01014.1;Parent=gene-HE;Dbxref=NCBI_GP:AAR01014.1;Name=AAR01014.1;gbkey=CDS;gene=HE;product=HE protein;protein_id=AAR01014.1
+AY391777.1	Genbank	gene	23644	27729	.	+	.	ID=gene-S;Name=S;gbkey=Gene;gene=S;gene_biotype=protein_coding
+AY391777.1	Genbank	CDS	23644	27729	.	+	0	ID=cds-AAR01015.1;Parent=gene-S;Dbxref=NCBI_GP:AAR01015.1;Name=AAR01015.1;gbkey=CDS;gene=S;product=S protein;protein_id=AAR01015.1
+AY391777.1	Genbank	gene	27817	28146	.	+	.	ID=gene-NS2;Name=NS2;gbkey=Gene;gene=NS2;gene_biotype=protein_coding
+AY391777.1	Genbank	CDS	27817	28146	.	+	0	ID=cds-AAR01016.1;Parent=gene-NS2;Dbxref=NCBI_GP:AAR01016.1;Name=AAR01016.1;gbkey=CDS;gene=NS2;product=NS2 protein;protein_id=AAR01016.1
+AY391777.1	Genbank	gene	28133	28387	.	+	.	ID=gene-NS3;Name=NS3;gbkey=Gene;gene=NS3;gene_biotype=protein_coding
+AY391777.1	Genbank	CDS	28133	28387	.	+	0	ID=cds-AAR01017.1;Parent=gene-NS3;Dbxref=NCBI_GP:AAR01017.1;Name=AAR01017.1;Note=envelope protein%3B small membrane protein;gbkey=CDS;gene=NS3;product=NS3 protein;protein_id=AAR01017.1
+AY391777.1	Genbank	gene	28402	29094	.	+	.	ID=gene-M;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding
+AY391777.1	Genbank	CDS	28402	29094	.	+	0	ID=cds-AAR01018.1;Parent=gene-M;Dbxref=NCBI_GP:AAR01018.1;Name=AAR01018.1;gbkey=CDS;gene=M;product=M protein;protein_id=AAR01018.1
+AY391777.1	Genbank	gene	29104	30450	.	+	.	ID=gene-N;Name=N;gbkey=Gene;gene=N;gene_biotype=protein_coding
+AY391777.1	Genbank	CDS	29104	30450	.	+	0	ID=cds-AAR01019.1;Parent=gene-N;Dbxref=NCBI_GP:AAR01019.1;Name=AAR01019.1;gbkey=CDS;gene=N;product=N protein;protein_id=AAR01019.1
+AY391777.1	Genbank	gene	29441	29788	.	+	.	ID=gene-N2;Name=N2;gbkey=Gene;gene=N2;gene_biotype=protein_coding
+AY391777.1	Genbank	CDS	29441	29788	.	+	0	ID=cds-AAR01020.1;Parent=gene-N2;Dbxref=NCBI_GP:AAR01020.1;Name=AAR01020.1;gbkey=CDS;gene=N2;product=N2 protein;protein_id=AAR01020.1
+

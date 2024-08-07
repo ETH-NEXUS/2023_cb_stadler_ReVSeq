@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KU509705.1 1 1410
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1777792
+KU509705.1	Genbank	region	1	1410	.	+	.	ID=KU509705.1:1..1410;Dbxref=taxon:1777792;Name=6;collection-date=07-Sep-2015;country=USA;gbkey=Src;mol_type=viral cRNA;nat-host=Homo sapiens;note=passage details: E1 (10/08/2015);segment=6;serotype=H1N1;strain=A/Michigan/45/2015
+KU509705.1	Genbank	gene	1	1410	.	+	.	ID=gene-NA;Name=NA;gbkey=Gene;gene=NA;gene_biotype=protein_coding
+KU509705.1	Genbank	CDS	1	1410	.	+	0	ID=cds-AMA11477.1;Parent=gene-NA;Dbxref=NCBI_GP:AMA11477.1;Name=AMA11477.1;gbkey=CDS;gene=NA;product=neuraminidase;protein_id=AMA11477.1
+

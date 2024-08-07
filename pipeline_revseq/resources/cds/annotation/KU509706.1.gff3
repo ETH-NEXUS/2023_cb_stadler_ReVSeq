@@ -1,0 +1,12 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KU509706.1 1 982
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1777792
+KU509706.1	Genbank	region	1	982	.	+	.	ID=KU509706.1:1..982;Dbxref=taxon:1777792;Name=7;collection-date=07-Sep-2015;country=USA;gbkey=Src;mol_type=viral cRNA;nat-host=Homo sapiens;note=passage details: E1 (10/08/2015);segment=7;serotype=H1N1;strain=A/Michigan/45/2015
+KU509706.1	Genbank	gene	1	982	.	+	.	ID=gene-M2;Name=M2;gbkey=Gene;gene=M2;gene_biotype=protein_coding
+KU509706.1	Genbank	CDS	1	26	.	+	0	ID=cds-AMA11479.1;Parent=gene-M2;Dbxref=NCBI_GP:AMA11479.1;Name=AMA11479.1;gbkey=CDS;gene=M2;product=matrix protein 2;protein_id=AMA11479.1
+KU509706.1	Genbank	CDS	715	982	.	+	1	ID=cds-AMA11479.1;Parent=gene-M2;Dbxref=NCBI_GP:AMA11479.1;Name=AMA11479.1;gbkey=CDS;gene=M2;product=matrix protein 2;protein_id=AMA11479.1
+KU509706.1	Genbank	gene	1	759	.	+	.	ID=gene-M1;Name=M1;gbkey=Gene;gene=M1;gene_biotype=protein_coding
+KU509706.1	Genbank	CDS	1	759	.	+	0	ID=cds-AMA11478.1;Parent=gene-M1;Dbxref=NCBI_GP:AMA11478.1;Name=AMA11478.1;gbkey=CDS;gene=M1;product=matrix protein 1;protein_id=AMA11478.1
+

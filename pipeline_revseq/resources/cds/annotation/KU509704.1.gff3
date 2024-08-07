@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KU509704.1 1 1497
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1777792
+KU509704.1	Genbank	region	1	1497	.	+	.	ID=KU509704.1:1..1497;Dbxref=taxon:1777792;Name=5;collection-date=07-Sep-2015;country=USA;gbkey=Src;mol_type=viral cRNA;nat-host=Homo sapiens;note=passage details: E1 (10/08/2015);segment=5;serotype=H1N1;strain=A/Michigan/45/2015
+KU509704.1	Genbank	gene	1	1497	.	+	.	ID=gene-NP;Name=NP;gbkey=Gene;gene=NP;gene_biotype=protein_coding
+KU509704.1	Genbank	CDS	1	1497	.	+	0	ID=cds-AMA11476.1;Parent=gene-NP;Dbxref=NCBI_GP:AMA11476.1;Name=AMA11476.1;gbkey=CDS;gene=NP;product=nucleocapsid protein;protein_id=AMA11476.1
+

@@ -1,0 +1,21 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region AB686524.1 1 7408
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=2650411
+AB686524.1	DDBJ	region	1	7408	.	+	.	ID=AB686524.1:1..7408;Dbxref=taxon:2650411;collection-date=2011-02;country=Japan:Osaka City;gb-acronym=EV-C104;gbkey=Src;isolation-source=nasal swab;mol_type=genomic RNA;nat-host=Homo sapiens;note=synonym: Human enterovirus 104;strain=AK11
+AB686524.1	DDBJ	five_prime_UTR	1	717	.	+	.	ID=id-AB686524.1:1..717;gbkey=5'UTR
+AB686524.1	DDBJ	CDS	718	7338	.	+	0	ID=cds-BAM10196.1;Dbxref=NCBI_GP:BAM10196.1;Name=BAM10196.1;gbkey=CDS;product=polyprotein;protein_id=BAM10196.1
+AB686524.1	DDBJ	mature_protein_region_of_CDS	718	924	.	+	.	ID=id-BAM10196.1:1..69;Parent=cds-BAM10196.1;gbkey=Prot;product=VP4
+AB686524.1	DDBJ	mature_protein_region_of_CDS	925	1737	.	+	.	ID=id-BAM10196.1:70..340;Parent=cds-BAM10196.1;gbkey=Prot;product=VP2 protein
+AB686524.1	DDBJ	mature_protein_region_of_CDS	1738	2460	.	+	.	ID=id-BAM10196.1:341..581;Parent=cds-BAM10196.1;gbkey=Prot;product=VP3 protein
+AB686524.1	DDBJ	mature_protein_region_of_CDS	2461	3348	.	+	.	ID=id-BAM10196.1:582..877;Parent=cds-BAM10196.1;gbkey=Prot;product=VP1 protein
+AB686524.1	DDBJ	mature_protein_region_of_CDS	3349	3795	.	+	.	ID=id-BAM10196.1:878..1026;Parent=cds-BAM10196.1;gbkey=Prot;product=2A protein
+AB686524.1	DDBJ	mature_protein_region_of_CDS	3796	4086	.	+	.	ID=id-BAM10196.1:1027..1123;Parent=cds-BAM10196.1;gbkey=Prot;product=2B protein
+AB686524.1	DDBJ	mature_protein_region_of_CDS	4087	5073	.	+	.	ID=id-BAM10196.1:1124..1452;Parent=cds-BAM10196.1;gbkey=Prot;product=2C protein
+AB686524.1	DDBJ	mature_protein_region_of_CDS	5074	5337	.	+	.	ID=id-BAM10196.1:1453..1540;Parent=cds-BAM10196.1;gbkey=Prot;product=3A protein
+AB686524.1	DDBJ	mature_protein_region_of_CDS	5338	5403	.	+	.	ID=id-BAM10196.1:1541..1562;Parent=cds-BAM10196.1;gbkey=Prot;product=3B protein
+AB686524.1	DDBJ	mature_protein_region_of_CDS	5404	5952	.	+	.	ID=id-BAM10196.1:1563..1745;Parent=cds-BAM10196.1;gbkey=Prot;product=3C protein
+AB686524.1	DDBJ	mature_protein_region_of_CDS	5953	7335	.	+	.	ID=id-BAM10196.1:1746..2206;Parent=cds-BAM10196.1;gbkey=Prot;product=3D protein
+AB686524.1	DDBJ	three_prime_UTR	7339	7408	.	+	.	ID=id-AB686524.1:7339..7408;gbkey=3'UTR
+

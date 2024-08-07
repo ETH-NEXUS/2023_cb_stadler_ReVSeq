@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_002205.1 1 2313
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=518987
+NC_002205.1	RefSeq	region	1	2313	.	+	.	ID=NC_002205.1:1..2313;Dbxref=taxon:518987;Name=2;gbkey=Src;genome=genomic;mol_type=viral cRNA;segment=2;strain=B/Lee/1940
+NC_002205.1	RefSeq	gene	1	2313	.	+	.	ID=gene-FLUBVsRNA-2gp1;Dbxref=GeneID:956546;Name=PB2;gbkey=Gene;gene=PB2;gene_biotype=protein_coding;locus_tag=FLUBVsRNA-2gp1
+NC_002205.1	RefSeq	CDS	1	2313	.	+	0	ID=cds-NP_056658.1;Parent=gene-FLUBVsRNA-2gp1;Dbxref=GenBank:NP_056658.1,GeneID:956546;Name=NP_056658.1;gbkey=CDS;gene=PB2;locus_tag=FLUBVsRNA-2gp1;product=polymerase PB2;protein_id=NP_056658.1
+

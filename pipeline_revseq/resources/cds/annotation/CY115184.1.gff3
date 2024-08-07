@@ -1,0 +1,12 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region CY115184.1 1 1151
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1089607
+CY115184.1	Genbank	region	1	1151	.	+	.	ID=CY115184.1:1..1151;Dbxref=taxon:1089607;Name=7;collection-date=2010;country=USA: Wisconsin;gbkey=Src;lab-host=Egg passage(s);mol_type=viral cRNA;nat-host=human;segment=7;strain=B/Wisconsin/01/2010
+CY115184.1	Genbank	sequence_feature	1	1151	.	+	.	ID=id-CY115184.1:1..1151;Dbxref=IRD:NIGSP_BUCB_00032.MP;gbkey=misc_feature
+CY115184.1	Genbank	gene	6	752	.	+	.	ID=gene-M1;Name=M1;gbkey=Gene;gene=M1;gene_biotype=protein_coding
+CY115184.1	Genbank	CDS	6	752	.	+	0	ID=cds-AFH57954.1;Parent=gene-M1;Dbxref=NCBI_GP:AFH57954.1;Name=AFH57954.1;gbkey=CDS;gene=M1;product=matrix protein 1;protein_id=AFH57954.1
+CY115184.1	Genbank	gene	752	1081	.	+	.	ID=gene-BM2;Name=BM2;gbkey=Gene;gene=BM2;gene_biotype=protein_coding
+CY115184.1	Genbank	CDS	752	1081	.	+	0	ID=cds-AFH57955.1;Parent=gene-BM2;Dbxref=NCBI_GP:AFH57955.1;Name=AFH57955.1;gbkey=CDS;gene=BM2;product=BM2 protein;protein_id=AFH57955.1
+

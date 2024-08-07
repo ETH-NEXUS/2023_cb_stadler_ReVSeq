@@ -1,0 +1,14 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KJ942616.1 1 1749
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1321009
+KJ942616.1	Genbank	region	1	1749	.	+	.	ID=KJ942616.1:1..1749;Dbxref=taxon:1321009;Name=4;collection-date=2012;country=USA: Texas;gbkey=Src;genome=genomic;mol_type=viral cRNA;nat-host=Homo sapiens;segment=4;serotype=H3N2;strain=A/Texas/50/2012
+KJ942616.1	Genbank	five_prime_UTR	1	27	.	+	.	ID=id-KJ942616.1:1..27;gbkey=5'UTR;partial=true;start_range=.,1
+KJ942616.1	Genbank	gene	28	1728	.	+	.	ID=gene-L998_47834gpHA;Name=HA;gbkey=Gene;gene=HA;gene_biotype=protein_coding;locus_tag=L998_47834gpHA
+KJ942616.1	Genbank	CDS	28	1728	.	+	0	ID=cds-AIE52525.1;Parent=gene-L998_47834gpHA;Dbxref=NCBI_GP:AIE52525.1;Name=AIE52525.1;gbkey=CDS;gene=HA;locus_tag=L998_47834gpHA;product=hemagglutinin;protein_id=AIE52525.1
+KJ942616.1	Genbank	signal_peptide_region_of_CDS	28	75	.	+	.	ID=id-AIE52525.1:1..16;Parent=cds-AIE52525.1;gbkey=Prot;gene=HA;locus_tag=L998_47834gpHA
+KJ942616.1	Genbank	mature_protein_region_of_CDS	76	1062	.	+	.	ID=id-AIE52525.1:17..345;Parent=cds-AIE52525.1;gbkey=Prot;gene=HA;locus_tag=L998_47834gpHA;product=HA1
+KJ942616.1	Genbank	mature_protein_region_of_CDS	1063	1725	.	+	.	ID=id-AIE52525.1:346..566;Parent=cds-AIE52525.1;gbkey=Prot;gene=HA;locus_tag=L998_47834gpHA;product=HA2
+KJ942616.1	Genbank	three_prime_UTR	1729	1749	.	+	.	ID=id-KJ942616.1:1729..1749;end_range=1749,.;gbkey=3'UTR;partial=true
+

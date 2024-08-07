@@ -1,0 +1,33 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_003443.1 1 15646
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=2560525
+NC_003443.1	RefSeq	region	1	15646	.	+	.	ID=NC_003443.1:1..15646;Dbxref=taxon:2560525;gbkey=Src;genome=genomic;mol_type=genomic RNA;old-name=Human parainfluenza virus 2
+NC_003443.1	RefSeq	gene	71	1919	.	+	.	ID=gene-HPIV2gp1;Dbxref=GeneID:935191;Name=NP;gbkey=Gene;gene=NP;gene_biotype=protein_coding;locus_tag=HPIV2gp1
+NC_003443.1	RefSeq	mRNA	71	1919	.	+	.	ID=rna-HPIV2gp1;Parent=gene-HPIV2gp1;Dbxref=GeneID:935191;gbkey=mRNA;gene=NP;locus_tag=HPIV2gp1
+NC_003443.1	RefSeq	exon	71	1919	.	+	.	ID=exon-HPIV2gp1-1;Parent=rna-HPIV2gp1;Dbxref=GeneID:935191;gbkey=mRNA;gene=NP;locus_tag=HPIV2gp1
+NC_003443.1	RefSeq	CDS	157	1785	.	+	0	ID=cds-NP_598401.1;Parent=rna-HPIV2gp1;Dbxref=UniProtKB/Swiss-Prot:P21737,GenBank:NP_598401.1,GeneID:935191;Name=NP_598401.1;gbkey=CDS;gene=NP;locus_tag=HPIV2gp1;product=nucleocapsid protein;protein_id=NP_598401.1
+NC_003443.1	RefSeq	gene	1924	3365	.	+	.	ID=gene-HPIV2gp2;Dbxref=GeneID:935190;Name=V;gbkey=Gene;gene=V;gene_biotype=protein_coding;locus_tag=HPIV2gp2
+NC_003443.1	RefSeq	CDS	1993	2481	.	+	0	ID=cds-NP_599019.1;Parent=gene-HPIV2gp2;Dbxref=GenBank:NP_599019.1,GeneID:935190;Name=NP_599019.1;exception=RNA editing;gbkey=CDS;gene=V;locus_tag=HPIV2gp2;product=P protein;protein_id=NP_599019.1
+NC_003443.1	RefSeq	CDS	2480	3178	.	+	0	ID=cds-NP_599019.1;Parent=gene-HPIV2gp2;Dbxref=GenBank:NP_599019.1,GeneID:935190;Name=NP_599019.1;exception=RNA editing;gbkey=CDS;gene=V;locus_tag=HPIV2gp2;product=P protein;protein_id=NP_599019.1
+NC_003443.1	RefSeq	mRNA	1924	3365	.	+	.	ID=rna-HPIV2gp2;Parent=gene-HPIV2gp2;Dbxref=GeneID:935190;gbkey=mRNA;gene=V;locus_tag=HPIV2gp2
+NC_003443.1	RefSeq	exon	1924	3365	.	+	.	ID=exon-HPIV2gp2-1;Parent=rna-HPIV2gp2;Dbxref=GeneID:935190;gbkey=mRNA;gene=V;locus_tag=HPIV2gp2
+NC_003443.1	RefSeq	CDS	1993	2670	.	+	0	ID=cds-NP_598402.1;Parent=rna-HPIV2gp2;Dbxref=UniProtKB/Swiss-Prot:P23057,GenBank:NP_598402.1,GeneID:935190;Name=NP_598402.1;gbkey=CDS;gene=V;locus_tag=HPIV2gp2;product=phospho-protein;protein_id=NP_598402.1
+NC_003443.1	RefSeq	gene	3411	4742	.	+	.	ID=gene-HPIV2gp3;Dbxref=GeneID:935187;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding;locus_tag=HPIV2gp3
+NC_003443.1	RefSeq	mRNA	3411	4742	.	+	.	ID=rna-HPIV2gp3;Parent=gene-HPIV2gp3;Dbxref=GeneID:935187;gbkey=mRNA;gene=M;locus_tag=HPIV2gp3
+NC_003443.1	RefSeq	exon	3411	4742	.	+	.	ID=exon-HPIV2gp3-1;Parent=rna-HPIV2gp3;Dbxref=GeneID:935187;gbkey=mRNA;gene=M;locus_tag=HPIV2gp3
+NC_003443.1	RefSeq	CDS	3479	4612	.	+	0	ID=cds-NP_598403.1;Parent=rna-HPIV2gp3;Dbxref=UniProtKB/Swiss-Prot:P24266,GenBank:NP_598403.1,GeneID:935187;Name=NP_598403.1;gbkey=CDS;gene=M;locus_tag=HPIV2gp3;product=matrix protein;protein_id=NP_598403.1
+NC_003443.1	RefSeq	gene	4771	6630	.	+	.	ID=gene-HPIV2gp4;Dbxref=GeneID:935186;Name=F;gbkey=Gene;gene=F;gene_biotype=protein_coding;locus_tag=HPIV2gp4
+NC_003443.1	RefSeq	mRNA	4771	6630	.	+	.	ID=rna-HPIV2gp4;Parent=gene-HPIV2gp4;Dbxref=GeneID:935186;gbkey=mRNA;gene=F;locus_tag=HPIV2gp4
+NC_003443.1	RefSeq	exon	4771	6630	.	+	.	ID=exon-HPIV2gp4-1;Parent=rna-HPIV2gp4;Dbxref=GeneID:935186;gbkey=mRNA;gene=F;locus_tag=HPIV2gp4
+NC_003443.1	RefSeq	CDS	4789	6444	.	+	0	ID=cds-NP_598404.1;Parent=rna-HPIV2gp4;Dbxref=UniProtKB/Swiss-Prot:P26629,GenBank:NP_598404.1,GeneID:935186;Name=NP_598404.1;gbkey=CDS;gene=F;locus_tag=HPIV2gp4;product=fusion protein;protein_id=NP_598404.1
+NC_003443.1	RefSeq	gene	6639	8742	.	+	.	ID=gene-HPIV2gp5;Dbxref=GeneID:935188;Name=HN;gbkey=Gene;gene=HN;gene_biotype=protein_coding;locus_tag=HPIV2gp5
+NC_003443.1	RefSeq	mRNA	6639	8742	.	+	.	ID=rna-HPIV2gp5;Parent=gene-HPIV2gp5;Dbxref=GeneID:935188;gbkey=mRNA;gene=HN;locus_tag=HPIV2gp5
+NC_003443.1	RefSeq	exon	6639	8742	.	+	.	ID=exon-HPIV2gp5-1;Parent=rna-HPIV2gp5;Dbxref=GeneID:935188;gbkey=mRNA;gene=HN;locus_tag=HPIV2gp5
+NC_003443.1	RefSeq	CDS	6817	8532	.	+	0	ID=cds-NP_598405.1;Parent=rna-HPIV2gp5;Dbxref=UniProtKB/Swiss-Prot:P25466,GenBank:NP_598405.1,GeneID:935188;Name=NP_598405.1;gbkey=CDS;gene=HN;locus_tag=HPIV2gp5;product=hemagglutinin-neuraminidase;protein_id=NP_598405.1
+NC_003443.1	RefSeq	gene	8785	15625	.	+	.	ID=gene-HPIV2gp6;Dbxref=GeneID:935189;Name=L;gbkey=Gene;gene=L;gene_biotype=protein_coding;locus_tag=HPIV2gp6
+NC_003443.1	RefSeq	mRNA	8785	15625	.	+	.	ID=rna-HPIV2gp6;Parent=gene-HPIV2gp6;Dbxref=GeneID:935189;gbkey=mRNA;gene=L;locus_tag=HPIV2gp6
+NC_003443.1	RefSeq	exon	8785	15625	.	+	.	ID=exon-HPIV2gp6-1;Parent=rna-HPIV2gp6;Dbxref=GeneID:935189;gbkey=mRNA;gene=L;locus_tag=HPIV2gp6
+NC_003443.1	RefSeq	CDS	8793	15581	.	+	0	ID=cds-NP_598406.1;Parent=rna-HPIV2gp6;Dbxref=UniProtKB/Swiss-Prot:P26676,GenBank:NP_598406.1,GeneID:935189;Name=NP_598406.1;gbkey=CDS;gene=L;locus_tag=HPIV2gp6;product=Large protein;protein_id=NP_598406.1
+

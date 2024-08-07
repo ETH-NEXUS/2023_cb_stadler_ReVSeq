@@ -1,0 +1,21 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region GQ865517.1 1 7354
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=861519
+GQ865517.1	Genbank	region	1	7354	.	+	.	ID=GQ865517.1:1..7354;Dbxref=taxon:861519;collection-date=23-Feb-2008;country=Nicaragua;gbkey=Src;isolate=NICA08-4327;mol_type=genomic RNA;nat-host=Homo sapiens;old-name=Human enterovirus 109;serotype=109
+GQ865517.1	Genbank	five_prime_UTR	1	663	.	+	.	ID=id-GQ865517.1:1..663;gbkey=5'UTR
+GQ865517.1	Genbank	CDS	664	7284	.	+	0	ID=cds-ADK22846.1;Dbxref=NCBI_GP:ADK22846.1;Name=ADK22846.1;gbkey=CDS;product=polyprotein;protein_id=ADK22846.1
+GQ865517.1	Genbank	mature_protein_region_of_CDS	664	870	.	+	.	ID=id-ADK22846.1:1..69;Parent=cds-ADK22846.1;gbkey=Prot;product=VP4
+GQ865517.1	Genbank	mature_protein_region_of_CDS	871	1683	.	+	.	ID=id-ADK22846.1:70..340;Parent=cds-ADK22846.1;gbkey=Prot;product=VP2
+GQ865517.1	Genbank	mature_protein_region_of_CDS	1684	2406	.	+	.	ID=id-ADK22846.1:341..581;Parent=cds-ADK22846.1;gbkey=Prot;product=VP3
+GQ865517.1	Genbank	mature_protein_region_of_CDS	2407	3294	.	+	.	ID=id-ADK22846.1:582..877;Parent=cds-ADK22846.1;gbkey=Prot;product=VP1
+GQ865517.1	Genbank	mature_protein_region_of_CDS	3295	3741	.	+	.	ID=id-ADK22846.1:878..1026;Parent=cds-ADK22846.1;gbkey=Prot;product=2A
+GQ865517.1	Genbank	mature_protein_region_of_CDS	3742	4032	.	+	.	ID=id-ADK22846.1:1027..1123;Parent=cds-ADK22846.1;gbkey=Prot;product=2B
+GQ865517.1	Genbank	mature_protein_region_of_CDS	4033	5019	.	+	.	ID=id-ADK22846.1:1124..1452;Parent=cds-ADK22846.1;gbkey=Prot;product=2C
+GQ865517.1	Genbank	mature_protein_region_of_CDS	5020	5283	.	+	.	ID=id-ADK22846.1:1453..1540;Parent=cds-ADK22846.1;gbkey=Prot;product=3A
+GQ865517.1	Genbank	mature_protein_region_of_CDS	5284	5349	.	+	.	ID=id-ADK22846.1:1541..1562;Parent=cds-ADK22846.1;gbkey=Prot;product=3B
+GQ865517.1	Genbank	mature_protein_region_of_CDS	5350	5898	.	+	.	ID=id-ADK22846.1:1563..1745;Parent=cds-ADK22846.1;gbkey=Prot;product=3C
+GQ865517.1	Genbank	mature_protein_region_of_CDS	5899	7281	.	+	.	ID=id-ADK22846.1:1746..2206;Parent=cds-ADK22846.1;gbkey=Prot;product=3D
+GQ865517.1	Genbank	three_prime_UTR	7285	7354	.	+	.	ID=id-GQ865517.1:7285..7354;gbkey=3'UTR
+

@@ -1,0 +1,19 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region FM242866.1 1 7296
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=568506
+FM242866.1	EMBL	region	1	7296	.	+	.	ID=FM242866.1:1..7296;Dbxref=taxon:568506;collected-by=Sami Oikarinen;collection-date=17-Oct-2000;country=Finland:Tampere;gbkey=Src;identified-by=Cigdem Williams;isolation-source=faeces from asymptomatic human;mol_type=genomic RNA;serotype=type 1;strain=PicoBank/HPeV1/a
+FM242866.1	EMBL	gene	669	7208	.	+	.	ID=gene-p123;Name=p123;gbkey=Gene;gene=p123;gene_biotype=protein_coding
+FM242866.1	EMBL	CDS	669	7208	.	+	0	ID=cds-CAR85878.1;Parent=gene-p123;Dbxref=GOA:C1L304,InterPro:IPR000199,InterPro:IPR000605,InterPro:IPR001205,InterPro:IPR001676,InterPro:IPR007094,InterPro:IPR009003,InterPro:IPR009407,InterPro:IPR009419,InterPro:IPR014759,UniProtKB/TrEMBL:C1L304,NCBI_GP:CAR85878.1;Name=CAR85878.1;gbkey=CDS;gene=p123;product=polyprotein;protein_id=CAR85878.1
+FM242866.1	EMBL	mature_protein_region_of_CDS	672	1535	.	+	.	ID=id-CAR85878.1:2..289;Parent=cds-CAR85878.1;gbkey=Prot;product=VP0
+FM242866.1	EMBL	mature_protein_region_of_CDS	1536	2291	.	+	.	ID=id-CAR85878.1:290..541;Parent=cds-CAR85878.1;gbkey=Prot;product=VP3
+FM242866.1	EMBL	mature_protein_region_of_CDS	2292	2984	.	+	.	ID=id-CAR85878.1:542..772;Parent=cds-CAR85878.1;gbkey=Prot;product=VP1
+FM242866.1	EMBL	mature_protein_region_of_CDS	2985	3434	.	+	.	ID=id-CAR85878.1:773..922;Parent=cds-CAR85878.1;gbkey=Prot;product=2A
+FM242866.1	EMBL	mature_protein_region_of_CDS	3435	3800	.	+	.	ID=id-CAR85878.1:923..1044;Parent=cds-CAR85878.1;gbkey=Prot;product=2B
+FM242866.1	EMBL	mature_protein_region_of_CDS	3801	4964	.	+	.	ID=id-CAR85878.1:1045..1432;Parent=cds-CAR85878.1;gbkey=Prot;product=2C
+FM242866.1	EMBL	mature_protein_region_of_CDS	4965	5138	.	+	.	ID=id-CAR85878.1:1433..1490;Parent=cds-CAR85878.1;gbkey=Prot;product=3A
+FM242866.1	EMBL	mature_protein_region_of_CDS	5139	5198	.	+	.	ID=id-CAR85878.1:1491..1510;Parent=cds-CAR85878.1;gbkey=Prot;product=3B
+FM242866.1	EMBL	mature_protein_region_of_CDS	5199	5798	.	+	.	ID=id-CAR85878.1:1511..1710;Parent=cds-CAR85878.1;gbkey=Prot;product=3C
+FM242866.1	EMBL	mature_protein_region_of_CDS	5799	7205	.	+	.	ID=id-CAR85878.1:1711..2179;Parent=cds-CAR85878.1;gbkey=Prot;product=3D
+

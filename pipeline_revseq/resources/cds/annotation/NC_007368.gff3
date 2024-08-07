@@ -1,0 +1,9 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_007368.1 1 1467
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=335341
+NC_007368.1	RefSeq	region	1	1467	.	+	.	ID=NC_007368.1:1..1467;Dbxref=taxon:335341;Name=6;collection-date=21-Dec-2004;country=USA: Tompkins County%2C NY;gbkey=Src;genome=genomic;isolation-source=gender:M%3B age:16y;lab-host=RhMK 1 passage(s);mol_type=viral cRNA;nat-host=Homo sapiens;segment=6;serotype=H3N2;strain=A/New York/392/2004
+NC_007368.1	RefSeq	gene	20	1429	.	+	.	ID=gene-FLUAVH3N2_s6p1;Dbxref=GeneID:3655154;Name=NA;gbkey=Gene;gene=NA;gene_biotype=protein_coding;locus_tag=FLUAVH3N2_s6p1
+NC_007368.1	RefSeq	CDS	20	1429	.	+	0	ID=cds-YP_308842.1;Parent=gene-FLUAVH3N2_s6p1;Dbxref=GenBank:YP_308842.1,GeneID:3655154;Name=YP_308842.1;gbkey=CDS;gene=NA;locus_tag=FLUAVH3N2_s6p1;product=neuraminidase;protein_id=YP_308842.1
+

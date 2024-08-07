@@ -135,6 +135,7 @@ rule depth:
         samtools depth -a -o {output.depth} {input.bam}
         """
 
+
 rule idxstats:
     input:
         bam = rules.remove_duplicates.output.bam,
@@ -218,6 +219,7 @@ rule validate_assignment:
         ctrl_neg = config["tools"]["general"]["neg"],
         mouthwash = config["tools"]["general"]["mouthwash"],
         wastewater = config["tools"]["general"]["wastewater"],
+        dnase = config["tools"]["general"]["dnase"],
         plate = config["plate"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/validate_assignment/{sample}_validation.out.log",
@@ -234,7 +236,7 @@ rule validate_assignment:
             --ethid {wildcards.sample} \
             --match_table {params.match_table} \
             --count_table {input.assignment} \
-            --exceptions {params.ctrl_pos},{params.ctrl_neg},{params.mouthwash},{params.wastewater} \
+            --exceptions {params.ctrl_pos},{params.ctrl_neg},{params.mouthwash},{params.wastewater},{params.dnase} \
             --plate {params.plate} \
             --output {output.validation}  2> >(tee {log.errfile} >&2)
         """
@@ -259,7 +261,6 @@ rule validate_assignment:
 rule consensus:
     input:
         bam = rules.remove_duplicates.output.bam,
-        #qualimap_qc = rules.qualimap_filtered.output.qc_status,
     output:
         calls_norm_filt_indels = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm_filt_indel.bcf",
         all_consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa",
@@ -300,7 +301,6 @@ rule postprocess_consensus:
     output:
         consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa",
         consensus_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa.gz",
-        #consensus_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus_cds.fa",
         count_n = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_count_n.txt",
     params:
         ref = config["resources"]["reference_table"],
@@ -309,7 +309,6 @@ rule postprocess_consensus:
         reference = config["resources"]["reference_table"],
         readcount = rules.remove_duplicates.output.readcount,
         mincov = config["tools"]["consensus"]["minimum_coverage"],
-        cds = config["tools"]["consensus"]["cds_bed"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/postprocess_consensus/{sample}_consensus.err.log",
@@ -330,12 +329,69 @@ rule postprocess_consensus:
         
         gzip -c {output.consensus} > {output.consensus_gzip}
 
-
-
         python workflow/scripts/count_n.py \
         --input {output.consensus} \
         --output {output.count_n} \
         --bed {params.reference} \
         --coverage {input.all_cov_bed} \
         --threshold {params.mincov}
+        """
+
+
+rule consensus_cds:
+    input:
+        all_consensus = rules.consensus.output.all_consensus,
+        postprocess_consensus = rules.postprocess_consensus.output.consensus,
+    output:
+        all_consensus_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus_cds/{sample}_all_consensus_cds.fa",
+        consensus_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus_cds/{sample}_consensus_cds.fa",
+    params:
+        cds = config["tools"]["consensus"]["cds_bed"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus_cds/{sample}_consensus.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus_cds/{sample}_consensus.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/consensus_cds/{sample}_consensus.benchmark"
+    conda:
+        "../envs/bcftools.yaml"
+    shell:
+        """
+            if [ "$(wc -l < {input.postprocess_consensus})" == "0" ]; then
+                echo "WARNING: empty consensus. This should only happen if no viruses showed enough coverage"
+                touch {output.all_consensus_cds}
+                touch {output.consensus_cds}
+            else
+                bedtools getfasta -fi {input.all_consensus} -bed {params.cds} > {output.all_consensus_cds}
+                bedtools getfasta -fi {input.postprocess_consensus} -bed {params.cds} > {output.consensus_cds}
+            fi
+        """
+
+
+rule count_n_cds:
+    input:
+        consensus = rules.consensus_cds.output.consensus_cds,
+        assignment = rules.assign_virus.output.table,
+        all_cov_bed = rules.consensus.output.all_cov_bed,
+    output:
+        count_n_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/count_n_cds/{sample}_count_n.txt",
+    params:
+        bed = config["tools"]["consensus"]["cds_bed"],
+        mincov = config["tools"]["consensus"]["minimum_coverage"],
+        match_table = config["resources"]["reference_table"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/count_n_cds/{sample}_count_n_cds.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/count_n_cds/{sample}_count_n_cds.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/count_n_cds/{sample}_count_n_cds.benchmark"
+    conda:
+        "../envs/python.yaml"
+    shell:
+        """
+        python workflow/scripts/count_n_cds.py \
+        --input {input.consensus} \
+        --output {output.count_n_cds} \
+        --bed {params.bed} \
+        --coverage {input.all_cov_bed} \
+        --threshold {params.mincov} \
+        --match_table {params.match_table}
         """

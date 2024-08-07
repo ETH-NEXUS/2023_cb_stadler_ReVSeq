@@ -1,0 +1,11 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KJ942623.1 1 2333
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1321009
+KJ942623.1	Genbank	region	1	2333	.	+	.	ID=KJ942623.1:1..2333;Dbxref=taxon:1321009;Name=1;collection-date=2012;country=USA: Texas;gbkey=Src;genome=genomic;mol_type=viral cRNA;nat-host=Homo sapiens;segment=1;serotype=H3N2;strain=A/Texas/50/2012
+KJ942623.1	Genbank	five_prime_UTR	1	27	.	+	.	ID=id-KJ942623.1:1..27;gbkey=5'UTR
+KJ942623.1	Genbank	gene	28	2307	.	+	.	ID=gene-L998_47834gpPB2;Name=PB2;gbkey=Gene;gene=PB2;gene_biotype=protein_coding;locus_tag=L998_47834gpPB2
+KJ942623.1	Genbank	CDS	28	2307	.	+	0	ID=cds-AIE52536.1;Parent=gene-L998_47834gpPB2;Dbxref=NCBI_GP:AIE52536.1;Name=AIE52536.1;gbkey=CDS;gene=PB2;locus_tag=L998_47834gpPB2;product=polymerase PB2;protein_id=AIE52536.1
+KJ942623.1	Genbank	three_prime_UTR	2308	2333	.	+	.	ID=id-KJ942623.1:2308..2333;end_range=2333,.;gbkey=3'UTR;partial=true
+

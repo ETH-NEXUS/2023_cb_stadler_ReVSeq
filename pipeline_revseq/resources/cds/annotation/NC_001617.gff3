@@ -1,0 +1,20 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_001617.1 1 7152
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=147711
+NC_001617.1	RefSeq	region	1	7152	.	+	.	ID=NC_001617.1:1..7152;Dbxref=taxon:147711;gbkey=Src;genome=genomic;mol_type=genomic RNA;old-name=Human rhinovirus A;serotype=89
+NC_001617.1	RefSeq	gene	619	7113	.	+	.	ID=gene-HRV89gp1;Dbxref=GeneID:1493933;Name=HRV89gp1;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HRV89gp1
+NC_001617.1	RefSeq	CDS	619	7113	.	+	0	ID=cds-NP_042288.1;Parent=gene-HRV89gp1;Dbxref=UniProtKB/Swiss-Prot:P07210,GenBank:NP_042288.1,GeneID:1493933;Name=NP_042288.1;gbkey=CDS;locus_tag=HRV89gp1;product=genome polyprotein;protein_id=NP_042288.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	619	825	.	+	.	ID=id-NP_042288.1:1..69;Parent=cds-NP_042288.1;gbkey=Prot;product=capsid protein VP4;protein_id=NP_740391.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	826	1626	.	+	.	ID=id-NP_042288.1:70..336;Parent=cds-NP_042288.1;gbkey=Prot;product=capsid protein VP2;protein_id=NP_740392.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	1627	2340	.	+	.	ID=id-NP_042288.1:337..574;Parent=cds-NP_042288.1;gbkey=Prot;product=capsid protein VP3;protein_id=NP_740393.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	2341	3234	.	+	.	ID=id-NP_042288.1:575..872;Parent=cds-NP_042288.1;gbkey=Prot;product=capsid protein VP1;protein_id=NP_740394.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	3235	3642	.	+	.	ID=id-NP_042288.1:873..1008;Parent=cds-NP_042288.1;gbkey=Prot;product=P2-A polypeptide;protein_id=NP_740395.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	3643	3927	.	+	.	ID=id-NP_042288.1:1009..1103;Parent=cds-NP_042288.1;gbkey=Prot;product=P2-B polypeptide;protein_id=NP_740396.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	3928	4890	.	+	.	ID=id-NP_042288.1:1104..1424;Parent=cds-NP_042288.1;gbkey=Prot;product=P2-C polypeptide;protein_id=NP_740397.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	4891	5118	.	+	.	ID=id-NP_042288.1:1425..1500;Parent=cds-NP_042288.1;gbkey=Prot;product=P-3A polypeptide;protein_id=NP_740398.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	5119	5181	.	+	.	ID=id-NP_042288.1:1501..1521;Parent=cds-NP_042288.1;gbkey=Prot;product=VPg polypeptide;protein_id=NP_740399.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	5182	5730	.	+	.	ID=id-NP_042288.1:1522..1704;Parent=cds-NP_042288.1;gbkey=Prot;product=protease 3C;protein_id=NP_740400.1
+NC_001617.1	RefSeq	mature_protein_region_of_CDS	5731	7110	.	+	.	ID=id-NP_042288.1:1705..2164;Parent=cds-NP_042288.1;gbkey=Prot;product=RNA-directed RNA polymerase;protein_id=NP_740401.1
+

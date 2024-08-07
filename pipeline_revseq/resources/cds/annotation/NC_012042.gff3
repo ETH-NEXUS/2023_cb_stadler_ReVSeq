@@ -1,0 +1,15 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_012042.1 1 5196
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1511882
+NC_012042.1	RefSeq	region	1	5196	.	+	.	ID=NC_012042.1:1..5196;Dbxref=taxon:1511882;country=Pakistan;gbkey=Src;genome=genomic;genotype=1;isolate=PK-5510;isolation-source=stool;mol_type=genomic DNA;nat-host=Homo sapiens
+NC_012042.1	RefSeq	gene	179	2101	.	+	.	ID=gene-HBoV2_gp1;Dbxref=GeneID:7755626;Name=HBoV2_gp1;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HBoV2_gp1
+NC_012042.1	RefSeq	CDS	179	2101	.	+	0	ID=cds-YP_002586773.1;Parent=gene-HBoV2_gp1;Dbxref=GenBank:YP_002586773.1,GeneID:7755626;Name=YP_002586773.1;gbkey=CDS;locus_tag=HBoV2_gp1;product=NS1;protein_id=YP_002586773.1
+NC_012042.1	RefSeq	gene	2330	2974	.	+	.	ID=gene-HBoV2_gp2;Dbxref=GeneID:7755623;Name=HBoV2_gp2;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HBoV2_gp2
+NC_012042.1	RefSeq	CDS	2330	2974	.	+	0	ID=cds-YP_002586774.1;Parent=gene-HBoV2_gp2;Dbxref=GenBank:YP_002586774.1,GeneID:7755623;Name=YP_002586774.1;gbkey=CDS;locus_tag=HBoV2_gp2;product=NP1;protein_id=YP_002586774.1
+NC_012042.1	RefSeq	gene	2961	4964	.	+	.	ID=gene-HBoV2_gp3;Dbxref=GeneID:7755624;Name=HBoV2_gp3;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HBoV2_gp3
+NC_012042.1	RefSeq	CDS	2961	4964	.	+	0	ID=cds-YP_002586775.1;Parent=gene-HBoV2_gp3;Dbxref=GenBank:YP_002586775.1,GeneID:7755624;Name=YP_002586775.1;gbkey=CDS;locus_tag=HBoV2_gp3;product=VP1;protein_id=YP_002586775.1
+NC_012042.1	RefSeq	gene	3348	4964	.	+	.	ID=gene-HBoV2_gp4;Dbxref=GeneID:7755625;Name=HBoV2_gp4;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HBoV2_gp4
+NC_012042.1	RefSeq	CDS	3348	4964	.	+	0	ID=cds-YP_002586776.1;Parent=gene-HBoV2_gp4;Dbxref=GenBank:YP_002586776.1,GeneID:7755625;Name=YP_002586776.1;gbkey=CDS;locus_tag=HBoV2_gp4;product=VP2;protein_id=YP_002586776.1
+

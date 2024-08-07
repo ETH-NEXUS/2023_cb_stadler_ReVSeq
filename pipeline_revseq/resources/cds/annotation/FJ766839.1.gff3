@@ -1,0 +1,11 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region FJ766839.1 1 1557
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=604436
+FJ766839.1	Genbank	region	1	1557	.	+	.	ID=FJ766839.1:1..1557;Dbxref=taxon:604436;Name=6;collection-date=15-Aug-2008;country=Australia: Queensland%2C Gold Coast;gbkey=Src;mol_type=viral cRNA;nat-host=Homo sapiens%3B gender M%3B age 15;segment=6;strain=B/Brisbane/60/2008
+FJ766839.1	Genbank	gene	47	349	.	+	.	ID=gene-NB;Name=NB;gbkey=Gene;gene=NB;gene_biotype=protein_coding
+FJ766839.1	Genbank	CDS	47	349	.	+	0	ID=cds-ACN29378.1;Parent=gene-NB;Dbxref=NCBI_GP:ACN29378.1;Name=ACN29378.1;gbkey=CDS;gene=NB;product=NB protein;protein_id=ACN29378.1
+FJ766839.1	Genbank	gene	54	1454	.	+	.	ID=gene-NA;Name=NA;gbkey=Gene;gene=NA;gene_biotype=protein_coding
+FJ766839.1	Genbank	CDS	54	1454	.	+	0	ID=cds-ACN29379.1;Parent=gene-NA;Dbxref=NCBI_GP:ACN29379.1;Name=ACN29379.1;gbkey=CDS;gene=NA;product=neuraminidase;protein_id=ACN29379.1
+

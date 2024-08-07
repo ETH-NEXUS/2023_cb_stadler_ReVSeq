@@ -1,0 +1,14 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KJ942617.1 1 1016
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1321009
+KJ942617.1	Genbank	region	1	1016	.	+	.	ID=KJ942617.1:1..1016;Dbxref=taxon:1321009;Name=7;collection-date=2012;country=USA: Texas;gbkey=Src;genome=genomic;mol_type=viral cRNA;nat-host=Homo sapiens;segment=7;serotype=H3N2;strain=A/Texas/50/2012
+KJ942617.1	Genbank	five_prime_UTR	1	25	.	+	.	ID=id-KJ942617.1:1..25;gbkey=5'UTR
+KJ942617.1	Genbank	gene	26	1007	.	+	.	ID=gene-L998_47834gpM2;Name=M2;gbkey=Gene;gene=M2;gene_biotype=protein_coding;locus_tag=L998_47834gpM2
+KJ942617.1	Genbank	CDS	26	51	.	+	0	ID=cds-AIE52527.1;Parent=gene-L998_47834gpM2;Dbxref=NCBI_GP:AIE52527.1;Name=AIE52527.1;gbkey=CDS;gene=M2;locus_tag=L998_47834gpM2;product=matrix protein 2;protein_id=AIE52527.1
+KJ942617.1	Genbank	CDS	740	1007	.	+	1	ID=cds-AIE52527.1;Parent=gene-L998_47834gpM2;Dbxref=NCBI_GP:AIE52527.1;Name=AIE52527.1;gbkey=CDS;gene=M2;locus_tag=L998_47834gpM2;product=matrix protein 2;protein_id=AIE52527.1
+KJ942617.1	Genbank	gene	26	784	.	+	.	ID=gene-L998_47834gpM1;Name=M1;gbkey=Gene;gene=M1;gene_biotype=protein_coding;locus_tag=L998_47834gpM1
+KJ942617.1	Genbank	CDS	26	784	.	+	0	ID=cds-AIE52526.1;Parent=gene-L998_47834gpM1;Dbxref=NCBI_GP:AIE52526.1;Name=AIE52526.1;gbkey=CDS;gene=M1;locus_tag=L998_47834gpM1;product=matrix protein 1;protein_id=AIE52526.1
+KJ942617.1	Genbank	three_prime_UTR	1008	1016	.	+	.	ID=id-KJ942617.1:1008..1016;end_range=1016,.;gbkey=3'UTR;partial=true
+

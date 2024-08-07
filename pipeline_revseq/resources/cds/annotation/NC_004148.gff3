@@ -1,0 +1,40 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_004148.2 1 13335
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=162145
+NC_004148.2	RefSeq	region	1	13335	.	+	.	ID=NC_004148.2:1..13335;Dbxref=taxon:162145;gb-acronym=HMPV;gbkey=Src;genome=genomic;isolate=CAN97-83;mol_type=genomic RNA
+NC_004148.2	RefSeq	gene	42	1247	.	+	.	ID=gene-HmVgp1;Dbxref=GeneID:2799936;Name=N;gbkey=Gene;gene=N;gene_biotype=protein_coding;locus_tag=HmVgp1
+NC_004148.2	RefSeq	mRNA	42	1247	.	+	.	ID=rna-HmVgp1;Parent=gene-HmVgp1;Dbxref=GeneID:2799936;gbkey=mRNA;gene=N;locus_tag=HmVgp1;product=nucleoprotein
+NC_004148.2	RefSeq	exon	42	1247	.	+	.	ID=exon-HmVgp1-1;Parent=rna-HmVgp1;Dbxref=GeneID:2799936;gbkey=mRNA;gene=N;locus_tag=HmVgp1;product=nucleoprotein
+NC_004148.2	RefSeq	CDS	55	1239	.	+	0	ID=cds-YP_012605.1;Parent=rna-HmVgp1;Dbxref=GenBank:YP_012605.1,GeneID:2799936;Name=YP_012605.1;gbkey=CDS;gene=N;locus_tag=HmVgp1;product=nucleoprotein;protein_id=YP_012605.1
+NC_004148.2	RefSeq	gene	1250	2158	.	+	.	ID=gene-HmVgp2;Dbxref=GeneID:2799937;Name=P;gbkey=Gene;gene=P;gene_biotype=protein_coding;locus_tag=HmVgp2
+NC_004148.2	RefSeq	mRNA	1250	2158	.	+	.	ID=rna-HmVgp2;Parent=gene-HmVgp2;Dbxref=GeneID:2799937;gbkey=mRNA;gene=P;locus_tag=HmVgp2;product=phosphoprotein
+NC_004148.2	RefSeq	exon	1250	2158	.	+	.	ID=exon-HmVgp2-1;Parent=rna-HmVgp2;Dbxref=GeneID:2799937;gbkey=mRNA;gene=P;locus_tag=HmVgp2;product=phosphoprotein
+NC_004148.2	RefSeq	CDS	1263	2147	.	+	0	ID=cds-YP_012606.1;Parent=rna-HmVgp2;Dbxref=GenBank:YP_012606.1,GeneID:2799937;Name=YP_012606.1;gbkey=CDS;gene=P;locus_tag=HmVgp2;product=phosphoprotein;protein_id=YP_012606.1
+NC_004148.2	RefSeq	gene	2167	3019	.	+	.	ID=gene-HmVgp3;Dbxref=GeneID:2799938;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding;locus_tag=HmVgp3
+NC_004148.2	RefSeq	mRNA	2167	3019	.	+	.	ID=rna-HmVgp3;Parent=gene-HmVgp3;Dbxref=GeneID:2799938;gbkey=mRNA;gene=M;locus_tag=HmVgp3;product=matrix protein
+NC_004148.2	RefSeq	exon	2167	3019	.	+	.	ID=exon-HmVgp3-1;Parent=rna-HmVgp3;Dbxref=GeneID:2799938;gbkey=mRNA;gene=M;locus_tag=HmVgp3;product=matrix protein
+NC_004148.2	RefSeq	CDS	2180	2944	.	+	0	ID=cds-YP_012607.1;Parent=rna-HmVgp3;Dbxref=GenBank:YP_012607.1,GeneID:2799938;Name=YP_012607.1;gbkey=CDS;gene=M;locus_tag=HmVgp3;product=matrix protein;protein_id=YP_012607.1
+NC_004148.2	RefSeq	gene	3054	4697	.	+	.	ID=gene-HmVgp4;Dbxref=GeneID:2799939;Name=F;gbkey=Gene;gene=F;gene_biotype=protein_coding;locus_tag=HmVgp4
+NC_004148.2	RefSeq	mRNA	3054	4697	.	+	.	ID=rna-HmVgp4;Parent=gene-HmVgp4;Dbxref=GeneID:2799939;gbkey=mRNA;gene=F;locus_tag=HmVgp4;product=fusion glycoprotein precursor
+NC_004148.2	RefSeq	exon	3054	4697	.	+	.	ID=exon-HmVgp4-1;Parent=rna-HmVgp4;Dbxref=GeneID:2799939;gbkey=mRNA;gene=F;locus_tag=HmVgp4;product=fusion glycoprotein precursor
+NC_004148.2	RefSeq	CDS	3067	4686	.	+	0	ID=cds-YP_012608.1;Parent=rna-HmVgp4;Dbxref=GenBank:YP_012608.1,GeneID:2799939;Name=YP_012608.1;gbkey=CDS;gene=F;locus_tag=HmVgp4;product=fusion glycoprotein precursor;protein_id=YP_012608.1
+NC_004148.2	RefSeq	gene	4711	5456	.	+	.	ID=gene-HmVgp5;Dbxref=GeneID:2799940;Name=M2;gbkey=Gene;gene=M2;gene_biotype=protein_coding;locus_tag=HmVgp5
+NC_004148.2	RefSeq	mRNA	4711	5456	.	+	.	ID=rna-HmVgp5;Parent=gene-HmVgp5;Dbxref=GeneID:2799940;gbkey=mRNA;gene=M2;locus_tag=HmVgp5;product=matrix proteins M2-1 and M2-2
+NC_004148.2	RefSeq	exon	4711	5456	.	+	.	ID=exon-HmVgp5-1;Parent=rna-HmVgp5;Dbxref=GeneID:2799940;gbkey=mRNA;gene=M2;locus_tag=HmVgp5;product=matrix proteins M2-1 and M2-2
+NC_004148.2	RefSeq	CDS	4724	5287	.	+	0	ID=cds-YP_012609.1;Parent=rna-HmVgp5;Dbxref=GenBank:YP_012609.1,GeneID:2799940;Name=YP_012609.1;gbkey=CDS;gene=M2;locus_tag=HmVgp5;product=matrix protein M2-1;protein_id=YP_012609.1
+NC_004148.2	RefSeq	CDS	5235	5450	.	+	0	ID=cds-YP_012610.1;Parent=rna-HmVgp5;Dbxref=GenBank:YP_012610.1,GeneID:2799940;Name=YP_012610.1;gbkey=CDS;gene=M2;locus_tag=HmVgp5;product=matrix protein M2-2;protein_id=YP_012610.1
+NC_004148.2	RefSeq	gene	5468	6094	.	+	.	ID=gene-HmVgp6;Dbxref=GeneID:2799941;Name=SH;gbkey=Gene;gene=SH;gene_biotype=protein_coding;locus_tag=HmVgp6
+NC_004148.2	RefSeq	mRNA	5468	6094	.	+	.	ID=rna-HmVgp6;Parent=gene-HmVgp6;Dbxref=GeneID:2799941;gbkey=mRNA;gene=SH;locus_tag=HmVgp6;product=small hydrophobic protein
+NC_004148.2	RefSeq	exon	5468	6094	.	+	.	ID=exon-HmVgp6-1;Parent=rna-HmVgp6;Dbxref=GeneID:2799941;gbkey=mRNA;gene=SH;locus_tag=HmVgp6;product=small hydrophobic protein
+NC_004148.2	RefSeq	CDS	5481	6020	.	+	0	ID=cds-YP_012611.1;Parent=rna-HmVgp6;Dbxref=GenBank:YP_012611.1,GeneID:2799941;Name=YP_012611.1;gbkey=CDS;gene=SH;locus_tag=HmVgp6;product=small hydrophobic protein;protein_id=YP_012611.1
+NC_004148.2	RefSeq	gene	6219	6929	.	+	.	ID=gene-HmVgp7;Dbxref=GeneID:2799942;Name=G;gbkey=Gene;gene=G;gene_biotype=protein_coding;locus_tag=HmVgp7
+NC_004148.2	RefSeq	mRNA	6219	6929	.	+	.	ID=rna-HmVgp7;Parent=gene-HmVgp7;Dbxref=GeneID:2799942;gbkey=mRNA;gene=G;locus_tag=HmVgp7;product=attachment glycoprotein G
+NC_004148.2	RefSeq	exon	6219	6929	.	+	.	ID=exon-HmVgp7-1;Parent=rna-HmVgp7;Dbxref=GeneID:2799942;gbkey=mRNA;gene=G;locus_tag=HmVgp7;product=attachment glycoprotein G
+NC_004148.2	RefSeq	CDS	6232	6891	.	+	0	ID=cds-YP_012612.1;Parent=rna-HmVgp7;Dbxref=GenBank:YP_012612.1,GeneID:2799942;Name=YP_012612.1;gbkey=CDS;gene=G;locus_tag=HmVgp7;product=attachment glycoprotein G;protein_id=YP_012612.1
+NC_004148.2	RefSeq	gene	7120	13239	.	+	.	ID=gene-HmVgp8;Dbxref=GeneID:2799943;Name=L;gbkey=Gene;gene=L;gene_biotype=protein_coding;locus_tag=HmVgp8
+NC_004148.2	RefSeq	mRNA	7120	13239	.	+	.	ID=rna-HmVgp8;Parent=gene-HmVgp8;Dbxref=GeneID:2799943;gbkey=mRNA;gene=L;locus_tag=HmVgp8;product=RNA dependent RNA polymerase
+NC_004148.2	RefSeq	exon	7120	13239	.	+	.	ID=exon-HmVgp8-1;Parent=rna-HmVgp8;Dbxref=GeneID:2799943;gbkey=mRNA;gene=L;locus_tag=HmVgp8;product=RNA dependent RNA polymerase
+NC_004148.2	RefSeq	CDS	7133	13150	.	+	0	ID=cds-YP_012613.1;Parent=rna-HmVgp8;Dbxref=GenBank:YP_012613.1,GeneID:2799943;Name=YP_012613.1;gbkey=CDS;gene=L;locus_tag=HmVgp8;product=RNA dependent RNA polymerase;protein_id=YP_012613.1
+

@@ -1,0 +1,20 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region AB252582.1 1 7347
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=411152
+AB252582.1	DDBJ	region	1	7347	.	+	.	ID=AB252582.1:1..7347;Dbxref=taxon:411152;country=Japan;gbkey=Src;isolation-source=human CSF (cerebrospinal fluid);mol_type=genomic RNA;strain=NII561-2000
+AB252582.1	DDBJ	five_prime_UTR	1	709	.	+	.	ID=id-AB252582.1:1..709;gbkey=5'UTR
+AB252582.1	DDBJ	CDS	710	7258	.	+	0	ID=cds-BAF63403.1;Dbxref=NCBI_GP:BAF63403.1;Name=BAF63403.1;gbkey=CDS;product=polyprotein;protein_id=BAF63403.1
+AB252582.1	DDBJ	mature_protein_region_of_CDS	710	1576	.	+	.	ID=id-BAF63403.1:1..289;Parent=cds-BAF63403.1;gbkey=Prot;product=capsid protein VP0
+AB252582.1	DDBJ	mature_protein_region_of_CDS	1577	2332	.	+	.	ID=id-BAF63403.1:290..541;Parent=cds-BAF63403.1;gbkey=Prot;product=capsid protein VP3
+AB252582.1	DDBJ	mature_protein_region_of_CDS	2333	3034	.	+	.	ID=id-BAF63403.1:542..775;Parent=cds-BAF63403.1;gbkey=Prot;product=capsid protein VP1
+AB252582.1	DDBJ	mature_protein_region_of_CDS	3035	3484	.	+	.	ID=id-BAF63403.1:776..925;Note=function unknown;Parent=cds-BAF63403.1;gbkey=Prot;product=2A
+AB252582.1	DDBJ	mature_protein_region_of_CDS	3485	3850	.	+	.	ID=id-BAF63403.1:926..1047;Note=function unknown;Parent=cds-BAF63403.1;gbkey=Prot;product=2B
+AB252582.1	DDBJ	mature_protein_region_of_CDS	3851	4837	.	+	.	ID=id-BAF63403.1:1048..1376;Note=function unknown;Parent=cds-BAF63403.1;gbkey=Prot;product=2C
+AB252582.1	DDBJ	mature_protein_region_of_CDS	4838	5188	.	+	.	ID=id-BAF63403.1:1377..1493;Note=function unknown;Parent=cds-BAF63403.1;gbkey=Prot;product=3A
+AB252582.1	DDBJ	mature_protein_region_of_CDS	5189	5248	.	+	.	ID=id-BAF63403.1:1494..1513;Note=VPg;Parent=cds-BAF63403.1;gbkey=Prot;product=3B
+AB252582.1	DDBJ	mature_protein_region_of_CDS	5249	5848	.	+	.	ID=id-BAF63403.1:1514..1713;Note=proteinase;Parent=cds-BAF63403.1;gbkey=Prot;product=3C
+AB252582.1	DDBJ	mature_protein_region_of_CDS	5849	7255	.	+	.	ID=id-BAF63403.1:1714..2182;Note=RNA-dependent RNA polymerase;Parent=cds-BAF63403.1;gbkey=Prot;product=3D
+AB252582.1	DDBJ	three_prime_UTR	7259	7347	.	+	.	ID=id-AB252582.1:7259..7347;gbkey=3'UTR
+

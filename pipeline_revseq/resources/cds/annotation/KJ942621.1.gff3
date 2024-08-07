@@ -1,0 +1,14 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region KJ942621.1 1 2222
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1321009
+KJ942621.1	Genbank	region	1	2222	.	+	.	ID=KJ942621.1:1..2222;Dbxref=taxon:1321009;Name=3;collection-date=2012;country=USA: Texas;gbkey=Src;genome=genomic;mol_type=viral cRNA;nat-host=Homo sapiens;segment=3;serotype=H3N2;strain=A/Texas/50/2012
+KJ942621.1	Genbank	five_prime_UTR	1	24	.	+	.	ID=id-KJ942621.1:1..24;gbkey=5'UTR
+KJ942621.1	Genbank	gene	25	2175	.	+	.	ID=gene-L998_47834gpPA;Name=PA;gbkey=Gene;gene=PA;gene_biotype=protein_coding;locus_tag=L998_47834gpPA
+KJ942621.1	Genbank	CDS	25	2175	.	+	0	ID=cds-AIE52533.1;Parent=gene-L998_47834gpPA;Dbxref=NCBI_GP:AIE52533.1;Name=AIE52533.1;gbkey=CDS;gene=PA;locus_tag=L998_47834gpPA;product=polymerase PA;protein_id=AIE52533.1
+KJ942621.1	Genbank	gene	25	784	.	+	.	ID=gene-L998_47834gpPA-X;Name=PA-X;gbkey=Gene;gene=PA-X;gene_biotype=protein_coding;locus_tag=L998_47834gpPA-X
+KJ942621.1	Genbank	CDS	25	597	.	+	0	ID=cds-AIE52532.1;Parent=gene-L998_47834gpPA-X;Dbxref=NCBI_GP:AIE52532.1;Name=AIE52532.1;exception=ribosomal slippage;gbkey=CDS;gene=PA-X;locus_tag=L998_47834gpPA-X;product=PA-X protein;protein_id=AIE52532.1
+KJ942621.1	Genbank	CDS	599	784	.	+	0	ID=cds-AIE52532.1;Parent=gene-L998_47834gpPA-X;Dbxref=NCBI_GP:AIE52532.1;Name=AIE52532.1;exception=ribosomal slippage;gbkey=CDS;gene=PA-X;locus_tag=L998_47834gpPA-X;product=PA-X protein;protein_id=AIE52532.1
+KJ942621.1	Genbank	three_prime_UTR	2176	2222	.	+	.	ID=id-KJ942621.1:2176..2222;end_range=2222,.;gbkey=3'UTR;partial=true
+

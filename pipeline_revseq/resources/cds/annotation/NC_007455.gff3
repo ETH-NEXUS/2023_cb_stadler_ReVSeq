@@ -1,0 +1,15 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_007455.1 1 5299
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=3052040
+NC_007455.1	RefSeq	region	1	5299	.	+	.	ID=NC_007455.1:1..5299;Dbxref=taxon:3052040;gbkey=Src;genome=genomic;isolate=st2;mol_type=genomic DNA;old-name=Primate bocaparvovirus 1
+NC_007455.1	RefSeq	gene	253	2172	.	+	.	ID=gene-HBoV_gp1;Dbxref=GeneID:3711585;Name=NS1;gbkey=Gene;gene=NS1;gene_biotype=protein_coding;locus_tag=HBoV_gp1
+NC_007455.1	RefSeq	CDS	253	2172	.	+	0	ID=cds-YP_338086.1;Parent=gene-HBoV_gp1;Dbxref=GenBank:YP_338086.1,GeneID:3711585;Name=YP_338086.1;gbkey=CDS;gene=NS1;locus_tag=HBoV_gp1;product=NS1;protein_id=YP_338086.1
+NC_007455.1	RefSeq	gene	2410	3069	.	+	.	ID=gene-HBoV_gp2;Dbxref=GeneID:3711586;Name=NP-1;gbkey=Gene;gene=NP-1;gene_biotype=protein_coding;locus_tag=HBoV_gp2
+NC_007455.1	RefSeq	CDS	2410	3069	.	+	0	ID=cds-YP_338087.1;Parent=gene-HBoV_gp2;Dbxref=GenBank:YP_338087.1,GeneID:3711586;Name=YP_338087.1;gbkey=CDS;gene=NP-1;locus_tag=HBoV_gp2;product=NP-1;protein_id=YP_338087.1
+NC_007455.1	RefSeq	gene	3056	5071	.	+	.	ID=gene-HBoV_gp3;Dbxref=GeneID:3711587;Name=VP1;gbkey=Gene;gene=VP1;gene_biotype=protein_coding;locus_tag=HBoV_gp3
+NC_007455.1	RefSeq	CDS	3056	5071	.	+	0	ID=cds-YP_338088.1;Parent=gene-HBoV_gp3;Dbxref=GenBank:YP_338088.1,GeneID:3711587;Name=YP_338088.1;gbkey=CDS;gene=VP1;locus_tag=HBoV_gp3;product=VP1;protein_id=YP_338088.1
+NC_007455.1	RefSeq	gene	3443	5071	.	+	.	ID=gene-HBoV_gp4;Dbxref=GeneID:3711588;Name=VP2;gbkey=Gene;gene=VP2;gene_biotype=protein_coding;locus_tag=HBoV_gp4
+NC_007455.1	RefSeq	CDS	3443	5071	.	+	0	ID=cds-YP_338089.1;Parent=gene-HBoV_gp4;Dbxref=GenBank:YP_338089.1,GeneID:3711588;Name=YP_338089.1;gbkey=CDS;gene=VP2;locus_tag=HBoV_gp4;product=VP2;protein_id=YP_338089.1
+

@@ -1,0 +1,20 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_009996.1 1 7099
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=463676
+NC_009996.1	RefSeq	region	1	7099	.	+	.	ID=NC_009996.1:1..7099;Dbxref=taxon:463676;country=Hong Kong;gbkey=Src;genome=genomic;isolation-source=nasopharyngeal aspirates of patients;mol_type=genomic RNA;old-name=Human rhinovirus C;strain=024
+NC_009996.1	RefSeq	gene	616	7050	.	+	.	ID=gene-HRVC_gp1;Dbxref=GeneID:5758809;Name=HRVC_gp1;gbkey=Gene;gene_biotype=protein_coding;locus_tag=HRVC_gp1
+NC_009996.1	RefSeq	CDS	616	7050	.	+	0	ID=cds-YP_001552411.1;Parent=gene-HRVC_gp1;Dbxref=GenBank:YP_001552411.1,GeneID:5758809;Name=YP_001552411.1;gbkey=CDS;locus_tag=HRVC_gp1;product=genome polyprotein;protein_id=YP_001552411.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	616	816	.	+	.	ID=id-YP_001552411.1:1..67;Parent=cds-YP_001552411.1;gbkey=Prot;product=capsid protein VP4;protein_id=YP_001552432.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	817	1599	.	+	.	ID=id-YP_001552411.1:68..328;Parent=cds-YP_001552411.1;gbkey=Prot;product=capsid protein VP2;protein_id=YP_001552433.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	1600	2304	.	+	.	ID=id-YP_001552411.1:329..563;Parent=cds-YP_001552411.1;gbkey=Prot;product=capsid protein VP3;protein_id=YP_001552434.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	2305	3126	.	+	.	ID=id-YP_001552411.1:564..837;Parent=cds-YP_001552411.1;gbkey=Prot;product=capsid protein VP1;protein_id=YP_001552435.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	3127	3552	.	+	.	ID=id-YP_001552411.1:838..979;Parent=cds-YP_001552411.1;gbkey=Prot;product=protease 2A;protein_id=YP_001552436.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	3553	3849	.	+	.	ID=id-YP_001552411.1:980..1078;Parent=cds-YP_001552411.1;gbkey=Prot;product=protein 2B;protein_id=YP_001552437.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	3850	4827	.	+	.	ID=id-YP_001552411.1:1079..1404;Parent=cds-YP_001552411.1;gbkey=Prot;product=protein 2C;protein_id=YP_001552438.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	4828	5052	.	+	.	ID=id-YP_001552411.1:1405..1479;Parent=cds-YP_001552411.1;gbkey=Prot;product=protein 3A;protein_id=YP_001552439.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	5053	5118	.	+	.	ID=id-YP_001552411.1:1480..1501;Parent=cds-YP_001552411.1;gbkey=Prot;product=3B;protein_id=YP_001552440.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	5119	5667	.	+	.	ID=id-YP_001552411.1:1502..1684;Parent=cds-YP_001552411.1;gbkey=Prot;product=protease 3C;protein_id=YP_001552441.1
+NC_009996.1	RefSeq	mature_protein_region_of_CDS	5668	7047	.	+	.	ID=id-YP_001552411.1:1685..2144;Parent=cds-YP_001552411.1;gbkey=Prot;product=3D;protein_id=YP_001552442.1
+
