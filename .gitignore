@@ -1,6 +1,6 @@
 # Pipeline
 revseq/secrets
-#pipeline_revseq/.snakemake/
+pipeline_revseq/.snakemake/
 pipeline_revseq/logs
 pipeline_revseq/results/
 .DS_Store
