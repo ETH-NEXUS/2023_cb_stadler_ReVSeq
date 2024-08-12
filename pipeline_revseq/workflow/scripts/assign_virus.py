@@ -10,7 +10,7 @@
 
 import pandas as pd
 import numpy as np
-import argparse, pandas.errors
+import argparse, pandas.errors, sys
 from matplotlib import pyplot
 
 def get_outliers(aggregated, percentile):

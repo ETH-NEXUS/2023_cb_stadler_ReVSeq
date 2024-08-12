@@ -36,7 +36,8 @@ def get_top_strain(inputdir, sample, dirname):
 def get_alternative_tops(inputdir, sample, dirname, top_strain_name, filter_alternatives, readnum_threshold, coverage_threshold):
     if len(top_strain_name) == 0:
         return ""
-    top_strain_name = top_strain_name[0]
+    if type(top_strain_name) is list:
+        top_strain_name = top_strain_name[0]
     sampledir = inputdir + "/" + sample
     if(dirname == "assign_virus"):
         strain = pd.read_table(sampledir + "/" + dirname + "/" + sample + "_substrain_count_table.tsv")
