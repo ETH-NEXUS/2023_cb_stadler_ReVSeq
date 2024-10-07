@@ -172,3 +172,14 @@ curl -X GET  -H "Authorization: Bearer your_access_token" -H "Accept: applicatio
 curl -X POST  -H "Authorization: Bearer your_access_token"  -H "Accept: application/json"   -H "Content-Type: application/json" -d '{"path":"/path/to/results/dir"}' https://revseq.nexus.ethz.ch/api/import_results/
 
 ```
+
+## Change mode
+
+This script is meant to be executed once. Enter the api container and run the following command:
+
+```bash
+python manage.py change_mode <mode> --add_prefix --prefix <prefix>
+```
+<mode>: The mode to set for samples. Must be either metagenomics or alignment.
+--add_prefix: Optional flag to indicate whether to add a prefix to the pseudonymized_id.
+--prefix <prefix>: The prefix to add to the pseudonymized_id if --add_prefix is set.
