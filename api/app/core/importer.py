@@ -95,6 +95,7 @@ class Importer:
             if not matching_file_type:
                 logger.warning(f"File type for {basename} not found")
 
+
             file, _ = File.objects.update_or_create(
                 path=filepath,
                 checksum=checksum,

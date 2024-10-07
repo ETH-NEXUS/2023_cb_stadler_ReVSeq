@@ -80,7 +80,7 @@ class SampleViewSet(viewsets.ModelViewSet):
         filters.DjangoFilterBackend,
         drf_filters.OrderingFilter,
     )
-    filterset_fields = ("plate__barcode", "pseudonymized_id", "control")
+    filterset_fields = ("plate__barcode", "pseudonymized_id", "control", "mode")
 
     http_method_names = ["get", "head", "options"]
 

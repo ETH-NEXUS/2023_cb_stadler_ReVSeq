@@ -29,6 +29,7 @@ class Sample(models.Model):
     valid = models.BooleanField(null=True, blank=True, default=True)
     control = models.BooleanField(null=True, blank=True, default=False)
     control_type = models.CharField(max_length=10, null=True, blank=True)
+    mode = models.CharField(max_length=100, default="metagenomics")
 
     def __str__(self):
         return self.pseudonymized_id

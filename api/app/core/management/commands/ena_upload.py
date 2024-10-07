@@ -201,4 +201,4 @@ class Command(BaseCommand):
         elif data_type == 'delete_job_id':
             self.delete_job_id()
         else:
-            logger.warning('Please specify a data type to upload: study, ser, analysis, or all')
+            logger.warning('Please specify a data type to upload: study, ser, analysis')
