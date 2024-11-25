@@ -47,8 +47,6 @@ from rest_framework.request import Request
 logger = logging.getLogger(__name__)
 
 
-
-
 def def_value():
     return {}
 
