@@ -135,7 +135,7 @@ class Importer:
         sample_count.mean_coverage_non_N_positions = coverage_n_file[0] if coverage_n_file else None
         sample_count.save()
 
-        if len(consensus_counts[0]) > 0:
+        if consensus_counts:
             for line in txt_to_list(consensus_counts[0])[1:]:
                 line_list = line.split("\t")
                 defaults = {
