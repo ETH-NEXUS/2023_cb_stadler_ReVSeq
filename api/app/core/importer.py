@@ -135,20 +135,21 @@ class Importer:
         sample_count.mean_coverage_non_N_positions = coverage_n_file[0] if coverage_n_file else None
         sample_count.save()
 
-        for line in txt_to_list(consensus_counts[0])[1:]:
-            line_list = line.split("\t")
-            defaults = {
-                "fraction_n": float(line_list[4]),
-                "mean_cov_non_n_positions": float(line_list[5]),
-            }
-            CDSCount.objects.update_or_create(
-                sample=sample_count.sample,
-                substrain=sample_count.substrain,
-                CDS_name=line_list[2],
-                number_n=line_list[3],
-                defaults=defaults,
+        if len(consensus_counts[0]) > 0:
+            for line in txt_to_list(consensus_counts[0])[1:]:
+                line_list = line.split("\t")
+                defaults = {
+                    "fraction_n": float(line_list[4]),
+                    "mean_cov_non_n_positions": float(line_list[5]),
+                }
+                CDSCount.objects.update_or_create(
+                    sample=sample_count.sample,
+                    substrain=sample_count.substrain,
+                    CDS_name=line_list[2],
+                    number_n=line_list[3],
+                    defaults=defaults,
 
-            )
+                )
 
 
 
