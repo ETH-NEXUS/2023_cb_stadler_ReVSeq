@@ -183,3 +183,5 @@ python manage.py change_mode <mode> --add_prefix --prefix <prefix>
 <mode>: The mode to set for samples. Must be either metagenomics or alignment.
 --add_prefix: Optional flag to indicate whether to add a prefix to the pseudonymized_id.
 --prefix <prefix>: The prefix to add to the pseudonymized_id if --add_prefix is set.
+
+ docker compose  -f docker-compose.yml -f  docker-compose.dev.yml  up
