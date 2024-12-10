@@ -96,12 +96,22 @@ class Importer:
                 logger.warning(f"File type for {basename} not found")
 
 
+            # file, _ = File.objects.update_or_create(
+            #     path=filepath,
+            #     checksum=checksum,
+            #     type=matching_file_type,
+            #     sample=sample,
+            #     plate=plate,
+            # )
+
             file, _ = File.objects.update_or_create(
                 path=filepath,
-                checksum=checksum,
-                type=matching_file_type,
-                sample=sample,
-                plate=plate,
+                defaults={
+                    "checksum": checksum,
+                    "type": matching_file_type,
+                    "sample": sample,
+                    "plate": plate,
+                }
             )
             logger.info(f"Saved information about the file {file}")
 

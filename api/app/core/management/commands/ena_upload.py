@@ -84,7 +84,7 @@ class Command(BaseCommand):
             print(f"An error occurred: {e}")
 
     def upload_ser(self):
-        samples = Sample.objects.filter(job_id__isnull=True, valid=True)
+        samples = Sample.objects.filter(job_id__isnull=True, valid=True) # im admin interface add new filed released_to_ena and then filter by this field and sent_to_ena === true
         for sample in samples:
             sample_counts = sample.samplecounts.all()
             if not sample_counts:
