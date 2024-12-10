@@ -228,12 +228,16 @@ class Importer:
             well, _ = Well.objects.get_or_create(
                 plate=plate, location=item[columns.deep_well_location]
             )
-            sample, _ = Sample.objects.get_or_create(
-                well=well,
-                sample_number=item[columns.sample_number],
+            # look up by pseudonymized_id
+            sample, created = Sample.objects.get_or_create(
                 pseudonymized_id=item[columns.pseudonymized_id],
-                plate=plate,
+                defaults={"plate": plate, "well": well, "sample_number": item[columns.sample_number]},
             )
+            if created:
+                logger.info(f"Created sample {sample}")
+            else:
+                logger.info(f"Sample {sample} already exists")
+                self.stats["already_existed"] += 1
             self.sample_id_dict[
                 item[columns.pseudonymized_id]
             ] = False  # later on, we will check, if all samples have been imported
@@ -260,10 +264,10 @@ class Importer:
         :return: None
         """
         if control:
-            Sample.objects.update_or_create(pseudonymized_id=control_sample_id,
-                                            plate=plate,
-                                            control=True,
-                                            control_type=control_type)
+            # look by pseudonymized_id
+            _sample, _ = Sample.objects.update_or_create(pseudonymized_id=control_sample_id,
+                                                        defaults={"plate": plate, "control": True, "control_type": control_type})
+
             sample_id = control_sample_id
         else:
             sample_id = os.path.basename(counts_file).split("_")[0]
