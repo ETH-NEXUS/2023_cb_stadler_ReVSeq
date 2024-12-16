@@ -45,7 +45,7 @@ class WellAdmin(ModelAdmin):
 
 @admin.register(Sample)
 class SampleAdmin(ModelAdmin):
-    list_display = ("pseudonymized_id", 'valid', "sample_number", "well", "job_id", "control")
+    list_display = ("pseudonymized_id", 'valid', "sample_number", "well", "job_id", "control", "upload_to_ena")
     search_fields = ("sample_number", "pseudonymized_id", "well__location")
     list_filter_submit = True
     list_filter = ("plate__barcode", "control", "control_type")

@@ -58,4 +58,4 @@ analysis:
   assembly_type: clone
   coverage: 3.7  # should be taken from the most expressed substrain
   program: BCFtools
-  platform: TODO
+  platform: 'Illumina NextSeq'
