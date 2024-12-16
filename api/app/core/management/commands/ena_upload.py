@@ -94,7 +94,7 @@ class Command(BaseCommand):
 
                 logger.info(f"Releasing {job_type_description}: There are {len(submitted_jobs)} submitted, "
                       f"{len(queued_jobs)} queued, and {len(running_jobs)} running jobs.")
-                logger.error(f"Releasing {job_type_description}: There are {len(error_jobs)} error jobs.")
+                logger.debug(f"Releasing {job_type_description}: There are {len(error_jobs)} error jobs.")
 
                 for job in submitted_jobs:
                     self.release_job(release_endpoint_template, job['id'])
