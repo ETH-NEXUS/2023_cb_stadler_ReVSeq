@@ -140,11 +140,11 @@ class Command(BaseCommand):
             release_endpoint_template=RELEASE_JOB_ENDPOINT,
             job_type_description="regular jobs"
         )
-        self._release_jobs_loop(
-            list_endpoint=ANALYSIS_JOBS_ENDPOINT,
-            release_endpoint_template=RELEASE_ANALYSIS_JOB_ENDPOINT,
-            job_type_description="analysis jobs"
-        )
+        # self._release_jobs_loop(
+        #     list_endpoint=ANALYSIS_JOBS_ENDPOINT,
+        #     release_endpoint_template=RELEASE_ANALYSIS_JOB_ENDPOINT,
+        #     job_type_description="analysis jobs"
+        # )
 
     def _create_ser_payload(self, sample, sample_counts):
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
