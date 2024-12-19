@@ -30,6 +30,7 @@ class Command(BaseCommand):
         super().__init__()
         self.job_analysis_ids = []
         self.job_ids = []
+        self.data_for_analysis_upload = []
 
     token = environ.get('ENA_TOKEN')
     headers = {'Authorization': f'Token {token}', 'Content-Type': 'application/json'}
@@ -98,18 +99,19 @@ class Command(BaseCommand):
 
                 for job in submitted_jobs:
                     self.release_job(release_endpoint_template, job['id'])
-                    print(f"Released {job_type_description} job {job['id']} ")
+
 
                 continue_releasing = bool(queued_jobs or running_jobs)
                 time.sleep(30)
         except Exception as e:
-            print(f"An error occurred while releasing {job_type_description}: {e}")
+            logger.error(f"An error occurred while releasing {job_type_description}: {e}")
 
     def upload_ser(self):
         samples = Sample.objects.filter(job_id__isnull=True, valid=True, upload_to_ena=True)
         logger.info(f'Uploading {len(samples)} samples to ENA')
         print(list(samples.values_list('pseudonymized_id', flat=True)))
         for sample in samples:
+            logger.info(f' ##################### Uploading {sample} to ENA #######################')
             sample_counts = SampleCount.objects.filter(sample=sample)
             if not sample_counts:
                 logger.warning(f'No counts for {sample}')
@@ -117,24 +119,21 @@ class Command(BaseCommand):
 
             payload = self._create_ser_payload(sample, sample_counts)
             analysis_payload = payload['data']['analysis']
-            print(f"Payload: {payload}")
 
             response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
                                                 message=f'SER for {sample} uploaded successfully')
             files = File.objects.filter(sample=sample)
-            # we need two files here: consensus.fa und chromosome file, both gzipped
-
             analysis_files = [file for file in files if  extract_basename(file.path).endswith(CONSENSUS_FILE_SUFFIX)  or extract_basename(file.path) == CHROMOSOME_FILE_NAME]
-            # if accession id comes, it worked
-            print('ANALYSIS FILES: ', analysis_files)
 
             job_id = response['id']
             sample.job_id = job_id
             sample.save()
-            time.sleep(10)
-            self.upload_analysis_job_and_files(job_id, sample, analysis_files, analysis_payload)
+            time.sleep(20)
+
+            self.data_for_analysis_upload.append((job_id, sample, analysis_files, analysis_payload))
             self.job_ids.append(job_id)
 
+        self._upload_analysis_loop()
         self._release_jobs_loop(
             list_endpoint=JOBS_ENDPOINT,
             release_endpoint_template=RELEASE_JOB_ENDPOINT,
@@ -146,6 +145,12 @@ class Command(BaseCommand):
         #     job_type_description="analysis jobs"
         # )
 
+    def _upload_analysis_loop(self):
+        logger.debug(f'Uploading analysis jobs for {len(self.data_for_analysis_upload)} samples')
+        for job_id, sample, files, analysis_payload in self.data_for_analysis_upload:
+            self.upload_analysis_job_and_files(job_id, sample, files, analysis_payload)
+            time.sleep(20)
+
     def _create_ser_payload(self, sample, sample_counts):
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
         sorted_sample_counts = sorted(sample_counts, key=self.__sort_key, reverse=True)
@@ -153,9 +158,7 @@ class Command(BaseCommand):
         metadata = Metadata.objects.filter(sample=sample).first()
         collection_date = metadata.ent_date.strftime("%Y-%m-%d")
         geo_location = metadata.prescriber
-
         coverage = float(sorted_sample_counts[0].coverage) + 0.01
-
 
         sample_alias = f"revseq_sample_{sample.pseudonymized_id}_{now}"
         experiment_alias = f"revseq_experiment_{sample.pseudonymized_id}_{now}"
@@ -202,14 +205,13 @@ class Command(BaseCommand):
     def upload_analysis_job_and_files(self, job_id, sample, files, analysis_payload):
         payload = {'template': 'default', 'data': analysis_payload, 'job': job_id}
         logger.info(f'Uploading analysis payload job for {sample}')
-        print('Analysis payload: ', payload)
         response = self.handle_http_request(ANALYSIS_ENDPOINT, payload, 'post',
                                             message=f'Analysis job for {sample} uploaded successfully')
         analysis_job_id = response['id']
         sample.analysis_job_id = analysis_job_id
         sample.save()
         self.upload_analysis_files(analysis_job_id, files)
-
+        time.sleep(30)
         self.enqueue_analysis_job(analysis_job_id)
         self.job_analysis_ids.append(analysis_job_id)
 
@@ -221,7 +223,6 @@ class Command(BaseCommand):
             if extract_basename(file.path) == CHROMOSOME_FILE_NAME:
                 file_type = 'CHROMOSOME_LIST'
             payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": file_type} #
-            print('FILES PAYLOAD: ', payload)
             self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
                                      message=f'Analysis file {file} uploaded successfully')
 

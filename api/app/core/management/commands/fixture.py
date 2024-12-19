@@ -9,12 +9,14 @@ FILE_PANEL_STRAIN = "initial_data/panel_strain.csv"
 FILE_STRAIN_SUBSTRAIN = "initial_data/strain_substrain.csv"
 FILE_FILE_TYPE = "initial_data/file_type.csv"
 FILE_TAXON_ID = "initial_data/substrain_taxon_lookup.csv"
-FILE_CDS = "initial_data/cds.bed"
+FILE_CDS = "initial_data/cds.bed" # bkrZsY
 
 
 def read_csv_file(input_file):
     with open(input_file, "r", encoding="utf-8-sig") as f:
         return list(csv.DictReader(f))
+
+
 
 
 class Command(BaseCommand):
