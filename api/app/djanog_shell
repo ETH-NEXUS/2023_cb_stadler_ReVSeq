@@ -20,3 +20,32 @@ for job in jobs:
     print(job, job.status)
 
 print(f"There are {submitted} submitted jobs, {qu} queued jobs and {error} error jobs")
+
+############################
+
+from core.models import Sample
+ids  = [
+    "4H6FKQ", "5xXjjp", "38nVTV", "49m5VA", "zGrf4n", "4SRYNi", "BJn2VZ", "3Ft7q9", "3eGjGj", "4JSa55", "3edUBd", "3fGJE8",
+    "3SXzSV", "bkrZsY", "cGQaRk", "4SWHMc", "375EUk", "xvyMxE", "3Vw5ij", "32WNFL", "DxMevL", "3fLBSP", "33eCP4", "CLwScw",
+    "E6qgW7", "ozKj7w", "HAAUgG", "yQUmMG", "uBCY5S", "gyQtpZ", "ex4d6T", "XisgNp", "G4bQxE", "jtjCjd", "Zu3u7N", "4i2tZF",
+    "4UF9K6", "HXGr8V", "q4bsMd", "RyXauM", "itJLqU", "QtXNo7", "TzR6v7", "xwkVbK", "tUrV5z", "QGowTB", "kwbwf8", "npCqtD",
+    "xPAa2d", "y9sf9q", "cyCNuA", "NMp4NB", "t9UZtV", "e3y7tj", "eAr6Lo", "q2oXnd", "YRBBfu", "jQNpYD", "V5iihT", "sJs93G",
+    "ss4Fh8", "m6243p", "SKJgwA", "kBgpZ4", "Sm9GYA", "9HhvMh", "xrRPFj", "MvvBk9", "VA9Yi5", "4rvG7f", "x6NRYc", "xYnaUy",
+    "mzwDVC", "SQZYHn", "GpvELC", "oUT7WT", "g33df2", "i5wLSU", "opfXjQ", "DwiwwU", "qtZxkz", "ydSpNQ", "39kc9U", "xHGR9u",
+    "oLXZ9a", "QRRsiL", "K2udH5", "sZ4qK3", "mmYEfJ", "hzNQRG", "8QXJTp", "gkcF5C", "3VC6ft", "BP5QSp", "3H4uLZ", "juVwzj",
+    "LCBdav", "SpXNmN", "BnbHLr", "Lq3fms", "h2ZJd5", "hjq9oe", "Q8Ba9A", "nf9ieP", "dgZP3L", "7xxDyW", "sr4bvM", "LosGHn",
+    "M5iqYC", "ahT4kF", "VT3bcF", "KtHTz8", "k9vgiw", "uTpHe5", "4t7Ncr", "iDqyV9", "G8vc2N", "BYjiah", "2hKeW2", "DBKZHX",
+    "afGSAT", "j3ZXpL", "jwkH9W", "ZNTJLD", "Di2qm7", "FcN3wC", "ND22rx", "uSTYZ2", "FXFt6J", "b99ooj", "sAyJww", "RVmPKr",
+    "gaQkyT", "CgiSAY", "5YkKkJ", "wF4k2T", "f8rfBe", "yhE88h", "ozGf4E", "m5XiUJ", "iZ7TLc", "CdyN3k", "yR5Hef", "MM8MkA",
+    "dLeBHd", "5cJWyf", "cWAMxe", "WydUVb", "2MHu4K", "NqUrMx", "TPgies", "Ki8Aa3", "Xo2ZNk", "sFFUfJ", "xwByzt", "V8dKQC",
+    "V9rHyG", "6z2wf2", "Mp25Fk", "2kH55m", "LX4eJE", "STGkhE", "DhoSq8", "Ho9wQu", "gycK6z", "KaJ5Pe", "MUZ8Cb", "34KSAo",
+    "wVBQbT", "ToGSRe"
+]
+
+
+samples = Sample.objects.all()
+for sample in samples:
+      if sample.pseudonymized_id  in ids:
+          sample.upload_to_ena = False
+          sample.save()
+          print(f"updated {sample}")
