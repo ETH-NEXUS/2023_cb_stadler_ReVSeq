@@ -4,16 +4,19 @@ import csv
 from core.models import Panel, Strain, Substrain, FileType, CDSPositions
 from helpers.color_log import logger
 
+
 FILE_PANEL_STRAIN = "initial_data/panel_strain.csv"
 FILE_STRAIN_SUBSTRAIN = "initial_data/strain_substrain.csv"
 FILE_FILE_TYPE = "initial_data/file_type.csv"
 FILE_TAXON_ID = "initial_data/substrain_taxon_lookup.csv"
-FILE_CDS = "initial_data/cds.bed"
+FILE_CDS = "initial_data/cds.bed" # bkrZsY
 
 
 def read_csv_file(input_file):
     with open(input_file, "r", encoding="utf-8-sig") as f:
         return list(csv.DictReader(f))
+
+
 
 
 class Command(BaseCommand):
@@ -38,13 +41,16 @@ class Command(BaseCommand):
         data = read_csv_file(FILE_TAXON_ID)
         for item in data:
             if item["substrain_name"]:
-                substrain, _ = Substrain.objects.get_or_create(
+                substrain, created = Substrain.objects.get_or_create(
                     name=item["substrain_name"]
                 )
                 substrain.taxon_id = item["tax_id"]
                 substrain.scientific_name = item["scientific_name"]
                 substrain.save()
-                print(f"Updated {substrain}")
+                if created:
+                    logger.info(f"Created {substrain}")
+                else:
+                    logger.info(f"Updated {substrain}")
 
 
     def panel_strain(self):

@@ -1,7 +1,9 @@
+import os
+
 from django.core.management.base import BaseCommand
 import requests
 from os import environ
-from core.models import Sample, File, Metadata
+from core.models import Sample, File, Metadata, SampleCount
 import datetime as dt
 from helpers.color_log import logger
 import time
@@ -15,6 +17,12 @@ RELEASE_JOB_ENDPOINT = 'http://ena:5000/api/jobs/<job_id>/release/'
 RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/release/'
 JOBS_ENDPOINT = 'http://ena:5000/api/jobs/'
 ANALYSIS_JOBS_ENDPOINT = 'http://ena:5000/api/analysisjobs/'
+CONSENSUS_FILE_SUFFIX = '.fa.gz'
+CHROMOSOME_FILE_NAME = 'chr_file.txt.gz'
+
+
+def extract_basename(path):
+    return os.path.basename(path)
 
 
 class Command(BaseCommand):
@@ -22,6 +30,7 @@ class Command(BaseCommand):
         super().__init__()
         self.job_analysis_ids = []
         self.job_ids = []
+        self.data_for_analysis_upload = []
 
     token = environ.get('ENA_TOKEN')
     headers = {'Authorization': f'Token {token}', 'Content-Type': 'application/json'}
@@ -37,6 +46,7 @@ class Command(BaseCommand):
         samples = Sample.objects.filter(job_id__isnull=False)
         for sample in samples:
             sample.job_id = None
+            sample.analysis_job_id = None
             sample.save()
             logger.info(f'Job id for {sample} deleted')
 
@@ -65,53 +75,81 @@ class Command(BaseCommand):
         payload = {'template': 'default', 'data': {}}
         self.handle_http_request(STUDY_ENDPOINT, payload, 'post', 'Study uploaded successfully')
 
-    def _release_jobs_loop(self, endpoint):
+    def _release_jobs_loop(self,
+                           list_endpoint,
+                           release_endpoint_template,
+                           job_type_description="jobs"):
         try:
             continue_releasing = True
             while continue_releasing:
-                jobs = self.handle_http_request(endpoint, method='get')['results']
+                response = self.handle_http_request(list_endpoint, method='get')
+                if not response or 'results' not in response:
+                    print(f"Failed to retrieve jobs from {list_endpoint}")
+                    break
+
+                jobs = response['results']
                 submitted_jobs = [j for j in jobs if j['status'] == 'SUBMITTED']
                 queued_jobs = [j for j in jobs if j['status'] == 'QUEUED']
                 running_jobs = [j for j in jobs if j['status'] == 'RUNNING']
-                print(
-                    f"There are {len(submitted_jobs)} submitted jobs, {len(queued_jobs)} queued jobs, and {len(running_jobs)} running jobs")
+                error_jobs = [j for j in jobs if j['status'] == 'ERROR']
+
+                logger.info(f"Releasing {job_type_description}: There are {len(submitted_jobs)} submitted, "
+                      f"{len(queued_jobs)} queued, and {len(running_jobs)} running jobs.")
+                logger.debug(f"Releasing {job_type_description}: There are {len(error_jobs)} error jobs.")
+
                 for job in submitted_jobs:
-                    self.release_job(RELEASE_JOB_ENDPOINT, job['id'])
-                    print(f"Released job {job['id']}")
-                continue_releasing = queued_jobs or running_jobs
+                    self.release_job(release_endpoint_template, job['id'])
+
+
+                continue_releasing = bool(queued_jobs or running_jobs)
                 time.sleep(30)
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.error(f"An error occurred while releasing {job_type_description}: {e}")
 
     def upload_ser(self):
-        samples = Sample.objects.filter(job_id__isnull=True, valid=True)
+        samples = Sample.objects.filter(job_id__isnull=True, valid=True, upload_to_ena=True)
+        logger.info(f'Uploading {len(samples)} samples to ENA')
+        print(list(samples.values_list('pseudonymized_id', flat=True)))
         for sample in samples:
-            sample_counts = sample.samplecounts.all()
+            logger.info(f' ##################### Uploading {sample} to ENA #######################')
+            sample_counts = SampleCount.objects.filter(sample=sample)
             if not sample_counts:
                 logger.warning(f'No counts for {sample}')
                 continue
 
             payload = self._create_ser_payload(sample, sample_counts)
-            print(f"Payload: {payload}")
+            analysis_payload = payload['data']['analysis']
 
             response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
                                                 message=f'SER for {sample} uploaded successfully')
             files = File.objects.filter(sample=sample)
-            # TODO: we need two files here: consensus.fa und chromosome file, both gzipped
-            analysis_files = []
-            consensus_fa_file = files.filter(type__postfix='.fa').first()
-            gzipped_consensus_fa_file = consensus_fa_file
-            # if accession id comes, it worked
+            analysis_files = [file for file in files if  extract_basename(file.path).endswith(CONSENSUS_FILE_SUFFIX)  or extract_basename(file.path) == CHROMOSOME_FILE_NAME]
 
             job_id = response['id']
             sample.job_id = job_id
             sample.save()
-            time.sleep(10)
-            self.upload_analysis_job_and_files(job_id, sample, files)
+            time.sleep(20)
+
+            self.data_for_analysis_upload.append((job_id, sample, analysis_files, analysis_payload))
             self.job_ids.append(job_id)
 
-        self._release_jobs_loop(JOBS_ENDPOINT)
-        self._release_jobs_loop(ANALYSIS_JOBS_ENDPOINT)
+        self._upload_analysis_loop()
+        self._release_jobs_loop(
+            list_endpoint=JOBS_ENDPOINT,
+            release_endpoint_template=RELEASE_JOB_ENDPOINT,
+            job_type_description="regular jobs"
+        )
+        # self._release_jobs_loop(
+        #     list_endpoint=ANALYSIS_JOBS_ENDPOINT,
+        #     release_endpoint_template=RELEASE_ANALYSIS_JOB_ENDPOINT,
+        #     job_type_description="analysis jobs"
+        # )
+
+    def _upload_analysis_loop(self):
+        logger.debug(f'Uploading analysis jobs for {len(self.data_for_analysis_upload)} samples')
+        for job_id, sample, files, analysis_payload in self.data_for_analysis_upload:
+            self.upload_analysis_job_and_files(job_id, sample, files, analysis_payload)
+            time.sleep(20)
 
     def _create_ser_payload(self, sample, sample_counts):
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
@@ -120,7 +158,7 @@ class Command(BaseCommand):
         metadata = Metadata.objects.filter(sample=sample).first()
         collection_date = metadata.ent_date.strftime("%Y-%m-%d")
         geo_location = metadata.prescriber
-        coverage = sorted_sample_counts[0].coverage
+        coverage = float(sorted_sample_counts[0].coverage) + 0.01
 
         sample_alias = f"revseq_sample_{sample.pseudonymized_id}_{now}"
         experiment_alias = f"revseq_experiment_{sample.pseudonymized_id}_{now}"
@@ -128,6 +166,7 @@ class Command(BaseCommand):
         files = File.objects.filter(sample=sample)
         for file in files:
             if file.type.postfix == '.cram':
+                logger.debug(f'Adding CRAM FILE{file.path} to SER for {sample} ___________________________-')
                 _files.append(file.path)
                 logger.debug(f'Adding {file.path} to SER for {sample}')
 
@@ -135,6 +174,7 @@ class Command(BaseCommand):
             'template': 'default',
             'data': {
                 'sample': {
+                    'title': f"ReVSeq Sample {sample.pseudonymized_id}",
                     'alias': sample_alias,
                     'host subject id': sample.pseudonymized_id,
                     'taxon_id': taxon_id,
@@ -153,7 +193,7 @@ class Command(BaseCommand):
                 'analysis': {
                     'name': f"analysis_{sample.pseudonymized_id}_{now}",
                     'coverage': coverage,
-
+                    'program': 'BCFtools',
                 }
 
             },
@@ -162,23 +202,27 @@ class Command(BaseCommand):
 
 
 
-    def upload_analysis_job_and_files(self, job_id, sample, files):
-        payload = {'template': 'default', 'data': {}, 'job': job_id}
+    def upload_analysis_job_and_files(self, job_id, sample, files, analysis_payload):
+        payload = {'template': 'default', 'data': analysis_payload, 'job': job_id}
+        logger.info(f'Uploading analysis payload job for {sample}')
         response = self.handle_http_request(ANALYSIS_ENDPOINT, payload, 'post',
                                             message=f'Analysis job for {sample} uploaded successfully')
         analysis_job_id = response['id']
         sample.analysis_job_id = analysis_job_id
         sample.save()
         self.upload_analysis_files(analysis_job_id, files)
-
+        time.sleep(30)
         self.enqueue_analysis_job(analysis_job_id)
         self.job_analysis_ids.append(analysis_job_id)
 
     def upload_analysis_files(self, analysis_job_id, files):
         for file in files:
             # file types: FASTA und CHROMOSOME_LIST
-            # TODO: if it is a chromosome file, file type is CHROMOSOME_LIST
-            payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": 'FASTA'} #
+            # if it is a chromosome file, file type is CHROMOSOME_LIST
+            file_type = 'FASTA'
+            if extract_basename(file.path) == CHROMOSOME_FILE_NAME:
+                file_type = 'CHROMOSOME_LIST'
+            payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": file_type} #
             self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
                                      message=f'Analysis file {file} uploaded successfully')
 
@@ -201,4 +245,4 @@ class Command(BaseCommand):
         elif data_type == 'delete_job_id':
             self.delete_job_id()
         else:
-            logger.warning('Please specify a data type to upload: study, ser, analysis, or all')
+            logger.warning('Please specify a data type to upload: study, ser, analysis')

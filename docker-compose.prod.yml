@@ -7,7 +7,7 @@ services:
       - /data/revseq/results/gather_results:/data
       - /data/revseq/results/results:/data/revseq/results/results
   ws:
-    image: ethnexus/smnrp:1.1.1
+    image: ethnexus/smnrp:2.5.1
     volumes:
       - "web_root:/web_root:z"
       - "smnrp-data:/etc/letsencrypt"
@@ -31,6 +31,8 @@ services:
         rm -rf /app/dist/spa
       "
   ena:
+    ports:
+      - 5042:5000
     volumes:
       - /data/revseq/results/gather_results:/data
       - /data/revseq/results/results:/data/revseq/results/results

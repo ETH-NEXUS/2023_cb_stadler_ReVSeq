@@ -313,3 +313,4 @@ media/
 site/
 
 .ena.secret.yml
+.secret.yml
