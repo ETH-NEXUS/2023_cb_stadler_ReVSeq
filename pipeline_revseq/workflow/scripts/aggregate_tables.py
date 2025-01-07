@@ -20,6 +20,7 @@ def get_top_strain(inputdir, sample, dirname):
         strain = pd.read_table(sampledir + "/" + dirname + "/" + sample + "_validation.tsv")
     else:
         sys.exit("ERROR: unknown subdir to fetch the assignments")
+    strain=strain.rename(columns={"Unnamed: 0": "name"})
     top_strain = strain.loc[strain['rpkm_proportions'] == max(strain['rpkm_proportions'])]
     top_strain = top_strain.drop(columns="Unnamed: 0", errors="ignore")
     if len(top_strain) > 1:

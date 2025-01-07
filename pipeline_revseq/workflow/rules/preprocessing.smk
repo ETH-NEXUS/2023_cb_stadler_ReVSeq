@@ -82,42 +82,101 @@ rule merge_lanes:
         --outsuffix {params.outsuffix_r2}
         """
 
-rule merge_refs:
-    input:
-        virus_reference = config["resources"]["reference"],
-        host_reference = config["resources"]["host_ref"],
+rule kraken2:
+    #input:
+        #r1 =rules.merge_lanes.output.r1,
+        #r2 =rules.merge_lanes.output.r2,
     output:
-        referenceout = config["resources"]["reference_dir"]+"/merged_virus_host_ref.fa",
+        kraken2_report = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.report",
+        #upload_success = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.upload_success",
+        #download_success = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.download_success",
+        detected_substrains = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.detected_substrains.tsv",
+    params:
+        k2 = "/data/k2/"+config["plate"]+"/{sample}/{sample}.report",
     log:
-        outfile=config["inputOutput"]["output_dir"]+"/logs/merge_refs/merge_refs.out.log",
-        errfile=config["inputOutput"]["output_dir"]+"/logs/merge_refs/merge_refs.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/kraken2/kraken2.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/kraken2/kraken2.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/logs/benchmark/merge_refs/merge_refs.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/kraken2/{sample}_kraken2.benchmark"
     conda:
         "../envs/python.yaml"
     shell:
         """
-        cat {input.virus_reference} > {output.referenceout} 2> >(tee {log.errfile} >&2)
-        cat {input.host_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
+        #cp {params.k2} {output.kraken2_report}
+        #python workflow/scripts/kraken_report_parser.py \
+        #    --report {output.kraken2_report} \
+        #    --output {output.detected_substrains}
+        touch {output.detected_substrains}
+        touch {output.kraken2_report}
         """
 
 
-rule bwa_index:
+rule gather_references:
     input:
-        reference = config["resources"]["host_ref"]
+        detected_substrains = rules.kraken2.output.detected_substrains,
     output:
-        ref_index = config["resources"]["host_ref"] + '.bwt'
+        bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/gather_references/{sample}.bed",
+        fasta_links_dir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/gather_references"),
+    params:
+        fastadir = config["resources"]["reference_dir"]+"/fasta",
+        download_list = config["resources"]["reference_dir"]+"/library_report.tsv",
     log:
-        outfile=config["inputOutput"]["output_dir"]+"/logs/bwa_index/bwa_index.out.log",
-        errfile=config["inputOutput"]["output_dir"]+"/logs/bwa_index/bwa_index.err.log",
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_references/gather_references.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_references/gather_references.err.log",
     benchmark:
-        config["inputOutput"]["output_dir"]+"/logs/benchmark/bwa_index/bwa_index.benchmark"
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/gather_references/{sample}_gather_references.benchmark"
     conda:
-        "../envs/bwa.yaml"
+        "../envs/python.yaml"
     shell:
-        "bwa index {input.reference} 2> >(tee {log.errfile} >&2)"
-
-
+        """
+        #python workflow/scripts/gather_references.py \
+        #    --substrains {input.detected_substrains} \
+        #    --downloadlist {params.download_list} \
+        #    --fastadir {params.fastadir} \
+        #    --bed {output.bed} \
+        #    --fastalinksdir {output.fasta_links_dir}
+        touch {output.bed}
+        """
+#
+#
+#rule merge_refs:
+#    input:
+#        bed = rules.gather_references.output.bed,
+#        host_reference = config["resources"]["host_ref"],
+#    output:
+#        referenceout = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_host_ref.fa",
+#    params:
+#        fasta_links_dir = rules.gather_references.output.fasta_links_dir,
+#    log:
+#        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_refs/merge_refs.out.log",
+#        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_refs/merge_refs.err.log",
+#    benchmark:
+#        config["inputOutput"]["output_dir"]+"/logs/benchmark/merge_refs/{sample}_merge_refs.benchmark"
+#    conda:
+#        "../envs/python.yaml"
+#    shell:
+#        """
+#        cat {params.fasta_links_dir}/* > {output.referenceout} 2> >(tee {log.errfile} >&2)
+#        cat {input.host_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
+#        """
+#
+#
+#rule bwa_index:
+#    input:
+#        reference = rules.merge_refs.output.referenceout
+#    output:
+#        ref_index = rules.merge_refs.output.referenceout + '.bwt'
+#    log:
+#        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bwa_index/bwa_index.out.log",
+#        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bwa_index/bwa_index.err.log",
+#    benchmark:
+#        config["inputOutput"]["output_dir"]+"/logs/benchmark/bwa_index/{sample}_bwa_index.benchmark"
+#    conda:
+#        "../envs/bwa.yaml"
+#    shell:
+#        "bwa index {input.reference} 2> >(tee {log.errfile} >&2)"
+#
+#
 rule cutadapt:
     input:
         r1 = rules.merge_lanes.output.r1,
@@ -182,88 +241,3 @@ rule cutadapt:
             {input.r2} 2> >(tee {log.errfile} >&2)
         fi
         """
-
-#rule trim_primers:
-#    input:
-#        r1 = rules.merge_lanes.output.r1,
-#        r2 = rules.merge_lanes.output.r2,
-#    output:
-#        r1 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_primers/{sample}_merged_R1_val_1.fq.gz"),#temp
-#        r2 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_primers/{sample}_merged_R2_val_2.fq.gz"),#temp
-#    params:
-#        base_name = "data/{sample}",
-#        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_primers",
-#        min_length = config["tools"]["trim_galore"]["min_length"],
-#        min_length_single = config["tools"]["trim_galore"]["min_length_single"],
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/trim_primers/{sample}_trim_galore.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/trim_primers/{sample}_trim_galore.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/trim_primers/{sample}.benchmark"
-#    conda:
-#        "../envs/trim_galore.yaml"
-#    threads: config['tools']['trim_galore']['threads']
-#    shell:
-#        """
-#        trim_galore \
-#        --length {params.min_length} \
-#        --output "{params.outdir}" \
-#        --retain_unpaired \
-#        --paired \
-#        -j {threads} \
-#        -r1 {params.min_length_single} \
-#        -r2 {params.min_length_single} \
-#        {input.r1} \
-#        {input.r2} 2> >(tee {log.errfile} >&2)
-#        """
-#
-#rule trim_adapters:
-#    input:
-#        r1 = rules.trim_primers.output.r1,
-#        r2 = rules.trim_primers.output.r2,
-#    output:
-#        r1_preliminary = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_adapters/{sample}_merged_R1_val_1_val_1.fq.gz"),#temp
-#        r2_preliminary = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_adapters/{sample}_merged_R2_val_2_val_2.fq.gz"),#temp
-#        r1 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_adapters/{sample}_merged_R1_val_1_val_1_val_1.fq.gz"),#temp
-#        r2 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_adapters/{sample}_merged_R2_val_2_val_2_val_2.fq.gz"),#temp
-#    params:
-#        base_name = "data/{sample}",
-#        outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/trim_adapters",
-#        min_length = config["tools"]["trim_galore"]["min_length"],
-#        min_length_single = config["tools"]["trim_galore"]["min_length_single"],
-#        adapter1 = XXX,
-#        adapter2 = XXX,
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/trim_adapters/{sample}_trim_galore.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/trim_adapters/{sample}_trim_galore.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/trim_adapters/{sample}.benchmark"
-#    conda:
-#        "../envs/trim_galore.yaml"
-#    threads: config['tools']['trim_galore']['threads']
-#    shell:
-#        """
-#        trim_galore \
-#        --length {params.min_length} \
-#        --output "{params.outdir}" \
-#        --retain_unpaired \
-#        --paired \
-#        -j {threads} \
-#        -r1 {params.min_length_single} \
-#        -r2 {params.min_length_single} \
-#        -a {params.adapter1} \
-#        {input.r1} \
-#        {input.r2} 2> >(tee {log.errfile} >&2)
-#
-#        trim_galore \
-#        --length {params.min_length} \
-#        --output "{params.outdir}" \
-#        --retain_unpaired \
-#        --paired \
-#        -j {threads} \
-#        -r1 {params.min_length_single} \
-#        -r2 {params.min_length_single} \
-#        -a {params.adapter2} \
-#        {output.r1_preliminary} \
-#        {input.r2_preliminary} 2> >(tee -a {log.errfile} >&2)
-#        """

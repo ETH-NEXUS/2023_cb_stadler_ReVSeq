@@ -85,7 +85,7 @@ case "$1" in
                                 -c${threads} \
                                 --configfile ${snakemake_config} \
                                 --config plate=${plate} \
-                                sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv --rerun-incomplete --notemp 
+                                sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv --notemp --keep-incomplete --rerun-incomplete --until gather_results_plate
                 else
                         echo "$(date) The plate has been already analysed (file ${anonymizeddir}/${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
                 fi
@@ -126,6 +126,11 @@ case "$1" in
                         --config plate=${plate} \
                         sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
                         --delete-temp-output
+                echo "deleting samplewise bwa references"
+                find ${anonymizeddir}/${plate} -iname merge_refs
+                for i in $(find ${anonymizeddir}/${plate} -iname merge_refs); do
+                        rm -r $i
+                done
         ;;
         *)
                 echo "$(date) Unkown sub-command ${1}" > /dev/stderr

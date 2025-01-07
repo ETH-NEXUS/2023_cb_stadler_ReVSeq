@@ -143,8 +143,6 @@ rule multiqc:
         --interactive \
         -o {params.outdir}  2> >(tee {log.errfile} >&2)
         """
-
-
 rule multiqc_trimmed:
     input:
         trimresult1 =  expand(rules.fastqc_trimmed.output.zip1, sample=sample_ids),

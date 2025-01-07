@@ -60,7 +60,7 @@ def get_dp(depth, value, aggregated_stats, ref_table):
 if __name__ == '__main__':
 	# Parse input args
     parser = argparse.ArgumentParser(description='Detects, counts and reports viruses in a sample', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--ref_table', required=True, type=str, help='the bed file listing all the reference viral genomes')
+    parser.add_argument('--ref_table', required=True, type=str, help='the bed file listing all the reference viral genomes from Kraken2')
     parser.add_argument('--idxstats', required=True, type=str, help='the output of samtools idxstats')
     parser.add_argument('--counts', required=True, type=str, help='the count file output by samtools view -c -F 4')
     parser.add_argument('--taxon_table', required=True, type=str, help='the table with all the substrain name/taxon matches')
@@ -138,6 +138,7 @@ if __name__ == '__main__':
         # Collapsing substrains in major strains using the lookup table
     aggregated_stats.index = aggregated_stats.index.map(lookup_dict)
     if np.nan in aggregated_stats.index.tolist():
+        print(aggregated_stats)
         sys.exit("Error: The strain/substrain lookup did not contain correct entries and produced empty names. Please check the lookup table for syntax errors or missing entries.")
     aggregated_stats = aggregated_stats.groupby(level=0)[["aligned_reads","rpkm", "rpkm_proportions"]].sum()
     all_outlier_info = get_outliers(aggregated_stats, args.outlier_percentile_collapsed)
