@@ -85,6 +85,7 @@ class Substrain(models.Model):
     scientific_name = models.TextField(null=True)
     strain = models.ForeignKey(Strain, on_delete=models.CASCADE, null=True)
 
+
     def __str__(self):
         return self.name
 

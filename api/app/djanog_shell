@@ -46,6 +46,6 @@ ids  = [
 samples = Sample.objects.all()
 for sample in samples:
       if sample.pseudonymized_id  in ids:
-          sample.upload_to_ena = False
+          sample.upload_to_ena = True
           sample.save()
           print(f"updated {sample}")
