@@ -49,3 +49,16 @@ for sample in samples:
           sample.upload_to_ena = True
           sample.save()
           print(f"updated {sample}")
+
+
+from core.models import Sample, SampleCount
+samples = Sample.objects.filter(analysis_job_id__isnull=False)
+print(len(samples))
+c = 0
+for sample in samples:
+    sample_count = SampleCount.objects.filter(sample=sample)[0]
+    substrain = sample_count.substrain
+    print(c, substrain.serotype, substrain.name, substrain.strain)
+    c +=1
+    if substrain.serotype:
+        print(f"{sample.pseudonymized_id} --= {substrain.name} --- {substrain.serotype}")

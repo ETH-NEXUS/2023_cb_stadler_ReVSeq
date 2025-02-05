@@ -88,9 +88,12 @@ class SampleCountAdmin(ModelAdmin):
         "rpkm_proportions",
         "normcounts",
         "outlier",
+        "substrain",
+
     )
     list_filter_submit = True
-    list_filter = ("plate__barcode", "sample__pseudonymized_id", "substrain__name")
+    list_filter = ("plate__barcode",  "substrain__name")
+    search_fields = ( "substrain__name", 'sample__pseudonymized_id', "sample__pseudonymized_id",)
 
 
 @admin.register(Metadata)
