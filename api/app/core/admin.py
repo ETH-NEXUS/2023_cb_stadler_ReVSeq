@@ -72,7 +72,7 @@ class PanelAdmin(ModelAdmin):
 
 @admin.register(Substrain)
 class SubstrainAdmin(ModelAdmin):
-    list_display = ("name", "strain")
+    list_display = ("name", "strain", "taxon_id", "serotype")
 
     search_fields = ("name", "strain__name")
     list_filter_submit = True
