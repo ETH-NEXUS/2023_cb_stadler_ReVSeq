@@ -20,6 +20,7 @@ sample:
   host subject id: xx #  pseudonymized ethid
   collection date: 2023-11-10
   geographic location (region and locality): CANTON
+
   # static
   geographic location (country and/or sea): Switzerland
   host common name: Human
