@@ -51,14 +51,45 @@ for sample in samples:
           print(f"updated {sample}")
 
 
+def sort_key(x):
+        # if the value is None, it is treated as a very small number for sorting purposes
+        return x.rpkm_proportions if x.rpkm_proportions is not None else float('-inf')
+
 from core.models import Sample, SampleCount
 samples = Sample.objects.filter(analysis_job_id__isnull=False)
 print(len(samples))
-c = 0
+c = 1
 for sample in samples:
-    sample_count = SampleCount.objects.filter(sample=sample)[0]
-    substrain = sample_count.substrain
+    sample_counts = SampleCount.objects.filter(sample=sample)
+    sorted_sample_counts = sorted(sample_counts, key=sort_key, reverse=True)
+    first = sorted_sample_counts[0]
+    substrain = first.substrain
     print(c, substrain.serotype, substrain.name, substrain.strain)
     c +=1
     if substrain.serotype:
-        print(f"{sample.pseudonymized_id} --= {substrain.name} --- {substrain.serotype}")
+        print(f"{sample.pseudonymized_id} --= {substrain.name} --- {substrain.serotype}!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+ids =  [
+    "3edUBd", "375EUk", "32WNFL", "CLwScw", "jtjCjd", "4UF9K6", "RyXauM", "itJLqU", "xwkVbK", "kwbwf8", "eAr6Lo", "q2oXnd",
+    "V5iihT", "ss4Fh8", "m6243p", "SKJgwA", "kBgpZ4", "Sm9GYA", "9HhvMh", "xrRPFj", "VA9Yi5", "4rvG7f", "x6NRYc", "xYnaUy",
+    "SQZYHn", "g33df2", "opfXjQ", "DwiwwU", "qtZxkz", "ydSpNQ", "39kc9U", "xHGR9u", "oLXZ9a", "K2udH5", "mmYEfJ", "hzNQRG",
+    "8QXJTp", "gkcF5C", "3VC6ft", "3H4uLZ", "juVwzj", "LCBdav", "SpXNmN", "BnbHLr", "h2ZJd5", "sr4bvM", "LosGHn", "VT3bcF",
+    "uTpHe5", "4t7Ncr", "iDqyV9", "2hKeW2", "j3ZXpL", "uSTYZ2", "FXFt6J", "b99ooj", "sAyJww", "gaQkyT", "f8rfBe", "yhE88h",
+    "5cJWyf", "TPgies", "sFFUfJ", "6z2wf2", "wVBQbT"
+]
+
+from core.models import Sample, SampleCount
+def sort_key(x):
+        # if the value is None, it is treated as a very small number for sorting purposes
+        return x.rpkm_proportions if x.rpkm_proportions is not None else float('-inf')
+
+samples = Sample.objects.filter(analysis_job_id__isnull=False)
+items = []
+for sample in samples:
+    if sample.pseudonymized_id in ids:
+        sample_counts = SampleCount.objects.filter(sample=sample)
+        sorted_sample_counts = sorted(sample_counts, key=sort_key, reverse=True)
+        first = sorted_sample_counts[0]
+        substrain = first.substrain
+        items.append({"pseudonymized_id": sample.pseudonymized_id,"analysis_job_id": sample.analysis_job_id, "job_id": sample.job_id, "serotype": substrain.serotype})
+print(items)

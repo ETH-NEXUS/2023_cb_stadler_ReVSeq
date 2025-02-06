@@ -35,7 +35,7 @@ services:
     depends_on:
       - db
   ena:
-    image: ethnexus/ena-upload-ms:1.1.6
+    image: ethnexus/ena-upload-ms:1.2.0
     hostname: ena
     restart: unless-stopped
     environment:
