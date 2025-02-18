@@ -155,7 +155,7 @@ class Command(BaseCommand):
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
         sorted_sample_counts = sorted(sample_counts, key=self.__sort_key, reverse=True)
         taxon_id = sorted_sample_counts[0].substrain.taxon_id
-        serotype = sorted_sample_counts[0].serotype
+        serotype = sorted_sample_counts[0].substrain.serotype
         metadata = Metadata.objects.filter(sample=sample).first()
         collection_date = metadata.ent_date.strftime("%Y-%m-%d")
         geo_location = metadata.prescriber
