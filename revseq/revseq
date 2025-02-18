@@ -85,7 +85,7 @@ case "$1" in
                                 -c${threads} \
                                 --configfile ${snakemake_config} \
                                 --config plate=${plate} \
-                                sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv --notemp --keep-incomplete --rerun-incomplete --until gather_results_plate
+                                sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv --notemp --keep-incomplete --rerun-incomplete
                 else
                         echo "$(date) The plate has been already analysed (file ${anonymizeddir}/${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
                 fi
