@@ -55,10 +55,11 @@ rule dehuman:
 rule cram:
     input:
         bam = rules.dehuman.output.bam,
+        ref = rules.merge_refs.output.referenceout,
     output:
         cram = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/cram/{sample}.cram",
     params:
-        ref = config["resources"]["host_ref"],
+	    opt = config["tools"]["cram"]["tool_options"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/cram/fastq_to_cram.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/cram/fastq_to_cram.err.log",
@@ -67,8 +68,30 @@ rule cram:
     conda:
         "../envs/samtools.yaml"
     shell:
-        "samtools view -C -T {params.ref} -o {output.cram} {input.bam} 2> >(tee {log.errfile} >&2)"
+        "samtools sort -T {input.bam} --reference {input.ref} --output-fmt {params.opt} -o {output.cram} {input.bam}"
 
+
+#rule flat_file:
+#    input:
+#        cram = rules.cram.output.cram,
+#    output:
+#        fasta = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}.fasta",
+#        flat_temp = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}.embl.tmp"),
+#        flat = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}.embl",
+#    log:
+#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/flat_file.out.log",
+#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/flat_file.err.log",
+#    benchmark:
+#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/flat_file/{sample}.benchmark"
+#    conda:
+#        "../envs/seqret.yaml"
+#    shell:
+#    """
+#        samtools fasta {input.cram} > {output.fasta}
+#        seqret -sequence {output.fasta -outseq {output.flat_tmp} -osformat embl
+#        #The flat file does not fully comply with the upload requirements. The header needs to be manually modified
+#        
+#    """
 
 rule bam_to_fastq:
     input:

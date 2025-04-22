@@ -120,7 +120,7 @@ rule samtools_index:
 rule pileup:
     input:
         bam = rules.remove_duplicates.output.bam,
-        fasta = config["resources"]["reference"]
+        fasta = rules.merge_refs.output.referenceout_virus_only,
     output:
         outpile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/pileup/{sample}_pileup.txt"
     params:
@@ -283,13 +283,13 @@ rule validate_assignment:
 rule consensus:
     input:
         bam = rules.remove_duplicates.output.bam,
+        ref = rules.merge_refs.output.referenceout_virus_only,
     output:
         calls_norm_filt_indels = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm_filt_indel.bcf",
         all_consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa",
         low_cov_bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_low_coverage_sites.bed",
         all_cov_bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_coverage.bed",
     params:
-        ref = config["resources"]["reference"],
         mincov = config["tools"]["consensus"]["minimum_coverage"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus/{sample}_consensus.out.log",
@@ -300,9 +300,9 @@ rule consensus:
         "../envs/bcftools.yaml"
     shell:
         """
-            bcftools mpileup -Ou -f {params.ref} {input.bam} | \
+            bcftools mpileup -Ou -f {input.ref} {input.bam} | \
             bcftools call --ploidy 1 -mv -Ou | \
-            bcftools norm -f {params.ref} -Ou | \
+            bcftools norm -f {input.ref} -Ou | \
             bcftools filter --IndelGap 5 -Ob -o {output.calls_norm_filt_indels}
             bcftools index -o {output.calls_norm_filt_indels}.csi {output.calls_norm_filt_indels}
 
@@ -310,7 +310,7 @@ rule consensus:
             cat {output.all_cov_bed} | awk '$4 < {params.mincov}' > {output.low_cov_bed}
 
             # apply variants to create consensus sequence
-            bcftools consensus {output.calls_norm_filt_indels} -f {params.ref} -m {output.low_cov_bed} > {output.all_consensus}
+            bcftools consensus {output.calls_norm_filt_indels} -f {input.ref} -m {output.low_cov_bed} > {output.all_consensus}
         """
 
 

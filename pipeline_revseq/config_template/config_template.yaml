@@ -53,6 +53,8 @@ tools:
     threads: 4
     # The common string for any given samplesheet
     samplesheet_search_string: "SampleSheet"
+  cram:
+    tool_options: "cram,embed_ref,use_bzip2,use_lzma,level=9,seqs_per_slice=1000000"
   pileup:
     # minimum mapping quality threshold. Passed to samtools option -q
     # Used to create the pileup for visualization.

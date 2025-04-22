@@ -137,30 +137,43 @@ rule gather_references:
         #    --fastalinksdir {output.fasta_links_dir}
         touch {output.bed}
         """
-#
-#
-#rule merge_refs:
-#    input:
-#        bed = rules.gather_references.output.bed,
-#        host_reference = config["resources"]["host_ref"],
-#    output:
-#        referenceout = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_host_ref.fa",
-#    params:
-#        fasta_links_dir = rules.gather_references.output.fasta_links_dir,
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_refs/merge_refs.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_refs/merge_refs.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/logs/benchmark/merge_refs/{sample}_merge_refs.benchmark"
-#    conda:
-#        "../envs/python.yaml"
-#    shell:
-#        """
-#        cat {params.fasta_links_dir}/* > {output.referenceout} 2> >(tee {log.errfile} >&2)
-#        cat {input.host_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
-#        """
-#
-#
+
+
+rule merge_refs:
+    input:
+        bed = rules.gather_references.output.bed,
+    output:
+        referenceout = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_host_ref.fa",
+        referenceout_virus_only = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_only.fa",
+    params:
+        fasta_links_dir = rules.gather_references.output.fasta_links_dir,
+        host_virus_reference = config["resources"]["host_ref"],
+        virus_reference = config["resources"]["reference"]
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_refs/merge_refs.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_refs/merge_refs.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/merge_refs/{sample}_merge_refs.benchmark"
+    conda:
+        "../envs/python.yaml"
+    shell:
+        """
+        if [[ -f {output.referenceout} ]]; then
+            rm {output.referenceout}
+        fi
+        if [[ -f {output.referenceout_virus_only} ]];then
+            rm {output.referenceout_virus_only}
+        fi
+        if find {params.fasta_links_dir} -maxdepth 1 -type f -name "*.gz" | grep -q .; then
+            zcat {params.fasta_links_dir}/*gz >> {output.referenceout} 2> >(tee {log.errfile} >&2)
+            cp {output.referenceout} {output.referenceout_virus_only} 2> >(tee {log.errfile} >&2)
+        fi        
+        cat {params.host_virus_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
+        cat {params.virus_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
+        cat {params.virus_reference} >> {output.referenceout_virus_only} 2> >(tee {log.errfile} >&2)
+        """
+
+
 #rule bwa_index:
 #    input:
 #        reference = rules.merge_refs.output.referenceout

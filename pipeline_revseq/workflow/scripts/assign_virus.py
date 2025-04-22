@@ -126,7 +126,7 @@ if __name__ == '__main__':
     aggregated_stats = aggregated_stats.merge(taxon, right_index=True, left_index=True, how="left")
 
     aggregated_stats = get_dp(depth, 20, aggregated_stats, refs)
-
+    aggregated_stats.drop_duplicates(inplace=True)
     aggregated_stats.to_csv(args.out_prefix + "substrain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])
     for row in aggregated_stats.itertuples():
@@ -145,6 +145,7 @@ if __name__ == '__main__':
     aggregated_stats = all_outlier_info[0]
     outlier_threshold = all_outlier_info[1]
     aggregated_stats = aggregated_stats.rename(columns={"name": "reference_name", "aligned": "aligned_reads", "length": "reference_length"})
+    aggregated_stats.drop_duplicates(inplace=True)
     aggregated_stats.to_csv(args.out_prefix + "strain_count_table.tsv", sep="\t", float_format='%.5f')
     pyplot.boxplot(aggregated_stats["rpkm_proportions"])
     for row in aggregated_stats.itertuples():
