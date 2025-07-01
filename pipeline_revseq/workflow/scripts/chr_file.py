@@ -64,7 +64,10 @@ else:
                 line = id + "\t" + id + "\t" + "segmented\n"
                 file.write(line)
     else:
-        id = k2bed.loc[k2bed['name'] == top_substrain.iloc[0]['name'], 'id'].item()
+        if name == "Human metapneumovirus B" or name == "Human metapneumovirus A":
+            id = k2bed.loc[k2bed['name'] == "Human metapneumovirus", 'id'].item()
+        else:
+            id = k2bed.loc[k2bed['name'] == top_substrain.iloc[0]['name'], 'id'].item()
         with open(args.out, "w") as file:
             line = id + "\t" + id + "\t" + "chromosome"
             file.write(line)

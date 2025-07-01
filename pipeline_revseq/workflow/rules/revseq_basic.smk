@@ -50,11 +50,15 @@ rule remove_duplicates:
 
 rule merge_regions:
     input:
-        regions = rules.gather_references.output.bed,
+        ######regions = rules.gather_references.output.bed,
+        regions = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/gather_references/{sample}.bed",
     output:
+        crop = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_regions/{sample}_crop.bed",
+        short = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_regions/{sample}_short.bed",
         regions = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_regions/{sample}.bed",
     params:
         base_reference = config["resources"]["reference_table"],
+        lookup = config["tools"]["general"]["lookup"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/merge_regions/merge_regions.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/merge_regions/merge_regions.err.log",
@@ -64,7 +68,41 @@ rule merge_regions:
         "../envs/python.yaml"
     shell:
         """
-        cat {input.regions} > {output.regions} &&
+        if [[ -s "{input.regions}" ]]; then
+            awk -F'\t' '
+                BEGIN {{ OFS=FS }}
+                {{
+                    gsub(/NC_[^[:space:]]+ /, "", $4)
+                    gsub(/AC_[^[:space:]]+ /, "", $4)
+                    gsub(/, complete genome/, "", $4)
+                    sub(/ strain .*/, "", $4)
+                    sub(/ isolate .*/, "", $4)
+                    print
+                }}
+                ' "{input.regions}" > "{output.crop}"
+            
+
+            awk '
+                  BEGIN {{
+                    FS = "\t"    # split input on tabs
+                    OFS = FS     # preserve tabs on output
+                  }}
+                  FNR==NR {{
+                    split($0, a, ",")
+                    valid[a[2]] = 1
+                    next
+                  }}
+                  $4 in valid
+                ' {params.lookup} "{output.crop}" > "{output.short}"
+
+        else
+            cp {input.regions} {output.short}
+            cp {input.regions} {output.crop}
+        fi
+
+        sed -i 's/^\(NC_039199\)\.1\t/\1\t/' {output.crop}
+
+        cat {output.short} > {output.regions} &&
         cat {params.base_reference} >> {output.regions}
         """
 
@@ -120,7 +158,8 @@ rule samtools_index:
 rule pileup:
     input:
         bam = rules.remove_duplicates.output.bam,
-        fasta = rules.merge_refs.output.referenceout_virus_only,
+        #####fasta = rules.merge_refs.output.referenceout_virus_only,
+        fasta = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_only_ref.fa",
     output:
         outpile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/pileup/{sample}_pileup.txt"
     params:
@@ -200,7 +239,9 @@ rule assign_virus:
         readnum_threshold = config["tools"]["general"]["min_readcount"],
         taxon = config["tools"]["assign_virus"]["taxon"],
         dp_limit = config["tools"]["assign_virus"]["dp_limit"],
-        ref_table = config["resources"]["reference_table"],
+        #ref_table = config["resources"]["reference_table"],
+        hmpva_id = config["tools"]["assign_virus"]["hmpva_id"],
+        hmpva_region = config["tools"]["assign_virus"]["hmpva_region"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.err.log",
@@ -283,12 +324,14 @@ rule validate_assignment:
 rule consensus:
     input:
         bam = rules.remove_duplicates.output.bam,
-        ref = rules.merge_refs.output.referenceout_virus_only,
+        #ref = rules.merge_refs.output.referenceout_virus_only,
+        ref = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_only_ref.fa",
     output:
         calls_norm_filt_indels = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm_filt_indel.bcf",
         all_consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa",
         low_cov_bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_low_coverage_sites.bed",
         all_cov_bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_coverage.bed",
+        clean_ref = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_clean_ref.fa",
     params:
         mincov = config["tools"]["consensus"]["minimum_coverage"],
     log:
@@ -300,17 +343,19 @@ rule consensus:
         "../envs/bcftools.yaml"
     shell:
         """
-            bcftools mpileup -Ou -f {input.ref} {input.bam} | \
+            grep . {input.ref} > {output.clean_ref} 
+            bcftools mpileup -Ou -f {output.clean_ref} {input.bam} | \
             bcftools call --ploidy 1 -mv -Ou | \
-            bcftools norm -f {input.ref} -Ou | \
-            bcftools filter --IndelGap 5 -Ob -o {output.calls_norm_filt_indels}
+            bcftools norm -f {output.clean_ref} -Ou | \
+            bcftools filter -Ob -o {output.calls_norm_filt_indels}
             bcftools index -o {output.calls_norm_filt_indels}.csi {output.calls_norm_filt_indels}
 
             bedtools genomecov -ibam {input.bam} -bga > {output.all_cov_bed}
             cat {output.all_cov_bed} | awk '$4 < {params.mincov}' > {output.low_cov_bed}
 
             # apply variants to create consensus sequence
-            bcftools consensus {output.calls_norm_filt_indels} -f {input.ref} -m {output.low_cov_bed} > {output.all_consensus}
+            cat {output.clean_ref} | \
+            bcftools consensus {output.calls_norm_filt_indels} -f - -m {output.low_cov_bed} > {output.all_consensus}
         """
 
 
@@ -361,7 +406,7 @@ rule postprocess_consensus:
         consensus_type = config["tools"]["consensus"]["consensus_type"],
         upload_consensus_type = config["tools"]["consensus"]["upload_consensus_type"],
         lookup = config["tools"]["general"]["lookup"],
-        reference = config["resources"]["reference_table"],
+        #reference = config["resources"]["reference_table"],
         readcount = rules.remove_duplicates.output.readcount,
         mincov = config["tools"]["consensus"]["minimum_coverage"],
     log:
@@ -398,7 +443,7 @@ rule postprocess_consensus:
         python workflow/scripts/count_n.py \
         --input {output.consensus} \
         --output {output.count_n} \
-        --bed {params.reference} \
+        --bed {params.ref} \
         --coverage {input.all_cov_bed} \
         --threshold {params.mincov}
         """

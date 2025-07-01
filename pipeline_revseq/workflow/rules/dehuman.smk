@@ -55,7 +55,8 @@ rule dehuman:
 rule cram:
     input:
         bam = rules.dehuman.output.bam,
-        ref = rules.merge_refs.output.referenceout,
+        #####ref = rules.merge_refs.output.referenceout,
+        ref = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_host_ref.fa",
     output:
         cram = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/cram/{sample}.cram",
     params:

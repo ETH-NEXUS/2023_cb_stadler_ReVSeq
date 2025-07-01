@@ -36,7 +36,7 @@ rule all:
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_regions/{sample}.bed", sample = sample_ids),
         #####dehuman
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/cram/{sample}.cram", sample = sample_ids),
-        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r1.fastq", sample = sample_ids),
+        #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r1.fastq", sample = sample_ids),
         #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dh_fastqc/{sample}_bam_to_fastq_r1_fastqc.zip", sample = sample_ids),
         #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/fastqc_trimmed/{sample}_R1_trimmed_fastqc.zip", sample = sample_ids),
         #####pipeline
@@ -52,6 +52,7 @@ rule all:
         #####gathering
         expand(config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_count_table.tsv", sample = sample_ids),
         config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
+        config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/complete.txt",
         #aggregation
         #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_assignment_table.tsv"),
         #expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_qc_table.tsv"),
