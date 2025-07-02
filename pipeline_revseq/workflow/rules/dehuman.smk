@@ -1,38 +1,38 @@
-#rule bwa:
-#    input:
-#        ref = config["resources"]["host_ref"],
-#        ref_index = rules.bwa_index.output.ref_index,
-#        r1 = rules.cutadapt.output.r1,
-#        r2 = rules.cutadapt.output.r2,
-#    output:
-#        bwa = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_mapped_reads.bam"),
-#        bam = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam"),
-#        bai = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam.bai"),
-#        readcount_all = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_readcount_all.txt",
-#        readcount = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_readcount.txt",
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bwa/bwa.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bwa/bwa.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/bwa/{sample}.benchmark"
-#    conda:
-#        "../envs/bwa.yaml"
-#    threads: config["tools"]["bwa"]["threads"]
-#    resources:
-#        mem_mb=6500
-#    shell:
-#        """
-#        bwa mem -t {threads} -M {input.ref} {input.r1} {input.r2} > {output.bwa} 2> >(tee {log.errfile} >&2)
-#        samtools sort -@ {threads} --output-fmt=SAM {output.bwa} | samtools view -Sb - > {output.bam} 2> >(tee -a {log.errfile} >&2)
-#        samtools index {output.bam} 2> >(tee -a {log.errfile} >&2)
-#        samtools view -c {output.bam} > {output.readcount_all} 2> >(tee -a {log.errfile} >&2)
-#        samtools view -c -F 4 {output.bam} > {output.readcount} 2> >(tee -a {log.errfile} >&2)
-#        """
+rule bwa:
+    input:
+        ref = config["resources"]["host_ref"],
+        ref_index = rules.bwa_index.output.ref_index,
+        r1 = rules.cutadapt.output.r1,
+        r2 = rules.cutadapt.output.r2,
+    output:
+        bwa = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_mapped_reads.bam"),
+        bam = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam"),
+        bai = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam.bai"),
+        readcount_all = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_readcount_all.txt",
+        readcount = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}_readcount.txt",
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bwa/bwa.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bwa/bwa.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/bwa/{sample}.benchmark"
+    conda:
+        "../envs/bwa.yaml"
+    threads: config["tools"]["bwa"]["threads"]
+    resources:
+        mem_mb=6500
+    shell:
+        """
+        bwa mem -t {threads} -M {input.ref} {input.r1} {input.r2} > {output.bwa} 2> >(tee {log.errfile} >&2)
+        samtools sort -@ {threads} --output-fmt=SAM {output.bwa} | samtools view -Sb - > {output.bam} 2> >(tee -a {log.errfile} >&2)
+        samtools index {output.bam} 2> >(tee -a {log.errfile} >&2)
+        samtools view -c {output.bam} > {output.readcount_all} 2> >(tee -a {log.errfile} >&2)
+        samtools view -c -F 4 {output.bam} > {output.readcount} 2> >(tee -a {log.errfile} >&2)
+        """
 
 
 rule dehuman:
     input:
-        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam",
+        bam = rules.bwa.output.bam,
     output:
         bam = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam"),
         bai = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/dehuman/{sample}_dehuman.bam.bai"),
@@ -55,8 +55,7 @@ rule dehuman:
 rule cram:
     input:
         bam = rules.dehuman.output.bam,
-        #####ref = rules.merge_refs.output.referenceout,
-        ref = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_host_ref.fa",
+        ref = rules.merge_refs.output.referenceout,
     output:
         cram = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/cram/{sample}.cram",
     params:

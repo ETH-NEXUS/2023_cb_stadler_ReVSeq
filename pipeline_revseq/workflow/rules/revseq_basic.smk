@@ -50,8 +50,7 @@ rule remove_duplicates:
 
 rule merge_regions:
     input:
-        ######regions = rules.gather_references.output.bed,
-        regions = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/gather_references/{sample}.bed",
+        regions = rules.gather_references.output.bed,
     output:
         crop = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_regions/{sample}_crop.bed",
         short = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_regions/{sample}_short.bed",
@@ -157,9 +156,8 @@ rule samtools_index:
 
 rule pileup:
     input:
+        fasta = rules.merge_refs.output.referenceout_virus_only,
         bam = rules.remove_duplicates.output.bam,
-        #####fasta = rules.merge_refs.output.referenceout_virus_only,
-        fasta = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_only_ref.fa",
     output:
         outpile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/pileup/{sample}_pileup.txt"
     params:
@@ -239,9 +237,6 @@ rule assign_virus:
         readnum_threshold = config["tools"]["general"]["min_readcount"],
         taxon = config["tools"]["assign_virus"]["taxon"],
         dp_limit = config["tools"]["assign_virus"]["dp_limit"],
-        #ref_table = config["resources"]["reference_table"],
-        hmpva_id = config["tools"]["assign_virus"]["hmpva_id"],
-        hmpva_region = config["tools"]["assign_virus"]["hmpva_region"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.out.log",
         errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/assign_virus/{sample}_assignment.err.log",
@@ -302,30 +297,12 @@ rule validate_assignment:
             --plate {params.plate} \
             --output {output.validation}  2> >(tee {log.errfile} >&2)
         """
-
-#rule create_chromosome_file:
-#    input:
-#        assignment = rules.assign_virus.output.table,
-#    output:
-#        chrom_file = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/create_chromosome_file/{sample}_chromosome_file.txt",
-#        chrom_file_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/create_chromosome_file/{sample}_chromosome_file.txt.gz",
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/create_chromosome_file/{sample}_create_chromosome_file.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/create_chromosome_file/{sample}_create_chromosome_file.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/create_chromosome_file/{sample}_create_chromosome_file.benchmark"
-#    shell:
-#        """
-#        name=sort -r -t$'\t' -k6 {input.assignment} | head -n 2 | tail -n 1 | awk '{print $1}'
-#        echo "${name}\t1\t"
-#        """
-
+        
 
 rule consensus:
     input:
         bam = rules.remove_duplicates.output.bam,
-        #ref = rules.merge_refs.output.referenceout_virus_only,
-        ref = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_only_ref.fa",
+        ref = rules.merge_refs.output.referenceout_virus_only,
     output:
         calls_norm_filt_indels = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm_filt_indel.bcf",
         all_consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa",
@@ -406,7 +383,6 @@ rule postprocess_consensus:
         consensus_type = config["tools"]["consensus"]["consensus_type"],
         upload_consensus_type = config["tools"]["consensus"]["upload_consensus_type"],
         lookup = config["tools"]["general"]["lookup"],
-        #reference = config["resources"]["reference_table"],
         readcount = rules.remove_duplicates.output.readcount,
         mincov = config["tools"]["consensus"]["minimum_coverage"],
     log:
@@ -449,60 +425,83 @@ rule postprocess_consensus:
         """
 
 
-#rule consensus_cds:
+rule consensus_cds:
+    input:
+        all_consensus = rules.consensus.output.all_consensus,
+        postprocess_consensus = rules.postprocess_consensus.output.consensus,
+    output:
+        all_consensus_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus_cds/{sample}_all_consensus_cds.fa",
+        consensus_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus_cds/{sample}_consensus_cds.fa",
+    params:
+        cds = config["tools"]["consensus"]["cds_bed"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus_cds/{sample}_consensus.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus_cds/{sample}_consensus.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/consensus_cds/{sample}_consensus.benchmark"
+    conda:
+        "../envs/bcftools.yaml"
+    shell:
+        """
+            if [ "$(wc -l < {input.postprocess_consensus})" == "0" ]; then
+                echo "WARNING: empty consensus. This should only happen if no viruses showed enough coverage"
+                touch {output.all_consensus_cds}
+                touch {output.consensus_cds}
+            else
+                bedtools getfasta -fi {input.all_consensus} -bed {params.cds} > {output.all_consensus_cds}
+                bedtools getfasta -fi {input.postprocess_consensus} -bed {params.cds} > {output.consensus_cds}
+            fi
+        """
+
+
+rule count_n_cds:
+    input:
+        consensus = rules.consensus_cds.output.consensus_cds,
+        assignment = rules.assign_virus.output.table,
+        all_cov_bed = rules.consensus.output.all_cov_bed,
+    output:
+        count_n_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/count_n_cds/{sample}_count_n.txt",
+    params:
+        bed = config["tools"]["consensus"]["cds_bed"],
+        mincov = config["tools"]["consensus"]["minimum_coverage"],
+        match_table = config["resources"]["reference_table"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/count_n_cds/{sample}_count_n_cds.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/count_n_cds/{sample}_count_n_cds.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/count_n_cds/{sample}_count_n_cds.benchmark"
+    conda:
+        "../envs/python.yaml"
+    shell:
+        """
+        python workflow/scripts/count_n_cds.py \
+        --input {input.consensus} \
+        --output {output.count_n_cds} \
+        --bed {params.bed} \
+        --coverage {input.all_cov_bed} \
+        --threshold {params.mincov} \
+        --match_table {params.match_table}
+        """
+
+#rule flat_file:
 #    input:
-#        all_consensus = rules.consensus.output.all_consensus,
-#        postprocess_consensus = rules.postprocess_consensus.output.consensus,
+#        consensus_upload = rules.postprocess_consensus.output.consensus_upload,
 #    output:
-#        all_consensus_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus_cds/{sample}_all_consensus_cds.fa",
-#        consensus_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus_cds/{sample}_consensus_cds.fa",
+#        flat_file = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}_consensus.fa",
 #    params:
-#        cds = config["tools"]["consensus"]["cds_bed"],
+#        
 #    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus_cds/{sample}_consensus.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus_cds/{sample}_consensus.err.log",
+#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/{sample}_consensus.out.log",
+#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/{sample}_consensus.err.log",
 #    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/consensus_cds/{sample}_consensus.benchmark"
-#    conda:
-#        "../envs/bcftools.yaml"
-#    shell:
-#        """
-#            if [ "$(wc -l < {input.postprocess_consensus})" == "0" ]; then
-#                echo "WARNING: empty consensus. This should only happen if no viruses showed enough coverage"
-#                touch {output.all_consensus_cds}
-#                touch {output.consensus_cds}
-#            else
-#                bedtools getfasta -fi {input.all_consensus} -bed {params.cds} > {output.all_consensus_cds}
-#                bedtools getfasta -fi {input.postprocess_consensus} -bed {params.cds} > {output.consensus_cds}
-#            fi
-#        """
-#
-#
-#rule count_n_cds:
-#    input:
-#        consensus = rules.consensus_cds.output.consensus_cds,
-#        assignment = rules.assign_virus.output.table,
-#        all_cov_bed = rules.consensus.output.all_cov_bed,
-#    output:
-#        count_n_cds = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/count_n_cds/{sample}_count_n.txt",
-#    params:
-#        bed = config["tools"]["consensus"]["cds_bed"],
-#        mincov = config["tools"]["consensus"]["minimum_coverage"],
-#        match_table = config["resources"]["reference_table"],
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/count_n_cds/{sample}_count_n_cds.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/count_n_cds/{sample}_count_n_cds.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/count_n_cds/{sample}_count_n_cds.benchmark"
+#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/flat_file/{sample}_postprocess_consensus.benchmark"
 #    conda:
 #        "../envs/python.yaml"
 #    shell:
 #        """
-#        python workflow/scripts/count_n_cds.py \
-#        --input {input.consensus} \
-#        --output {output.count_n_cds} \
-#        --bed {params.bed} \
-#        --coverage {input.all_cov_bed} \
-#        --threshold {params.mincov} \
-#        --match_table {params.match_table}
+#        # Generate an EMBL flat file of the consensus sequence
+#        # Useful for proper upload of viruses with mandatory serotype, such as Influenza
+#        python workflow/scripts/flat_file_from_consensus.py \
+#            --consensus {input.consensus_upload} \
+#            --output {output.flat_file} 2> >(tee {log.errfile} >&2)
 #        """

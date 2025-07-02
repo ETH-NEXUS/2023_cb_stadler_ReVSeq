@@ -83,13 +83,11 @@ rule merge_lanes:
         """
 
 rule kraken2:
-    #input:
-        #r1 =rules.merge_lanes.output.r1,
-        #r2 =rules.merge_lanes.output.r2,
+    input:
+        r1 =rules.merge_lanes.output.r1,
+        r2 =rules.merge_lanes.output.r2,
     output:
         kraken2_report = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.report",
-        #upload_success = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.upload_success",
-        #download_success = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.download_success",
         detected_substrains = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.detected_substrains.tsv",
     params:
         k2 = "/data/k2/"+config["plate"]+"/{sample}/{sample}.report",
@@ -99,98 +97,94 @@ rule kraken2:
     benchmark:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/kraken2/{sample}_kraken2.benchmark"
     conda:
+        "../envs/kraken2.yaml"
+    shell:
+        """
+        
+        python workflow/scripts/kraken_report_parser.py \
+            --report {output.kraken2_report} \
+            --output {output.detected_substrains}
+        """
+
+
+rule gather_references:
+    input:
+        detected_substrains = rules.kraken2.output.detected_substrains,
+    output:
+        bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/gather_references/{sample}.bed",
+        fasta_links_dir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/gather_references"),
+    params:
+        fastadir = config["resources"]["reference_dir"]+"/fasta",
+        download_list = config["resources"]["reference_dir"]+"/library_report.tsv",
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_references/gather_references.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_references/gather_references.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/gather_references/{sample}_gather_references.benchmark"
+    conda:
         "../envs/python.yaml"
     shell:
         """
-        #cp {params.k2} {output.kraken2_report}
-        #python workflow/scripts/kraken_report_parser.py \
-        #    --report {output.kraken2_report} \
-        #    --output {output.detected_substrains}
-        touch {output.detected_substrains}
-        touch {output.kraken2_report}
+        python workflow/scripts/gather_references.py \
+            --substrains {input.detected_substrains} \
+            --downloadlist {params.download_list} \
+            --fastadir {params.fastadir} \
+            --bed {output.bed} \
+            --fastalinksdir {output.fasta_links_dir}
         """
 
 
-###rule gather_references:
-###    input:
-###        detected_substrains = rules.kraken2.output.detected_substrains,
-###    output:
-###        bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/gather_references/{sample}.bed",
-###        fasta_links_dir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/gather_references"),
-###    params:
-###        fastadir = config["resources"]["reference_dir"]+"/fasta",
-###        download_list = config["resources"]["reference_dir"]+"/library_report.tsv",
-###    log:
-###        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_references/gather_references.out.log",
-###        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/gather_references/gather_references.err.log",
-###    benchmark:
-###        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/gather_references/{sample}_gather_references.benchmark"
-###    conda:
-###        "../envs/python.yaml"
-###    shell:
-###        """
-###        #python workflow/scripts/gather_references.py \
-###        #    --substrains {input.detected_substrains} \
-###        #    --downloadlist {params.download_list} \
-###        #    --fastadir {params.fastadir} \
-###        #    --bed {output.bed} \
-###        #    --fastalinksdir {output.fasta_links_dir}
-###        touch {output.bed}
-###        """
-###
-###
-###rule merge_refs:
-###    input:
-###        bed = rules.gather_references.output.bed,
-###    output:
-###        referenceout = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_host_ref.fa",
-###        referenceout_virus_only = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_only_ref.fa",
-###    params:
-###        fasta_links_dir = rules.gather_references.output.fasta_links_dir,
-###        host_virus_reference = config["resources"]["host_ref"],
-###        virus_reference = config["resources"]["reference"]
-###    log:
-###        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_refs/merge_refs.out.log",
-###        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_refs/merge_refs.err.log",
-###    benchmark:
-###        config["inputOutput"]["output_dir"]+"/logs/benchmark/merge_refs/{sample}_merge_refs.benchmark"
-###    conda:
-###        "../envs/python.yaml"
-###    shell:
-###        """
-###        #if [[ -f {output.referenceout} ]]; then
-###        #    rm {output.referenceout}
-###        #fi
-###        #if [[ -f {output.referenceout_virus_only} ]];then
-###        #    rm {output.referenceout_virus_only}
-###        #fi
-###        #if find {params.fasta_links_dir} -maxdepth 1 -type f -name "*.gz" | grep -q .; then
-###        #    zcat {params.fasta_links_dir}/*gz >> {output.referenceout} 2> >(tee {log.errfile} >&2)
-###        #    cp {output.referenceout} {output.referenceout_virus_only} 2> >(tee {log.errfile} >&2)
-###        #fi        
-###        #cat {params.host_virus_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
-###        #cat {params.virus_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
-###        #cat {params.virus_reference} >> {output.referenceout_virus_only} 2> >(tee {log.errfile} >&2)
-###        touch {output.referenceout_virus_only} {output.referenceout}
-###        """
+rule merge_refs:
+    input:
+        bed = rules.gather_references.output.bed,
+    output:
+        referenceout = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_host_ref.fa",
+        referenceout_virus_only = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_refs/{sample}_merged_virus_only_ref.fa",
+    params:
+        fasta_links_dir = rules.gather_references.output.fasta_links_dir,
+        host_virus_reference = config["resources"]["host_ref"],
+        virus_reference = config["resources"]["reference"]
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_refs/merge_refs.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/merge_refs/merge_refs.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/merge_refs/{sample}_merge_refs.benchmark"
+    conda:
+        "../envs/python.yaml"
+    shell:
+        """
+        if [[ -f {output.referenceout} ]]; then
+            rm {output.referenceout}
+        fi
+        if [[ -f {output.referenceout_virus_only} ]];then
+            rm {output.referenceout_virus_only}
+        fi
+        if find {params.fasta_links_dir} -maxdepth 1 -type f -name "*.gz" | grep -q .; then
+            zcat {params.fasta_links_dir}/*gz >> {output.referenceout} 2> >(tee {log.errfile} >&2)
+            cp {output.referenceout} {output.referenceout_virus_only} 2> >(tee {log.errfile} >&2)
+        fi        
+        cat {params.host_virus_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
+        cat {params.virus_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
+        cat {params.virus_reference} >> {output.referenceout_virus_only} 2> >(tee {log.errfile} >&2)
+        """
 
 
-#rule bwa_index:
-#    input:
-#        reference = rules.merge_refs.output.referenceout
-#    output:
-#        ref_index = rules.merge_refs.output.referenceout + '.bwt'
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bwa_index/bwa_index.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bwa_index/bwa_index.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/logs/benchmark/bwa_index/{sample}_bwa_index.benchmark"
-#    conda:
-#        "../envs/bwa.yaml"
-#    shell:
-#        "bwa index {input.reference} 2> >(tee {log.errfile} >&2)"
-#
-#
+rule bwa_index:
+    input:
+        reference = rules.merge_refs.output.referenceout
+    output:
+        ref_index = rules.merge_refs.output.referenceout + '.bwt'
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bwa_index/bwa_index.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bwa_index/bwa_index.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/logs/benchmark/bwa_index/{sample}_bwa_index.benchmark"
+    conda:
+        "../envs/bwa.yaml"
+    shell:
+        "bwa index {input.reference} 2> >(tee {log.errfile} >&2)"
+
+
 rule cutadapt:
     input:
         r1 = rules.merge_lanes.output.r1,
