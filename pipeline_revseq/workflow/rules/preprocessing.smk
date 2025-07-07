@@ -205,7 +205,7 @@ rule cutadapt:
     benchmark:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/cutadapt/{sample}.benchmark"
     conda:
-        "../envs/trim_galore.yaml"
+        "../envs/cutadapt.yaml"
     threads: config['tools']['cutadapt']['threads']
     shell:
         """
