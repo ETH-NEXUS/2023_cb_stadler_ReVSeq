@@ -1,3 +1,19 @@
 name: curl
 dependencies:
-- curl
+  - _libgcc_mutex=0.1
+  - _openmp_mutex=5.1
+  - c-ares=1.19.1
+  - ca-certificates=2023.12.12
+  - curl=8.5.0
+  - krb5=1.20.1
+  - libcurl=8.5.0
+  - libedit=3.1.20230828
+  - libev=4.33
+  - libgcc-ng=11.2.0
+  - libgomp=11.2.0
+  - libnghttp2=1.57.0
+  - libssh2=1.10.0
+  - libstdcxx-ng=11.2.0
+  - ncurses=6.4
+  - openssl=3.0.13
+  - zlib=1.2.13
