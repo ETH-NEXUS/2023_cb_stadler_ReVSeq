@@ -16,6 +16,28 @@ CDSCount
 )
 from unfold.admin import ModelAdmin
 
+# ============== Inlines =================
+
+
+class FileInline(admin.TabularInline):
+    model = File
+    fk_name = "sample"
+    extra = 0
+
+class SampleCountInline(admin.TabularInline):
+    model = SampleCount
+    fk_name = "sample"
+    extra = 0
+
+class CDSCountInline(admin.TabularInline):
+    model = CDSCount
+    fk_name = "sample"
+    extra = 0
+
+class MetadataInline(admin.TabularInline):
+    model = Metadata
+    fk_name = "sample"
+    extra = 0
 
 # Register your models here.
 
@@ -49,6 +71,7 @@ class SampleAdmin(ModelAdmin):
     search_fields = ("sample_number", "pseudonymized_id", "well__location")
     list_filter_submit = True
     list_filter = ("plate__barcode", "control", "control_type")
+    inlines =  [FileInline, SampleCountInline, CDSCountInline, MetadataInline]
 
 
 @admin.register(SampleFile)
