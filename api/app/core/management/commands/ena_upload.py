@@ -19,6 +19,8 @@ JOBS_ENDPOINT = 'http://ena:5000/api/jobs/'
 ANALYSIS_JOBS_ENDPOINT = 'http://ena:5000/api/analysisjobs/'
 CONSENSUS_FILE_SUFFIX = '.fa.gz'
 CHROMOSOME_FILE_NAME = 'chr_file.txt.gz'
+EMBL_FILE_SUFFIX = '.embl.gz'
+EMBL_FILE_TYPE = 'FLATFILE'
 
 
 def extract_basename(path):
@@ -42,7 +44,7 @@ class Command(BaseCommand):
                  'job_id'
         )
 
-    def delete_job_id(self):
+    def ena_uploadjob_id(self):
         samples = Sample.objects.filter(job_id__isnull=False)
         for sample in samples:
             sample.job_id = None
@@ -123,7 +125,7 @@ class Command(BaseCommand):
             response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
                                                 message=f'SER for {sample} uploaded successfully')
             files = File.objects.filter(sample=sample)
-            analysis_files = [file for file in files if  extract_basename(file.path).endswith(CONSENSUS_FILE_SUFFIX)  or extract_basename(file.path) == CHROMOSOME_FILE_NAME]
+            analysis_files = [file for file in files if  extract_basename(file.path).endswith(EMBL_FILE_SUFFIX)]
 
             job_id = response['id']
             sample.job_id = job_id
@@ -224,12 +226,22 @@ class Command(BaseCommand):
         for file in files:
             # file types: FASTA und CHROMOSOME_LIST
             # if it is a chromosome file, file type is CHROMOSOME_LIST
-            file_type = 'FASTA'
-            if extract_basename(file.path) == CHROMOSOME_FILE_NAME:
-                file_type = 'CHROMOSOME_LIST'
-            payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": file_type} #
-            self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
-                                     message=f'Analysis file {file} uploaded successfully')
+            # file_type = 'FASTA'
+            # if extract_basename(file.path) == CHROMOSOME_FILE_NAME:
+            #     file_type = 'CHROMOSOME_LIST'
+            # payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": file_type} #
+            # self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
+            #                          message=f'Analysis file {file} uploaded successfully')
+
+            # for EMBL files, we need to set the file type to FLATFILE
+            # we don't need fasta and chromosome files anymore, only EMBL files
+            if extract_basename(file.path).endswith(EMBL_FILE_SUFFIX):
+                payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": EMBL_FILE_TYPE}
+                self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
+                                         message=f'Analysis file {file} uploaded successfully')
+            else:
+                logger.warning(f'Skipping file {file.path} for analysis upload, not an EMBL file')
+
 
     def enqueue_analysis_job(self, analysis_job_id):
         url = ENQUEUE_ENDPOINT.replace('<job_id>', str(analysis_job_id))
@@ -241,12 +253,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         data_type = options.get('type')
-
         if data_type == 'study':
             self.upload_study()
         elif data_type == 'ser_and_analysis':
             self.upload_ser()
-
         elif data_type == 'delete_job_id':
             self.delete_job_id()
         else:
