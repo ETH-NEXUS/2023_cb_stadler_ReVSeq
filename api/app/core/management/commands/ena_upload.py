@@ -57,6 +57,9 @@ class Command(BaseCommand):
             '-a', '--no_analysis', action='store_true',
             help='If set, analysis jobs will not be uploaded, only SER jobs.'
         )
+
+        # command to upload this one 32WNFL without analysis
+        # python manage.py ena_upload --type ser_and_analysis --no_analysis -s 32WNFL
     def resend_analysis_jobs(self, samples):
         if not samples:
             logger.warning('No samples provided for resend_analysis_jobs')
@@ -138,8 +141,14 @@ class Command(BaseCommand):
         except Exception as e:
             logger.error(f"An error occurred while releasing {job_type_description}: {e}")
 
-    def upload_ser(self, no_analysis=False):
-        samples = Sample.objects.filter(job_id__isnull=True, valid=True, upload_to_ena=True)
+    def upload_ser(self, no_analysis=False, given_samples=None):
+        if given_samples:
+            samples = Sample.objects.filter(pseudonymized_id__in=given_samples)
+        else:
+            samples = Sample.objects.filter(job_id__isnull=True, valid=True, upload_to_ena=True)
+            if not samples:
+                logger.warning(f'No samples found for the given pseudonymized IDs: {given_samples}')
+                return
         logger.info(f'Uploading {len(samples)} samples to ENA')
         print(list(samples.values_list('pseudonymized_id', flat=True)))
         for sample in samples:
@@ -284,6 +293,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         task = options.get('task')
         no_analysis = options.get('no_analysis', False)
+        samples = options.get('samples', None)
         if task == 'resend_analysis_jobs':
             samples = options.get('samples')
             self.resend_analysis_jobs(samples)
@@ -292,7 +302,7 @@ class Command(BaseCommand):
         if data_type == 'study':
             self.upload_study()
         elif data_type == 'ser_and_analysis':
-            self.upload_ser(no_analysis)
+            self.upload_ser(no_analysis, samples)
         elif data_type == 'delete_job_id':
             self.delete_job_id()
 
