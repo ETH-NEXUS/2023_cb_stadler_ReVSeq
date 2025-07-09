@@ -372,6 +372,7 @@ rule postprocess_consensus:
         assignment = rules.assign_virus.output.table,
         qualimap_qc = rules.qualimap_filtered.output.qc_status,
         all_cov_bed = rules.consensus.output.all_cov_bed,
+        ref = rules.merge_regions.output.regions,
     output:
         consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa",
         consensus_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa.gz",
@@ -379,7 +380,6 @@ rule postprocess_consensus:
         consensus_upload_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus_upload.fa.gz",
         count_n = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_count_n.txt",
     params:
-        ref = rules.merge_regions.output.regions,
         consensus_type = config["tools"]["consensus"]["consensus_type"],
         upload_consensus_type = config["tools"]["consensus"]["upload_consensus_type"],
         lookup = config["tools"]["general"]["lookup"],
@@ -396,7 +396,7 @@ rule postprocess_consensus:
         """
         # Fetch only the consensus in the regions of the most represented virus
         python workflow/scripts/filter_consensus.py \
-        --ref_table {params.ref} \
+        --ref_table {input.ref} \
         --assignment {input.assignment} \
         --consensus {input.all_consensus} \
         --consensus_type {params.consensus_type} \
@@ -419,7 +419,7 @@ rule postprocess_consensus:
         python workflow/scripts/count_n.py \
         --input {output.consensus} \
         --output {output.count_n} \
-        --bed {params.ref} \
+        --bed {input.ref} \
         --coverage {input.all_cov_bed} \
         --threshold {params.mincov}
         """
