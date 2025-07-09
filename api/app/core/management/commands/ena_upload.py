@@ -158,10 +158,8 @@ class Command(BaseCommand):
             if not sample_counts:
                 logger.warning(f'No counts for {sample}')
                 continue
-
             payload = self._create_ser_payload(sample, sample_counts)
             analysis_payload = payload['data']['analysis']
-
             response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
                                                 message=f'SER for {sample} uploaded successfully')
             files = File.objects.filter(sample=sample)
@@ -193,6 +191,7 @@ class Command(BaseCommand):
             time.sleep(20)
 
     def _create_ser_payload(self, sample, sample_counts):
+        logger.debug(f'Creating SER payload for {sample}')
         now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
         sorted_sample_counts = sorted(sample_counts, key=self.__sort_key, reverse=True)
         taxon_id = sorted_sample_counts[0].substrain.taxon_id
@@ -209,8 +208,6 @@ class Command(BaseCommand):
             if file.type.postfix == '.cram':
                 logger.debug(f'Adding CRAM FILE{file.path} to SER for {sample} ___________________________-')
                 _files.append(file.path)
-                logger.debug(f'Adding {file.path} to SER for {sample}')
-
         payload = {
             'template': 'default',
             'data': {
