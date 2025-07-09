@@ -7,7 +7,7 @@ services:
       - /data/revseq/results/gather_results:/data
       - /data/revseq/results/results:/data/revseq/results/results
   ws:
-    image: ethnexus/smnrp:2.5.1
+    image: ethnexus/smnrp:2.6.2
     volumes:
       - "web_root:/web_root:z"
       - "smnrp-data:/etc/letsencrypt"
@@ -36,3 +36,4 @@ services:
     volumes:
       - /data/revseq/results/gather_results:/data
       - /data/revseq/results/results:/data/revseq/results/results
+      - ./data:/data2

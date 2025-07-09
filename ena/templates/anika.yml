@@ -1,0 +1,63 @@
+checklist: ERC000033
+center_name: ETH Zurich
+laboratory: Computational Evolution group
+
+# Overall ENA research project
+study:
+  alias: revseq_study
+  title: Respiratory Virus Sequencing
+  study_type: RNASeq
+  study_abstract: Respiratory Virus Sequencing
+  pubmed_id:
+
+#
+sample:
+  alias: revseq_sample_{} #  revseq_sample_<pseudonymized id>_{}
+  title: ReVSeq Sample
+  taxon_id: 269049 # (mapping from substrain)
+  sample_description: ReVSeq Sample Description
+  # dynamic
+  host subject id: xx #  pseudonymized ethid
+  collection date: 2023-11-10
+  geographic location (region and locality): CANTON
+
+  # static
+  geographic location (country and/or sea): Switzerland
+  host common name: Human
+  host health state: "missing: human-identifiable"
+  host sex: "missing: human-identifiable"
+  host scientific name: Homo Sapiens
+  collector name: "Viollier AG"
+  collecting institution: Viollier AG
+  isolate: "Respiratory swabs"
+
+#
+experiment:
+  alias: revseq_experiment_{} # add id
+  title: ReVSeq Experiment
+  study_alias: revseq_study
+  sample_alias: revseq_sample_{} # it must be the same as the alias of sample: revseq_sample_<pseudonymized id>_{}
+  design_description: "None"
+  platform: OXFORD_NANOPORE
+  instrument_model: MinION
+  library_name: "SQK-NBD114"
+  library_source: GENOMIC
+  library_selection: RT-PCR
+  library_strategy: AMPLICON
+  library_layout: "single"
+  # Optional values
+  # library_construction_protocol: "None"
+  # insert_size: 250 (only necessary in paired layout)
+
+#
+run:
+  alias: revseq_run_{}
+  experiment_alias: revseq_experiment_{}
+
+#
+analysis:
+  name: analysis_{}
+  assembly_type: clone
+  coverage: 3.7 # should be taken from the most expressed substrain
+  program: BCFtools
+  platform: "Illumina NextSeq"
