@@ -71,7 +71,7 @@ class SampleAdmin(ModelAdmin):
     search_fields = ("sample_number", "pseudonymized_id", "well__location")
     list_filter_submit = True
     list_filter = ("plate__barcode", "control", "control_type")
-    inlines =  [FileInline, CDSCountInline, MetadataInline]
+    inlines =  [FileInline,  MetadataInline]
 
 
 @admin.register(SampleFile)
