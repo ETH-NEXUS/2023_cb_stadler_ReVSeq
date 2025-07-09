@@ -144,6 +144,7 @@ class Command(BaseCommand):
     def upload_ser(self, no_analysis=False, given_samples=None):
         if given_samples:
             samples = Sample.objects.filter(pseudonymized_id__in=given_samples)
+            print(f'Found {len(samples)} samples for the given pseudonymized IDs: {given_samples}')
         else:
             samples = Sample.objects.filter(job_id__isnull=True, valid=True, upload_to_ena=True)
             if not samples:
