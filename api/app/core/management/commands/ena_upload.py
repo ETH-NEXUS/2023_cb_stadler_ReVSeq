@@ -26,7 +26,6 @@ EMBL_FILE_TYPE = 'FLATFILE'
 def extract_basename(path):
     return os.path.basename(path)
 
-
 class Command(BaseCommand):
     def __init__(self):
         super().__init__()
@@ -43,6 +42,37 @@ class Command(BaseCommand):
             help='Type of data to upload: study, or ser_and_analysis to upload the samples which don;t already have a '
                  'job_id'
         )
+        # if we have a custom list of samples to upload, we can add it here as a lis []
+        parser.add_argument(
+            '-s', '--samples', type=str, nargs='*',
+            help='List of sample IDs to upload. If not provided, all samples with job_id=None will be uploaded.'
+        )
+
+        parser.add_argument(
+            '-r', '--task', type=str, choices=['resend_analysis_jobs'],
+            help='Task to perform: resend_analysis_jobs to resend analysis jobs for the given samples'
+        )
+        # argument not to include analysis
+        parser.add_argument(
+            '-a', '--no_analysis', action='store_true',
+            help='If set, analysis jobs will not be uploaded, only SER jobs.'
+        )
+    def resend_analysis_jobs(self, samples):
+        if not samples:
+            logger.warning('No samples provided for resend_analysis_jobs')
+            return
+        for sample_id in samples:
+            sample = Sample.objects.filter(pseudonymized_id=sample_id).first()
+            sample_counts = SampleCount.objects.filter(sample=sample)
+            payload = self._create_ser_payload(sample, sample_counts)
+            analysis_payload = payload['data']['analysis']
+            files = File.objects.filter(sample=sample)
+            analysis_files = [file for file in files if extract_basename(file.path).endswith(EMBL_FILE_SUFFIX)]
+            job_id = sample.job_id
+            self.data_for_analysis_upload.append((job_id, sample, analysis_files, analysis_payload))
+        self._upload_analysis_loop()
+
+
 
     def ena_uploadjob_id(self):
         samples = Sample.objects.filter(job_id__isnull=False)
@@ -108,7 +138,7 @@ class Command(BaseCommand):
         except Exception as e:
             logger.error(f"An error occurred while releasing {job_type_description}: {e}")
 
-    def upload_ser(self):
+    def upload_ser(self, no_analysis=False):
         samples = Sample.objects.filter(job_id__isnull=True, valid=True, upload_to_ena=True)
         logger.info(f'Uploading {len(samples)} samples to ENA')
         print(list(samples.values_list('pseudonymized_id', flat=True)))
@@ -126,16 +156,15 @@ class Command(BaseCommand):
                                                 message=f'SER for {sample} uploaded successfully')
             files = File.objects.filter(sample=sample)
             analysis_files = [file for file in files if  extract_basename(file.path).endswith(EMBL_FILE_SUFFIX)]
-
             job_id = response['id']
             sample.job_id = job_id
             sample.save()
             time.sleep(20)
-
             self.data_for_analysis_upload.append((job_id, sample, analysis_files, analysis_payload))
             self.job_ids.append(job_id)
-
-        self._upload_analysis_loop()
+        if not no_analysis:
+            logger.info('Uploading analysis jobs and files')
+            self._upload_analysis_loop()
         self._release_jobs_loop(
             list_endpoint=JOBS_ENDPOINT,
             release_endpoint_template=RELEASE_JOB_ENDPOINT,
@@ -162,7 +191,6 @@ class Command(BaseCommand):
         collection_date = metadata.ent_date.strftime("%Y-%m-%d")
         geo_location = metadata.prescriber
         coverage = float(sorted_sample_counts[0].coverage) + 0.01
-
         sample_alias = f"revseq_sample_{sample.pseudonymized_id}_{now}"
         experiment_alias = f"revseq_experiment_{sample.pseudonymized_id}_{now}"
         _files = []
@@ -205,15 +233,16 @@ class Command(BaseCommand):
 
         if serotype:
             payload['data']['sample']['serotype'] = serotype
-
         return payload
-
 
     def upload_analysis_job_and_files(self, job_id, sample, files, analysis_payload):
         payload = {'template': 'default', 'data': analysis_payload, 'job': job_id}
         logger.info(f'Uploading analysis payload job for {sample}')
         response = self.handle_http_request(ANALYSIS_ENDPOINT, payload, 'post',
                                             message=f'Analysis job for {sample} uploaded successfully')
+        if not response:
+            logger.error(f'Failed to upload analysis job for {sample}')
+            return
         analysis_job_id = response['id']
         sample.analysis_job_id = analysis_job_id
         sample.save()
@@ -251,13 +280,21 @@ class Command(BaseCommand):
         _url = url.replace('<job_id>', str(job_id))
         self.handle_http_request(_url, method='get', message=f'Job {job_id} released successfully')
 
+
     def handle(self, *args, **options):
+        task = options.get('task')
+        no_analysis = options.get('no_analysis', False)
+        if task == 'resend_analysis_jobs':
+            samples = options.get('samples')
+            self.resend_analysis_jobs(samples)
+            return
         data_type = options.get('type')
         if data_type == 'study':
             self.upload_study()
         elif data_type == 'ser_and_analysis':
-            self.upload_ser()
+            self.upload_ser(no_analysis)
         elif data_type == 'delete_job_id':
             self.delete_job_id()
+
         else:
             logger.warning('Please specify a data type to upload: study, ser, analysis')
