@@ -9,7 +9,7 @@ resources/RespiratoryVirus_hg38.20200409.fa
 revseq/.env
 revseq/db_credentials_file
 
-
+django_shell
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
