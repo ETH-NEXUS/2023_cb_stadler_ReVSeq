@@ -69,9 +69,10 @@ class Command(BaseCommand):
         # submit analysis jobs for this sample
         # python manage.py ena_upload --task resend_analysis_jobs -s RyXauM
 
-        # for 32WNFL job id 1173, analysis job id 367
-        # python manage.py ena_upload -s 32WNFL
-        # python manage.py ena_upload --task resend_analysis_jobs -s 32WNFL
+        # for 375EUk  jobid 1152  analysis job id 346
+        # python manage.py ena_upload --type ser_and_analysis -s 375EUk
+        # submit analysis jobs for this sample
+        # python manage.py ena_upload --task resend_analysis_jobs -s 375EUk
 
 
 
@@ -255,6 +256,7 @@ class Command(BaseCommand):
 
         if serotype:
             payload['data']['sample']['serotype'] = serotype
+        print(f'Payload for {sample.pseudonymized_id}: {payload}')
         return payload
 
     def upload_analysis_job_and_files(self, job_id, sample, files, analysis_payload):

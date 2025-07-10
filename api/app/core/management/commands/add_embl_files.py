@@ -6,6 +6,7 @@ from core.helpers import compute_checksum
 file_data = [
     {"plate": "RVSeqPlate4-m2", "sample": "RyXauM", "file": "/data/RVSeqPlate4-m2/sample_m2-RyXauM/RyXauM-m2.embl.gz"},
     {"plate": "RVSeqPlate3-m2", "sample": "32WNFL", "file": "/data/RVSeqPlate3-m2/sample_m2-32WNFL/32WNFL.embl.gz"},
+    {"plate": "RVSeqPlate3-m2", "sample": "375EUk", "file": "/data/RVSeqPlate3-m2/sample_m2-375EUk/375EUk-m2.embl.gz"},
 
 
 ]
