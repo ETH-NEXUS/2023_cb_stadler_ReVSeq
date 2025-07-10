@@ -29,6 +29,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
+            type=semver,pattern={{raw}}
       - name: Set up QEMU
         if: github.event_name != 'pull_request'
         uses: docker/setup-qemu-action@v3
@@ -50,19 +51,19 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
-#   PushContainerReadme:
-#     runs-on: ubuntu-latest
-#     name: Push README to Docker Hub`
-#     steps:
-#       - name: git checkout
-#         uses: actions/checkout@v3
-#       - name: push README to Dockerhub
-#         uses: christian-korneck/update-container-description-action@v1
-#         env:
-#           DOCKER_USER: ethnexus
-#           DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
-#         with:
-#           destination_container_repo: ethnexus/revseq_bioinformatics_pipeline
-#           provider: dockerhub
-#           short_description: "ReVSeq Bioinformatics Pipeline"
-#           readme_file: "revseq/README.md"
+  PushContainerReadme:
+    runs-on: ubuntu-latest
+    name: Push README to Docker Hub`
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v3
+      - name: push README to Dockerhub
+        uses: christian-korneck/update-container-description-action@v1
+        env:
+          DOCKER_USER: ethnexus
+          DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+        with:
+          destination_container_repo: ethnexus/revseq_bioinformatics_pipeline
+          provider: dockerhub
+          short_description: "ReVSeq Bioinformatics Pipeline"
+          readme_file: "revseq/README.md"
