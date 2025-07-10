@@ -314,3 +314,4 @@ site/
 
 .ena.secret.yml
 .secret.yml
+.secrets
