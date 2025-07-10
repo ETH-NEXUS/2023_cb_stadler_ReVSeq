@@ -8,15 +8,15 @@ import datetime as dt
 from helpers.color_log import logger
 import time
 
-STUDY_ENDPOINT = 'http://ena:5000/api/jobs/study/'
-SER_ENDPOINT = 'http://ena:5000/api/jobs/ser/'
-ANALYSIS_ENDPOINT = 'http://ena:5000/api/analysisjobs/'
-ANALYSIS_FILES_ENDPOINT = 'http://ena:5000/api/analysisfiles/'
-ENQUEUE_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/enqueue/'
-RELEASE_JOB_ENDPOINT = 'http://ena:5000/api/jobs/<job_id>/release/'
-RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/api/analysisjobs/<job_id>/release/'
-JOBS_ENDPOINT = 'http://ena:5000/api/jobs/'
-ANALYSIS_JOBS_ENDPOINT = 'http://ena:5000/api/analysisjobs/'
+STUDY_ENDPOINT = 'http://ena:5000/ena/api/jobs/study/'
+SER_ENDPOINT = 'http://ena:5000/ena/api/jobs/ser/'
+ANALYSIS_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/'
+ANALYSIS_FILES_ENDPOINT = 'http://ena:5000/ena/api/analysisfiles/'
+ENQUEUE_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/<job_id>/enqueue/'
+RELEASE_JOB_ENDPOINT = 'http://ena:5000/ena/api/jobs/<job_id>/release/'
+RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/<job_id>/release/'
+JOBS_ENDPOINT = 'http://ena:5000/ena/api/jobs/'
+ANALYSIS_JOBS_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/'
 CONSENSUS_FILE_SUFFIX = '.fa.gz'
 CHROMOSOME_FILE_NAME = 'chr_file.txt.gz'
 EMBL_FILE_SUFFIX = '.embl.gz'
@@ -53,13 +53,17 @@ class Command(BaseCommand):
             help='Task to perform: resend_analysis_jobs to resend analysis jobs for the given samples'
         )
         # argument not to include analysis
+        # we need this option to be able to upload ser without anaysis
+        # use case: to test the task of resending analysis jobs
+        # we upload some ser jobst on the dev server without analysis and then try to send analysis separately.
+        # if it works, we resent some analysis jobst in production for several samples
         parser.add_argument(
             '-a', '--no_analysis', action='store_true',
             help='If set, analysis jobs will not be uploaded, only SER jobs.'
         )
 
-        # command to upload this one 32WNFL without analysis
-        # python manage.py ena_upload --type ser_and_analysis --no_analysis -s 32WNFL
+        # command to upload this one RyXauM without analysis
+        # python manage.py ena_upload --type ser_and_analysis --no_analysis -s RyXauM   # job jd 1187 analysis job id 381
     def resend_analysis_jobs(self, samples):
         if not samples:
             logger.warning('No samples provided for resend_analysis_jobs')
