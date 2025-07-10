@@ -19,7 +19,7 @@ JOBS_ENDPOINT = 'http://ena:5000/ena/api/jobs/'
 ANALYSIS_JOBS_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/'
 CONSENSUS_FILE_SUFFIX = '.fa.gz'
 CHROMOSOME_FILE_NAME = 'chr_file.txt.gz'
-EMBL_FILE_SUFFIX = '.embl.gz'
+EMBL_FILE_SUFFIX = 'embl.gz'
 EMBL_FILE_TYPE = 'FLATFILE'
 
 
@@ -64,6 +64,8 @@ class Command(BaseCommand):
 
         # command to upload this one RyXauM without analysis
         # python manage.py ena_upload --type ser_and_analysis --no_analysis -s RyXauM   # job jd 1187 analysis job id 381
+        # submit analysis jobs for this sample
+        # python manage.py ena_upload --task resend_analysis_jobs -s RyXauM
     def resend_analysis_jobs(self, samples):
         if not samples:
             logger.warning('No samples provided for resend_analysis_jobs')
