@@ -4,7 +4,7 @@ from helpers.color_log import logger
 from core.helpers import compute_checksum
 
 file_data = [
-    {"plate": "RVSeqPlate4-m2", "sample": "RyXauM", "file": "/data/revseq/results/gather_results/RVSeqPlate4-m2/sample_m2-RyXauM/RyXauM-m2.embl.gz"},
+    {"plate": "RVSeqPlate4-m2", "sample": "RyXauM", "file": "/data/RVSeqPlate4-m2/sample_m2-RyXauM/RyXauM-m2.embl.gz"},
 
 ]
 
