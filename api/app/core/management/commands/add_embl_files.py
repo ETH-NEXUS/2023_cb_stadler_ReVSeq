@@ -32,7 +32,7 @@ class Command(BaseCommand):
                 else:
                     logger.info(f'File {file_path} does not exist, creating new file instance.')
 
-                    file_instance,  = File.objects.create(
+                    file_instance = File.objects.create(
                         path=file_path,
                         checksum=checksum,
                         type=file_type,
