@@ -63,9 +63,18 @@ class Command(BaseCommand):
         )
 
         # command to upload this one RyXauM without analysis
+
+
         # python manage.py ena_upload --type ser_and_analysis --no_analysis -s RyXauM   # job jd 1187 analysis job id 381
         # submit analysis jobs for this sample
         # python manage.py ena_upload --task resend_analysis_jobs -s RyXauM
+
+        # for 32WNFL job id 1173, analysis job id 367
+        # python manage.py ena_upload -s 32WNFL
+        # python manage.py ena_upload --task resend_analysis_jobs -s 32WNFL
+
+
+
     def resend_analysis_jobs(self, samples):
         if not samples:
             logger.warning('No samples provided for resend_analysis_jobs')
