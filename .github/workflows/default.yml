@@ -51,9 +51,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+  
   PushContainerReadme:
     runs-on: ubuntu-latest
-    name: Push README to Docker Hub`
+    name: Push README to Docker Hub
     steps:
       - name: git checkout
         uses: actions/checkout@v3
