@@ -311,6 +311,7 @@ data/
 static/
 media/
 site/
+backup/
 
 .ena.secret.yml
 .secret.yml
