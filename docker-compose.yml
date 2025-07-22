@@ -55,6 +55,7 @@ services:
     volumes:
       - ./ena/templates:/templates
       - ./data:/data
+      - ./api/static:/vol/web/static:z
     depends_on:
       - db
   db:
