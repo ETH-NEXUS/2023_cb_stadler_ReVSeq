@@ -8,7 +8,7 @@ revseq/docker-compose.yml
 resources/RespiratoryVirus_hg38.20200409.fa
 revseq/.env
 revseq/db_credentials_file
-
+data/influenza_samples.txt
 django_shell
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -262,6 +262,8 @@ class Command(BaseCommand):
     def upload_analysis_job_and_files(self, job_id, sample, files, analysis_payload):
         payload = {'template': 'default', 'data': analysis_payload, 'job': job_id}
         logger.info(f'Uploading analysis payload job for {sample}')
+        logger.info(f'Analysis payload: {payload}')
+        logger.info(f'Files for analysis upload: {[file.path for file in files]}')
         response = self.handle_http_request(ANALYSIS_ENDPOINT, payload, 'post',
                                             message=f'Analysis job for {sample} uploaded successfully')
         if not response:
