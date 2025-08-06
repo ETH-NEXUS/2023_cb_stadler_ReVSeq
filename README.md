@@ -1,10 +1,9 @@
-# 2023_cb_stadler_ReVSeq
-Code related to the project 2023_cb_stadler_ReVSeq.
+# ReVSeq - Respiratory Virus Sequencing
 
 ## Introduction
-This is a workflow design to perform sample retrieval and bioinformatics analysis for the project 2023_cb_stadler_ReVSeq. The goal of the project is to analyse sequencing data of patients' oropharingeal samples and detect which (if any) of the respiratory viruses of interest is the cause of infection observed by the physician.
+This repository contains code for data retrieval and bioinformatics analysis of samples from patients with respiratory virus symptoms tested and sequenced at Viollier AG. The project aims at providing an overview on the genetic diversity of respiratory viruses in Switzerland as well as fostering an understanding of their evolution.
 
-The workflow is divided in two main sections:
+The analysis workflow is divided in two main sections:
 - `pipeline_revseq`: the snakemake pipeline that performs the full bioinformatics analysis
 - `revseq`: the docker container that retrieves samples and runs the pipeline
 
