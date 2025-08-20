@@ -140,14 +140,14 @@ The Kraken2 assignment is performed using a curated custom database generated as
   - Tupanvirus deep ocean, Prymnesium kappa virus, Cotonvirus japonicus, Bodo saltans virus, Tupanvirus soda lake, Powai lake megavirus, Acanthamoeba polyphaga mimivirus (reason: broken download links)
   - Human coronavirus OC43, Severe acute respiratory syndrome coronavirus 2, Respiratory syncytial virus (reason: already in the Illumina panel and always included in the analysis)
   - Simian Agent 10, Bovine coronavirus (reason: too similar in sequence to viruses in the Illumina panel)
-- We use the metadata file library_report.tsv available in the reference to download the FASTA reference of all the species we kept in our custom list
-- We use a custom script to add all reference FASTA sequences to a new database and then build it using kraken-build
+- We use the metadata file `resources/library_report.tsv` to download the FASTA reference of all the species we kept in our custom list
+- We use the custom script `resources/kraken_build.sh` to add all reference FASTA sequences to a new database and then build it using kraken-build
 
 #### Details - Virus assignment
 The virus assignment is computed by a custom python script that summarises the results in a dedicated table.
 From the index stats, the tool retrieves the amount of reads aligned to each virus sequence and the length of each viral sequence.
-Virus sequences related to different ORF of the same virus strain are merged together by sum of the all the ORF's lengths and sequences.
-This information is then used to compute RPKMs and the percentage of RPKM assigned to each virus sequence.
+Virus sequences related to different Open Reading Frames (ORF) of the same virus strain are merged together by sum of the all the ORF's lengths and sequences.
+This information is then used to compute Reads per Kilobase per Million mapped reads (RPKMs) and the percentage of RPKM assigned to each virus sequence.
 
 Virus sequences with outlier RPKM values are detected by searching for RPKM percentage larger than a user-defined higher percentile of the RPKM percentage distribution. The default is the 90th percentile.
 
