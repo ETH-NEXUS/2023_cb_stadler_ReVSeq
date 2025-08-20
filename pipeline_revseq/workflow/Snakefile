@@ -32,6 +32,8 @@ rule all:
         #####preprocessing
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R1.fastq.gz", sample = sample_ids, lane = lane_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_lanes/{sample}_merged_R2.fastq.gz", sample = sample_ids, lane = lane_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.report", sample = sample_ids, lane = lane_ids),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_regions/{sample}.bed", sample = sample_ids),
         #####dehuman
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/cram/{sample}.cram", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r1.fastq", sample = sample_ids),
@@ -42,6 +44,7 @@ rule all:
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/validate_assignment/{sample}_validation.tsv", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa", sample = sample_ids),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/depth/{sample}_depth.tsv", sample = sample_ids),
+	expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_substrain_count_table.tsv", sample = sample_ids),
         #####qc
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc/multiqc_report.html"),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered/multiqc_report.html"),
@@ -49,13 +52,15 @@ rule all:
         #####gathering
         expand(config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/sample_{sample}/{sample}_count_table.tsv", sample = sample_ids),
         config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/"+config["plate"]+"_metadata.csv",
+        config["tools"]["gather_results"]["outdir"]+"/"+config["plate"]+"/complete.txt",
         #aggregation
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_assignment_table.tsv"),
         expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/aggregate/"+config["plate"]+"_aggregated_qc_table.tsv"),
+        expand(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/chr_file/chr_file.txt", sample = sample_ids),
         #db_upload
         #config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/db_upload_status",
         #viollier_upload
-        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
+        #config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/viollier_upload/viollier_upload_success",
     output:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/complete.txt",
     shell:

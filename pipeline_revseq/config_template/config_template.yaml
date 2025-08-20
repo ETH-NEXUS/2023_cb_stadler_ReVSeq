@@ -53,6 +53,8 @@ tools:
     threads: 4
     # The common string for any given samplesheet
     samplesheet_search_string: "SampleSheet"
+  cram:
+    tool_options: "cram,embed_ref,use_bzip2,use_lzma,level=9,seqs_per_slice=1000000"
   pileup:
     # minimum mapping quality threshold. Passed to samtools option -q
     # Used to create the pileup for visualization.
@@ -72,7 +74,7 @@ tools:
     # Minimum average coverage allowed in the sample for the assignment to be reported
     coverage_threshold: 10
     # Table containing the matches between substrain name and taxon
-    taxon: /data/pipeline/resources/substrain_taxon_lookup.csv
+    taxon: /data/pipeline/resources/substrain_taxon_lookup_old.csv
     # Wether to filter or not the alternative strains and substrains based on the same thresholds used to assign the top
     filter_alternatives: 0
     # The maximum DP to be reported. The DP field will contain all DPs from 1 to this limit

@@ -28,6 +28,7 @@ if __name__ == '__main__':
     anontable = pd.read_table(args.pseudoanon_table, dtype=str)
     match_table = pd.read_csv(args.match_table,sep=",", header=0, dtype=str)
     count_table = pd.read_csv(args.count_table,sep="\t", dtype=str)
+    count_table = count_table.rename(columns={"Unnamed: 0": "name"})
     metadata_subdirs = [os.path.join(args.metadata_dir, batchdir) for batchdir in os.listdir(args.metadata_dir)]
     metadata_files = [ os.path.join(batchdir, file) for batchdir in metadata_subdirs for file in os.listdir(batchdir) if "Z_ETH_Scan_Extraktionsplatte_Respiratorische Erreger_STEP_03" in file ]
     #all_files = [ os.path.join(metaname, os.listdir(metaname)[0]) for metaname in metadata_subdirs ]

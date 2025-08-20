@@ -95,12 +95,23 @@ class Importer:
             if not matching_file_type:
                 logger.warning(f"File type for {basename} not found")
 
+
+            # file, _ = File.objects.update_or_create(
+            #     path=filepath,
+            #     checksum=checksum,
+            #     type=matching_file_type,
+            #     sample=sample,
+            #     plate=plate,
+            # )
+
             file, _ = File.objects.update_or_create(
                 path=filepath,
-                checksum=checksum,
-                type=matching_file_type,
-                sample=sample,
-                plate=plate,
+                defaults={
+                    "checksum": checksum,
+                    "type": matching_file_type,
+                    "sample": sample,
+                    "plate": plate,
+                }
             )
             logger.info(f"Saved information about the file {file}")
 
@@ -134,20 +145,21 @@ class Importer:
         sample_count.mean_coverage_non_N_positions = coverage_n_file[0] if coverage_n_file else None
         sample_count.save()
 
-        for line in txt_to_list(consensus_counts[0])[1:]:
-            line_list = line.split("\t")
-            defaults = {
-                "fraction_n": float(line_list[4]),
-                "mean_cov_non_n_positions": float(line_list[5]),
-            }
-            CDSCount.objects.update_or_create(
-                sample=sample_count.sample,
-                substrain=sample_count.substrain,
-                CDS_name=line_list[2],
-                number_n=line_list[3],
-                defaults=defaults,
+        if consensus_counts:
+            for line in txt_to_list(consensus_counts[0])[1:]:
+                line_list = line.split("\t")
+                defaults = {
+                    "fraction_n": float(line_list[4]),
+                    "mean_cov_non_n_positions": float(line_list[5]),
+                }
+                CDSCount.objects.update_or_create(
+                    sample=sample_count.sample,
+                    substrain=sample_count.substrain,
+                    CDS_name=line_list[2],
+                    number_n=line_list[3],
+                    defaults=defaults,
 
-            )
+                )
 
 
 
@@ -216,12 +228,16 @@ class Importer:
             well, _ = Well.objects.get_or_create(
                 plate=plate, location=item[columns.deep_well_location]
             )
-            sample, _ = Sample.objects.get_or_create(
-                well=well,
-                sample_number=item[columns.sample_number],
+            # look up by pseudonymized_id
+            sample, created = Sample.objects.get_or_create(
                 pseudonymized_id=item[columns.pseudonymized_id],
-                plate=plate,
+                defaults={"plate": plate, "well": well, "sample_number": item[columns.sample_number]},
             )
+            if created:
+                logger.info(f"Created sample {sample}")
+            else:
+                logger.info(f"Sample {sample} already exists")
+                self.stats["already_existed"] += 1
             self.sample_id_dict[
                 item[columns.pseudonymized_id]
             ] = False  # later on, we will check, if all samples have been imported
@@ -248,10 +264,10 @@ class Importer:
         :return: None
         """
         if control:
-            Sample.objects.update_or_create(pseudonymized_id=control_sample_id,
-                                            plate=plate,
-                                            control=True,
-                                            control_type=control_type)
+            # look by pseudonymized_id
+            _sample, _ = Sample.objects.update_or_create(pseudonymized_id=control_sample_id,
+                                                        defaults={"plate": plate, "control": True, "control_type": control_type})
+
             sample_id = control_sample_id
         else:
             sample_id = os.path.basename(counts_file).split("_")[0]

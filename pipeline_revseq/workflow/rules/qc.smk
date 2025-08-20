@@ -48,8 +48,7 @@ rule fastqc_trimmed:
 
 rule samtoolsstats:
     input:
-        #bam = rules.bwa.output.bam,
-        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam"
+        bam = rules.bwa.output.bam,
     output:
         stats = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/samtoolsstats/{sample}_samtools_stats.txt",
         flagstats = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/samtoolsstats/{sample}_samtools_flagstats.txt",
@@ -67,10 +66,8 @@ rule samtoolsstats:
 
 rule rseqc:
     input:
-        #bam = rules.bwa.output.bam,
-        #index = rules.bwa.output.bai
-        bam =config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam",
-        index = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam.bai"
+        bam = rules.bwa.output.bam,
+        index = rules.bwa.output.bai
     output:
         stats = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/rseqc/{sample}_bam_stat.txt",
     params:
@@ -88,8 +85,7 @@ rule rseqc:
 
 rule qualimap:
     input:
-        #bam = rules.bwa.output.bam,
-        bam = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bwa/{sample}.bam"
+        bam = rules.bwa.output.bam,
     output:
         report = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/qualimapReport.html",
         genome_res = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap/genome_results.txt",
@@ -143,8 +139,6 @@ rule multiqc:
         --interactive \
         -o {params.outdir}  2> >(tee {log.errfile} >&2)
         """
-
-
 rule multiqc_trimmed:
     input:
         trimresult1 =  expand(rules.fastqc_trimmed.output.zip1, sample=sample_ids),
@@ -222,7 +216,7 @@ rule multiqc_filtered:
         stats = expand(rules.samtoolsstats_filtered.output.stats, sample=sample_ids),
         flagstats = expand(rules.samtoolsstats_filtered.output.flagstats, sample=sample_ids),
         rseqcstats = expand(rules.rseqc_filtered.output.stats, sample=sample_ids),
-        #qualimap = expand(rules.qualimap_filtered.output.report, sample=sample_ids),
+        qualimap = expand(rules.qualimap_filtered.output.report, sample=sample_ids),
     output:
         outfile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered/multiqc_report.html",
         outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/multiqc_filtered")

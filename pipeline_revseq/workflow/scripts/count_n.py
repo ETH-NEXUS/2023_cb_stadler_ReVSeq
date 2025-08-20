@@ -48,8 +48,9 @@ if __name__ == '__main__':
             else:
                 length = fasta_cov[2] - fasta_cov[1]
                 avg = (length * fasta_cov[3]).sum() / length.sum()
-            reference_length = bed[2][bed[0] == name].to_string(index=False).strip()
-            name = bed[3][bed[0] == name].to_string(index=False).strip()
+            mask = bed.iloc[:, 0] == name
+            reference_length = bed.iloc[mask.values, 2]
+            name = bed.iloc[mask.values, 3].to_string(index=False).strip()
             number_n = sequence.count("N")
             line = {"name": name, "number_n": int(number_n), "reference_length": int(reference_length), "fraction_n": 1, "mean_cov_non_n_positions": avg}
             info_df = info_df.append([line], ignore_index=True)

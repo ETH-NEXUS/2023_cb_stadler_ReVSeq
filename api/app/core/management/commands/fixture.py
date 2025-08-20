@@ -4,11 +4,13 @@ import csv
 from core.models import Panel, Strain, Substrain, FileType, CDSPositions
 from helpers.color_log import logger
 
+
 FILE_PANEL_STRAIN = "initial_data/panel_strain.csv"
 FILE_STRAIN_SUBSTRAIN = "initial_data/strain_substrain.csv"
 FILE_FILE_TYPE = "initial_data/file_type.csv"
 FILE_TAXON_ID = "initial_data/substrain_taxon_lookup.csv"
-FILE_CDS = "initial_data/cds.bed"
+FILE_CDS = "initial_data/cds.bed" # bkrZsY
+SEROTYPE = "initial_data/pipeline_lookup_strain_substrain_from_k2.csv"
 
 
 def read_csv_file(input_file):
@@ -16,11 +18,13 @@ def read_csv_file(input_file):
         return list(csv.DictReader(f))
 
 
+
+
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             "what", type=str, help="Which fixture to upload"
-        )  # panel_strain, strain_substrain, file_type, taxon_id, cds
+        )  # panel_strain, strain_substrain, file_type, taxon_id, cds, serotype
 
     def strain_substrain(self):
         data = read_csv_file(FILE_STRAIN_SUBSTRAIN)
@@ -34,17 +38,32 @@ class Command(BaseCommand):
                 substrain.save()
                 strain.save()
 
+    def serotype(self):
+        data = read_csv_file(SEROTYPE)
+        for item in data:
+            if item["substrain"]:
+                substrain, _ = Substrain.objects.get_or_create(
+                    name=item["substrain"]
+                )
+                if item["serotype"] and item["serotype"] != ".":
+                    substrain.serotype = item["serotype"]
+                    substrain.save()
+                    logger.info(f"Added serotype {item['serotype']} to {substrain}")
+
     def substrain_taxon_id(self):
         data = read_csv_file(FILE_TAXON_ID)
         for item in data:
             if item["substrain_name"]:
-                substrain, _ = Substrain.objects.get_or_create(
+                substrain, created = Substrain.objects.get_or_create(
                     name=item["substrain_name"]
                 )
                 substrain.taxon_id = item["tax_id"]
                 substrain.scientific_name = item["scientific_name"]
                 substrain.save()
-                print(f"Updated {substrain}")
+                if created:
+                    logger.info(f"Created {substrain}")
+                else:
+                    logger.info(f"Updated {substrain}")
 
 
     def panel_strain(self):
@@ -110,6 +129,8 @@ class Command(BaseCommand):
                 self.substrain_taxon_id()
             elif options.get("what") == "cds":
                 self.cds()
+            elif options.get("what") == "serotype":
+                self.serotype()
         except Exception as ex:
             print(ex)
             traceback.print_exc()

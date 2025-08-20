@@ -47,4 +47,7 @@ rsync -avz --exclude='sample_*' aesche@revseq.nexus.ethz.ch:/data/revseq/results
     
 ```
 
+docker compose  -f docker-compose.yml -f  docker-compose.dev.yml  up
+ 
+
 scp aesche@revseq.nexus.ethz.ch:/data/revseq/results/gather_results/RVSeqPlate10/RVSeqPlate10_empty_samples.txt /Users/aesche/git/2023_cb_stadler_ReVSeq/data/RVSeqPlate10/

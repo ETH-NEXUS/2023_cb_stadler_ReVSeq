@@ -22,14 +22,3 @@ while [[ -n "1" ]]; do
 	echo "$(date) Loop ended. Sleeping for ${loop_interval_hours} hours\n\n"
 	sleep ${loop_interval_hours}h
 done
-#cd /data/pipeline
-#
-#snakemake \
-#	--use-conda \
-#	--rerun-triggers mtime \
-#	-c8 \
-#	--configfile /data/config/config.yaml \
-#	--config plate=010623RVS \
-#	sample_map=/data/results/010623RVS/010623RVS_samplemap.tsv \
-#	--notemp \
-#	--until bwa &&

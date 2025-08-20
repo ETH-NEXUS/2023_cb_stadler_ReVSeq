@@ -1,47 +1,3 @@
-substrain_name,tax_id,scientific_name
-Human parechovirus 6,411152,Human parechovirus 6
-Human enterovirus C104 strain: AK11,2650411,Enterovirus C104
-Human Respiratory syncytial virus 9320 (type B),253182,Human Respiratory syncytial virus 9320
-Human coronavirus OC43,31631,Human coronavirus OC43
-Influenza B virus (B/Wisconsin/01/2010),1089607,Influenza B virus (B/Wisconsin/01/2010)
-Influenza B virus (B/Colorado/06/2017),1987257,Influenza B virus (B/Colorado/06/2017)
-Influenza B virus (B/Brisbane/60/2008),604436,Influenza B virus (B/Brisbane/60/2008)
-Human parechovirus type 1 PicoBank/HPeV1/a,568506,Human parechovirus type 1 PicoBank/HPeV1/a
-Human enterovirus C109 isolate NICA08-4327,861519,Enterovirus C109
-Influenza A virus  (A/Zhejiang/DTID-ZJU01/2013(H7N9)),1318616,Influenza A virus (A/Zhejiang/DTID-ZJU01/2013(H7N9)
-Influenza A virus (A/Texas/50/2012(H3N2)),1321009,Influenza A virus (A/Texas/50/2012(H3N2))
-Influenza A virus (A/Michigan/45/2015(H1N1)),1777792,Influenza A virus (A/Michigan/45/2015(H1N1))
-Influenza B virus (B/Washington/02/2019),11520,Influenza B virus
-SARS-CoV-2,2697049,Severe acute respiratory syndrome coronavirus 2
-Human adenovirus C2,129951,Human mastadenovirus C
-Human rhinovirus B14,12131,Rhinovirus B14
-Human rhinovirus A89,12132,rhinovirus A89
-Human parainfluenza virus 3,11216,Human respirovirus 3
-Respiratory syncytial virus (type A),208893,Respiratory syncytial virus
-Influenza A virus (A/Puerto Rico/8/1934(H1N1)),211044,Influenza A virus (A/Puerto Rico/8/1934(H1N1))
-Influenza B virus (B/Lee/1940),518987,Influenza B virus (B/Lee/1940)
-Human coronavirus 229E,11137,Human coronavirus 229E
-Human adenovirus E4,28280,Human adenovirus E4
-Human parainfluenza virus 2,2560525,Human orthorubulavirus 2
-Human parainfluenza virus 1,12730,Human respirovirus 1
-Human metapneumovirus (CAN97-83),694067,Human metapneumovirus CAN97-83
-Human metapneumovirus,162145,Human metapneumovirus
-Influenza A virus (A/Hong Kong/1073/99(H9N2)),130760,Influenza A virus (A/Hong Kong/1073/99(H9N2))
-Human coronavirus NL63,277944,Human coronavirus NL63
-Human coronavirus HKU1,290028,Human coronavirus HKU1
-Influenza A virus (A/goose/Guangdong/1/1996(H5N1)),93838,Influenza A virus (A/goose/Guangdong/1/1996(H5N1))
-Influenza A virus (A/New York/392/2004(H3N2)),335341,Influenza A virus (A/New York/392/2004(H3N2))
-Influenza A virus (A/Korea/426/1968(H2N2)),488241,Influenza A virus (A/Korea/426/1968(H2N2))
-Human bocavirus 1 (Primate bocaparvovirus 1 isolate st2),3052040,Bocaparvovirus primate1
-KI polyomavirus Stockholm 60,423446,KI polyomavirus Stockholm 60
-WU polyomavirus,440266,WU Polyomavirus
-Human rhinovirus C (strain 024),463676,Rhinovirus C
-Human adenovirus B1,565302,Human adenovirus B1
-Human bocavirus 2c PK isolate PK-5510,1511882,Human bocavirus 2c PK
-Human bocavirus 3,638313,Human bocavirus 3
-Human bocavirus 4 NI strain HBoV4-NI-385,1511883,Human bocavirus 4 NI
-Human parainfluenza virus 4a,11224,Human parainfluenza virus 4a
-
 Escherichia phage F2,2696339,Escherichia phage F2
 Escherichia phage T4,2681598,Escherichia phage T4
 Escherichia phage T2,2060721,Escherichia phage T2
@@ -4843,6 +4799,7 @@ Pneumonia virus of mice J3666,270473,Pneumonia virus of mice J3666
 bovine respiratory syncytial virus,3136119,bovine respiratory syncytial virus
 Bovine respiratory syncytial virus ATCC51908,11247,Bovine respiratory syncytial virus ATCC51908
 Bovine orthopneumovirus,11246,Bovine orthopneumovirus
+Respiratory syncytial virus,12814,Respiratory syncytial virus
 human respiratory syncytial virus,11250,human respiratory syncytial virus
 avian metapneumovirus,38525,avian metapneumovirus
 human metapneumovirus,162145,human metapneumovirus

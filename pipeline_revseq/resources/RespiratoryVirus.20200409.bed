@@ -72,7 +72,6 @@ NC_002645	0	27317	Human coronavirus 229E
 NC_003266	0	35994	Human adenovirus E4
 NC_003443	0	15646	Human parainfluenza virus 2
 NC_003461	0	15600	Human parainfluenza virus 1
-NC_004148	0	13335	Human metapneumovirus (CAN97-83)
 NC_004905	0	1557	Influenza A virus (A/Hong Kong/1073/99(H9N2))
 NC_004906	0	890	Influenza A virus (A/Hong Kong/1073/99(H9N2))
 NC_004907	0	1025	Influenza A virus (A/Hong Kong/1073/99(H9N2))
@@ -116,3 +115,4 @@ NC_012042	0	5196	Human bocavirus 2c PK isolate PK-5510
 NC_012564	0	5242	Human bocavirus 3
 NC_012729	0	5104	Human bocavirus 4 NI strain HBoV4-NI-385
 NC_021928	0	17052	Human parainfluenza virus 4a
+NC_039199	0	13349	Human metapneumovirus

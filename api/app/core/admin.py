@@ -16,6 +16,28 @@ CDSCount
 )
 from unfold.admin import ModelAdmin
 
+# ============== Inlines =================
+
+
+class FileInline(admin.TabularInline):
+    model = File
+    fk_name = "sample"
+    extra = 0
+
+class SampleCountInline(admin.TabularInline):
+    model = SampleCount
+    fk_name = "sample"
+    extra = 0
+
+class CDSCountInline(admin.TabularInline):
+    model = CDSCount
+    fk_name = "sample"
+    extra = 0
+
+class MetadataInline(admin.TabularInline):
+    model = Metadata
+    fk_name = "sample"
+    extra = 0
 
 # Register your models here.
 
@@ -45,10 +67,11 @@ class WellAdmin(ModelAdmin):
 
 @admin.register(Sample)
 class SampleAdmin(ModelAdmin):
-    list_display = ("pseudonymized_id", 'valid', "sample_number", "well", "job_id", "control")
+    list_display = ("pseudonymized_id", 'valid', "sample_number", "well", "job_id", "control", "upload_to_ena")
     search_fields = ("sample_number", "pseudonymized_id", "well__location")
     list_filter_submit = True
     list_filter = ("plate__barcode", "control", "control_type")
+    inlines =  [FileInline,  MetadataInline]
 
 
 @admin.register(SampleFile)
@@ -72,7 +95,7 @@ class PanelAdmin(ModelAdmin):
 
 @admin.register(Substrain)
 class SubstrainAdmin(ModelAdmin):
-    list_display = ("name", "strain")
+    list_display = ("name", "strain", "taxon_id", "serotype")
 
     search_fields = ("name", "strain__name")
     list_filter_submit = True
@@ -88,9 +111,12 @@ class SampleCountAdmin(ModelAdmin):
         "rpkm_proportions",
         "normcounts",
         "outlier",
+        "substrain",
+
     )
     list_filter_submit = True
-    list_filter = ("plate__barcode", "sample__pseudonymized_id", "substrain__name")
+    list_filter = ("plate__barcode",  "substrain__name")
+    search_fields = ( "substrain__name", 'sample__pseudonymized_id', "sample__pseudonymized_id",)
 
 
 @admin.register(Metadata)

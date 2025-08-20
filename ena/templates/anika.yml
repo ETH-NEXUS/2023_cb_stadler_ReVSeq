@@ -36,17 +36,18 @@ experiment:
   alias: revseq_experiment_{} # add id
   title: ReVSeq Experiment
   study_alias: revseq_study
-  sample_alias: revseq_sample_{}  # it must be the same as the alias of sampel: revseq_sample_<pseudonymized id>_{}
+  sample_alias: revseq_sample_{} # it must be the same as the alias of sample: revseq_sample_<pseudonymized id>_{}
   design_description: "None"
-  library_name: "Respiratory Virus Oligos Panel V2"
-  library_strategy: Targeted-Capture
-  library_source: genomic
-  library_selection: cDNA
-  library_layout: "paired"
-  insert_size: 250
-  library_construction_protocol: "None"
-  platform: illumina
-  instrument_model: NextSeq 500
+  platform: OXFORD_NANOPORE
+  instrument_model: MinION
+  library_name: "SQK-NBD114"
+  library_source: GENOMIC
+  library_selection: RT-PCR
+  library_strategy: AMPLICON
+  library_layout: "single"
+  # Optional values
+  # library_construction_protocol: "None"
+  # insert_size: 250 (only necessary in paired layout)
 
 #
 run:
@@ -57,6 +58,6 @@ run:
 analysis:
   name: analysis_{}
   assembly_type: clone
-  coverage: 3.7  # should be taken from the most expressed substrain
+  coverage: 3.7 # should be taken from the most expressed substrain
   program: BCFtools
-  platform: 'Illumina NextSeq'
+  platform: "Illumina NextSeq"

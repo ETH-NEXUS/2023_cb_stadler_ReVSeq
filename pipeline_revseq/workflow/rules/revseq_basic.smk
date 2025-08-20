@@ -48,16 +48,73 @@ rule remove_duplicates:
         """
 
 
+rule merge_regions:
+    input:
+        regions = rules.gather_references.output.bed,
+    output:
+        crop = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_regions/{sample}_crop.bed",
+        short = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_regions/{sample}_short.bed",
+        regions = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/merge_regions/{sample}.bed",
+    params:
+        base_reference = config["resources"]["reference_table"],
+        lookup = config["tools"]["general"]["lookup"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/merge_regions/merge_regions.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/merge_regions/merge_regions.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/merge_regions/{sample}merge_regions.benchmark"
+    conda:
+        "../envs/python.yaml"
+    shell:
+        """
+        if [[ -s "{input.regions}" ]]; then
+            awk -F'\t' '
+                BEGIN {{ OFS=FS }}
+                {{
+                    gsub(/NC_[^[:space:]]+ /, "", $4)
+                    gsub(/AC_[^[:space:]]+ /, "", $4)
+                    gsub(/, complete genome/, "", $4)
+                    sub(/ strain .*/, "", $4)
+                    sub(/ isolate .*/, "", $4)
+                    print
+                }}
+                ' "{input.regions}" > "{output.crop}"
+            
+
+            awk '
+                  BEGIN {{
+                    FS = "\t"    # split input on tabs
+                    OFS = FS     # preserve tabs on output
+                  }}
+                  FNR==NR {{
+                    split($0, a, ",")
+                    valid[a[2]] = 1
+                    next
+                  }}
+                  $4 in valid
+                ' {params.lookup} "{output.crop}" > "{output.short}"
+
+        else
+            cp {input.regions} {output.short}
+            cp {input.regions} {output.crop}
+        fi
+
+        sed -i 's/^\(NC_039199\)\.1\t/\1\t/' {output.crop}
+
+        cat {output.short} > {output.regions} &&
+        cat {params.base_reference} >> {output.regions}
+        """
+
 rule qualimap_filtered:
     input:
         bam = rules.remove_duplicates.output.bam,
         readcount = rules.remove_duplicates.output.readcount,
+        regions = rules.merge_regions.output.regions,
     output:
         report = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap_filtered/qualimapReport.html",
         genome_res = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap_filtered/genome_results.txt",
         qc_status = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap_filtered/qc_status.txt",
     params:
-        regions = config["resources"]["reference_table"],
         outdir = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/qualimap_filtered/",
         min_reads = config["tools"]["general"]["min_readcount"],
     log:
@@ -76,7 +133,7 @@ rule qualimap_filtered:
         else
             echo "PASS" | tee {output.qc_status}
             unset DISPLAY
-            qualimap bamqc -outdir {params.outdir} -bam {input.bam} --feature-file {params.regions} -c 2> >(tee {log.errfile} >&2)
+            qualimap bamqc -outdir {params.outdir} -bam {input.bam} --feature-file {input.regions} -c 2> >(tee {log.errfile} >&2)
         fi
         """
 
@@ -99,8 +156,8 @@ rule samtools_index:
 
 rule pileup:
     input:
+        fasta = rules.merge_refs.output.referenceout_virus_only,
         bam = rules.remove_duplicates.output.bam,
-        fasta = config["resources"]["reference"]
     output:
         outpile = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/pileup/{sample}_pileup.txt"
     params:
@@ -165,13 +222,13 @@ rule assign_virus:
         counts = rules.idxstats.output.counts,
         genome_res = rules.qualimap_filtered.output.genome_res,
         depth = rules.depth.output.depth,
+        regions = rules.merge_regions.output.regions,
     output:
         table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_substrain_count_table.tsv",
         strain_table = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_strain_count_table.tsv",
         boxplot = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_substrain_proportions_boxplot.pdf",
         strain_boxplot = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_strain_proportions_boxplot.pdf",
     params:
-        ref_table = config["resources"]["reference_table"],
         prefix = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/assign_virus/{sample}_",
         outlier_percentile = config["tools"]["assign_virus"]["outlier_percentile"],
         outlier_percentile_collapsed = config["tools"]["assign_virus"]["outlier_percentile_collapsed"],
@@ -190,7 +247,7 @@ rule assign_virus:
     shell:
         """
             python workflow/scripts/assign_virus.py \
-            --ref_table {params.ref_table} \
+            --ref_table {input.regions} \
             --idxstats {input.idxstats} \
             --counts {input.counts} \
             --taxon_table {params.taxon} \
@@ -240,34 +297,19 @@ rule validate_assignment:
             --plate {params.plate} \
             --output {output.validation}  2> >(tee {log.errfile} >&2)
         """
-
-#rule create_chromosome_file:
-#    input:
-#        assignment = rules.assign_virus.output.table,
-#    output:
-#        chrom_file = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/create_chromosome_file/{sample}_chromosome_file.txt",
-#        chrom_file_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/create_chromosome_file/{sample}_chromosome_file.txt.gz",
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/create_chromosome_file/{sample}_create_chromosome_file.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/create_chromosome_file/{sample}_create_chromosome_file.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/create_chromosome_file/{sample}_create_chromosome_file.benchmark"
-#    shell:
-#        """
-#        name=sort -r -t$'\t' -k6 {input.assignment} | head -n 2 | tail -n 1 | awk '{print $1}'
-#        echo "${name}\t1\t"
-#        """"
+        
 
 rule consensus:
     input:
         bam = rules.remove_duplicates.output.bam,
+        ref = rules.merge_refs.output.referenceout_virus_only,
     output:
         calls_norm_filt_indels = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_calls_norm_filt_indel.bcf",
         all_consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_all_consensus.fa",
         low_cov_bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_low_coverage_sites.bed",
         all_cov_bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_coverage.bed",
+        clean_ref = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/consensus/{sample}_clean_ref.fa",
     params:
-        ref = config["resources"]["reference"],
         mincov = config["tools"]["consensus"]["minimum_coverage"],
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/consensus/{sample}_consensus.out.log",
@@ -278,17 +320,49 @@ rule consensus:
         "../envs/bcftools.yaml"
     shell:
         """
-            bcftools mpileup -Ou -f {params.ref} {input.bam} | \
+            grep . {input.ref} > {output.clean_ref} 
+            bcftools mpileup -Ou -f {output.clean_ref} {input.bam} | \
             bcftools call --ploidy 1 -mv -Ou | \
-            bcftools norm -f {params.ref} -Ou | \
-            bcftools filter --IndelGap 5 -Ob -o {output.calls_norm_filt_indels}
+            bcftools norm -f {output.clean_ref} -Ou | \
+            bcftools filter -Ob -o {output.calls_norm_filt_indels}
             bcftools index -o {output.calls_norm_filt_indels}.csi {output.calls_norm_filt_indels}
 
             bedtools genomecov -ibam {input.bam} -bga > {output.all_cov_bed}
             cat {output.all_cov_bed} | awk '$4 < {params.mincov}' > {output.low_cov_bed}
 
             # apply variants to create consensus sequence
-            bcftools consensus {output.calls_norm_filt_indels} -f {params.ref} -m {output.low_cov_bed} > {output.all_consensus}
+            cat {output.clean_ref} | \
+            bcftools consensus {output.calls_norm_filt_indels} -f - -m {output.low_cov_bed} > {output.all_consensus}
+        """
+
+
+rule chr_file:
+    input:
+        assignment = rules.assign_virus.output.table,
+        k2_bed = rules.merge_regions.output.regions,
+    output:
+        chr_file = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/chr_file/chr_file.txt",
+        chr_file_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/chr_file/chr_file.txt.gz",
+    params:
+        inputdir = config["inputOutput"]["output_dir"]+"/"+config["plate"],
+        sample = "{sample}",
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/chr_file/{sample}chr_file.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/chr_file/{sample}chr_file.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/chr_file/{sample}chr_file.benchmark"
+    conda:
+        "../envs/python.yaml"
+    shell:
+        """
+            python workflow/scripts/chr_file.py \
+                --inputdir {params.inputdir} \
+                --assignment_subdir assign_virus \
+                --sample {params.sample} \
+                --k2_bed {input.k2_bed} \
+                --out {output.chr_file}
+            
+             gzip -c {output.chr_file} > {output.chr_file_gzip}
         """
 
 
@@ -298,15 +372,17 @@ rule postprocess_consensus:
         assignment = rules.assign_virus.output.table,
         qualimap_qc = rules.qualimap_filtered.output.qc_status,
         all_cov_bed = rules.consensus.output.all_cov_bed,
+        ref = rules.merge_regions.output.regions,
     output:
         consensus = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa",
         consensus_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus.fa.gz",
+        consensus_upload = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus_upload.fa",
+        consensus_upload_gzip = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_consensus_upload.fa.gz",
         count_n = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/postprocess_consensus/{sample}_count_n.txt",
     params:
-        ref = config["resources"]["reference_table"],
         consensus_type = config["tools"]["consensus"]["consensus_type"],
+        upload_consensus_type = config["tools"]["consensus"]["upload_consensus_type"],
         lookup = config["tools"]["general"]["lookup"],
-        reference = config["resources"]["reference_table"],
         readcount = rules.remove_duplicates.output.readcount,
         mincov = config["tools"]["consensus"]["minimum_coverage"],
     log:
@@ -320,7 +396,7 @@ rule postprocess_consensus:
         """
         # Fetch only the consensus in the regions of the most represented virus
         python workflow/scripts/filter_consensus.py \
-        --ref_table {params.ref} \
+        --ref_table {input.ref} \
         --assignment {input.assignment} \
         --consensus {input.all_consensus} \
         --consensus_type {params.consensus_type} \
@@ -329,10 +405,21 @@ rule postprocess_consensus:
         
         gzip -c {output.consensus} > {output.consensus_gzip}
 
+        # Fetch only the consensus for the top virus for upload
+        python workflow/scripts/filter_consensus.py \
+        --ref_table {params.ref} \
+        --assignment {input.assignment} \
+        --consensus {input.all_consensus} \
+        --consensus_type {params.upload_consensus_type} \
+        --readcount {params.readcount} \
+        --output {output.consensus_upload} 2> >(tee {log.errfile} >&2)
+        
+        gzip -c {output.consensus_upload} > {output.consensus_upload_gzip}
+
         python workflow/scripts/count_n.py \
         --input {output.consensus} \
         --output {output.count_n} \
-        --bed {params.reference} \
+        --bed {input.ref} \
         --coverage {input.all_cov_bed} \
         --threshold {params.mincov}
         """
@@ -395,3 +482,26 @@ rule count_n_cds:
         --threshold {params.mincov} \
         --match_table {params.match_table}
         """
+
+#rule flat_file:
+#    input:
+#        consensus_upload = rules.postprocess_consensus.output.consensus_upload,
+#    output:
+#        flat_file = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}_consensus.fa",
+#    params:
+#        
+#    log:
+#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/{sample}_consensus.out.log",
+#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/{sample}_consensus.err.log",
+#    benchmark:
+#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/flat_file/{sample}_postprocess_consensus.benchmark"
+#    conda:
+#        "../envs/python.yaml"
+#    shell:
+#        """
+#        # Generate an EMBL flat file of the consensus sequence
+#        # Useful for proper upload of viruses with mandatory serotype, such as Influenza
+#        python workflow/scripts/flat_file_from_consensus.py \
+#            --consensus {input.consensus_upload} \
+#            --output {output.flat_file} 2> >(tee {log.errfile} >&2)
+#        """

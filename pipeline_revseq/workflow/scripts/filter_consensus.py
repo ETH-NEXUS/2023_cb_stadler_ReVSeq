@@ -31,6 +31,7 @@ if __name__ == '__main__':
     with open(args.readcount) as f:
         readcount=int(f.read().strip())
     assignment = pd.read_table(args.assignment, header=0, sep="\t")
+    assignment=assignment.rename(columns={"Unnamed: 0": "name"})
     if args.consensus_type == "top":
         print("Calculating consensus only for the top strain")
         filter_values = assignment.loc[assignment["rpkm_proportions"] == max(assignment["rpkm_proportions"])]["name"].to_list()

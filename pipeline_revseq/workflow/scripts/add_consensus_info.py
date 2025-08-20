@@ -20,6 +20,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     assignment = pd.read_table(args.assignment, dtype=str)
+    assignment = assignment.rename(columns={"Unnamed: 0": "name"})
     count_n = pd.read_table(args.consensus_n)
     assignment["consensus_number_n"]=None
     assignment["consensus_fraction_n"]=None
