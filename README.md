@@ -121,7 +121,8 @@ A snakemake workflow is available to run the full analysis on the available raw 
 The pipeline can be started at any moment using the command `./revseq/revseq runpipeline`.
 
 ### Available steps
-The pipeline is divided in the five major areas: `preprocessing`, `basic pipeline`, `dehumanization`, `qc`, and `uploads` with the following steps:
+![RuleGraph](images/revseq_pipeline_rulegraph.png?raw=true "Rulegraph")
+The pipeline is divided in the five major areas: `preprocessing`, `dehumanization`, `basic_pipeline`, `qc`, `aggregation`, and `uploads` with the following steps:
 -  `preprocessing`: prepare the raw data for the bioinformatics analysis
   - `merge_lanes`: merge the raw data from multiple lanes in a single fastq file
   - `kraken2`: metagenomic strain assignment. The reported strains are used downstream to prepare the reference for the alignment
@@ -162,11 +163,12 @@ The pipeline is divided in the five major areas: `preprocessing`, `basic pipelin
   - `qualimap_filtered`: quality control of the filtered alignments using qualimap
   - `multiqc`: collecting and reporting all previous QC steps using multiQC
   - `multiqc_filtered`: collecting and reporting all previous QC steps for the filtered alignments using multiQC
+- `aggregation`: rules to aggregate the plate results for a human-readable summary of assignments
+  - `aggregate`: generate the tables summarizing the virus assignment and the qc
 - `upload`: functions to upload results on the database and on Viollier's FTP server
   - `gather_results_samples`: processes the assignment table to add the consensus statistics. Gather all sample-related files for upload in a single directory
   - `gather_results_plate`: Gather all plate-related files for upload in a single directory
   - `push_to_db`: use ReVSeqDataLoader to upload the gathered data to the database
-  - `viollier_upload`: upload the gathered data to Viollier's SFTP server
   
 A rulegraph showing how these steps are connected is available in `images/revseq_pipeline_rulegraph.pdf`
 
@@ -184,7 +186,7 @@ The Kraken2 assignment is performed using a curated custom database generated as
 - We use the custom script `resources/kraken_build.sh` to add all reference FASTA sequences to a new database and then build it using kraken-build
 
 #### Details - Virus assignment
-The virus assignment is computed by a custom python script that summarises the results in a dedicated table.
+The virus assignment is computed by a the python script `pipeline_revseq/workflow/scripts/assign_virus.py` that summarises the results in a dedicated table.
 From the index stats, the tool retrieves the amount of reads aligned to each virus sequence and the length of each viral sequence.
 Virus sequences related to different Open Reading Frames (ORF) of the same virus strain are merged together by sum of the all the ORF's lengths and sequences.
 This information is then used to compute Reads per Kilobase per Million mapped reads (RPKMs) and the percentage of RPKM assigned to each virus sequence.
