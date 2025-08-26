@@ -37,7 +37,7 @@ By default, the workflow is set to run within a docker container, where a monito
 To run the bioinformatics pipeline independently from raw data mirroring, please refer to the section `Running the bioinformatics pipeline manually` below.
 
 
-Run the container by navigating to the folder `\<git repo\>/revseq` and running the command
+Run the container by navigating to the folder `<git repo>/revseq` and running the command
 ```
 docker-compose up --detach
 ```
@@ -48,21 +48,21 @@ The revseq docker container starts by running an infinite loop responsible of mo
 
 ##### Commands
 The loop takes care of running automatically the following three commands:
-- `\<git repo\>/revseq/revseq syncvioller`: checks on the sequencing center server if new raw sequencing data is available and mirrors it to the local folder defined in the configuration
-- `\<git repo\>/revseq/revseq pseudoanonymize_samples`: assigned a pseudonymized ID to each new sample. The pseudonym is ensured to be unique and is an alphanumeric string of 6 characters that can include both uppercase and lowercase letters
-- `\<git repo\>/revseq/revseq runpipeline \<plate\>`: runs the full bioinformatics pipeline on the all pseudonymized samples included in the delivery batch
+- `<git repo>/revseq/revseq syncvioller`: checks on the sequencing center server if new raw sequencing data is available and mirrors it to the local folder defined in the configuration
+- `<git repo>/revseq/revseq pseudoanonymize_samples`: assigned a pseudonymized ID to each new sample. The pseudonym is ensured to be unique and is an alphanumeric string of 6 characters that can include both uppercase and lowercase letters
+- `<git repo>/revseq/revseq runpipeline \<plate\>`: runs the full bioinformatics pipeline on the all pseudonymized samples included in the delivery batch
 
 ### Running the bioinformatics pipeline manually
-The bioinformatics analysis step is not strictly dependent on a direct connection to the seqencing center, nor on the pseudonymization of the samples. The command `\<git repo\>/revseq/revseq revseq \<plate\>` can in fact be run manually to trigger only the bioinformatics analysis outside of the monitoring loop. This section explains how to start a docker container that can be used for such purpose.
+The bioinformatics analysis step is not strictly dependent on a direct connection to the seqencing center, nor on the pseudonymization of the samples. The command `<git repo>/revseq/revseq revseq \<plate\>` can in fact be run manually to trigger only the bioinformatics analysis outside of the monitoring loop. This section explains how to start a docker container that can be used for such purpose.
 
-Run the container by navigating to the folder `\<git repo\>/revseq/manual_run` and running the command
+Run the container by navigating to the folder `<git repo>/revseq/manual_run` and running the command
 ```
 docker-compose up --detach
 ```
 to start the docker container (default name `revseq_manual`) responsible to wait for user input and configured to run the bioinformatics pipeline.
 
 #### revseq_manual container
-The revseq_manual docker container starts idle, configured to run any command from `\<git repo\>/revseq/manual_run/revseq (`/data/revseq` inside the container).
+The revseq_manual docker container starts idle, configured to run any command from `<git repo>/revseq/manual_run/revseq (`/data/revseq` inside the container).
 
 ##### How to run the commands
 With the docker container `revseq_manual` up and running, open an interactive session within it by running the command
