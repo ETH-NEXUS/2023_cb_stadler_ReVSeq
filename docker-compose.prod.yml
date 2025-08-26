@@ -1,16 +1,11 @@
-version: "3"
 volumes:
   smnrp-data:
 services:
-  api:
-    volumes:
-      - /data/revseq/results/gather_results:/data
-      - /data/revseq/results/results:/data/revseq/results/results
   ws:
     image: ethnexus/smnrp:2.6.2
     volumes:
-      - "web_root:/web_root:z"
-      - "smnrp-data:/etc/letsencrypt"
+      - web_root:/web_root
+      - smnrp-data:/etc/letsencrypt
       - ./api/static:/vol/web/static:z
       - ./api/media:/vol/web/media:z
     ports:
@@ -20,7 +15,11 @@ services:
     restart: unless-stopped
     depends_on:
       - api
-      - db
+  api:
+    volumes:
+      # - /data/revseq/results/gather_results:/data
+      # - /data/revseq/results/results:/data/revseq/results/results
+      - ./data:/data
   ui:
     command: >
       bash -c "\
@@ -34,6 +33,7 @@ services:
     ports:
       - 5042:5000
     volumes:
-      - /data/revseq/results/gather_results:/data
-      - /data/revseq/results/results:/data/revseq/results/results
-      - ./data:/data2
+      # - /data/revseq/results/gather_results:/data
+      # - /data/revseq/results/results:/data/revseq/results/results
+      # - ./data:/data2
+      - ./data:/data
