@@ -1,0 +1,139 @@
+#!/bin/bash
+
+## Date: July 2023
+## Author: Matteo Carrara (NEXUS Personalized Health Technologies)
+##
+## Description: Main command interface for the revseq workflow.
+## The subcommands allow to trigger: sync raw data from Viollier SFTP server,
+## pseudoanonymize samples, start a snakemake dryrun or fullrun,
+## upload results back to Viollier
+## Commands "runpipeline" and "dryrun" require the plate on which to run as option
+
+. /data/revseq/revseq.conf
+
+case "$1" in
+        syncviollier)
+                echo "$(date) Sync Viollier"
+		cd ${mirror}
+                # delete previous partial downloads
+                . <(grep '^mirror=' /data/revseq/revseq.conf)
+                echo "$(date) Removing partial files from:" "${mirror}/"
+                find "${mirror}/" -type f -name '*.filepart' -print0 | xargs -r -0 rm -vi
+		# Mirroring samples
+                lftp -c "set cmd:move-background false; \
+                        set net:timeout $(( contimeout / retries)); \
+                        set net:max-retries ${retries}; \
+                        set net:reconnect-interval-base 8; \
+                        set xfer:timeout ${iotimeout}; \
+                        connect sftp://${fileserver}${srvport:+:${srvport}}; \
+                        mirror --continue --no-perms --parallel=${parallel} --loop \
+                        --on-change='source ${scriptdir}/email.sh' \
+                        --target-directory=${mirror}/ ${source}" #; \
+                        #mirror --continue --no-perms --parallel=${parallel} --loop --target-directory=${mirror}/ ${metadata}"
+                
+	;;
+        uploadviollier)
+                echo "$(date) Uploading Viollier"
+                plate=$2
+                if [ ! -d ${gather_results}/${plate} ]; then
+                        echo "$(date) ERROR: cannot find pipeline results directory ${gather_results}/${plate}"
+                        exit 1
+                else
+                        mirror_command=$(echo "${mirror_command} mirror --continue --no-perms --parallel=${parallel} --loop --dereference --exclude-glob */*.fastq.gz --exclude-glob */*_remove_duplicates.bam -R ${gather_results}/${plate} /${uploaddir}/${plate}")
+                        lftp -c "set cmd:move-background false; \
+                                set net:timeout $(( contimeout / retries)); \
+                                set net:max-retries ${retries}; \
+                                set net:reconnect-interval-base 8; set xfer:timeout ${iotimeout}; \
+                                connect sftp://${fileserver}${srvport:+:${srvport}}; \
+                                ${mirror_command}"
+                fi
+        ;;
+        pseudoanonymize_samples)
+                python \
+                        ${scriptdir}/pseudoanonymize_sample_names.py \
+                        --mirrordir ${sampledir} \
+                        --outdir ${anonymizeddir} \
+                        --ctrl_neg_prefix ${ctrl_neg_prefix} \
+                        --ctrl_pos_prefix ${ctrl_pos_prefix} \
+                        --metadata_string ${metadata_string}
+                        #--metadatadir ${metadatadir}
+        ;;
+        dryrun)
+		cd ${pipelinedir}
+                plate=$2
+                if [ ! -f "${anonymizeddir}/${plate}/complete.txt" ]
+                then
+		        snakemake \
+                                --use-conda \
+                                --rerun-triggers mtime \
+                                -c${threads} \
+                                --configfile ${snakemake_config} \
+                                --config plate=${plate} \
+                                sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
+                                -n --notemp
+                else
+                        echo "$(date) The plate has been already analysed (file ${anonymizeddir}/${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
+                fi
+                     ;;
+        runpipeline)
+		cd ${pipelinedir}
+                plate=$2
+                if [ ! -f "${anonymizeddir}/${plate}/complete.txt" ]; then
+                        snakemake \
+                                --use-conda \
+                                --rerun-triggers mtime \
+                                -c${threads} \
+                                --configfile ${snakemake_config} \
+                                --config plate=${plate} \
+                                sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv --keep-incomplete --rerun-incomplete
+                else
+                        echo "$(date) The plate has been already analysed (file ${anonymizeddir}/${plate}/complete.txt exists)\nPlease delete the file complete.txt to trigger a new run"
+                fi
+        ;;
+        unlock)
+                cd ${pipelinedir}
+                plate=$2
+                        snakemake \
+                        --use-conda \
+                        --rerun-triggers mtime \
+                        -c${threads} \
+                        --configfile ${snakemake_config} \
+                        --config plate=${plate} \
+                        sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
+                        --unlock \
+                        -n
+        ;;
+        list_temp_files)
+                cd ${pipelinedir}
+                plate=$2
+                        snakemake \
+                        --use-conda \
+                        --rerun-triggers mtime \
+                        -c${threads} \
+                        --configfile ${snakemake_config} \
+                        --config plate=${plate} \
+                        sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
+                        --delete-temp-output -n
+        ;;
+        delete_temp_files)
+                cd ${pipelinedir}
+                plate=$2
+                        snakemake \
+                        --use-conda \
+                        --rerun-triggers mtime \
+                        -c${threads} \
+                        --configfile ${snakemake_config} \
+                        --config plate=${plate} \
+                        sample_map=${anonymizeddir}/${plate}/${plate}_samplemap.tsv \
+                        --delete-temp-output
+                echo "deleting samplewise bwa references"
+                find ${anonymizeddir}/${plate} -iname merge_refs
+                for i in $(find ${anonymizeddir}/${plate} -iname merge_refs); do
+                        rm -r $i
+                done
+        ;;
+        *)
+                echo "$(date) Unkown sub-command ${1}" > /dev/stderr
+                exit 2
+        ;;
+esac

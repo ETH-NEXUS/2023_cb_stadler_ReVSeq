@@ -21,8 +21,7 @@ The analysis workflow is divided in two main sections:
 ```
 git clone git@github.com:ETH-NEXUS/2023_cb_stadler_ReVSeq.git
 ```
-- The workflow works with data that may be sensitive, e.g. paths, internal sample names, metadata. It is good practice to leave this data outside of the git repository to avoid accidental commits. We provide a script to simplify the procedure
-  - Run the script `resources/initialize.sh` and follow the instructions
+- Run the script `resources/initialize.sh` and follow the instructions
     - The script creates and populates in the provided directory the following 5 sub-directories:
       - `pipeline_configuration`: where the pipeline configuration is stored
         - The file created in `pipeline_configuration` are already customized based on user input
@@ -32,10 +31,50 @@ git clone git@github.com:ETH-NEXUS/2023_cb_stadler_ReVSeq.git
       - `results`: where the bioinformatics pipeline analysis results will be written
     - The script also creates and customizes the content of the file `revseq/docker-compose.yml` based on the user input
 
-### Running the workflow
-Run the container by navigating to folder `revseq` and running the command
+### Running the full workflow
+By default, the workflow is set to run within a docker container, where a monitoring loop regularly updates the mirror of the raw data from the sequencing center, pseduonymizes sample names, and runs the full bioinformatics pipeline.
+
+To run the bioinformatics pipeline independently from raw data mirroring, please refer to the section `Running the bioinformatics pipeline manually` below.
+
+
+Run the container by navigating to the folder `\<git repo\>/revseq` and running the command
 ```
 docker-compose up --detach
+```
+to start the docker container (default name `revseq`) responsible to run the workflow.
+
+#### Revseq container
+The revseq docker container starts by running an infinite loop responsible of monitoring the raw sequencing data mirror, pseduonymize samples, and run the snakemake pipeline on the any newly detected sample.
+
+##### Commands
+The loop takes care of running automatically the following three commands:
+- `\<git repo\>/revseq/revseq syncvioller`: checks on the sequencing center server if new raw sequencing data is available and mirrors it to the local folder defined in the configuration
+- `\<git repo\>/revseq/revseq pseudoanonymize_samples`: assigned a pseudonymized ID to each new sample. The pseudonym is ensured to be unique and is an alphanumeric string of 6 characters that can include both uppercase and lowercase letters
+- `\<git repo\>/revseq/revseq runpipeline \<plate\>`: runs the full bioinformatics pipeline on the all pseudonymized samples included in the delivery batch
+
+### Running the bioinformatics pipeline manually
+The bioinformatics analysis step is not strictly dependent on a direct connection to the seqencing center, nor on the pseudonymization of the samples. The command `\<git repo\>/revseq/revseq revseq \<plate\>` can in fact be run manually to trigger only the bioinformatics analysis outside of the monitoring loop. This section explains how to start a docker container that can be used for such purpose.
+
+Run the container by navigating to the folder `\<git repo\>/revseq/manual_run` and running the command
+```
+docker-compose up --detach
+```
+to start the docker container (default name `revseq_manual`) responsible to wait for user input and configured to run the bioinformatics pipeline.
+
+#### revseq_manual container
+The revseq_manual docker container starts idle, configured to run any command from `\<git repo\>/revseq/manual_run/revseq (`/data/revseq` inside the container).
+
+##### How to run the commands
+With the docker container `revseq_manual` up and running, open an interactive session within it by running the command
+```
+docker exec -it revseq-revseq_manual-1 bash
+```
+The new prompt is within the container and allows access to its full configuration.
+
+To run the pipeline it is only necessary to run:
+```
+/data/revseq/revseq pseudoanonymize_samples
+/data/revseq/revseq runpipeline <batch>
 ```
 
 ## Input
@@ -45,8 +84,9 @@ The workflow requires several input files:
 
 
 ## Output
+The workflow analyses the raw sequences data and provides several output files that are part of the quantification and characterization the viruses detected in each sample. 
 The workflow provides outputs for all analysis steps. The final outputs of interest are:
-- \<batch\>\_empty_samples.txt: a list of all samples found with no raw reads. Such samples are skipped
+- \<batch\>\_empty_samples.txt: a list of all samples found with zero raw reads. Such samples are not analyzed by the bioinformatics workflow even if they are included in the sample list.
 - \<batch\>\_pseudoanon_table.tsv: a table matching the original sample ID to its pseudonymized ID
 - \<batch\>\_metadata.csv: a copy of the clinical metadata including the pseudonymized ID
 - gather_results: directory gathering all main results in one place
