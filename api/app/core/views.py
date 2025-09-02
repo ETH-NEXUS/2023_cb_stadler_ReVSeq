@@ -1,5 +1,4 @@
-from django.core.handlers.wsgi import WSGIRequest
-from django.views import View
+from rest_framework_csv.renderers import PaginatedCSVRenderer
 from django_filters import rest_framework as filters
 from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
@@ -141,7 +140,7 @@ class SampleCountViewSet(viewsets.ModelViewSet):
         However, the CSV data can be obtained using a designated header via `curl`.
             Example:
             ```bash
-            curl -H "Accept: text/csv" http://https://revseq.nexus.ethz.ch/api/samplecounts/ > sample_counts.csv
+            curl -H "Accept: text/csv" https://revseq.nexus.ethz.ch/api/samplecounts/ > sample_counts.csv
             ```
     - Alternatively, a csv file can be downloaded directly from our default DRF API view.
 
@@ -165,6 +164,7 @@ class SampleCountViewSet(viewsets.ModelViewSet):
     )
     renderer_classes = (
         JSONRenderer,
+        PaginatedCSVRenderer,
         CSVRenderer,
     ) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
 
@@ -216,9 +216,6 @@ class SampleCountViewSet(viewsets.ModelViewSet):
                 "coverage_threshold": 0,
                 "coverage": 0,
                 "readnum_threshold": 0,
-
-
-
 
             }
         )
