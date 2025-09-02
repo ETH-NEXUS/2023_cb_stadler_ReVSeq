@@ -242,10 +242,8 @@ class SampleCountViewSet(viewsets.ModelViewSet):
             {"strain": key, **value} for key, value in strains.items()
         ]
         #print("RESPONSE DATA", response_data)
-
         serializer = AggregatedCountSerializer(data=response_data)
         print("SERIALIZER", serializer)
-
         if serializer.is_valid():
             return Response(serializer.data)
         else:
