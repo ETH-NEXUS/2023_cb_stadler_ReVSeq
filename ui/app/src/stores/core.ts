@@ -18,6 +18,29 @@ export const useCoreStore = defineStore('core', () => {
   const selected_sample_id = ref<string | null>(null)
   const selected_sample = ref<Sample | null>(null)
 
+// Helper: make DRF `next` safe for the axios `baseURL`
+const toRelative = (u: string) => u.replace(/^https?:\/\/[^/]+/, '');
+
+// Helper: fetch all pages (DRF-style or plain arrays)
+const fetchAllPages = async (initialUrl: string) => {
+  const all: any[] = [];
+  let url: string | null = initialUrl;
+  while (url) {
+    const res: any = await api.get(url);
+    const data: any = res.data;
+    if (Array.isArray(data)) {   // Non-paginated list endpoint
+      all.push(...data);
+      url = null;
+    } else if (data && Array.isArray(data.results)) { // DRF paginated
+      all.push(...data.results);
+      url = data.next ? toRelative(data.next) : null;
+    } else {
+      return data; // Non-list object; return as-is
+    }
+  }
+  return all;
+};
+
   const getSelectedSample = async () => {
     try {
       const res = await api.get(`/api/samples/?pseudonymized_id=${selected_sample_id.value}`)
@@ -42,9 +65,7 @@ export const useCoreStore = defineStore('core', () => {
   const aggregateData = () => {
     aggregate.value = true
     const mappedData = new Map()
-
       tableData.value.forEach(item => {
-
         const strain_sampleId = item.substrain.strain.name + '__' + item.sample.pseudonymized_id
         // const strain = item.substrain.strain.name
         const substrain = item.substrain
@@ -100,61 +121,56 @@ export const useCoreStore = defineStore('core', () => {
     tableData.value = sampleCounts.value
   }
 
-  const getPlates = async (barcode: string | null = null) => {
-    try {
-      if (barcode) {
-        const res = await api.get(`/api/plates/?barcode=${barcode}`)
-        selected_plate.value = res.data[0]
-      } else {
-        const res = await api.get('/api/plates/')
-        plates.value = res.data
-      }
-    } catch (error) {
-      console.error(error)
+const getPlates = async (barcode: string | null = null) => {
+  try {
+    if (barcode) { // Fetch a specific plate by barcode
+      const res = await api.get(`/api/plates/?barcode=${barcode}`);
+      selected_plate.value = res.data[0] || null;
+    } else { // Fetch all plates using the helper
+      plates.value = await fetchAllPages('/api/plates/');
     }
+  } catch (error) {
+    console.error('Error fetching plates:', error);
   }
+};
 
-  const getSubstrains = async () => {
-    try {
-      const res = await api.get('/api/substrains/')
-      substrains.value = res.data
-    } catch (error) {
-      console.error(error)
+const getSubstrains = async () => {
+  try {
+    substrains.value = await fetchAllPages('/api/substrains/');
+  } catch (error) {
+    console.error('Error fetching substrains:', error);
+  }
+};
+
+const getSamplesByPlate = async (barcode: string) => {
+  try {
+    samples.value = await fetchAllPages(`/api/samples/?plate__barcode=${barcode}`);
+  } catch (error) {
+    console.error('Error fetching samples by plate:', error);
+  }
+};
+
+const getPlateData = async (barcode: string | null = null, substrain: string | null = null) => {
+  try {
+    if (!barcode) return;
+    selected_barcode.value = barcode;
+    await getPlates(barcode);
+    const params = new URLSearchParams({ 'plate__barcode': barcode }); // build query parameters with URLSearchParams to handle encoding
+    if (substrain) {
+      params.append('substrain__name', substrain);
     }
+    const [counts, meta] = await Promise.all([ // fetch all sample counts and metadata in parallel
+      fetchAllPages(`/api/samplecounts/?${params.toString()}`),
+      fetchAllPages(`/api/metadata/?plate__barcode=${barcode}`)
+    ]);
+    sampleCounts.value = counts;
+    tableData.value = counts;
+    metadata.value = meta;
+
+  } catch (error) {
+    console.error('Error fetching plate data:', error);
   }
-
-  const getSamplesByPlate = async (barcode: string) => {
-    try {
-      const res = await api.get(`/api/samples/?plate__barcode=${barcode}`)
-      samples.value = res.data
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const getPlateData = async (barcode: string | null = null, substrain: string | null = null) => {
-    let baseUrl = '/api/samplecounts/'
-
-    if (barcode) {
-      baseUrl += `?plate__barcode=${barcode}`
-      selected_barcode.value = barcode
-      await getPlates(barcode)
-
-      if (substrain) {
-        baseUrl += `&substrain__name=${substrain}`
-      }
-
-      try {
-        const res1 = await api.get(baseUrl)
-        sampleCounts.value = res1.data
-        tableData.value = res1.data
-        const res2 = await api.get(`/api/metadata/?plate__barcode=${barcode}`)
-        metadata.value = res2.data
-      } catch (error) {
-        console.error(error)
-      }
-    }
-  }
+};
 
   const downloadFile = async (path: string) => {
     try {
