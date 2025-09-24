@@ -142,6 +142,12 @@ class Importer:
 
         sample_count.consensus = consensus_fa[0] if consensus_fa else None
         sample_count.consensus_cds = consensus_cds[0] if consensus_cds else None
+        # read coverage_n_file to dict
+        count_dict = {}
+        with open(coverage_n_file[0], "r") as f:
+            for line in f:
+                line_list = line.split("\t")
+                count_dict[line_list[0]] = int(line_list[1])
         sample_count.mean_coverage_non_N_positions = coverage_n_file[0] if coverage_n_file else None
         sample_count.save()
 

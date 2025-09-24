@@ -31,6 +31,13 @@ class Sample(models.Model):
     control_type = models.CharField(max_length=10, null=True, blank=True)
     mode = models.CharField(max_length=100, default="metagenomics")
     upload_to_ena = models.BooleanField(null=True, blank=True, default=False)
+    major_strain = models.ForeignKey(
+        "Substrain", on_delete=models.CASCADE, null=True, blank=True, related_name="major_strain"
+    )
+    secondary_strains = models.ManyToManyField(
+        "Substrain", blank=True, related_name="secondary_strains"
+    )
+
 
     def __str__(self):
         return self.pseudonymized_id

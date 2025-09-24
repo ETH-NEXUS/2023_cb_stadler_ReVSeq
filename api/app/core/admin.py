@@ -72,6 +72,7 @@ class SampleAdmin(ModelAdmin):
     list_filter_submit = True
     list_filter = ("plate__barcode", "control", "control_type")
     inlines =  [FileInline,  MetadataInline]
+    filter_horizontal = ('secondary_strains',)
 
 
 @admin.register(SampleFile)
