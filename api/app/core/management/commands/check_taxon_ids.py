@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 items.append(f"{name} ({taxon if taxon is not None else 'N/A'})")
 
             if items:
-                print(f"{sid} -> " + "\n".join(items))
+                print(f"{sid} -> " + "\n".join(items[:2]))
                 print('----------------------------------------------------------------------')  # blank line for readability
             else:
                 print(f"{sid} -> (no Substrain found)")
