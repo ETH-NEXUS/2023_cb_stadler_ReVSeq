@@ -2,11 +2,13 @@ from django.core.management.base import BaseCommand
 from core.models import Sample
 
 """
-This command lists the taxon IDs and scientific names of Substrains associated with a predefined list of pseudonymized sample IDs.
-
+This command lists the taxon IDs and scientific names of Substrains
+for a predefined list of pseudonymized sample IDs, sorted by rpkm_proportions (desc),
+treating None as -inf.
 """
+
 class Command(BaseCommand):
-    help = "Prints: sample_id -> Substrain scientific_name (taxon_id) for selected pseudonymized samples."
+    help = "Prints: sample_id -> Substrain scientific_name (taxon_id) sorted by rpkm_proportions desc."
 
     # your list of pseudonymized IDs
     SAMPLE_IDS = [
@@ -19,6 +21,11 @@ class Command(BaseCommand):
         "GbMzJy", "AnXy9n",
     ]
 
+    @staticmethod
+    def _sort_key(sc):
+        # None → -inf, so those go to the end when sorting desc
+        return sc.rpkm_proportions if sc.rpkm_proportions is not None else float('-inf')
+
     def handle(self, *args, **options):
         qs = (
             Sample.objects.filter(pseudonymized_id__in=self.SAMPLE_IDS)
@@ -28,18 +35,25 @@ class Command(BaseCommand):
 
         for sample in qs:
             sid = sample.pseudonymized_id
-            substrains = []
-            seen = set()
+            seen_by_taxon = set()
+            items = []
 
-            for sc in sample.samplecounts.all():
+            # sort counts by rpkm_proportions desc (None treated as -inf)
+            counts = sorted(sample.samplecounts.all(), key=self._sort_key, reverse=True)
+
+            for sc in counts:
                 ss = sc.substrain
-                if ss and ss.taxon_id not in seen:
-                    seen.add(ss.taxon_id)
-                    name = ss.scientific_name or ss.name or "N/A"
-                    substrains.append(f"{name} ({ss.taxon_id or 'N/A'})")
+                if not ss:
+                    continue
+                taxon = ss.taxon_id
+                if taxon in seen_by_taxon:
+                    continue
+                seen_by_taxon.add(taxon)
+                name = ss.scientific_name or ss.name or "N/A"
+                items.append(f"{name} ({taxon if taxon is not None else 'N/A'})")
 
-            if substrains:
-                print(f"{sid} -> " + "; ".join(substrains))
-                print('\n')
+            if items:
+                print(f"{sid} -> " + "; ".join(items))
+                print()  # blank line for readability
             else:
                 print(f"{sid} -> (no Substrain found)")
