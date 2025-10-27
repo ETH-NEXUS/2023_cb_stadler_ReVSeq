@@ -40,5 +40,6 @@ class Command(BaseCommand):
 
             if substrains:
                 print(f"{sid} -> " + "; ".join(substrains))
+                print('\n')
             else:
                 print(f"{sid} -> (no Substrain found)")
