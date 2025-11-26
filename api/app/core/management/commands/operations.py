@@ -875,11 +875,11 @@ samples = [
 
 
 class Command(BaseCommand):
-    help = "CSV: sample, table, major_strain, has_consensus, has_embl for a predefined list of samples."
+    help = "CSV: sample, table, major_strain, has_consensus, has_embl, has_embl_gz"
 
     def handle(self, *args, **options):
         # CSV header
-        self.stdout.write("sample,table,major_strain,has_consensus,has_embl")
+        self.stdout.write("sample,table,major_strain,has_consensus,has_embl,has_embl_gz")
 
         for sid in samples:
             sample = (
@@ -900,24 +900,27 @@ class Command(BaseCommand):
 
             has_consensus = False
             has_embl = False
+            has_embl_gz = False
 
             for f in files:
                 basename = os.path.basename(f.path)
 
-                # consensus
                 if basename.endswith("consensus_upload.gz"):
                     has_consensus = True
 
-                # embl detection
-                if basename.endswith(".embl") or basename.endswith(".embl.gz"):
+                elif basename.endswith(".embl.gz"):
+                    has_embl_gz = True
+
+                elif basename.endswith(".embl"):
                     has_embl = True
 
             row = ",".join([
                 sid,
                 plate_barcode,
-                major_strain_name.replace(",", " "),  # avoid CSV breaks
+                major_strain_name.replace(",", " "),
                 "yes" if has_consensus else "no",
                 "yes" if has_embl else "no",
+                "yes" if has_embl_gz else "no",
             ])
 
             self.stdout.write(row)
