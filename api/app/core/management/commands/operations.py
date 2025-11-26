@@ -1,6 +1,6 @@
 # A command for different operation could be added here.
 from django.core.management.base import BaseCommand
-
+import os
 from core.models import Sample, File
 from helpers.color_log import logger
 
