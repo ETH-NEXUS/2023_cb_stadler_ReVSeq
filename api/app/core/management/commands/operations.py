@@ -875,14 +875,17 @@ samples = [
 
 
 class Command(BaseCommand):
-    help = "Print major strain and presence of consensus_upload.gz / embl.gz files for a predefined list of samples."
+    help = "CSV: sample, table, major_strain, has_consensus, has_embl for a predefined list of samples."
 
     def handle(self, *args, **options):
+        # CSV header
+        self.stdout.write("sample,table,major_strain,has_consensus,has_embl")
+
         for sid in samples:
             sample = (
                 Sample.objects
                 .filter(pseudonymized_id=sid)
-                .select_related("major_strain")
+                .select_related("major_strain", "plate")
                 .first()
             )
 
@@ -890,35 +893,27 @@ class Command(BaseCommand):
                 logger.warning(f"[MISSING] Sample with pseudonymized_id='{sid}' not found")
                 continue
 
-            major_strain_name = sample.major_strain.name if sample.major_strain else "None"
+            major_strain_name = sample.major_strain.name if sample.major_strain else ""
+            plate_barcode = sample.plate.barcode if sample.plate else ""
 
             files = File.objects.filter(sample=sample).only("path")
 
-            consensus_files = []
-            embl_files = []
+            has_consensus = False
+            has_embl = False
 
             for f in files:
                 basename = os.path.basename(f.path)
                 if basename.endswith("consensus_upload.gz"):
-                    consensus_files.append(f.path)
+                    has_consensus = True
                 if basename.endswith("embl.gz"):
-                    embl_files.append(f.path)
+                    has_embl = True
 
-            logger.info("")
-            logger.info("=" * 70)
-            logger.info(f"Sample: {sid}")
-            logger.info(f"  Major strain         : {major_strain_name}")
-            logger.info(f"  Has consensus_upload : {'YES' if consensus_files else 'NO'}")
-            logger.info(f"  Has EMBL (.embl.gz)  : {'YES' if embl_files else 'NO'}")
+            row = ",".join([
+                sid,
+                plate_barcode,
+                major_strain_name.replace(",", " "),  # avoid breaking CSV
+                "yes" if has_consensus else "no",
+                "yes" if has_embl else "no",
+            ])
 
-            if consensus_files:
-                logger.info("    consensus_upload.gz files:")
-                for p in consensus_files:
-                    logger.info(f"      - {p}")
-
-            if embl_files:
-                logger.info("    embl.gz files:")
-                for p in embl_files:
-                    logger.info(f"      - {p}")
-
-            logger.info("=" * 70)
+            self.stdout.write(row)
