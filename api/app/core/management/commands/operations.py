@@ -903,15 +903,19 @@ class Command(BaseCommand):
 
             for f in files:
                 basename = os.path.basename(f.path)
+
+                # consensus
                 if basename.endswith("consensus_upload.gz"):
                     has_consensus = True
-                if basename.endswith("embl.gz"):
+
+                # embl detection
+                if basename.endswith(".embl") or basename.endswith(".embl.gz"):
                     has_embl = True
 
             row = ",".join([
                 sid,
                 plate_barcode,
-                major_strain_name.replace(",", " "),  # avoid breaking CSV
+                major_strain_name.replace(",", " "),  # avoid CSV breaks
                 "yes" if has_consensus else "no",
                 "yes" if has_embl else "no",
             ])
