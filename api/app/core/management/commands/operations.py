@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from core.models import Sample, File
 from helpers.color_log import logger
 
-samples = ['single infections to upload', 'm2-UZk6rp', 'm2-3xWWe7', 'm2-4R8qnW', 'm2-4VEsBg', 'm2-nVaDMr', 'm2-4VDu4S',
+samples = ['m2-UZk6rp', 'm2-3xWWe7', 'm2-4R8qnW', 'm2-4VEsBg', 'm2-nVaDMr', 'm2-4VDu4S',
            'm2-4VxKmQ', 'm2-32supx', 'm2-3H2Wig', 'm2-468ARL', 'm2-48cAtM', 'm2-mVqwfv', 'm2-4Bx73L', 'm2-4W9wb5',
            'm2-37mqBc', 'm2-3MV28K', 'm2-3qDrEd', 'm2-4HbGG2', 'm2-9jS4Ro', 'm2-3d2qwx', 'm2-AWBv2b', 'm2-4Lx8Lv',
            'm2-3Fa9rz', 'm2-FMccqA', 'm2-3G3Doj', 'm2-3zPstM', 'm2-gYFizT', 'm2-357RdT', 'm2-5at3hA', 'm2-YAdfpF',
