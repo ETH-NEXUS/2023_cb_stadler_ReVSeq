@@ -17,7 +17,7 @@ services:
       - api
   api:
     volumes:
-       - /data/revseq/results/gather_results:/data/revseq/results/gather_results
+       - /data/revseq/results/gather_results:/data
        - /data/revseq/results/results:/data/revseq/results/results
        - /data/revseq/metagenomics_integration_proof-of-concept/results/results:/data/revseq/metagenomics_integration_proof-of-concept/results/results
       #- ./data:/data
