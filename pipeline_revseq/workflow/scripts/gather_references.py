@@ -21,13 +21,14 @@ if __name__ == '__main__':
     parser.add_argument('--downloadlist', required=True, type=str, help="The list from the Kraken2 database containing the links for downloading the FASTA references")
     parser.add_argument('--fastadir', required=True, type=str, help="The directory for the fasta references")
     parser.add_argument('--bed', required=True, type=str, help="The directory for the bed references")
+    parser.add_argument('--missing', required=True, type=str, help="The file with blacklisted substrains")
     parser.add_argument('--fastalinksdir', required=True, type=str, help="The sample directory for the links to the fasta references")
     args = parser.parse_args()
     
     #Some substrains are in the kraken2 database but not in the list of downloadable references from the same database
     #We skip these assignments
     stop_flag = 0
-    with open("/data/config/missing.txt", 'r') as f:
+    with open(args.missing, 'r') as f:
         substrains_blacklist = f.read()
     substrains_blacklist = substrains_blacklist.split("\n")
     try:
@@ -46,6 +47,7 @@ if __name__ == '__main__':
             substrain = substrains[i]
             name = substrain['name,taxon_id'].split(",")[0]
             if name in substrains_blacklist:
+                print("Skipping blacklisted substrain (--missing): " + name)
                 continue
             taxon_id = substrain['name,taxon_id'].split(",")[1]
             print("no fasta reference found for " + name + ". Searching if a download link is available")
@@ -66,7 +68,7 @@ if __name__ == '__main__':
                 this_url = download_url[0]
             except:
                 print("ERROR!!!!" + name)
-                with open("/data/config/missing.txt", 'a') as f:
+                with open(args.missing, 'a') as f:
                     f.write(name + "\n")
                 sys.exit()
             print("Found the reference at URL: ", this_url["URL"])
@@ -81,7 +83,7 @@ if __name__ == '__main__':
             multifasta = SeqIO.parse(filename_decompressed, "fasta")
             #updated_multifasta = []
             for record in multifasta:
-                bed_list.append({0:name, 1: 0, 2: len(record.seq), 3: record.description})
+                bed_list.append({0:record.name, 1: 0, 2: len(record.seq), 3: record.description})
             #    record.description = ""
             #    updated_multifasta.append(record)
             #with open(filename_decompressed, "w") as output_handle:

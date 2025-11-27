@@ -1,6 +1,6 @@
 rule bwa:
     input:
-        ref = config["resources"]["host_ref"],
+        ref = rules.merge_refs.output.referenceout,
         ref_index = rules.bwa_index.output.ref_index,
         r1 = rules.cutadapt.output.r1,
         r2 = rules.cutadapt.output.r2,
@@ -71,34 +71,34 @@ rule cram:
         "samtools sort -T {input.bam} --reference {input.ref} --output-fmt {params.opt} -o {output.cram} {input.bam}"
 
 
-#rule flat_file:
-#    input:
-#        cram = rules.cram.output.cram,
-#    output:
-#        fasta = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}.fasta",
-#        flat_temp = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}.embl.tmp"),
-#        flat = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}.embl",
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/flat_file.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/flat_file.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/flat_file/{sample}.benchmark"
-#    conda:
-#        "../envs/seqret.yaml"
-#    shell:
-#    """
-#        samtools fasta {input.cram} > {output.fasta}
-#        seqret -sequence {output.fasta -outseq {output.flat_tmp} -osformat embl
-#        #The flat file does not fully comply with the upload requirements. The header needs to be manually modified
-#        
-#    """
+rule flat_file:
+    input:
+        cram = rules.cram.output.cram,
+    output:
+        fasta = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}.fasta",
+        flat_temp = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}.embl.tmp"),
+        flat = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}.embl",
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/flat_file.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/flat_file.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/flat_file/{sample}.benchmark"
+    conda:
+        "../envs/seqret.yaml"
+    shell:
+    """
+        samtools fasta {input.cram} > {output.fasta}
+        seqret -sequence {output.fasta} -outseq {output.flat_temp} -osformat embl
+        #The flat file does not fully comply with the upload requirements. The header needs to be manually modified
+        cp {output.flat_temp} {output.flat}
+    """
 
 rule bam_to_fastq:
     input:
         bam = rules.dehuman.output.bam,
     output:
-        fq1 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r1.fastq"),#temp
-        fq2 = temp(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r2.fastq"),#temp
+        fq1 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r1.fastq",#temp
+        fq2 = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/{sample}_bam_to_fastq_r2.fastq",#temp
         outdir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/bam_to_fastq/"),
     log:
         outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/bam_to_fastq/bam_to_fastq.out.log",

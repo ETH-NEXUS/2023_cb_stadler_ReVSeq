@@ -407,7 +407,7 @@ rule postprocess_consensus:
 
         # Fetch only the consensus for the top virus for upload
         python workflow/scripts/filter_consensus.py \
-        --ref_table {params.ref} \
+        --ref_table {input.ref} \
         --assignment {input.assignment} \
         --consensus {input.all_consensus} \
         --consensus_type {params.upload_consensus_type} \
@@ -483,25 +483,25 @@ rule count_n_cds:
         --match_table {params.match_table}
         """
 
-#rule flat_file:
-#    input:
-#        consensus_upload = rules.postprocess_consensus.output.consensus_upload,
-#    output:
-#        flat_file = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}_consensus.fa",
-#    params:
-#        
-#    log:
-#        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/{sample}_consensus.out.log",
-#        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/{sample}_consensus.err.log",
-#    benchmark:
-#        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/flat_file/{sample}_postprocess_consensus.benchmark"
-#    conda:
-#        "../envs/python.yaml"
-#    shell:
-#        """
-#        # Generate an EMBL flat file of the consensus sequence
-#        # Useful for proper upload of viruses with mandatory serotype, such as Influenza
-#        python workflow/scripts/flat_file_from_consensus.py \
-#            --consensus {input.consensus_upload} \
-#            --output {output.flat_file} 2> >(tee {log.errfile} >&2)
-#        """
+rule flat_file:
+    input:
+        consensus_upload = rules.postprocess_consensus.output.consensus_upload,
+    output:
+        flat_file = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/flat_file/{sample}_consensus_upload.embls",
+    params:
+        
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/{sample}_consensus.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/flat_file/{sample}_consensus.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/flat_file/{sample}_postprocess_consensus.benchmark"
+    conda:
+        "../envs/python.yaml"
+    shell:
+        """
+        # Generate an EMBL flat file of the consensus sequence
+        # Useful for proper upload of viruses with mandatory serotype, such as Influenza
+        python workflow/scripts/flat_file_from_consensus.py \
+            --consensus {input.consensus_upload} \
+            --output {output.flat_file} 2> >(tee {log.errfile} >&2)
+        """

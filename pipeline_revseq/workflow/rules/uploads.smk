@@ -89,7 +89,7 @@ envvars:
     "PASSWORD_REVSEQ",
 rule push_to_db:
     input:
-        multiqcdir_filtered = rules.gather_results_plate.output.multiqcdir_filtered,
+        #multiqcdir_filtered = rules.gather_results_plate.output.multiqcdir_filtered,
     output:
         db_upload_status = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/db_upload_status",
     params:

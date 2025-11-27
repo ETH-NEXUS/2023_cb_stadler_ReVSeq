@@ -82,12 +82,45 @@ rule merge_lanes:
         --outsuffix {params.outsuffix_r2}
         """
 
+rule kraken2_cp:
+    input:
+        kraken2_report = f"/data/raw_data/results/{config['plate']}/{{sample}}/{{sample}}.report"
+    output:
+        kraken2_report_cp = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.report",
+    shell:
+        "cp {input.kraken2_report} {output.kraken2_report_cp}"
+
+
 rule kraken2:
     input:
         r1 =rules.merge_lanes.output.r1,
         r2 =rules.merge_lanes.output.r2,
     output:
         kraken2_report = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.report",
+    params:
+        db = config["resources"]["kraken2_db"],
+    log:
+        outfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/kraken2/kraken2.out.log",
+        errfile=config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/{sample}/kraken2/kraken2.err.log",
+    benchmark:
+        config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/kraken2/{sample}_kraken2.benchmark"
+    conda:
+        "../envs/kraken2.yaml"
+    threads: config['tools']['kraken2']['threads']
+    shell:
+        """
+        kraken2 --db {params.db} \
+            --paired \
+            --report {output.kraken2_report} \
+            --use-names \
+            --threads {threads} \
+            {input.r1} {input.r2} 2> >(tee {log.errfile} >&2)
+        """
+
+rule kraken2_report:
+    input:       
+        kraken2_report = rules.kraken2.output.kraken2_report,
+    output:
         detected_substrains = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/kraken2/{sample}.detected_substrains.tsv",
     params:
         k2 = "/data/k2/"+config["plate"]+"/{sample}/{sample}.report",
@@ -97,12 +130,12 @@ rule kraken2:
     benchmark:
         config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/logs/benchmark/kraken2/{sample}_kraken2.benchmark"
     conda:
-        "../envs/kraken2.yaml"
+        "../envs/python.yaml"
     shell:
         """
         
         python workflow/scripts/kraken_report_parser.py \
-            --report {output.kraken2_report} \
+            --report {input.kraken2_report} \
             --output {output.detected_substrains}
         """
 
@@ -110,6 +143,7 @@ rule kraken2:
 rule gather_references:
     input:
         detected_substrains = rules.kraken2.output.detected_substrains,
+        missing=config["resources"]["reference_dir"]+"/missing.txt ",
     output:
         bed = config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/gather_references/{sample}.bed",
         fasta_links_dir = directory(config["inputOutput"]["output_dir"]+"/"+config["plate"]+"/{sample}/gather_references"),
@@ -130,6 +164,7 @@ rule gather_references:
             --downloadlist {params.download_list} \
             --fastadir {params.fastadir} \
             --bed {output.bed} \
+            --missing {input.missing} \
             --fastalinksdir {output.fasta_links_dir}
         """
 
@@ -164,7 +199,6 @@ rule merge_refs:
             cp {output.referenceout} {output.referenceout_virus_only} 2> >(tee {log.errfile} >&2)
         fi        
         cat {params.host_virus_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
-        cat {params.virus_reference} >> {output.referenceout} 2> >(tee {log.errfile} >&2)
         cat {params.virus_reference} >> {output.referenceout_virus_only} 2> >(tee {log.errfile} >&2)
         """
 
@@ -179,6 +213,8 @@ rule bwa_index:
         errfile=config["inputOutput"]["output_dir"]+"/logs/{sample}/bwa_index/bwa_index.err.log",
     benchmark:
         config["inputOutput"]["output_dir"]+"/logs/benchmark/bwa_index/{sample}_bwa_index.benchmark"
+    resources:
+        mem_mb = 5000,
     conda:
         "../envs/bwa.yaml"
     shell:
