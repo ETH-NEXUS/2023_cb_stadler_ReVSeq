@@ -32,7 +32,7 @@ if __name__ == '__main__':
         bacterial_fraction = report.loc[report[5] == '    Bacteria'][0]
         human_fraction = report.loc[report[5] == '                                                              Homo sapiens'][0]
 
-        report_domain = report.loc[report[3] == 'D']
+        report_domain = report.loc[report[3] == 'R1']
         perform_substrain_evaluation = True
         try:
             virus_position = report_domain.loc[report_domain[5] == '  Viruses'].index.values[0]
@@ -58,7 +58,10 @@ if __name__ == '__main__':
                 this_strain = virus_strains.loc[range(start, end)]
                 this_S = max(this_strain[3])
                 this_substrains = this_strain.loc[this_strain[3] == this_S]
-                substrains = this_substrains
+                try:
+                        substrains = pd.concat([substrains, this_substrains])
+                except:
+                        substrains = this_substrains
             else:
                 for i in range(1, len(virus_S)):
                     end = virus_S.iloc[i].name
@@ -71,7 +74,8 @@ if __name__ == '__main__':
                         substrains = this_substrains
                     start = virus_S.iloc[i].name
             substrains_final = substrains
-            substrains_final["name"] = substrains[5].str.strip()
-            substrains_final["taxon_id"] = substrains[4]
+            substrains_final["name"] = substrains_final[5].str.lstrip()
+            substrains_final.rename(columns={4: 'taxon_id'}, inplace=True)
+            #substrains_final["taxon_id"] = substrains[4].to_string(index=False)
             substrains_final = substrains_final[["name", "taxon_id"]]
         substrains_final.to_csv(args.output, index=None)
