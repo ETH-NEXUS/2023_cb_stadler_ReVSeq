@@ -17,9 +17,10 @@ services:
       - api
   api:
     volumes:
-      # - /data/revseq/results/gather_results:/data
-      # - /data/revseq/results/results:/data/revseq/results/results
-      - ./data:/data
+       - /data/revseq/results/gather_results:/data
+       - /data/revseq/results/results:/data/revseq/results/results
+       - /data/revseq/metagenomics_integration_proof-of-concept/results/results:/data/revseq/metagenomics_integration_proof-of-concept/results/results
+      #- ./data:/data
   ui:
     command: >
       bash -c "\
