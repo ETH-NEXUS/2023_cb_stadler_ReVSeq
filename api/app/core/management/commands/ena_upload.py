@@ -1,12 +1,13 @@
-import os
-
-from django.core.management.base import BaseCommand
-import requests
-from os import environ
-from core.models import Sample, File, Metadata, SampleCount
 import datetime as dt
-from helpers.color_log import logger
+import os
 import time
+from os import environ
+
+import requests
+from django.core.management.base import BaseCommand
+
+from core.models import Sample, File, Metadata, SampleCount
+from helpers.color_log import logger
 
 STUDY_ENDPOINT = 'http://ena:5000/ena/api/jobs/study/'
 SER_ENDPOINT = 'http://ena:5000/ena/api/jobs/ser/'
@@ -17,7 +18,7 @@ RELEASE_JOB_ENDPOINT = 'http://ena:5000/ena/api/jobs/<job_id>/release/'
 RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/<job_id>/release/'
 JOBS_ENDPOINT = 'http://ena:5000/ena/api/jobs/'
 ANALYSIS_JOBS_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/'
-CONSENSUS_FILE_SUFFIX = '.fa.gz'
+CONSENSUS_FILE_SUFFIX = 'consensus_upload.gz'
 CHROMOSOME_FILE_NAME = 'chr_file.txt.gz'
 EMBL_FILE_SUFFIX = 'embl.gz'
 EMBL_FILE_TYPE = 'FLATFILE'
@@ -25,6 +26,7 @@ EMBL_FILE_TYPE = 'FLATFILE'
 
 def extract_basename(path):
     return os.path.basename(path)
+
 
 class Command(BaseCommand):
     def __init__(self):
@@ -64,7 +66,6 @@ class Command(BaseCommand):
 
         # command to upload this one RyXauM without analysis
 
-
         # python manage.py ena_upload --type ser_and_analysis --no_analysis -s RyXauM   # job jd 1187 analysis job id 381
         # submit analysis jobs for this sample
         # python manage.py ena_upload --task resend_analysis_jobs -s RyXauM
@@ -73,8 +74,6 @@ class Command(BaseCommand):
         # python manage.py ena_upload --type ser_and_analysis -s 375EUk
         # submit analysis jobs for this sample
         # python manage.py ena_upload --task resend_analysis_jobs -s 375EUk
-
-
 
     def resend_analysis_jobs(self, samples):
         if not samples:
@@ -86,12 +85,18 @@ class Command(BaseCommand):
             payload = self._create_ser_payload(sample, sample_counts)
             analysis_payload = payload['data']['analysis']
             files = File.objects.filter(sample=sample)
-            analysis_files = [file for file in files if extract_basename(file.path).endswith(EMBL_FILE_SUFFIX)]
+
+            if sample.major_strain and sample.major_strain.name.startswith('Influenza A'):
+                logger.info(f'We only upload EMBL files for influenza samples like {sample}')
+                analysis_files = [file for file in files if
+                                  extract_basename(file.path).endswith(EMBL_FILE_SUFFIX)]
+            else:
+                analysis_files = [file for file in files if
+                              extract_basename(file.path).endswith(CONSENSUS_FILE_SUFFIX) or extract_basename(
+                                  file.path) == CHROMOSOME_FILE_NAME]
             job_id = sample.job_id
             self.data_for_analysis_upload.append((job_id, sample, analysis_files, analysis_payload))
         self._upload_analysis_loop()
-
-
 
     def ena_uploadjob_id(self):
         samples = Sample.objects.filter(job_id__isnull=False)
@@ -145,12 +150,11 @@ class Command(BaseCommand):
                 error_jobs = [j for j in jobs if j['status'] == 'ERROR']
 
                 logger.info(f"Releasing {job_type_description}: There are {len(submitted_jobs)} submitted, "
-                      f"{len(queued_jobs)} queued, and {len(running_jobs)} running jobs.")
+                            f"{len(queued_jobs)} queued, and {len(running_jobs)} running jobs.")
                 logger.debug(f"Releasing {job_type_description}: There are {len(error_jobs)} error jobs.")
 
                 for job in submitted_jobs:
                     self.release_job(release_endpoint_template, job['id'])
-
 
                 continue_releasing = bool(queued_jobs or running_jobs)
                 time.sleep(30)
@@ -179,7 +183,14 @@ class Command(BaseCommand):
             response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
                                                 message=f'SER for {sample} uploaded successfully')
             files = File.objects.filter(sample=sample)
-            analysis_files = [file for file in files if  extract_basename(file.path).endswith(EMBL_FILE_SUFFIX)]
+            if sample.major_strain and sample.major_strain.name.startswith('Influenza A'):
+                logger.info(f'We only upload EMBL files for influenza samples like {sample}')
+                analysis_files = [file for file in files if
+                                  extract_basename(file.path).endswith(EMBL_FILE_SUFFIX)]
+            else:
+                analysis_files = [file for file in files if
+                              extract_basename(file.path).endswith(CONSENSUS_FILE_SUFFIX) or extract_basename(
+                                  file.path) == CHROMOSOME_FILE_NAME]
             job_id = response['id']
             sample.job_id = job_id
             sample.save()
@@ -281,12 +292,13 @@ class Command(BaseCommand):
         for file in files:
             # file types: FASTA und CHROMOSOME_LIST
             # if it is a chromosome file, file type is CHROMOSOME_LIST
-            # file_type = 'FASTA'
-            # if extract_basename(file.path) == CHROMOSOME_FILE_NAME:
-            #     file_type = 'CHROMOSOME_LIST'
-            # payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": file_type} #
-            # self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
-            #                          message=f'Analysis file {file} uploaded successfully')
+
+            file_type = 'FASTA'
+            if extract_basename(file.path) == CHROMOSOME_FILE_NAME:
+                file_type = 'CHROMOSOME_LIST'
+            payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": file_type}  #
+            self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
+                                     message=f'Analysis file {file} uploaded successfully')
 
             # for EMBL files, we need to set the file type to FLATFILE
             # we don't need fasta and chromosome files anymore, only EMBL files
@@ -297,7 +309,6 @@ class Command(BaseCommand):
             else:
                 logger.warning(f'Skipping file {file.path} for analysis upload, not an EMBL file')
 
-
     def enqueue_analysis_job(self, analysis_job_id):
         url = ENQUEUE_ENDPOINT.replace('<job_id>', str(analysis_job_id))
         self.handle_http_request(url, method='get', message=f'Analysis job {analysis_job_id} enqueued')
@@ -305,7 +316,6 @@ class Command(BaseCommand):
     def release_job(self, url, job_id):
         _url = url.replace('<job_id>', str(job_id))
         self.handle_http_request(_url, method='get', message=f'Job {job_id} released successfully')
-
 
     def handle(self, *args, **options):
         task = options.get('task')
