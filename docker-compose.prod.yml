@@ -34,7 +34,7 @@ services:
     ports:
       - 5042:5000
     volumes:
-      # - /data/revseq/results/gather_results:/data
+      - /data/revseq/results/gather_results:/data
       # - /data/revseq/results/results:/data/revseq/results/results
       # - ./data:/data2
-      - ./data:/data
+      # - ./data:/data
