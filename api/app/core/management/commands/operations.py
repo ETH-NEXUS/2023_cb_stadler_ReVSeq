@@ -32,32 +32,25 @@ class Command(BaseCommand):
 
         self.stdout.write(f"Found {qs.count()} files to process...")
 
-        # Don't wrap in transaction for dry-run
-        context = transaction.atomic() if not dry_run else None
+        # First handle dry run: just print and exit
+        if dry_run:
+            for f in qs:
+                old_path = f.path
+                new_path = old_path.replace(OLD_PREFIX, NEW_PREFIX, 1)
+                self.stdout.write(
+                    f"[DRY RUN] {old_path}\n          → {new_path}\n"
+                )
+            self.stdout.write(self.style.WARNING("Dry run complete — no changes saved."))
+            return
 
-        if context:
-            context.__enter__()
-
-        try:
+        # Real update with transaction
+        with transaction.atomic():
             for f in qs:
                 old_path = f.path
                 new_path = old_path.replace(OLD_PREFIX, NEW_PREFIX, 1)
 
-                if dry_run:
-                    self.stdout.write(
-                        f"[DRY RUN] {old_path}\n          → {new_path}\n"
-                    )
-                else:
-                    f.path = new_path
-                    f.save(update_fields=["path"])
-                    self.stdout.write(f"Updated:\n  {old_path}\n  → {new_path}")
+                f.path = new_path
+                f.save(update_fields=["path"])
+                self.stdout.write(f"Updated:\n  {old_path}\n  → {new_path}")
 
-        finally:
-            # Roll back automatically for dry run
-            if dry_run and context:
-                context.__exit__(None, None, None)
-
-        if dry_run:
-            self.stdout.write(self.style.WARNING("Dry run complete — no changes saved."))
-        else:
-            self.stdout.write(self.style.SUCCESS("File path updates saved."))
+        self.stdout.write(self.style.SUCCESS("File path updates saved."))
