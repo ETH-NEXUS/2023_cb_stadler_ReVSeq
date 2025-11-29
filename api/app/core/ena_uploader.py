@@ -148,9 +148,14 @@ class ENAUploader:
             sample.job_id = job_id
         sample.save()
 
-        self.data_for_analysis_upload.append(
-            (job_id, sample, analysis_files, analysis_payload)
-        )
+        # if no analysis files - warning and return
+        if not analysis_files:
+            logger.warning(f'!!!!!!!!!!!!!!!! No analysis files selected for sample {sample}; skipping analysis upload. !!!!!!!!!!!!!!!')
+        else:
+            self.data_for_analysis_upload.append(
+                (job_id, sample, analysis_files, analysis_payload)
+            )
+
         self.job_ids.append(job_id)
 
         # ------------------------- Analysis upload loop and related methods ------------------------- #
