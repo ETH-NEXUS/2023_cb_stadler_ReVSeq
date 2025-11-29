@@ -1,337 +1,299 @@
-import datetime as dt
-import os
-import time
-from os import environ
+"""
+Management command to upload data to ENA using ENAUploader.
 
-import requests
-from django.core.management.base import BaseCommand
+USAGE EXAMPLES
+==============
 
-from core.models import Sample, File, Metadata, SampleCount
+1) Upload STUDY only
+--------------------
+# uses ENAUploader.upload_study()
+python manage.py ena_upload --type study
+
+2) Upload SER + ANALYSIS for specific samples (live run)
+--------------------------------------------------------
+# will:
+# - create SER jobs for these samples
+# - create + enqueue analysis jobs
+python manage.py ena_upload \
+    --type ser_and_analysis \
+    --samples RyXauM 375EUk ABC123
+
+3) Upload SER + ANALYSIS for samples from a text file
+-----------------------------------------------------
+# samples.txt contains one pseudonymized_id per line, e.g.:
+#   RyXauM
+#   375EUk
+#   ABC123
+python manage.py ena_upload \
+    --type ser_and_analysis \
+    --samples-file /path/to/samples.txt
+
+4) Upload SER ONLY (no analysis) for given samples
+--------------------------------------------------
+# same as #2 but with --no-analysis; you can send analysis later.
+python manage.py ena_upload \
+    --type ser_and_analysis \
+    --no-analysis \
+    --samples RyXauM 375EUk
+
+5) Upload SER + ANALYSIS for INFLUENZA samples only (EMBL files only)
+---------------------------------------------------------------------
+# This will:
+# - create SER jobs
+# - create analysis jobs
+# - select ONLY EMBL files (no consensus/chr) for analysis input
+python manage.py ena_upload \
+    --type ser_and_analysis \
+    --influenza-only \
+    --samples RyXauM 375EUk
+
+6) Upload SER (no analysis) for INFLUENZA samples only
+------------------------------------------------------
+python manage.py ena_upload \
+    --type ser_and_analysis \
+    --no-analysis \
+    --influenza-only \
+    --samples-file /path/to/influenza_samples.txt
+
+7) TEST RUN - use it if you upload to the dev instance of ENA
+--------------------------------------------------------
+# By default this command runs as LIVE (test_run=False).
+# Add --test-run to:
+#   - store job ids in sample.test_job_id / sample.test_analysis_job_id
+#   - not touch sample.job_id / sample.analysis_job_id
+python manage.py ena_upload \
+    --type ser_and_analysis \
+    --test-run \
+    --samples RyXauM 375EUk
+
+8) RESEND ANALYSIS JOBS for existing SER jobs
+---------------------------------------------
+# Use when SER jobs are already created AND released,
+# but analysis jobs need to be recreated (e.g., wrong files, missing EMBL, etc.).
+#
+# This will:
+# - reuse existing job_id (or test_job_id in test_run mode)
+# - rebuild analysis payload from DB state
+# - re-select analysis files
+# - create + enqueue new analysis jobs
+python manage.py ena_upload \
+    --task resend_analysis_jobs \
+    --samples RyXauM 375EUk
+
+# Influenza-only variant:
+python manage.py ena_upload \
+    --task resend_analysis_jobs \
+    --influenza-only \
+    --samples-file /path/to/samples.txt
+
+NOTE:
+- You must always specify samples (via --samples and/or --samples-file)
+  for SER upload and resend_analysis_jobs.
+- There is intentionally NO default "all samples with job_id is null" as it was before
+"""
+
+from pathlib import Path
+from typing import List, Set
+
+from django.core.management.base import BaseCommand, CommandError
+
 from helpers.color_log import logger
-
-STUDY_ENDPOINT = 'http://ena:5000/ena/api/jobs/study/'
-SER_ENDPOINT = 'http://ena:5000/ena/api/jobs/ser/'
-ANALYSIS_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/'
-ANALYSIS_FILES_ENDPOINT = 'http://ena:5000/ena/api/analysisfiles/'
-ENQUEUE_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/<job_id>/enqueue/'
-RELEASE_JOB_ENDPOINT = 'http://ena:5000/ena/api/jobs/<job_id>/release/'
-RELEASE_ANALYSIS_JOB_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/<job_id>/release/'
-JOBS_ENDPOINT = 'http://ena:5000/ena/api/jobs/'
-ANALYSIS_JOBS_ENDPOINT = 'http://ena:5000/ena/api/analysisjobs/'
-CONSENSUS_FILE_SUFFIX = 'consensus_upload.gz'
-CHROMOSOME_FILE_NAME = 'chr_file.txt.gz'
-EMBL_FILE_SUFFIX = 'embl.gz'
-EMBL_FILE_TYPE = 'FLATFILE'
-
-
-def extract_basename(path):
-    return os.path.basename(path)
+from core.ena_uploader import ENAUploader  # adjust import path to where ENAUploader lives
 
 
 class Command(BaseCommand):
-    def __init__(self):
-        super().__init__()
-        self.job_analysis_ids = []
-        self.job_ids = []
-        self.data_for_analysis_upload = []
-
-    token = environ.get('ENA_TOKEN')
-    headers = {'Authorization': f'Token {token}', 'Content-Type': 'application/json'}
+    help = "Upload study/SER/analysis data to ENA or resend analysis jobs."
 
     def add_arguments(self, parser):
+        # What to do: type vs task
         parser.add_argument(
-            '-t', '--type', type=str, choices=['study', 'ser_and_analysis', 'delete_job_id'],
-            help='Type of data to upload: study, or ser_and_analysis to upload the samples which don;t already have a '
-                 'job_id'
+            "-t",
+            "--type",
+            type=str,
+            choices=["study", "ser_and_analysis"],
+            help=(
+                "Type of operation: "
+                "'study' to upload only the study, "
+                "'ser_and_analysis' to upload SER (and optionally analysis)."
+            ),
         )
-        # if we have a custom list of samples to upload, we can add it here as a lis []
+
         parser.add_argument(
-            '-s', '--samples', type=str, nargs='*',
-            help='List of sample IDs to upload. If not provided, all samples with job_id=None will be uploaded.'
+            "-r",
+            "--task",
+            type=str,
+            choices=["resend_analysis_jobs"],
+            help=(
+                "Optional task to perform instead of --type.\n"
+                "Currently supported: 'resend_analysis_jobs' to recreate analysis jobs "
+                "for already uploaded SER jobs."
+            ),
+        )
+
+        # Samples can be given directly on CLI...
+        parser.add_argument(
+            "-s",
+            "--samples",
+            nargs="*",
+            help=(
+                "List of pseudonymized sample IDs to process. "
+                "Example: --samples RyXauM 375EUk ABC123"
+            ),
+        )
+
+        # ...or via a text file (one ID per line).
+        parser.add_argument(
+            "--samples-file",
+            type=str,
+            help=(
+                "Path to a text file containing one pseudonymized sample ID per line. "
+                "Blank lines and lines starting with '#' are ignored."
+            ),
+        )
+
+        # Flags modifying SER/analysis behavior
+        parser.add_argument(
+            "-a",
+            "--no-analysis",
+            action="store_true",
+            dest="no_analysis",
+            help="If set, analysis jobs will NOT be created, only SER jobs.",
         )
 
         parser.add_argument(
-            '-r', '--task', type=str, choices=['resend_analysis_jobs'],
-            help='Task to perform: resend_analysis_jobs to resend analysis jobs for the given samples'
+            "--influenza-only",
+            action="store_true",
+            dest="influenza_only",
+            help=(
+                "If set, analysis will only upload EMBL files (no consensus/chr). "
+                "Use for influenza samples where only EMBL is required."
+            ),
         )
-        # argument not to include analysis
-        # we need this option to be able to upload ser without anaysis
-        # use case: to test the task of resending analysis jobs
-        # we upload some ser jobst on the dev server without analysis and then try to send analysis separately.
-        # if it works, we resent some analysis jobst in production for several samples
+
+        # test vs live run
         parser.add_argument(
-            '-a', '--no_analysis', action='store_true',
-            help='If set, analysis jobs will not be uploaded, only SER jobs.'
+            "--test-run",
+            action="store_true",
+            dest="test_run",
+            default=False,
+            help=(
+                "Run in TEST mode: store job IDs in sample.test_job_id / "
+                "sample.test_analysis_job_id instead of the real fields."
+            ),
         )
 
-        # command to upload this one RyXauM without analysis
+    # ------------------------------------------------------------------ #
+    # Helpers
+    # ------------------------------------------------------------------ #
 
-        # python manage.py ena_upload --type ser_and_analysis --no_analysis -s RyXauM   # job jd 1187 analysis job id 381
-        # submit analysis jobs for this sample
-        # python manage.py ena_upload --task resend_analysis_jobs -s RyXauM
+    def _load_samples_from_file(self, path_str: str) -> List[str]:
+        """
+        Read pseudonymized IDs line-by-line from a text file.
+        Ignores empty lines and lines starting with '#'.
+        """
+        path = Path(path_str)
+        if not path.exists():
+            raise CommandError(f"Samples file does not exist: {path}")
 
-        # for 375EUk  jobid 1152  analysis job id 346
-        # python manage.py ena_upload --type ser_and_analysis -s 375EUk
-        # submit analysis jobs for this sample
-        # python manage.py ena_upload --task resend_analysis_jobs -s 375EUk
+        ids: List[str] = []
+        with path.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                ids.append(line)
+        return ids
 
-    def resend_analysis_jobs(self, samples):
-        if not samples:
-            logger.warning('No samples provided for resend_analysis_jobs')
-            return
-        for sample_id in samples:
-            sample = Sample.objects.filter(pseudonymized_id=sample_id).first()
-            sample_counts = SampleCount.objects.filter(sample=sample)
-            payload = self._create_ser_payload(sample, sample_counts)
-            analysis_payload = payload['data']['analysis']
-            files = File.objects.filter(sample=sample)
+    def _combine_samples(
+        self,
+        samples_arg: List[str] | None,
+        samples_file: str | None,
+    ) -> List[str]:
+        """
+        Combine samples from --samples and --samples-file,
+        preserve order but avoid duplicates.
+        """
+        result: List[str] = []
+        seen: Set[str] = set()
 
-            if sample.major_strain and sample.major_strain.name.startswith('Influenza A'):
-                logger.info(f'We only upload EMBL files for influenza samples like {sample}')
-                analysis_files = [file for file in files if
-                                  extract_basename(file.path).endswith(EMBL_FILE_SUFFIX)]
-            else:
-                analysis_files = [file for file in files if
-                              extract_basename(file.path).endswith(CONSENSUS_FILE_SUFFIX) or extract_basename(
-                                  file.path) == CHROMOSOME_FILE_NAME]
-            job_id = sample.job_id
-            self.data_for_analysis_upload.append((job_id, sample, analysis_files, analysis_payload))
-        self._upload_analysis_loop()
+        # from CLI
+        if samples_arg:
+            for s in samples_arg:
+                if s not in seen:
+                    seen.add(s)
+                    result.append(s)
 
-    def ena_uploadjob_id(self):
-        samples = Sample.objects.filter(job_id__isnull=False)
-        for sample in samples:
-            sample.job_id = None
-            sample.analysis_job_id = None
-            sample.save()
-            logger.info(f'Job id for {sample} deleted')
+        # from file
+        if samples_file:
+            file_ids = self._load_samples_from_file(samples_file)
+            for s in file_ids:
+                if s not in seen:
+                    seen.add(s)
+                    result.append(s)
 
-    def handle_http_request(self, url, payload=None, method='get', message=None):
-        try:
-            response = None
-            if method == 'get':
-                response = requests.get(url, headers=self.headers)
-            elif method == 'post':
-                response = requests.post(url, headers=self.headers, json=payload)
-            if response.status_code in [200, 201]:
-                if message:
-                    logger.info(message)
-                return response.json()
-            else:
-                logger.error(f'Error calling the endpoint {url}: {response.text}')
-        except Exception as e:
-            logger.error(f'Exception: {e}')
-        return None
+        return result
 
-    def __sort_key(self, x):
-        # if the value is None, it is treated as a very small number for sorting purposes
-        return x.rpkm_proportions if x.rpkm_proportions is not None else float('-inf')
-
-    def upload_study(self):
-        payload = {'template': 'default', 'data': {}}
-        self.handle_http_request(STUDY_ENDPOINT, payload, 'post', 'Study uploaded successfully')
-
-    def _release_jobs_loop(self,
-                           list_endpoint,
-                           release_endpoint_template,
-                           job_type_description="jobs"):
-        try:
-            continue_releasing = True
-            while continue_releasing:
-                response = self.handle_http_request(list_endpoint, method='get')
-                if not response or 'results' not in response:
-                    print(f"Failed to retrieve jobs from {list_endpoint}")
-                    break
-
-                jobs = response['results']
-                submitted_jobs = [j for j in jobs if j['status'] == 'SUBMITTED']
-                queued_jobs = [j for j in jobs if j['status'] == 'QUEUED']
-                running_jobs = [j for j in jobs if j['status'] == 'RUNNING']
-                error_jobs = [j for j in jobs if j['status'] == 'ERROR']
-
-                logger.info(f"Releasing {job_type_description}: There are {len(submitted_jobs)} submitted, "
-                            f"{len(queued_jobs)} queued, and {len(running_jobs)} running jobs.")
-                logger.debug(f"Releasing {job_type_description}: There are {len(error_jobs)} error jobs.")
-
-                for job in submitted_jobs:
-                    self.release_job(release_endpoint_template, job['id'])
-
-                continue_releasing = bool(queued_jobs or running_jobs)
-                time.sleep(30)
-        except Exception as e:
-            logger.error(f"An error occurred while releasing {job_type_description}: {e}")
-
-    def upload_ser(self, no_analysis=False, given_samples=None):
-        if given_samples:
-            samples = Sample.objects.filter(pseudonymized_id__in=given_samples)
-            print(f'Found {len(samples)} samples for the given pseudonymized IDs: {given_samples}')
-        else:
-            samples = Sample.objects.filter(job_id__isnull=True, valid=True, upload_to_ena=True)
-            if not samples:
-                logger.warning(f'No samples found for the given pseudonymized IDs: {given_samples}')
-                return
-        logger.info(f'Uploading {len(samples)} samples to ENA')
-        print(list(samples.values_list('pseudonymized_id', flat=True)))
-        for sample in samples:
-            logger.info(f' ##################### Uploading {sample} to ENA #######################')
-            sample_counts = SampleCount.objects.filter(sample=sample)
-            if not sample_counts:
-                logger.warning(f'No counts for {sample}')
-                continue
-            payload = self._create_ser_payload(sample, sample_counts)
-            analysis_payload = payload['data']['analysis']
-            response = self.handle_http_request(SER_ENDPOINT, payload, 'post',
-                                                message=f'SER for {sample} uploaded successfully')
-            files = File.objects.filter(sample=sample)
-            if sample.major_strain and sample.major_strain.name.startswith('Influenza A'):
-                logger.info(f'We only upload EMBL files for influenza samples like {sample}')
-                analysis_files = [file for file in files if
-                                  extract_basename(file.path).endswith(EMBL_FILE_SUFFIX)]
-            else:
-                analysis_files = [file for file in files if
-                              extract_basename(file.path).endswith(CONSENSUS_FILE_SUFFIX) or extract_basename(
-                                  file.path) == CHROMOSOME_FILE_NAME]
-            job_id = response['id']
-            sample.job_id = job_id
-            sample.save()
-            time.sleep(20)
-            self.data_for_analysis_upload.append((job_id, sample, analysis_files, analysis_payload))
-            self.job_ids.append(job_id)
-        if not no_analysis:
-            logger.info('Uploading analysis jobs and files')
-            self._upload_analysis_loop()
-        self._release_jobs_loop(
-            list_endpoint=JOBS_ENDPOINT,
-            release_endpoint_template=RELEASE_JOB_ENDPOINT,
-            job_type_description="regular jobs"
-        )
-        # self._release_jobs_loop(
-        #     list_endpoint=ANALYSIS_JOBS_ENDPOINT,
-        #     release_endpoint_template=RELEASE_ANALYSIS_JOB_ENDPOINT,
-        #     job_type_description="analysis jobs"
-        # )
-
-    def _upload_analysis_loop(self):
-        logger.debug(f'Uploading analysis jobs for {len(self.data_for_analysis_upload)} samples')
-        for job_id, sample, files, analysis_payload in self.data_for_analysis_upload:
-            self.upload_analysis_job_and_files(job_id, sample, files, analysis_payload)
-            time.sleep(20)
-
-    def _create_ser_payload(self, sample, sample_counts):
-        logger.debug(f'Creating SER payload for {sample}')
-        now = dt.datetime.now().strftime('%Y%m%d%H%M%S%f')
-        sorted_sample_counts = sorted(sample_counts, key=self.__sort_key, reverse=True)
-        taxon_id = sorted_sample_counts[0].substrain.taxon_id
-        serotype = sorted_sample_counts[0].substrain.serotype
-        metadata = Metadata.objects.filter(sample=sample).first()
-        collection_date = metadata.ent_date.strftime("%Y-%m-%d")
-        geo_location = metadata.prescriber
-        coverage = float(sorted_sample_counts[0].coverage) + 0.01
-        sample_alias = f"revseq_sample_{sample.pseudonymized_id}_{now}"
-        experiment_alias = f"revseq_experiment_{sample.pseudonymized_id}_{now}"
-        _files = []
-        files = File.objects.filter(sample=sample)
-        for file in files:
-            if file.type.postfix == '.cram':
-                logger.debug(f'Adding CRAM FILE{file.path} to SER for {sample} ___________________________-')
-                _files.append(file.path)
-        payload = {
-            'template': 'default',
-            'data': {
-                'sample': {
-                    'title': f"ReVSeq Sample {sample.pseudonymized_id}",
-                    'alias': sample_alias,
-                    'host subject id': sample.pseudonymized_id,
-                    'taxon_id': taxon_id,
-                    'collection date': collection_date,
-                    'geographic location (region and locality)': geo_location
-                },
-                'experiment': {
-                    'alias': experiment_alias,
-                    'sample_alias': sample_alias
-                },
-                'run': {
-                    'alias': f"revseq_run_{sample.pseudonymized_id}_{now}",
-                    'experiment_alias': experiment_alias,
-                    'file': _files
-                },
-                'analysis': {
-                    'name': f"analysis_{sample.pseudonymized_id}_{now}",
-                    'coverage': coverage,
-                    'program': 'BCFtools',
-                }
-
-            },
-            'files': _files
-        }
-
-        if serotype:
-            payload['data']['sample']['serotype'] = serotype
-        print(f'Payload for {sample.pseudonymized_id}: {payload}')
-        return payload
-
-    def upload_analysis_job_and_files(self, job_id, sample, files, analysis_payload):
-        payload = {'template': 'default', 'data': analysis_payload, 'job': job_id}
-        logger.info(f'Uploading analysis payload job for {sample}')
-        logger.info(f'Analysis payload: {payload}')
-        logger.info(f'Files for analysis upload: {[file.path for file in files]}')
-        response = self.handle_http_request(ANALYSIS_ENDPOINT, payload, 'post',
-                                            message=f'Analysis job for {sample} uploaded successfully')
-        if not response:
-            logger.error(f'Failed to upload analysis job for {sample}')
-            return
-        analysis_job_id = response['id']
-        sample.analysis_job_id = analysis_job_id
-        sample.save()
-        self.upload_analysis_files(analysis_job_id, files)
-        time.sleep(30)
-        self.enqueue_analysis_job(analysis_job_id)
-        self.job_analysis_ids.append(analysis_job_id)
-
-    def upload_analysis_files(self, analysis_job_id, files):
-        for file in files:
-            # file types: FASTA und CHROMOSOME_LIST
-            # if it is a chromosome file, file type is CHROMOSOME_LIST
-
-            file_type = 'FASTA'
-            if extract_basename(file.path) == CHROMOSOME_FILE_NAME:
-                file_type = 'CHROMOSOME_LIST'
-            payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": file_type}  #
-            self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
-                                     message=f'Analysis file {file} uploaded successfully')
-
-            # for EMBL files, we need to set the file type to FLATFILE
-            # we don't need fasta and chromosome files anymore, only EMBL files
-            if extract_basename(file.path).endswith(EMBL_FILE_SUFFIX):
-                payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": EMBL_FILE_TYPE}
-                self.handle_http_request(ANALYSIS_FILES_ENDPOINT, payload, 'post',
-                                         message=f'Analysis file {file} uploaded successfully')
-            else:
-                logger.warning(f'Skipping file {file.path} for analysis upload, not an EMBL file')
-
-    def enqueue_analysis_job(self, analysis_job_id):
-        url = ENQUEUE_ENDPOINT.replace('<job_id>', str(analysis_job_id))
-        self.handle_http_request(url, method='get', message=f'Analysis job {analysis_job_id} enqueued')
-
-    def release_job(self, url, job_id):
-        _url = url.replace('<job_id>', str(job_id))
-        self.handle_http_request(_url, method='get', message=f'Job {job_id} released successfully')
+    # ------------------------------------------------------------------ #
+    # Main handler
+    # ------------------------------------------------------------------ #
 
     def handle(self, *args, **options):
-        task = options.get('task')
-        no_analysis = options.get('no_analysis', False)
-        samples = options.get('samples', None)
-        if task == 'resend_analysis_jobs':
-            samples = options.get('samples')
-            self.resend_analysis_jobs(samples)
-            return
-        data_type = options.get('type')
-        if data_type == 'study':
-            self.upload_study()
-        elif data_type == 'ser_and_analysis':
-            self.upload_ser(no_analysis, samples)
-        elif data_type == 'delete_job_id':
-            self.delete_job_id()
+        op_type = options.get("type")
+        task = options.get("task")
+        samples_arg = options.get("samples")
+        samples_file = options.get("samples_file")
+        no_analysis = options.get("no_analysis", False)
+        influenza_only = options.get("influenza_only", False)
+        test_run = options.get("test_run", False)
 
-        else:
-            logger.warning('Please specify a data type to upload: study, ser, analysis')
+        # Combine samples from arguments and file
+        pseudonymized_ids = self._combine_samples(samples_arg, samples_file)
+
+        if task and op_type:
+            raise CommandError(
+                "You cannot specify both --task and --type at the same time. "
+                "Choose one."
+            )
+
+        uploader = ENAUploader(test_run=test_run)
+
+        # --------------------- TASK: resend_analysis_jobs --------------------- #
+        if task == "resend_analysis_jobs":
+            if not pseudonymized_ids:
+                raise CommandError(
+                    "resend_analysis_jobs requires at least one sample ID "
+                    "(use --samples and/or --samples-file)."
+                )
+            logger.info(f"Resending analysis jobs for {len(pseudonymized_ids)} samples (test_run={test_run}, influenza_only={influenza_only}).")
+            uploader.resend_analysis_jobs(
+                pseudonymized_ids=pseudonymized_ids,
+                influenza_only=influenza_only,
+            )
+            return
+
+        # ----------------------- TYPE: study / ser --------------------------- #
+        if op_type == "study":
+            logger.info("Uploading study to ENA (test_run=%s).", test_run)
+            uploader.upload_study()
+            return
+
+        if op_type == "ser_and_analysis":
+            if not pseudonymized_ids:
+                raise CommandError(
+                    "SER upload requires at least one sample ID "
+                    "(use --samples and/or --samples-file). "
+                    "There is no default filter anymore."
+                )
+            logger.info(f"Uploading SER for {len(pseudonymized_ids)} samples (test_run={test_run}, no_analysis={no_analysis}, influenza_only={influenza_only}).")
+            uploader.upload_ser(
+                pseudonymized_ids=pseudonymized_ids,
+                no_analysis=no_analysis,
+                influenza_only=influenza_only,
+            )
+            return
+
+
+        raise CommandError(
+            "Please specify either --type (study, ser_and_analysis) or "
+            "--task (resend_analysis_jobs). See command help for examples."
+        )

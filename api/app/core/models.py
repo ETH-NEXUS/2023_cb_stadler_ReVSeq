@@ -26,6 +26,8 @@ class Sample(models.Model):
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
     job_id = models.IntegerField(null=True, blank=True)
     analysis_job_id = models.IntegerField(null=True, blank=True)
+    test_job_id = models.IntegerField(null=True, blank=True)
+    test_analysis_job_id = models.IntegerField(null=True, blank=True)
     valid = models.BooleanField(null=True, blank=True, default=True)
     control = models.BooleanField(null=True, blank=True, default=False)
     control_type = models.CharField(max_length=10, null=True, blank=True)
