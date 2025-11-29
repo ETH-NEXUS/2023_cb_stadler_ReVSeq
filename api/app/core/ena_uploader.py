@@ -224,7 +224,7 @@ class ENAUploader:
         try:
             continue_releasing = True
             while continue_releasing:
-                response = handle_http_request(list_endpoint, method='get')
+                response = handle_http_request(list_endpoint, method='get', headers=self.headers)
                 if not response or 'results' not in response:
                     logger.error(f"Failed to retrieve jobs from {list_endpoint}")
                     break
