@@ -92,7 +92,7 @@ class ENAUploader:
 
         self.release_jobs_loop(
             list_endpoint=self.jobs_endpoint,
-            release_endpoint_template=self.release_job_endpoint,
+            release_endpoint_url_template=self.release_job_endpoint,
             job_type_description="regular jobs"
         )
 
@@ -244,8 +244,8 @@ class ENAUploader:
         except Exception as e:
             logger.error(f"An error occurred while releasing {job_type_description}: {e}")
 
-    def _release_job(self, release_endpoint_template, job_id):
-        _url = release_endpoint_template.replace('<job_id>', str(job_id))
+    def _release_job(self, release_endpoint_url_template, job_id):
+        _url = release_endpoint_url_template.replace('<job_id>', str(job_id))
         handle_http_request(_url, method='get', message=f'Job {job_id} released successfully', headers=self.headers)
 
     # ---------------------------- resend analysis jobs --------------------------- #
