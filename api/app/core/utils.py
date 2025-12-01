@@ -62,7 +62,7 @@ class Defaults:
     )
 
     CONSENSUS_FILE_SUFFIX = environ.get(
-        "CONSENSUS_FILE_SUFFIX", "consensus_upload.gz"
+        "CONSENSUS_FILE_SUFFIX", "consensus_upload.fasta.gz"
     )
     CHROMOSOME_FILE_NAME = environ.get(
         "CHROMOSOME_FILE_NAME", "chr_file.txt.gz"
