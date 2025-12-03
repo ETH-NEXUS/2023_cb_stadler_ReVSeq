@@ -168,19 +168,32 @@ def select_analysis_files_for_sample(
     """
     if influenza_only:
         logger.info(f"We only upload EMBL files for influenza samples like {sample}")
-        return [
-            f
-            for f in files
+
+        embl_files = [
+            f for f in files
             if extract_basename(f.path).endswith(embl_file_suffix)
         ]
 
+        # TEMP FIX: keep only the "filtered" EMBL if duplicates exist
+        if len(embl_files) > 1:
+            filtered = [f for f in embl_files if "_filtered" in extract_basename(f.path)]
+            if filtered:
+                logger.warning(
+                    f"Multiple EMBL files found for {sample}. "
+                    f"Keeping only filtered one: {filtered[0].path}"
+                )
+                return filtered
+
+        return embl_files
+
+        # -------------------------
+        # Non-influenza: consensus + chromosome
+        # -------------------------
     logger.info(f"Uploading consensus and chromosome files for {sample}")
     return [
-        f
-        for f in files
+        f for f in files
         if extract_basename(f.path).endswith(consensus_file_suffix)
-        or extract_basename(f.path) == chromosome_file_name
+           or extract_basename(f.path) == chromosome_file_name
     ]
-
 
 
