@@ -11,87 +11,47 @@ python manage.py ena_upload --type study
 
 2) Upload SER + ANALYSIS for specific samples (live run)
 --------------------------------------------------------
-# will:
-# - create SER jobs for these samples
-# - create + enqueue analysis jobs
-python manage.py ena_upload \
-    --type ser_and_analysis \
-    --samples RyXauM 375EUk ABC123
+python manage.py ena_upload --type ser_and_analysis --samples RyXauM 375EUk ABC123
 
 3) Upload SER + ANALYSIS for samples from a text file
 -----------------------------------------------------
-# samples.txt contains one pseudonymized_id per line, e.g.:
-#   RyXauM
-#   375EUk
-#   ABC123
-python manage.py ena_upload \
-    --type ser_and_analysis \
-    --samples-file /path/to/samples.txt
+samples.txt contains:
+RyXauM
+375EUk
+ABC123
+
+python manage.py ena_upload --type ser_and_analysis --samples-file /path/to/samples.txt
 
 4) Upload SER ONLY (no analysis) for given samples
 --------------------------------------------------
-# same as #2 but with --no-analysis; you can send analysis later.
-python manage.py ena_upload \
-    --type ser_and_analysis \
-    --no-analysis \
-    --samples RyXauM 375EUk
+python manage.py ena_upload --type ser_and_analysis --no-analysis --samples XXXX XXXXX
 
 5) Upload SER + ANALYSIS for INFLUENZA samples only (EMBL files only)
 ---------------------------------------------------------------------
-# This will:
-# - create SER jobs
-# - create analysis jobs
-# - select ONLY EMBL files (no consensus/chr) for analysis input
-python manage.py ena_upload \
-    --type ser_and_analysis \
-    --influenza-only \
-    --samples RyXauM 375EUk
+python manage.py ena_upload --type ser_and_analysis --influenza-only --samples XXXX XXXX
+# example for test-run:
+# python manage.py ena_upload --type ser_and_analysis --influenza-only --test-run --samples m2-NESNdH
 
 6) Upload SER (no analysis) for INFLUENZA samples only
 ------------------------------------------------------
-python manage.py ena_upload \
-    --type ser_and_analysis \
-    --no-analysis \
-    --influenza-only \
-    --samples-file /path/to/influenza_samples.txt
+python manage.py ena_upload --type ser_and_analysis --no-analysis --influenza-only --samples-file /path/to/influenza_samples.txt
 
 7) TEST RUN - use it if you upload to the dev instance of ENA
---------------------------------------------------------
-# By default this command runs as LIVE (test_run=False).
-# Add --test-run to:
-#   - store job ids in sample.test_job_id / sample.test_analysis_job_id
-#   - not touch sample.job_id / sample.analysis_job_id
-python manage.py ena_upload \
-    --type ser_and_analysis \
-    --test-run \
-    --samples RyXauM 375EUk
+-------------------------------------------------------------
+python manage.py ena_upload --type ser_and_analysis --test-run --samples RyXauM 375EUk
 
 8) RESEND ANALYSIS JOBS for existing SER jobs
 ---------------------------------------------
-# Use when SER jobs are already created AND released,
-# but analysis jobs need to be recreated (e.g., wrong files, missing EMBL, etc.).
-#
-# This will:
-# - reuse existing job_id (or test_job_id in test_run mode)
-# - rebuild analysis payload from DB state
-# - re-select analysis files
-# - create + enqueue new analysis jobs
-python manage.py ena_upload \
-    --task resend_analysis_jobs \
-    --samples RyXauM 375EUk
+python manage.py ena_upload --task resend_analysis_jobs --samples RyXauM 375EUk
 
 # Influenza-only variant:
-python manage.py ena_upload \
-    --task resend_analysis_jobs \
-    --influenza-only \
-    --samples-file /path/to/samples.txt
+python manage.py ena_upload --task resend_analysis_jobs --influenza-only --samples-file /path/to/samples.txt
 
 NOTE:
 - You must always specify samples (via --samples and/or --samples-file)
   for SER upload and resend_analysis_jobs.
 - There is intentionally NO default "all samples with job_id is null" as it was before
 """
-
 
 from pathlib import Path
 from typing import List, Set
