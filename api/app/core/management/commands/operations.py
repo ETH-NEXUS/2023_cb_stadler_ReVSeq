@@ -15,21 +15,21 @@ class Command(BaseCommand):
     # 1) static mapping (sample_id → embl_file_path)
     # ----------------------------------------------
     FILE_MAP = [
-        ("33tHNX", "/data/revseq/results/gather_results/RVSeqPlate13-m2/sample_m2-33tHNX/m2-33tHNX_filtered.embl.gz"),
-        ("3MgVni", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-3MgVni/m2-3MgVni_filtered.embl.gz"),
-        ("3URpmc", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-3URpmc/m2-3URpmc_filtered.embl.gz"),
-        ("4Rt9sw", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-4Rt9sw/m2-4Rt9sw_filtered.embl.gz"),
-        ("BdtP8F", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-BdtP8F/m2-BdtP8F_filtered.embl.gz"),
-        ("Qb4JVo", "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-Qb4JVo/m2-Qb4JVo_filtered.embl.gz"),
-        ("xxAxC9", "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-xxAxC9/m2-xxAxC9_filtered.embl.gz"),
-        ("voFSf6", "/data/revseq/results/gather_results/RVSeqPlate6-m2/sample_m2-voFSf6/m2-voFSf6_filtered.embl.gz"),
-        ("os283P", "/data/revseq/results/gather_results/RVSeqPlate7-m2/sample_m2-os283P/m2-os283P_filtered.embl.gz"),
-        ("XMdsys", "/data/revseq/results/gather_results/RVSeqPlate7-m2/sample_m2-XMdsys/m2-XMdsys_filtered.embl.gz"),
-        ("Y4wzR3", "/data/revseq/results/gather_results/RVSeqPlate7-m2/sample_m2-Y4wzR3/m2-Y4wzR3_filtered.embl.gz"),
-        ("4Q8Stt", "/data/revseq/results/gather_results/RVSeqPlate8-m2/sample_m2-4Q8Stt/m2-4Q8Stt_filtered.embl.gz"),
-        ("BbET5x", "/data/revseq/results/gather_results/RVSeqPlate8-m2/sample_m2-BbET5x/m2-BbET5x_filtered.embl.gz"),
-        ("LYceeY", "/data/revseq/results/gather_results/RVSeqPlate8-m2/sample_m2-LYceeY/m2-LYceeY_filtered.embl.gz"),
-        ("NESNdH", "/data/revseq/results/gather_results/RVSeqPlate8-m2/sample_m2-NESNdH/m2-NESNdH_filtered.embl.gz"),
+        ("33tHNX", "/data/RVSeqPlate13-m2/sample_m2-33tHNX/m2-33tHNX_filtered.embl.gz"),
+        ("3MgVni", "/data/RVSeqPlate3-m2/sample_m2-3MgVni/m2-3MgVni_filtered.embl.gz"),
+        ("3URpmc", "/data/RVSeqPlate3-m2/sample_m2-3URpmc/m2-3URpmc_filtered.embl.gz"),
+        ("4Rt9sw", "/data/RVSeqPlate3-m2/sample_m2-4Rt9sw/m2-4Rt9sw_filtered.embl.gz"),
+        ("BdtP8F", "/data/RVSeqPlate3-m2/sample_m2-BdtP8F/m2-BdtP8F_filtered.embl.gz"),
+        ("Qb4JVo", "/data/RVSeqPlate5-m2/sample_m2-Qb4JVo/m2-Qb4JVo_filtered.embl.gz"),
+        ("xxAxC9", "/data/RVSeqPlate5-m2/sample_m2-xxAxC9/m2-xxAxC9_filtered.embl.gz"),
+        ("voFSf6", "/data/RVSeqPlate6-m2/sample_m2-voFSf6/m2-voFSf6_filtered.embl.gz"),
+        ("os283P", "/data/RVSeqPlate7-m2/sample_m2-os283P/m2-os283P_filtered.embl.gz"),
+        ("XMdsys", "/data/RVSeqPlate7-m2/sample_m2-XMdsys/m2-XMdsys_filtered.embl.gz"),
+        ("Y4wzR3", "/data/RVSeqPlate7-m2/sample_m2-Y4wzR3/m2-Y4wzR3_filtered.embl.gz"),
+        ("4Q8Stt", "/data/RVSeqPlate8-m2/sample_m2-4Q8Stt/m2-4Q8Stt_filtered.embl.gz"),
+        ("BbET5x", "/data/RVSeqPlate8-m2/sample_m2-BbET5x/m2-BbET5x_filtered.embl.gz"),
+        ("LYceeY", "/data/RVSeqPlate8-m2/sample_m2-LYceeY/m2-LYceeY_filtered.embl.gz"),
+        ("NESNdH", "/data/RVSeqPlate8-m2/sample_m2-NESNdH/m2-NESNdH_filtered.embl.gz"),
     ]
 
     # ----------------------------------------------------
