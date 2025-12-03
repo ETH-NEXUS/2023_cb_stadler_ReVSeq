@@ -39,7 +39,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         logger.info("Starting EMBL file association command")
 
-        filetype, _ = FileType.objects.get_orCreate(postfix=".embl.gz")
+        filetype, _ = FileType.objects.get_or_create(postfix=".embl.gz")
 
         created_files = 0
         missing_samples = []
