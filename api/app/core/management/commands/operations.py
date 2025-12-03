@@ -1,238 +1,106 @@
-import os
-import shutil
 import hashlib
+from pathlib import Path
 
 from django.core.management.base import BaseCommand
-from django.db import IntegrityError, transaction
+from django.db import transaction
 
-from core.models import Sample, File, FileType
-from helpers.color_log import logger  # if you prefer, you can also use self.stdout.write
-
-
-CONSENSUS_SUFFIX = "consensus_upload.gz"
-NEW_SUFFIX = "consensus_upload.fasta.gz"
-NEW_FILETYPE_POSTFIX = ".fasta.gz"
-
-
-def compute_md5(path: str, chunk_size: int = 8192) -> str:
-    """
-    Compute MD5 checksum of a file at the given path.
-    """
-    md5 = hashlib.md5()
-    with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(chunk_size), b""):
-            md5.update(chunk)
-    return md5.hexdigest()
+from core.models import Sample, File, FileType, Plate
+from helpers.color_log import logger
 
 
 class Command(BaseCommand):
-    help = (
-        "For each Sample, find File entries whose path ends with 'consensus_upload.gz', "
-        "copy the file to the same directory with suffix 'consensus_upload.fasta.gz', "
-        "and create a new File entry with the new path and checksum."
-    )
+    help = "Associate filtered EMBL files with Samples"
 
-    def add_arguments(self, parser):
-        parser.add_argument(
-            "--dry-run",
-            action="store_true",
-            dest="dry_run",
-            help="Do not modify files or database, just log what would be done.",
-        )
+    # ----------------------------------------------
+    # 1) static mapping (sample_id → embl_file_path)
+    # ----------------------------------------------
+    FILE_MAP = [
+        ("33tHNX", "/data/revseq/results/gather_results/RVSeqPlate13-m2/sample_m2-33tHNX/m2-33tHNX_filtered.embl.gz"),
+        ("3MgVni", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-3MgVni/m2-3MgVni_filtered.embl.gz"),
+        ("3URpmc", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-3URpmc/m2-3URpmc_filtered.embl.gz"),
+        ("4Rt9sw", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-4Rt9sw/m2-4Rt9sw_filtered.embl.gz"),
+        ("BdtP8F", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-BdtP8F/m2-BdtP8F_filtered.embl.gz"),
+        ("Qb4JVo", "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-Qb4JVo/m2-Qb4JVo_filtered.embl.gz"),
+        ("xxAxC9", "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-xxAxC9/m2-xxAxC9_filtered.embl.gz"),
+        ("voFSf6", "/data/revseq/results/gather_results/RVSeqPlate6-m2/sample_m2-voFSf6/m2-voFSf6_filtered.embl.gz"),
+        ("os283P", "/data/revseq/results/gather_results/RVSeqPlate7-m2/sample_m2-os283P/m2-os283P_filtered.embl.gz"),
+        ("XMdsys", "/data/revseq/results/gather_results/RVSeqPlate7-m2/sample_m2-XMdsys/m2-XMdsys_filtered.embl.gz"),
+        ("Y4wzR3", "/data/revseq/results/gather_results/RVSeqPlate7-m2/sample_m2-Y4wzR3/m2-Y4wzR3_filtered.embl.gz"),
+        ("4Q8Stt", "/data/revseq/results/gather_results/RVSeqPlate8-m2/sample_m2-4Q8Stt/m2-4Q8Stt_filtered.embl.gz"),
+        ("BbET5x", "/data/revseq/results/gather_results/RVSeqPlate8-m2/sample_m2-BbET5x/m2-BbET5x_filtered.embl.gz"),
+        ("LYceeY", "/data/revseq/results/gather_results/RVSeqPlate8-m2/sample_m2-LYceeY/m2-LYceeY_filtered.embl.gz"),
+        ("NESNdH", "/data/revseq/results/gather_results/RVSeqPlate8-m2/sample_m2-NESNdH/m2-NESNdH_filtered.embl.gz"),
+    ]
 
+    # ----------------------------------------------------
+    # MD5 checksum helper
+    # ----------------------------------------------------
+    def compute_md5(self, file_path: str) -> str:
+        hash_md5 = hashlib.md5()
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
+
+    # ----------------------------------------------------
+    # Main execution
+    # ----------------------------------------------------
+    @transaction.atomic
     def handle(self, *args, **options):
-        dry_run = options.get("dry_run", False)
+        logger.info("Starting EMBL file → Sample association operation")
 
-        # Ensure we have a FileType for the new suffix
-        if dry_run:
-            logger.info(
-                "DRY RUN: would ensure FileType with postfix '%s' exists.",
-                NEW_FILETYPE_POSTFIX,
-            )
-            filetype = None
-        else:
-            filetype, _ = FileType.objects.get_or_create(postfix=NEW_FILETYPE_POSTFIX)
-            logger.info("Using FileType with postfix '%s' (id=%s).", filetype.postfix, filetype.id)
+        # ensure FileType exists
+        postfix = ".embl.gz"
+        filetype, _ = FileType.objects.get_or_create(postfix=postfix)
 
-        samples = Sample.objects.all()
-        logger.info("Processing %d samples.", samples.count())
+        processed = 0
+        missing_samples = []
+        missing_files = []
+        created_files = []
 
-        total_original_files = 0
-        total_new_files_created = 0
-
-        for sample in samples:
-            # Find all File entries for this sample with the old consensus suffix
-            files = File.objects.filter(sample=sample, path__endswith=CONSENSUS_SUFFIX)
-            if not files.exists():
+        for sample_id, file_path in self.FILE_MAP:
+            # check sample exists
+            sample = Sample.objects.filter(pseudonymized_id=sample_id).first()
+            if not sample:
+                missing_samples.append(sample_id)
+                logger.error(f"Sample {sample_id} NOT FOUND")
                 continue
 
-            logger.info(
-                "Sample %s: found %d consensus files to process.",
-                sample.pseudonymized_id,
-                files.count(),
+            # check file exists
+            if not Path(file_path).exists():
+                missing_files.append(file_path)
+                logger.error(f"File does not exist: {file_path}")
+                continue
+
+            # compute checksum
+            checksum = self.compute_md5(file_path)
+
+            # create File object
+            file_obj, created = File.objects.get_or_create(
+                path=file_path,
+                defaults={
+                    "checksum": checksum,
+                    "type": filetype,
+                    "sample": sample,
+                    "plate": sample.plate,
+                },
             )
-            total_original_files += files.count()
 
-            for original_file in files:
-                old_path = original_file.path
-                dir_name, base_name = os.path.split(old_path)
+            if created:
+                logger.info(f"Created new File for sample {sample_id}: {file_path}")
+                created_files.append(file_path)
+            else:
+                logger.warning(f"File entry already existed: {file_path}")
 
-                if not base_name.endswith(CONSENSUS_SUFFIX):
-                    # Defensive: should not happen due to the filter, but we check anyway.
-                    logger.warning(
-                        "File path %s does not actually end with %s; skipping.",
-                        old_path,
-                        CONSENSUS_SUFFIX,
-                    )
-                    continue
+            processed += 1
 
-                new_base_name = base_name[: -len(CONSENSUS_SUFFIX)] + NEW_SUFFIX
-                new_path = os.path.join(dir_name, new_base_name)
+        logger.info("\n---- SUMMARY ----")
+        logger.info(f"Processed entries: {processed}")
+        logger.info(f"New File objects created: {len(created_files)}")
 
-                logger.info(
-                    "Sample %s: copying %s -> %s",
-                    sample.pseudonymized_id,
-                    old_path,
-                    new_path,
-                )
+        if missing_samples:
+            logger.warning(f"Missing samples: {missing_samples}")
+        if missing_files:
+            logger.warning(f"Missing files: {missing_files}")
 
-                # Check that the source exists
-                if not os.path.exists(old_path):
-                    logger.error("Source file does not exist on disk: %s", old_path)
-                    continue
-
-                # If the target already exists, we can either skip or just reuse it.
-                if os.path.exists(new_path):
-                    logger.warning("Target file already exists: %s", new_path)
-                else:
-                    if dry_run:
-                        logger.info("DRY RUN: would copy file on disk.")
-                    else:
-                        try:
-                            os.makedirs(dir_name, exist_ok=True)
-                            shutil.copy2(old_path, new_path)
-                        except Exception as e:
-                            logger.error(
-                                "Failed to copy '%s' to '%s': %s",
-                                old_path,
-                                new_path,
-                                e,
-                            )
-                            continue
-
-                if dry_run:
-                    logger.info(
-                        "DRY RUN: would compute checksum and create File entry for %s",
-                        new_path,
-                    )
-                    continue
-
-                # Compute checksum for the new file
-                try:
-                    checksum = compute_md5(new_path)
-                except Exception as e:
-                    logger.error("Failed to compute MD5 for %s: %s", new_path, e)
-                    continue
-
-                # Create the new File row
-                try:
-                    with transaction.atomic():
-                        new_file = File.objects.create(
-                            path=new_path,
-                            checksum=checksum,
-                            type=filetype,
-                            sample=sample,
-                            plate=sample.plate,
-                        )
-                    total_new_files_created += 1
-                    logger.info(
-                        "Created new File entry id=%s for path %s",
-                        new_file.id,
-                        new_path,
-                    )
-                except IntegrityError:
-                    # path is unique, so this can happen if the DB already has this File
-                    logger.warning(
-                        "File entry with path %s already exists in DB; skipping create.",
-                        new_path,
-                    )
-                except Exception as e:
-                    logger.error(
-                        "Unexpected error while creating File entry for %s: %s",
-                        new_path,
-                        e,
-                    )
-
-        logger.info(
-            "Done. Processed %d original consensus files; created %d new .fasta.gz File entries%s.",
-            total_original_files,
-            total_new_files_created,
-            " (dry run)" if dry_run else "",
-        )
-
-
-
-# from pathlib import Path
-#
-# from django.core.management.base import BaseCommand, CommandError
-#
-# from core.models import Sample
-# from helpers.color_log import logger
-#
-#
-# class Command(BaseCommand):
-#     help = (
-#         "Reset job_id and analysis_job_id to None for samples listed in a text file.\n"
-#         "The file should contain one pseudonymized_id per line."
-#     )
-#
-#     def add_arguments(self, parser):
-#         parser.add_argument(
-#             "file_path",
-#             type=str,
-#             help="Path to the text file with pseudonymized_ids (one per line).",
-#         )
-#
-#     def handle(self, *args, **options):
-#         file_path = options["file_path"]
-#         path = Path(file_path)
-#
-#         if not path.exists():
-#             raise CommandError(f"File not found: {path}")
-#
-#         # Read IDs, strip whitespace, ignore empty lines
-#         ids = [
-#             line.strip()
-#             for line in path.read_text().splitlines()
-#             if line.strip()
-#         ]
-#
-#         if not ids:
-#             self.stdout.write(self.style.WARNING("No IDs found in file. Nothing to do."))
-#             return
-#
-#         self.stdout.write(f"Read {len(ids)} pseudonymized IDs from {path}.")
-#
-#         updated = 0
-#         not_found = []
-#
-#         for pid in ids:
-#             qs = Sample.objects.filter(pseudonymized_id=pid)
-#             if not qs.exists():
-#                 not_found.append(pid)
-#                 logger.warning(f"No Sample found for pseudonymized_id={pid}")
-#                 continue
-#
-#             count = qs.update(job_id=None, analysis_job_id=None)
-#             updated += count
-#             logger.info(f"Reset job_id and analysis_job_id for {count} sample(s) with pseudonymized_id={pid}")
-#
-#         self.stdout.write(self.style.SUCCESS(f"Updated {updated} Sample objects."))
-#
-#         if not_found:
-#             self.stdout.write(
-#                 self.style.WARNING(
-#                     f"{len(not_found)} IDs had no matching Sample:\n" +
-#                     "\n".join(not_found)
-#                 )
-#             )
+        logger.info("Done.")
