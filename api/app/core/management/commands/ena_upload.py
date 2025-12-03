@@ -31,6 +31,7 @@ python manage.py ena_upload --type ser_and_analysis --no-analysis --samples XXXX
 python manage.py ena_upload --type ser_and_analysis --influenza-only --samples XXXX XXXX
 # example for test-run:
 # python manage.py ena_upload --type ser_and_analysis --influenza-only --test-run --samples m2-NESNdH
+python manage.py ena_upload --type ser_and_analysis --influenza-only --samples-file
 
 6) Upload SER (no analysis) for INFLUENZA samples only
 ------------------------------------------------------
