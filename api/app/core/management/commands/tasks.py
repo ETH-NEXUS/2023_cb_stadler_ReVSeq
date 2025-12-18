@@ -1,108 +1,183 @@
+from __future__ import annotations
+
 import hashlib
 from pathlib import Path
+from typing import Optional, Tuple, List
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from core.models import Sample, File, FileType
 from helpers.color_log import logger
+from core.models import Sample, File, FileType
 
 
-SAMPLE_IDS = [
-    "m2-CLwScw", "m2-4UF9K6", "m2-jtjCjd", "m2-32WNFL", "m2-375EUk",
-    "m2-xwkVbK", "m2-itJLqU", "m2-g33df2", "m2-opfXjQ", "m2-Sm9GYA",
-    "m2-eAr6Lo", "m2-xHGR9u", "m2-4rvG7f", "m2-SQZYHn", "m2-oLXZ9a",
-    "m2-9HhvMh", "m2-ss4Fh8", "m2-VA9Yi5", "m2-qtZxkz", "m2-39kc9U",
-    "m2-q2oXnd", "m2-x6NRYc", "m2-kBgpZ4", "m2-V5iihT", "m2-m6243p",
-    "m2-gkcF5C", "m2-3H4uLZ", "m2-juVwzj", "m2-h2ZJd5", "m2-SpXNmN",
-    "m2-K2udH5", "m2-4t7Ncr", "m2-hzNQRG", "m2-uTpHe5", "m2-BnbHLr",
-    "m2-LosGHn", "m2-LCBdav", "m2-sr4bvM", "m2-iDqyV9", "m2-mmYEfJ",
-    "m2-VT3bcF", "m2-sAyJww", "m2-b99ooj", "m2-2hKeW2", "m2-j3ZXpL",
-    "m2-uSTYZ2", "m2-f8rfBe", "m2-FXFt6J", "m2-6z2wf2", "m2-5cJWyf",
-    "m2-sFFUfJ", "m2-wVBQbT", "m2-kwbwf8", "m2-RyXauM", "m2-ydSpNQ",
-    "m2-SKJgwA", "m2-DwiwwU", "m2-xYnaUy", "m2-xrRPFj", "m2-yhE88h",
-    "m2-gaQkyT", "m2-TPgies"
+# ---------------------------------------------------------------------
+# Hardcoded input data (pseudonymized_id, folder_path)
+# ---------------------------------------------------------------------
+SAMPLES_AND_FOLDERS: list[tuple[str, str]] = [
+    ("m2-Dq37e8", "/data/revseq/results/gather_results/RVSeqPlate10-m2/sample_m2-Dq37e8/"),
+    ("m2-wfEdma", "/data/revseq/results/gather_results/RVSeqPlate10-m2/sample_m2-wfEdma/"),
+    ("m2-9eyPAv", "/data/revseq/results/gather_results/RVSeqPlate10-m2/sample_m2-9eyPAv/"),
+    ("m2-GRjNzo", "/data/revseq/results/gather_results/RVSeqPlate11-m2/sample_m2-GRjNzo/"),
+    ("m2-Kg3Fdm", "/data/revseq/results/gather_results/RVSeqPlate11-m2/sample_m2-Kg3Fdm/"),
+    ("m2-SrqwxQ", "/data/revseq/results/gather_results/RVSeqPlate11-m2/sample_m2-SrqwxQ/"),
+    ("m2-mzMRtV", "/data/revseq/results/gather_results/RVSeqPlate13-m2/sample_m2-mzMRtV/"),
+    ("m2-zwqknf", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-zwqknf/"),
+    ("m2-3oZJ5x", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-3oZJ5x/"),
+    ("m2-43Vmvj", "/data/revseq/results/gather_results/RVSeqPlate3-m2/sample_m2-43Vmvj/"),
+    ("m2-NmHGDa", "/data/revseq/results/gather_results/RVSeqPlate4-m2/sample_m2-NmHGDa/"),
+    ("m2-u89dBs", "/data/revseq/results/gather_results/RVSeqPlate4-m2/sample_m2-u89dBs/"),
+    ("m2-gnDemF", "/data/revseq/results/gather_results/RVSeqPlate4-m2/sample_m2-gnDemF/"),
+    ("m2-HXHQAT", "/data/revseq/results/gather_results/RVSeqPlate4-m2/sample_m2-HXHQAT/"),
+    ("m2-RVSeqPlate5-KOpos", "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-RVSeqPlate5-KOpos/"),
+    ("m2-w9v3Qv", "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-w9v3Qv/"),
+    ("m2-F2HifQ", "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-F2HifQ/"),
+    ("m2-EJ7fEz", "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-EJ7fEz/"),
+    ("m2-RVSeqPlate6-KOpos", "/data/revseq/results/gather_results/RVSeqPlate6-m2/sample_m2-RVSeqPlate6-KOpos/"),
+    ("m2-4L3pXZ", "/data/revseq/results/gather_results/RVSeqPlate6-m2/sample_m2-4L3pXZ/"),
+    ("m2-NDEjHn", "/data/revseq/results/gather_results/RVSeqPlate7-m2/sample_m2-NDEjHn/"),
+    ("m2-Y4rZ7q", "/data/revseq/results/gather_results/RVSeqPlate8-m2/sample_m2-Y4rZ7q/"),
+    ("m2-XHdiUs", "/data/revseq/results/gather_results/RVSeqPlate8-m2/sample_m2-XHdiUs/"),
+    # note: zwqknf appears twice in your list; we keep first and silently dedupe by File.path uniqueness
 ]
 
 
+# ---------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------
+def md5sum(path: Path, chunk_size: int = 1024 * 1024) -> str:
+    h = hashlib.md5()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(chunk_size), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def detect_postfix(filename: str) -> str:
+    """
+    FileType.postfix should match your pipeline expectations.
+    Path.suffix would only yield ".gz", so we detect multi-suffix endings.
+    """
+    lowered = filename.lower()
+    for ending in (".embl.gz", ".fa.gz", ".fasta.gz"):
+        if lowered.endswith(ending):
+            return ending
+    # fallback (keeps DB consistent even for unexpected names)
+    return Path(filename).suffix or lowered
+
+
+def pick_major_minor_files(folder: Path) -> tuple[Optional[Path], Optional[Path]]:
+    """
+    New rule: major/minor are independent:
+      - prefer EMBL if present, else FASTA
+    """
+    # Major candidates
+    major_embl = next(folder.glob("*_consensus_major.embl.gz"), None)
+    major_fa = next(folder.glob("*_consensus_major.fa.gz"), None)
+
+    # Minor candidates
+    minor_embl = next(folder.glob("*_consensus_minor.embl.gz"), None)
+    minor_fa = next(folder.glob("*_consensus_minor.fa.gz"), None)
+
+    major = major_embl or major_fa
+    minor = minor_embl or minor_fa
+    return major, minor
+
+
+def upsert_file(*, sample: Sample, file_path: Path, dry_run: bool) -> None:
+    postfix = detect_postfix(file_path.name)
+
+    if dry_run:
+        logger.info(f"[DRY RUN] Would attach file {file_path} to sample {sample} (postfix={postfix})")
+        return
+
+    checksum = md5sum(file_path)
+    ft, _ = FileType.objects.get_or_create(postfix=postfix)
+
+    # File.path is unique -> upsert by path
+    obj, created = File.objects.get_or_create(
+        path=str(file_path),
+        defaults={
+            "checksum": checksum,
+            "type": ft,
+            "sample": sample,
+            "plate": sample.plate,
+        },
+    )
+
+    if created:
+        logger.info(f"Attached NEW File {file_path} to sample {sample} (checksum={checksum}, postfix={postfix})")
+        return
+
+    # Existing file row: update if needed (checksum may change if file regenerated)
+    changed = False
+    if obj.checksum != checksum:
+        obj.checksum = checksum
+        changed = True
+    if obj.type_id != ft.id:
+        obj.type = ft
+        changed = True
+    if obj.sample_id != sample.id:
+        obj.sample = sample
+        changed = True
+    if obj.plate_id != sample.plate_id:
+        obj.plate = sample.plate
+        changed = True
+
+    if changed:
+        obj.save()
+        logger.info(f"Updated existing File {file_path} for sample {sample} (checksum={checksum}, postfix={postfix})")
+    else:
+        logger.debug(f"No changes for existing File {file_path} (already attached to sample {sample})")
+
+
+# ---------------------------------------------------------------------
+# Command
+# ---------------------------------------------------------------------
 class Command(BaseCommand):
-    help = "Scan sample directories for *.embl.gz files and attach them as File objects."
+    help = "Attach coinfection major/minor consensus files (FASTA/EMBL) to Sample via File model."
 
-    def compute_md5(self, file_path: Path) -> str:
-        hash_md5 = hashlib.md5()
-        with open(file_path, "rb") as f:
-            for chunk in iter(lambda: f.read(8192), b""):
-                hash_md5.update(chunk)
-        return hash_md5.hexdigest()
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--dry-run",
+            action="store_true",
+            default=False,
+            help="Do not write to DB, only log what would be attached.",
+        )
 
-    @transaction.atomic
     def handle(self, *args, **options):
-        logger.info("Starting EMBL file association command")
+        dry_run: bool = options["dry_run"]
 
-        filetype, _ = FileType.objects.get_or_create(postfix=".embl.gz")
+        logger.info(f"Starting attach_coinfection_consensus_files (dry_run={dry_run})")
+        logger.info(f"Processing {len(SAMPLES_AND_FOLDERS)} sample folder entries")
 
-        created_files = 0
-        missing_samples = []
-        no_directory_found = []
-        no_embl_found = []
+        for pseudonymized_id, folder_str in SAMPLES_AND_FOLDERS:
+            folder = Path(folder_str)
 
-        for sample_id in SAMPLE_IDS:
-            sample = Sample.objects.filter(pseudonymized_id=sample_id).first()
-            if not sample:
-                logger.error(f"❌ Sample not found: {sample_id}")
-                missing_samples.append(sample_id)
+            sample = Sample.objects.filter(pseudonymized_id=pseudonymized_id).select_related("plate").first()
+            if sample is None:
+                logger.warning(f"Sample not found in DB: {pseudonymized_id} (folder={folder})")
                 continue
 
-            # find an existing file to derive the directory
-            existing_file = File.objects.filter(sample=sample).first()
-            if not existing_file:
-                logger.error(f"❌ No File objects exist yet for sample {sample_id}")
-                no_directory_found.append(sample_id)
+            if not folder.exists() or not folder.is_dir():
+                logger.warning(f"Folder missing or not a directory for sample {sample}: {folder}")
                 continue
 
-            directory = Path(existing_file.path).parent
+            major_path, minor_path = pick_major_minor_files(folder)
 
-            if not directory.exists():
-                logger.error(f"❌ Directory does not exist: {directory}")
-                no_directory_found.append(sample_id)
+            if major_path is None and minor_path is None:
+                logger.warning(f"Sample {sample}: no *_consensus_major.* or *_consensus_minor.* found in {folder}")
                 continue
 
-            # find *.embl.gz files
-            embl_files = list(directory.glob("*.embl.gz"))
-            if not embl_files:
-                logger.warning(f"⚠️ No .embl.gz files found for sample {sample_id} in {directory}")
-                no_embl_found.append(sample_id)
-                continue
+            if major_path is None:
+                logger.warning(f"Sample {sample}: MAJOR consensus missing in {folder}; will attach only MINOR if present")
+            if minor_path is None:
+                logger.warning(f"Sample {sample}: MINOR consensus missing in {folder}; will attach only MAJOR if present")
 
-            for embl_path in embl_files:
-                checksum = self.compute_md5(embl_path)
-
-                file_obj, created = File.objects.get_or_create(
-                    path=str(embl_path),
-                    defaults={
-                        "checksum": checksum,
-                        "type": filetype,
-                        "sample": sample,
-                        "plate": sample.plate,
-                    },
-                )
-
-                if created:
-                    created_files += 1
-                    logger.info(f"🆕 Added EMBL file for {sample_id}: {embl_path}")
-                else:
-                    # ensure correct sample association
-                    if file_obj.sample != sample:
-                        logger.warning(f"🔄 Re-attaching file {embl_path} to sample {sample_id}")
-                        file_obj.sample = sample
-                        file_obj.plate = sample.plate
-                        file_obj.save()
-
-        # --- SUMMARY ---
-        logger.info("\n=== SUMMARY ===")
-        logger.info(f"Created new EMBL File objects: {created_files}")
-        logger.info(f"Missing samples: {missing_samples}")
-        logger.info(f"No directory found: {no_directory_found}")
-        logger.info(f"No EMBL files found: {no_embl_found}")
+            with transaction.atomic():
+                if major_path is not None:
+                    upsert_file(sample=sample, file_path=major_path, dry_run=dry_run)
+                if minor_path is not None:
+                    upsert_file(sample=sample, file_path=minor_path, dry_run=dry_run)
 
         logger.info("Done.")

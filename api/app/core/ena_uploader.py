@@ -2,7 +2,12 @@ from typing import List
 from helpers.color_log import logger
 from .utils import handle_http_request, Defaults, build_ser_payload, select_analysis_files_for_sample, extract_basename
 from core.models import Sample, SampleCount, File, Metadata
+from copy import deepcopy
 import time
+
+ANALYSIS_KIND_STANDARD = "standard"
+ANALYSIS_KIND_COINF_MAJOR = "coinf_major"
+ANALYSIS_KIND_COINF_MINOR = "coinf_minor"
 
 class ENAUploader:
     def __init__(
@@ -22,7 +27,11 @@ class ENAUploader:
             chromosome_file_name: str = Defaults.CHROMOSOME_FILE_NAME,
             embl_file_suffix: str = Defaults.EMBL_FILE_SUFFIX,
             embl_file_type: str = Defaults.EMBL_FILE_TYPE,
-            test_run: bool = True,
+            consensus_major_fasta_suffix: str = Defaults.CONSENSUS_MAJOR_FASTA_SUFFIX,
+            consensus_minor_fasta_suffix: str = Defaults.CONSENSUS_MINOR_FASTA_SUFFIX,
+            consensus_major_embl_suffix: str = Defaults.CONSENSUS_MAJOR_EMBL_SUFFIX,
+            consensus_minor_embl_suffix: str = Defaults.CONSENSUS_MINOR_EMBL_SUFFIX,
+            test_run: bool = True
 
     ):
         if ena_token is None:
@@ -50,12 +59,17 @@ class ENAUploader:
         self.embl_file_type = embl_file_type
         self.chromosome_file_type = 'CHROMOSOME_LIST'
         self.fasta_file_type = 'FASTA'
+        self.consensus_major_fasta_suffix = consensus_major_fasta_suffix
+        self.consensus_minor_fasta_suffix = consensus_minor_fasta_suffix
+        self.consensus_major_embl_suffix = consensus_major_embl_suffix
+        self.consensus_minor_embl_suffix = consensus_minor_embl_suffix
         # behaviour flags
         self.test_run = test_run
         # internal state
         self.job_ids: list[int] = []
         self.job_analysis_ids: list[int] = []
         self.data_for_analysis_upload: list[tuple] = []
+
 
     def upload_study(self):
         payload = {'template': 'default', 'data': {}}
@@ -67,6 +81,7 @@ class ENAUploader:
         pseudonymized_ids: List[str],
         no_analysis: bool = False,
         influenza_only: bool = False,
+        coinfections: bool = False,
     ) -> None:
         """
         Upload SER (and optionally analysis) for the given samples.
@@ -84,6 +99,7 @@ class ENAUploader:
             self.upload_single_sample(
                 sample,
                 influenza_only=influenza_only,
+                coinfections=coinfections,
             )
 
         if not no_analysis:
@@ -103,6 +119,7 @@ class ENAUploader:
             sample: Sample,
             *,
             influenza_only: bool,
+            coinfections: bool = False,
     ) -> None:
         logger.info(
             f"--------------------------- Uploading {sample} to ENA -----------------------------"
@@ -125,17 +142,6 @@ class ENAUploader:
         if not response:
             logger.error("Failed to upload SER for %s", sample)
             return
-
-        files = File.objects.filter(sample=sample)
-        analysis_files = select_analysis_files_for_sample(
-            sample,
-            files,
-            consensus_file_suffix=self.consensus_file_suffix,
-            chromosome_file_name=self.chromosome_file_name,
-            embl_file_suffix=self.embl_file_suffix,
-            influenza_only=influenza_only,
-        )
-
         job_id = response["id"]
         if self.test_run:
             logger.info(
@@ -148,25 +154,153 @@ class ENAUploader:
             sample.job_id = job_id
         sample.save()
 
-        # if no analysis files - warning and return
-        if not analysis_files:
-            logger.warning(f'!!!!!!!!!!!!!!!! No analysis files selected for sample {sample}; skipping analysis upload. !!!!!!!!!!!!!!!')
-        else:
-            self.data_for_analysis_upload.append(
-                (job_id, sample, analysis_files, analysis_payload)
-            )
+        files = File.objects.filter(sample=sample)
 
+        if coinfections:
+            logger.info(f'Preparing co-infection analysis upload for sample {sample} (job_id={job_id})')
+            self._prepare_coinfection_analysis_upload(
+                job_id=job_id,
+                sample=sample,
+                files=files,
+                analysis_payload=analysis_payload,
+            )
+        else:
+            self._prepare_standard_analysis_upload(
+                job_id=job_id,
+                sample=sample,
+                files=files,
+                analysis_payload=analysis_payload,
+                influenza_only=influenza_only,
+            )
         self.job_ids.append(job_id)
 
         # ------------------------- Analysis upload loop and related methods ------------------------- #
+    def _prepare_standard_analysis_upload(
+            self,
+            *,
+            job_id,
+            sample,
+            files,
+            analysis_payload,
+            influenza_only: bool,
+    ) -> None:
+        analysis_files = select_analysis_files_for_sample(
+            sample,
+            files,
+            consensus_file_suffix=self.consensus_file_suffix,
+            chromosome_file_name=self.chromosome_file_name,
+            embl_file_suffix=self.embl_file_suffix,
+            influenza_only=influenza_only,
+        )
+        if not analysis_files:
+            logger.warning(
+                f'!!!!!!!!!!!!!!!! No analysis files selected for sample {sample}; skipping analysis upload. !!!!!!!!!!!!!!!'
+            )
+            return
+
+        self.data_for_analysis_upload.append(
+            (job_id, sample, analysis_files, analysis_payload, ANALYSIS_KIND_STANDARD)
+        )
+
+    def _prepare_coinfection_analysis_upload(
+            self,
+            *,
+            job_id: int,
+            sample: Sample,
+            files,
+            analysis_payload: dict,
+    ) -> None:
+        """
+        Co-infections:
+          - one SER job_id
+          - up to two analysis jobs:
+              * major consensus
+              * minor consensus
+
+        Major and minor are independent:
+          - prefer EMBL if present
+          - otherwise fall back to FASTA
+          - if one side is missing, upload the other and log it
+        """
+
+        def bn(f: File) -> str:
+            return extract_basename(f.path)
+
+        # Collect candidates independently
+        major_embl = major_fa = None
+        minor_embl = minor_fa = None
+
+        for f in files:
+            name = bn(f)
+            # Major
+            if name.endswith(self.consensus_major_embl_suffix):
+                major_embl = f
+            elif name.endswith(self.consensus_major_fasta_suffix):
+                major_fa = f
+            # Minor
+            elif name.endswith(self.consensus_minor_embl_suffix):
+                minor_embl = f
+            elif name.endswith(self.consensus_minor_fasta_suffix):
+                minor_fa = f
+
+        # Choose best available per side
+        major_file = major_embl or major_fa
+        minor_file = minor_embl or minor_fa
+
+        if major_file is None and minor_file is None:
+            logger.warning(
+                f"Co-infection {sample} (job_id={job_id}): "
+                f"no major or minor consensus files found; skipping analysis upload."
+            )
+            return
+
+        base_name = analysis_payload.get("name", f"analysis_{sample.pseudonymized_id}")
+
+        # ---- MAJOR ----
+        if major_file is not None:
+            major_payload = deepcopy(analysis_payload)
+            major_payload["name"] = f"{base_name}_major"
+
+            self.data_for_analysis_upload.append(
+                (job_id, sample, [major_file], major_payload, ANALYSIS_KIND_COINF_MAJOR)
+            )
+
+            logger.info(
+                f"Co-infection {sample} (job_id={job_id}): "
+                f"queued MAJOR analysis using file {major_file.path}"
+            )
+        else:
+            logger.warning(
+                f"Co-infection {sample} (job_id={job_id}): "
+                f"MAJOR consensus file missing; minor analysis will still be uploaded"
+            )
+
+        # ---- MINOR ----
+        if minor_file is not None:
+            minor_payload = deepcopy(analysis_payload)
+            minor_payload["name"] = f"{base_name}_minor"
+
+            self.data_for_analysis_upload.append(
+                (job_id, sample, [minor_file], minor_payload, ANALYSIS_KIND_COINF_MINOR)
+            )
+
+            logger.info(
+                f"Co-infection {sample} (job_id={job_id}): "
+                f"queued MINOR analysis using file {minor_file.path}"
+            )
+        else:
+            logger.warning(
+                f"Co-infection {sample} (job_id={job_id}): "
+                f"MINOR consensus file missing; major analysis will still be uploaded"
+            )
 
     def upload_analysis_loop(self) -> None:
         logger.debug(f'Uploading analysis jobs for {len(self.data_for_analysis_upload)} samples')
-        for job_id, sample, analysis_files, analysis_payload in self.data_for_analysis_upload:
-            self._upload_analysis_job_and_files(job_id, sample, analysis_files, analysis_payload)
+        for job_id, sample, analysis_files, analysis_payload, kind in self.data_for_analysis_upload:
+            self._upload_analysis_job_and_files(job_id, sample, analysis_files, analysis_payload, kind)
             time.sleep(20)
 
-    def _upload_analysis_job_and_files(self, job_id, sample, analysis_files, analysis_payload) -> None:
+    def _upload_analysis_job_and_files(self, job_id, sample, analysis_files, analysis_payload, kind: str) -> None:
         payload = {'template': 'default', 'data': analysis_payload, 'job': job_id}
         logger.info(f'Uploading analysis payload job for {sample}')
         logger.debug(f'Analysis payload: {payload}')
@@ -178,14 +312,40 @@ class ENAUploader:
         if not response:
             logger.error(f'Failed to upload analysis job for {sample}')
             return
+
         analysis_job_id = response['id']
+
         if self.test_run:
-            logger.info(f'Test run enabled - not saving analysis_job_id {analysis_job_id} to sample {sample}')
-            sample.test_analysis_job_id = analysis_job_id
-            sample.save()
+            # --- TEST RUN FIELDS ---
+            if kind == ANALYSIS_KIND_STANDARD:
+                sample.test_analysis_job_id = analysis_job_id
+            elif kind == ANALYSIS_KIND_COINF_MAJOR:
+                sample.test_coinfections_major_analysis_job_id = analysis_job_id
+            elif kind == ANALYSIS_KIND_COINF_MINOR:
+                sample.test_coinfections_minor_analysis_job_id = analysis_job_id
+            else:
+                logger.warning(
+                    "Unknown analysis kind=%s for sample %s; not saving TEST analysis job id.",
+                    kind,
+                    sample,
+                )
         else:
-            sample.analysis_job_id = analysis_job_id
-            sample.save()
+            # --- PRODUCTION FIELDS ---
+            if kind == ANALYSIS_KIND_STANDARD:
+                sample.analysis_job_id = analysis_job_id
+            elif kind == ANALYSIS_KIND_COINF_MAJOR:
+                sample.coinfections_major_analysis_job_id = analysis_job_id
+            elif kind == ANALYSIS_KIND_COINF_MINOR:
+                sample.coinfections_minor_analysis_job_id = analysis_job_id
+            else:
+                logger.warning(
+                    "Unknown analysis kind=%s for sample %s; not saving analysis job id.",
+                    kind,
+                    sample,
+                )
+
+        sample.save()
+
         self._upload_analysis_files(analysis_job_id, analysis_files)
         time.sleep(30) # we have to wait a bit before enqueuing
         self._enqueue_analysis_job(analysis_job_id)
@@ -323,7 +483,7 @@ class ENAUploader:
                 continue
             # add to the same queue structure used by upload_ser
             self.data_for_analysis_upload.append(
-                (job_id, sample, analysis_files, analysis_payload)
+                (job_id, sample, analysis_files, analysis_payload, ANALYSIS_KIND_STANDARD)
             )
         if not self.data_for_analysis_upload:
             logger.warning("No analysis jobs prepared for resend; nothing to do.")
@@ -333,6 +493,8 @@ class ENAUploader:
 
         )
         self.upload_analysis_loop()
+
+        # ----------------------- co-ninfections ---------------------------- #
 
 
 

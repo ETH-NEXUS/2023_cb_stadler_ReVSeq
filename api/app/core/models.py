@@ -24,10 +24,15 @@ class Sample(models.Model):
     well = models.ForeignKey(Well, on_delete=models.CASCADE, null=True, blank=True)
     pseudonymized_id = models.TextField(unique=True, null=True)
     plate = models.ForeignKey(Plate, on_delete=models.CASCADE, null=True)
+
     job_id = models.IntegerField(null=True, blank=True)
     analysis_job_id = models.IntegerField(null=True, blank=True)
     test_job_id = models.IntegerField(null=True, blank=True)
-    test_analysis_job_id = models.IntegerField(null=True, blank=True)
+    coinfections_major_analysis_job_id = models.IntegerField(null=True, blank=True)
+    coinfections_minor_analysis_job_id = models.IntegerField(null=True, blank=True)
+    test_coinfections_major_analysis_job_id = models.IntegerField(null=True, blank=True)
+    test_coinfections_minor_analysis_job_id = models.IntegerField(null=True, blank=True)
+
     valid = models.BooleanField(null=True, blank=True, default=True)
     control = models.BooleanField(null=True, blank=True, default=False)
     control_type = models.CharField(max_length=10, null=True, blank=True)

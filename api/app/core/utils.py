@@ -72,6 +72,19 @@ class Defaults:
 
     ENA_TOKEN = environ.get("ENA_TOKEN")
 
+    CONSENSUS_MAJOR_FASTA_SUFFIX = environ.get(
+        "CONSENSUS_MAJOR_FASTA_SUFFIX", "_consensus_major.fa.gz"
+    )
+    CONSENSUS_MINOR_FASTA_SUFFIX = environ.get(
+        "CONSENSUS_MINOR_FASTA_SUFFIX", "_consensus_minor.fa.gz"
+    )
+    CONSENSUS_MAJOR_EMBL_SUFFIX = environ.get(
+        "CONSENSUS_MAJOR_EMBL_SUFFIX", "_consensus_major.embl.gz"
+    )
+    CONSENSUS_MINOR_EMBL_SUFFIX = environ.get(
+        "CONSENSUS_MINOR_EMBL_SUFFIX", "_consensus_minor.embl.gz"
+    )
+
 #---------------------------------
 # Utils
 # ---------------------------------

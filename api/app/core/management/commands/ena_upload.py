@@ -48,6 +48,10 @@ python manage.py ena_upload --task resend_analysis_jobs --samples RyXauM 375EUk
 # Influenza-only variant:
 python manage.py ena_upload --task resend_analysis_jobs --influenza-only --samples-file /path/to/samples.txt
 
+9) CO-INFECTIONS - upload SER + create TWO analysis jobs per sample
+-----------------------------------------------------------------
+python manage.py ena_upload --type coninfections --samples RyXauM 375EUk
+
 NOTE:
 - You must always specify samples (via --samples and/or --samples-file)
   for SER upload and resend_analysis_jobs.
@@ -72,11 +76,12 @@ class Command(BaseCommand):
             "-t",
             "--type",
             type=str,
-            choices=["study", "ser_and_analysis"],
+            choices=["study", "ser_and_analysis", "coninfections"],
             help=(
                 "Type of operation: "
                 "'study' to upload only the study, "
                 "'ser_and_analysis' to upload SER (and optionally analysis)."
+                " 'coninfections' to upload SER and create two analysis jobs per sample."
             ),
         )
 
@@ -143,6 +148,7 @@ class Command(BaseCommand):
                 "sample.test_analysis_job_id instead of the real fields."
             ),
         )
+
 
     # ------------------------------------------------------------------ #
     # Helpers
@@ -251,6 +257,25 @@ class Command(BaseCommand):
                 pseudonymized_ids=pseudonymized_ids,
                 no_analysis=no_analysis,
                 influenza_only=influenza_only,
+            )
+            return
+        if op_type == "coinfections":
+            if not pseudonymized_ids:
+                raise CommandError(
+                    "Coinfections upload requires at least one sample ID "
+                    "(use --samples and/or --samples-file)."
+                )
+
+            logger.info(
+                f"Uploading CO-INFECTIONS SER for {len(pseudonymized_ids)} samples "
+                f"(test_run={test_run})."
+            )
+
+            uploader.upload_ser(
+                pseudonymized_ids=pseudonymized_ids,
+                no_analysis=False,  # always create analysis
+                influenza_only=False,  # auto-detected inside uploader
+                coinfections=True,
             )
             return
 
