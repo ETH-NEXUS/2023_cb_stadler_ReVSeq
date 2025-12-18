@@ -28,6 +28,7 @@ class Sample(models.Model):
     job_id = models.IntegerField(null=True, blank=True)
     analysis_job_id = models.IntegerField(null=True, blank=True)
     test_job_id = models.IntegerField(null=True, blank=True)
+    test_analysis_job_id = models.IntegerField(null=True, blank=True)
     coinfections_major_analysis_job_id = models.IntegerField(null=True, blank=True)
     coinfections_minor_analysis_job_id = models.IntegerField(null=True, blank=True)
     test_coinfections_major_analysis_job_id = models.IntegerField(null=True, blank=True)
