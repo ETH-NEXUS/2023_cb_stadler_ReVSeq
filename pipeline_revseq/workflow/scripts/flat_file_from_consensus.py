@@ -9,9 +9,6 @@ from urllib.parse import urlencode
 from Bio import SeqIO
 
 
-from Bio import SeqIO
-
-
 def parse_args():
     p = argparse.ArgumentParser(
         description=(
