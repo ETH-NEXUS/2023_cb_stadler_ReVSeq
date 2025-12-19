@@ -38,6 +38,7 @@ class MetadataInline(admin.TabularInline):
     model = Metadata
     fk_name = "sample"
     extra = 0
+    search_fields = ("sample__pseudonymized_id",)
 
 # Register your models here.
 
