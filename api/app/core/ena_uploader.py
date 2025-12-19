@@ -31,7 +31,10 @@ class ENAUploader:
             consensus_minor_fasta_suffix: str = Defaults.CONSENSUS_MINOR_FASTA_SUFFIX,
             consensus_major_embl_suffix: str = Defaults.CONSENSUS_MAJOR_EMBL_SUFFIX,
             consensus_minor_embl_suffix: str = Defaults.CONSENSUS_MINOR_EMBL_SUFFIX,
+            chromosome_major_file_suffix: str = Defaults.CHROMOSOME_MAJOR_FILE_SUFFIX,
+            chromosome_minor_file_suffix: str = Defaults.CHROMOSOME_MINOR_FILE_SUFFIX,
             test_run: bool = True
+
 
     ):
         if ena_token is None:
@@ -54,6 +57,8 @@ class ENAUploader:
         self.analysis_jobs_endpoint = analysis_jobs_endpoint
         # file naming / types
         self.consensus_file_suffix = consensus_file_suffix
+        self.chromosome_major_file_suffix = chromosome_major_file_suffix
+        self.chromosome_minor_file_suffix = chromosome_minor_file_suffix
         self.chromosome_file_name = chromosome_file_name
         self.embl_file_suffix = embl_file_suffix
         self.embl_file_type = embl_file_type
@@ -213,85 +218,109 @@ class ENAUploader:
         """
         Co-infections:
           - one SER job_id
-          - up to two analysis jobs:
-              * major consensus
-              * minor consensus
+          - up to two analysis jobs: MAJOR + MINOR
 
-        Major and minor are independent:
-          - prefer EMBL if present
-          - otherwise fall back to FASTA
-          - if one side is missing, upload the other and log it
+        For each side independently:
+          - consensus: prefer EMBL if present, else FASTA
+          - chromosome list: attach matching chr file if present
+          - if a side is missing consensus, skip that side (log)
+          - chr file is optional: if missing, still upload consensus (log)
         """
 
         def bn(f: File) -> str:
             return extract_basename(f.path)
 
-        # Collect candidates independently
+        # ---- collect candidates per side ----
         major_embl = major_fa = None
         minor_embl = minor_fa = None
+        major_chr = None
+        minor_chr = None
 
         for f in files:
             name = bn(f)
-            # Major
+
+            # MAJOR consensus
             if name.endswith(self.consensus_major_embl_suffix):
                 major_embl = f
-            elif name.endswith(self.consensus_major_fasta_suffix):
+                continue
+            if name.endswith(self.consensus_major_fasta_suffix):
                 major_fa = f
-            # Minor
-            elif name.endswith(self.consensus_minor_embl_suffix):
+                continue
+
+            # MINOR consensus
+            if name.endswith(self.consensus_minor_embl_suffix):
                 minor_embl = f
-            elif name.endswith(self.consensus_minor_fasta_suffix):
+                continue
+            if name.endswith(self.consensus_minor_fasta_suffix):
                 minor_fa = f
+                continue
 
-        # Choose best available per side
-        major_file = major_embl or major_fa
-        minor_file = minor_embl or minor_fa
+            # chr files (suffix-based)
+            if name.endswith(self.chromosome_major_file_suffix):
+                major_chr = f
+                continue
+            if name.endswith(self.chromosome_minor_file_suffix):
+                minor_chr = f
+                continue
 
-        if major_file is None and minor_file is None:
+        # choose best consensus per side
+        major_consensus = major_embl or major_fa
+        minor_consensus = minor_embl or minor_fa
+
+        if major_consensus is None and minor_consensus is None:
             logger.warning(
-                f"Co-infection {sample} (job_id={job_id}): "
-                f"no major or minor consensus files found; skipping analysis upload."
+                f"Co-infection {sample} (job_id={job_id}): no major/minor consensus found; skipping analysis upload."
             )
             return
 
         base_name = analysis_payload.get("name", f"analysis_{sample.pseudonymized_id}")
 
         # ---- MAJOR ----
-        if major_file is not None:
+        if major_consensus is not None:
             major_payload = deepcopy(analysis_payload)
             major_payload["name"] = f"{base_name}_major"
 
-            self.data_for_analysis_upload.append(
-                (job_id, sample, [major_file], major_payload, ANALYSIS_KIND_COINF_MAJOR)
-            )
+            major_files: list[File] = [major_consensus]
+            if major_chr is not None:
+                major_files.append(major_chr)
+                logger.info(
+                    f"Co-infection {sample} (job_id={job_id}): MAJOR will upload consensus={major_consensus.path} + chr={major_chr.path}"
+                )
+            else:
+                logger.warning(
+                    f"Co-infection {sample} (job_id={job_id}): MAJOR chr file missing (suffix={self.chromosome_major_file_suffix}); uploading consensus only ({major_consensus.path})"
+                )
 
-            logger.info(
-                f"Co-infection {sample} (job_id={job_id}): "
-                f"queued MAJOR analysis using file {major_file.path}"
+            self.data_for_analysis_upload.append(
+                (job_id, sample, major_files, major_payload, ANALYSIS_KIND_COINF_MAJOR)
             )
         else:
             logger.warning(
-                f"Co-infection {sample} (job_id={job_id}): "
-                f"MAJOR consensus file missing; minor analysis will still be uploaded"
+                f"Co-infection {sample} (job_id={job_id}): MAJOR consensus missing; skipping MAJOR analysis upload."
             )
 
         # ---- MINOR ----
-        if minor_file is not None:
+        if minor_consensus is not None:
             minor_payload = deepcopy(analysis_payload)
             minor_payload["name"] = f"{base_name}_minor"
 
-            self.data_for_analysis_upload.append(
-                (job_id, sample, [minor_file], minor_payload, ANALYSIS_KIND_COINF_MINOR)
-            )
+            minor_files: list[File] = [minor_consensus]
+            if minor_chr is not None:
+                minor_files.append(minor_chr)
+                logger.info(
+                    f"Co-infection {sample} (job_id={job_id}): MINOR will upload consensus={minor_consensus.path} + chr={minor_chr.path}"
+                )
+            else:
+                logger.warning(
+                    f"Co-infection {sample} (job_id={job_id}): MINOR chr file missing (suffix={self.chromosome_minor_file_suffix}); uploading consensus only ({minor_consensus.path})"
+                )
 
-            logger.info(
-                f"Co-infection {sample} (job_id={job_id}): "
-                f"queued MINOR analysis using file {minor_file.path}"
+            self.data_for_analysis_upload.append(
+                (job_id, sample, minor_files, minor_payload, ANALYSIS_KIND_COINF_MINOR)
             )
         else:
             logger.warning(
-                f"Co-infection {sample} (job_id={job_id}): "
-                f"MINOR consensus file missing; major analysis will still be uploaded"
+                f"Co-infection {sample} (job_id={job_id}): MINOR consensus missing; skipping MINOR analysis upload."
             )
 
     def upload_analysis_loop(self) -> None:
@@ -351,21 +380,30 @@ class ENAUploader:
         self._enqueue_analysis_job(analysis_job_id)
         self.job_analysis_ids.append(analysis_job_id)
 
-
     def _upload_analysis_files(self, analysis_job_id, analysis_files) -> None:
         for file in analysis_files:
-            file_type = self.fasta_file_type # default file type
-            if extract_basename(file.path) == self.chromosome_file_name:
+            base = extract_basename(file.path)
+
+            file_type = self.fasta_file_type  # default
+
+            # chromosome lists: classic + coinfections major/minor
+            if (
+                    base == self.chromosome_file_name
+                    or base.endswith(self.chromosome_major_file_suffix)
+                    or base.endswith(self.chromosome_minor_file_suffix)
+            ):
                 file_type = self.chromosome_file_type
-            if extract_basename(file.path).endswith(self.embl_file_suffix):
+
+            # EMBL flatfiles
+            if base.endswith(self.embl_file_suffix):
                 file_type = self.embl_file_type
 
-            payload = {'job': analysis_job_id, 'file_name': file.path, "file_type": file_type}
+            payload = {"job": analysis_job_id, "file_name": file.path, "file_type": file_type}
             handle_http_request(
                 self.analysis_files_endpoint,
                 payload,
-                'post',
-                message=f'Analysis file {file} uploaded successfully',
+                "post",
+                message=f"Analysis file {file} uploaded successfully",
                 headers=self.headers,
             )
 
