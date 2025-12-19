@@ -17,27 +17,27 @@ from core.models import Sample, File, FileType
 EMBL_REASSIGNMENTS: list[dict[str, str]] = [
     {
         "sample_id": "m2-9eyPAv",
-        "path": "/data/revseq/results/gather_results/RVSeqPlate10-m2/sample_m2-9eyPAv/m2-9eyPAv_consensus_major.embl.gz",
+        "path": "/data/RVSeqPlate10-m2/sample_m2-9eyPAv/m2-9eyPAv_consensus_major.embl.gz",
         "kind": "major",
     },
     {
         "sample_id": "m2-F2HifQ",
-        "path": "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-F2HifQ/m2-F2HifQ_consensus_major.embl.gz",
+        "path": "/data/RVSeqPlate5-m2/sample_m2-F2HifQ/m2-F2HifQ_consensus_major.embl.gz",
         "kind": "major",
     },
     {
         "sample_id": "m2-SrqwxQ",
-        "path": "/data/revseq/results/gather_results/RVSeqPlate11-m2/sample_m2-SrqwxQ/m2-SrqwxQ_consensus_major.embl.gz",
+        "path": "/data/RVSeqPlate11-m2/sample_m2-SrqwxQ/m2-SrqwxQ_consensus_major.embl.gz",
         "kind": "major",
     },
     {
         "sample_id": "m2-w9v3Qv",
-        "path": "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-w9v3Qv/m2-w9v3Qv_consensus_minor.embl.gz",
+        "path": "/data/RVSeqPlate5-m2/sample_m2-w9v3Qv/m2-w9v3Qv_consensus_minor.embl.gz",
         "kind": "minor",
     },
     {
         "sample_id": "m2-EJ7fEz",
-        "path": "/data/revseq/results/gather_results/RVSeqPlate5-m2/sample_m2-EJ7fEz/m2-EJ7fEz_consensus_minor.embl.gz",
+        "path": "/data/RVSeqPlate5-m2/sample_m2-EJ7fEz/m2-EJ7fEz_consensus_minor.embl.gz",
         "kind": "minor",
     },
     {
