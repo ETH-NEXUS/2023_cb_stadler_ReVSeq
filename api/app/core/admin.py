@@ -130,7 +130,8 @@ class MetadataAdmin(ModelAdmin):
         "prescriber",
     )
     list_filter_submit = True
-    list_filter = ("plate__barcode", )
+    list_filter = ("plate__barcode",  )
+    search_fields = ("sample__pseudonymized_id",  "plate__barcode")
 
 
 @admin.register(FileType)
