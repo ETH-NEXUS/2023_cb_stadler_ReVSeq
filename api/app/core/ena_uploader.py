@@ -534,5 +534,81 @@ class ENAUploader:
 
         # ----------------------- co-ninfections ---------------------------- #
 
+    def resend_coinfections_analysis_jobs(
+            self,
+            *,
+            pseudonymized_ids: List[str],
+    ) -> None:
+        """
+        Re-send COINFECTIONS analysis jobs for samples that already have a SER job_id.
+        This:
+          - uses existing job_id / test_job_id
+          - rebuilds analysis payload from current DB state
+          - selects major/minor consensus (+ matching chr) via _prepare_coinfection_analysis_upload
+          - creates new analysis jobs and enqueues them
+        """
+        if not pseudonymized_ids:
+            logger.warning("No pseudonymized IDs provided for resend_coinfections_analysis_jobs")
+            return
 
+        samples = Sample.objects.filter(pseudonymized_id__in=pseudonymized_ids)
+        if not samples.exists():
+            logger.warning(f"No samples found for the given pseudonymized IDs: {pseudonymized_ids}")
+            return
+
+        logger.info(
+            f"Resending COINFECTIONS analysis jobs for {samples.count()} samples (test_run={self.test_run})"
+        )
+        logger.debug(
+            f"Resolved samples: {list(samples.values_list('pseudonymized_id', flat=True))}"
+        )
+
+        # reset per-run state
+        self.job_analysis_ids.clear()
+        self.data_for_analysis_upload.clear()
+
+        for sample in samples:
+            # Use existing SER job_id
+            if self.test_run and getattr(sample, "test_job_id", None) is not None:
+                job_id = sample.test_job_id
+            else:
+                job_id = sample.job_id
+
+            if job_id is None:
+                logger.warning(
+                    f"Sample {sample} has no existing job_id (or test_job_id); cannot resend coinfections analysis."
+                )
+                continue
+
+            sample_counts = SampleCount.objects.filter(sample=sample)
+            if not sample_counts:
+                logger.warning(f"No counts for {sample}; skipping.")
+                continue
+
+            # Build SER payload to reuse its analysis section (fresh name, coverage, etc.)
+            payload = build_ser_payload(sample, sample_counts)
+            analysis_payload = payload["data"]["analysis"]
+
+            files = File.objects.filter(sample=sample)
+
+            logger.info(
+                f"Preparing COINFECTIONS analysis re-upload for sample {sample} (job_id={job_id})"
+            )
+
+            # This appends up to two entries into self.data_for_analysis_upload
+            self._prepare_coinfection_analysis_upload(
+                job_id=job_id,
+                sample=sample,
+                files=files,
+                analysis_payload=analysis_payload,
+            )
+
+        if not self.data_for_analysis_upload:
+            logger.warning("No COINFECTIONS analysis jobs prepared for resend; nothing to do.")
+            return
+
+        logger.info(
+            f"************** Resending COINFECTIONS analysis jobs and files for {len(self.data_for_analysis_upload)} queued uploads ***************"
+        )
+        self.upload_analysis_loop()
 

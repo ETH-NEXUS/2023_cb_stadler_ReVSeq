@@ -95,7 +95,7 @@ class Command(BaseCommand):
             "-r",
             "--task",
             type=str,
-            choices=["resend_analysis_jobs"],
+            choices=["resend_analysis_jobs", "resend_coinfections_analysis_jobs"],
             help=(
                 "Optional task to perform instead of --type.\n"
                 "Currently supported: 'resend_analysis_jobs' to recreate analysis jobs "
@@ -242,6 +242,23 @@ class Command(BaseCommand):
             uploader.resend_analysis_jobs(
                 pseudonymized_ids=pseudonymized_ids,
                 influenza_only=influenza_only,
+            )
+            return
+
+        if task == "resend_coinfections_analysis_jobs":
+            if not pseudonymized_ids:
+                raise CommandError(
+                    "resend_coinfections_analysis_jobs requires at least one sample ID "
+                    "(use --samples and/or --samples-file)."
+                )
+
+            logger.info(
+                "Resending COINFECTIONS analysis jobs for %s samples (test_run=%s).",
+                len(pseudonymized_ids),
+                test_run,
+            )
+            uploader.resend_coinfections_analysis_jobs(
+                pseudonymized_ids=pseudonymized_ids,
             )
             return
 
