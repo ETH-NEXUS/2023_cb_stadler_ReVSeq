@@ -32,7 +32,7 @@ SAMPLES_AND_FOLDERS: list[tuple[str, str]] = [
     ("m2-w9v3Qv", "/data/RVSeqPlate5-m2/sample_m2-w9v3Qv/"),
     ("m2-F2HifQ", "/data/RVSeqPlate5-m2/sample_m2-F2HifQ/"),
     ("m2-EJ7fEz", "/data/RVSeqPlate5-m2/sample_m2-EJ7fEz/"),
-    ("m2-4L3pXZ", "/data/RVSeqPlate6-m2/sample_m2-4L3pXZ/"),
+    ("m2-4L3pXZ", "/data/RVSeqPlate6-m2/sample_m2-4L3pXZ/"), #
     ("m2-NDEjHn", "/data/RVSeqPlate7-m2/sample_m2-NDEjHn/"),
     ("m2-Y4rZ7q", "/data/RVSeqPlate8-m2/sample_m2-Y4rZ7q/"),
     ("m2-XHdiUs", "/data/RVSeqPlate8-m2/sample_m2-XHdiUs/"),
