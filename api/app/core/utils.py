@@ -2,6 +2,8 @@ import os
 from typing import Iterable
 
 import requests
+from django.utils import timezone
+
 from helpers.color_log import logger
 from os import environ
 from core.models import SampleCount, Sample, Metadata, File
@@ -121,7 +123,24 @@ def build_ser_payload(sample: Sample, sample_counts: Iterable[SampleCount]) -> d
     top = sorted_sample_counts[0]
     taxon_id = top.substrain.taxon_id
     serotype = top.substrain.serotype
+
+    ent_date = getattr(metadata, "ent_date", None)
+    if ent_date is None:
+        # fallback: today (local date)
+        collection_date = timezone.localdate().strftime("%Y-%m-%d")
+        logger.warning(
+            f"Metadata.ent_date is NULL for sample {sample.pseudonymized_id}; using today's date ({collection_date}) as 'collection date' for ENA payload."
+
+        )
+    else:
+        collection_date = ent_date.strftime("%Y-%m-%d")
+
+
+
+
     collection_date = metadata.ent_date.strftime("%Y-%m-%d")
+
+
     geo_location = metadata.prescriber
     coverage = float(top.coverage) + 0.01
     sample_alias = f"revseq_sample_{sample.pseudonymized_id}_{now}"
