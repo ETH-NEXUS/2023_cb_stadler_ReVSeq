@@ -214,6 +214,7 @@ class ENAUploader:
             sample: Sample,
             files,
             analysis_payload: dict,
+
     ) -> None:
         """
         Co-infections:
@@ -243,17 +244,17 @@ class ENAUploader:
             if name.endswith(self.consensus_major_embl_suffix):
                 major_embl = f
                 continue
-            if name.endswith(self.consensus_major_fasta_suffix):
-                major_fa = f
-                continue
+            # if name.endswith(self.consensus_major_fasta_suffix):
+            #     major_fa = f
+            #     continue
 
             # MINOR consensus
             if name.endswith(self.consensus_minor_embl_suffix):
                 minor_embl = f
                 continue
-            if name.endswith(self.consensus_minor_fasta_suffix):
-                minor_fa = f
-                continue
+            # if name.endswith(self.consensus_minor_fasta_suffix):
+            #     minor_fa = f
+            #     continue
 
             # chr files (suffix-based)
             if name.endswith(self.chromosome_major_file_suffix):
