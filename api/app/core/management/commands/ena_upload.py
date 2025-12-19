@@ -50,7 +50,7 @@ python manage.py ena_upload --task resend_analysis_jobs --influenza-only --sampl
 
 9) CO-INFECTIONS - upload SER + create TWO analysis jobs per sample
 -----------------------------------------------------------------
-python manage.py ena_upload --type coninfections --test-run  --samples m2-Dq37e8
+python manage.py ena_upload --type coinfections --test-run  --samples m2-XHdiUs
 
 NOTE:
 - You must always specify samples (via --samples and/or --samples-file)
