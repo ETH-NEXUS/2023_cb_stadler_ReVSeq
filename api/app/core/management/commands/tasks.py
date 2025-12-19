@@ -29,11 +29,9 @@ SAMPLES_AND_FOLDERS: list[tuple[str, str]] = [
     ("m2-u89dBs", "/data/RVSeqPlate4-m2/sample_m2-u89dBs/"),
     ("m2-gnDemF", "/data/RVSeqPlate4-m2/sample_m2-gnDemF/"),
     ("m2-HXHQAT", "/data/RVSeqPlate4-m2/sample_m2-HXHQAT/"),
-    ("m2-RVSeqPlate5-KOpos", "/data/RVSeqPlate5-m2/sample_m2-RVSeqPlate5-KOpos/"),
     ("m2-w9v3Qv", "/data/RVSeqPlate5-m2/sample_m2-w9v3Qv/"),
     ("m2-F2HifQ", "/data/RVSeqPlate5-m2/sample_m2-F2HifQ/"),
     ("m2-EJ7fEz", "/data/RVSeqPlate5-m2/sample_m2-EJ7fEz/"),
-    ("m2-RVSeqPlate6-KOpos", "/data/RVSeqPlate6-m2/sample_m2-RVSeqPlate6-KOpos/"),
     ("m2-4L3pXZ", "/data/RVSeqPlate6-m2/sample_m2-4L3pXZ/"),
     ("m2-NDEjHn", "/data/RVSeqPlate7-m2/sample_m2-NDEjHn/"),
     ("m2-Y4rZ7q", "/data/RVSeqPlate8-m2/sample_m2-Y4rZ7q/"),
@@ -53,34 +51,28 @@ def md5sum(path: Path, chunk_size: int = 1024 * 1024) -> str:
 
 
 def detect_postfix(filename: str) -> str:
-    """
-    FileType.postfix should match your pipeline expectations.
-    Path.suffix would only yield ".gz", so we detect multi-suffix endings.
-    """
     lowered = filename.lower()
-    for ending in (".txt.gz",):
-        if lowered.endswith(ending):
-            return ending
+    if lowered.endswith(".txt.gz"):
+        return ".txt.gz"
     return Path(filename).suffix or lowered
 
 
 def pick_major_minor_chr_files(folder: Path) -> tuple[Optional[Path], Optional[Path]]:
     """
-    Pick chr_file_major.txt.gz and chr_file_minor.txt.gz if present.
+    Find chr files by suffix, not exact filename.
     """
-    major_chr = folder / "chr_file_major.txt.gz"
-    minor_chr = folder / "chr_file_minor.txt.gz"
-
-    major = major_chr if major_chr.exists() else None
-    minor = minor_chr if minor_chr.exists() else None
-    return major, minor
+    major_chr = next(folder.glob("*chr_file_major.txt.gz"), None)
+    minor_chr = next(folder.glob("*chr_file_minor.txt.gz"), None)
+    return major_chr, minor_chr
 
 
 def upsert_file(*, sample: Sample, file_path: Path, dry_run: bool) -> None:
     postfix = detect_postfix(file_path.name)
 
     if dry_run:
-        logger.info(f"[DRY RUN] Would attach file {file_path} to sample {sample} (postfix={postfix})")
+        logger.info(
+            f"[DRY RUN] Would attach file {file_path} to sample {sample} (postfix={postfix})"
+        )
         return
 
     checksum = md5sum(file_path)
@@ -124,14 +116,16 @@ def upsert_file(*, sample: Sample, file_path: Path, dry_run: bool) -> None:
             f"(checksum={checksum}, postfix={postfix})"
         )
     else:
-        logger.debug(f"No changes for existing File {file_path} (already attached to sample {sample})")
+        logger.debug(
+            f"No changes for existing File {file_path} (already attached to sample {sample})"
+        )
 
 
 # ---------------------------------------------------------------------
 # Command
 # ---------------------------------------------------------------------
 class Command(BaseCommand):
-    help = "Attach chr_file_major.txt.gz / chr_file_minor.txt.gz to Samples via File model."
+    help = "Attach chr_file_major.txt.gz / chr_file_minor.txt.gz files to Samples."
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -150,27 +144,40 @@ class Command(BaseCommand):
         for pseudonymized_id, folder_str in SAMPLES_AND_FOLDERS:
             folder = Path(folder_str)
 
-            sample = Sample.objects.filter(pseudonymized_id=pseudonymized_id).select_related("plate").first()
+            sample = (
+                Sample.objects
+                .filter(pseudonymized_id=pseudonymized_id)
+                .select_related("plate")
+                .first()
+            )
             if sample is None:
-                logger.warning(f"Sample not found in DB: {pseudonymized_id} (folder={folder})")
+                logger.warning(
+                    f"Sample not found in DB: {pseudonymized_id} (folder={folder})"
+                )
                 continue
 
             if not folder.exists() or not folder.is_dir():
-                logger.warning(f"Folder missing or not a directory for sample {sample}: {folder}")
+                logger.warning(
+                    f"Folder missing or not a directory for sample {sample}: {folder}"
+                )
                 continue
 
             major_chr, minor_chr = pick_major_minor_chr_files(folder)
 
             if major_chr is None and minor_chr is None:
                 logger.warning(
-                    f"Sample {sample}: neither chr_file_major.txt.gz nor chr_file_minor.txt.gz found in {folder}"
+                    f"Sample {sample}: no chr_file_* found in {folder}"
                 )
                 continue
 
             if major_chr is None:
-                logger.warning(f"Sample {sample}: chr_file_major.txt.gz missing in {folder}; will attach only MINOR if present")
+                logger.warning(
+                    f"Sample {sample}: chr_file_major.txt.gz missing; attaching only MINOR"
+                )
             if minor_chr is None:
-                logger.warning(f"Sample {sample}: chr_file_minor.txt.gz missing in {folder}; will attach only MAJOR if present")
+                logger.warning(
+                    f"Sample {sample}: chr_file_minor.txt.gz missing; attaching only MAJOR"
+                )
 
             with transaction.atomic():
                 if major_chr is not None:
