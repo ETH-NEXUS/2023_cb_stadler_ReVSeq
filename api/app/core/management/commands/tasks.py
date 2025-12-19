@@ -42,7 +42,7 @@ EMBL_REASSIGNMENTS: list[dict[str, str]] = [
     },
     {
         "sample_id": "m2-4L3pXZ",
-        "path": "/data/revseq/results/gather_results/RVSeqPlate6-m2/sample_m2-4L3pXZ/m2-4L3pXZ_consensus_major.embl.gz",
+        "path": "/data/RVSeqPlate6-m2/sample_m2-4L3pXZ/m2-4L3pXZ_consensus_major.embl.gz",
         "kind": "major",
     },
 ]
