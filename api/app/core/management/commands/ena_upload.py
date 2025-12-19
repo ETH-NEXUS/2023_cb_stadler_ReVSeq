@@ -53,6 +53,11 @@ python manage.py ena_upload --task resend_analysis_jobs --influenza-only --sampl
 python manage.py ena_upload --type coinfections --test-run  --samples m2-XHdiUs
 python manage.py ena_upload --type coinfections --samples-file /path/to/coinfection_samples.txt
 
+  "m2-F2HifQ",
+    "m2-9eyPAv",
+    "m2-SrqwxQ",
+    "m2-4L3pXZ",
+python manage.py ena_upload --type coinfections --test-run  --samples m2-F2HifQ m2-9eyPAv m2-SrqwxQ m2-4L3pXZ
 NOTE:
 - You must always specify samples (via --samples and/or --samples-file)
   for SER upload and resend_analysis_jobs.

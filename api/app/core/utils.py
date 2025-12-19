@@ -135,12 +135,6 @@ def build_ser_payload(sample: Sample, sample_counts: Iterable[SampleCount]) -> d
     else:
         collection_date = ent_date.strftime("%Y-%m-%d")
 
-
-
-
-    collection_date = metadata.ent_date.strftime("%Y-%m-%d")
-
-
     geo_location = metadata.prescriber
     coverage = float(top.coverage) + 0.01
     sample_alias = f"revseq_sample_{sample.pseudonymized_id}_{now}"
