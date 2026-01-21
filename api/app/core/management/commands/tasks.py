@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = "Print ent_date from Metadata for given sample pseudonymized IDs"
 
     def handle(self, *args, **options):
-        # 👇 put your sample IDs here
+
         sample_ids = ['m2-SrqwxQ', 'm2-Kg3Fdm', 'm2-mzMRtV', 'm2-wfEdma', 'm2-NDEjHn', 'm2-4L3pXZ', 'm2-F2HifQ',
                       'm2-9eyPAv', 'm2-NmHGDa', 'm2-HXHQAT', 'm2-gnDemF', 'm2-u89dBs', 'm2-3oZJ5x', 'm2-43Vmvj',
                       'm2-zwqknf', 'm2-w9v3Qv', 'm2-EJ7fEz', 'm2-Y4rZ7q', 'm2-XHdiUs', 'm2-GRjNzo', 'm2-Dq37e8',
