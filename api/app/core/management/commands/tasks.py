@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from lab.models import Sample, Metadata
+from core.models import Sample, Metadata
 
 
 class Command(BaseCommand):
