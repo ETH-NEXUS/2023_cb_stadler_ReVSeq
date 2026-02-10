@@ -92,6 +92,10 @@ class Defaults:
     CONSENSUS_MINOR_EMBL_SUFFIX = environ.get(
         "CONSENSUS_MINOR_EMBL_SUFFIX", "_consensus_minor.embl.gz"
     )
+    MODIFY_JOB_ENDPOINT = environ.get(
+        "MODIFY_JOB_ENDPOINT",
+        "http://ena:5000/ena/api/jobs/<job_id>/modify/"
+    )
 
 #---------------------------------
 # Utils

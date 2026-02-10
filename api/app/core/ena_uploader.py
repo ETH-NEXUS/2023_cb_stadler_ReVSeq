@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from helpers.color_log import logger
 from .utils import handle_http_request, Defaults, build_ser_payload, select_analysis_files_for_sample, extract_basename
 from core.models import Sample, SampleCount, File, Metadata
@@ -23,6 +23,7 @@ class ENAUploader:
             release_analysis_job_endpoint: str = Defaults.RELEASE_ANALYSIS_JOB_ENDPOINT,
             jobs_endpoint: str = Defaults.JOBS_ENDPOINT,
             analysis_jobs_endpoint: str = Defaults.ANALYSIS_JOBS_ENDPOINT,
+            modify_job_endpoint: str = Defaults.MODIFY_JOB_ENDPOINT,
             consensus_file_suffix: str = Defaults.CONSENSUS_FILE_SUFFIX,
             chromosome_file_name: str = Defaults.CHROMOSOME_FILE_NAME,
             embl_file_suffix: str = Defaults.EMBL_FILE_SUFFIX,
@@ -55,6 +56,7 @@ class ENAUploader:
         self.release_analysis_job_endpoint = release_analysis_job_endpoint
         self.jobs_endpoint = jobs_endpoint
         self.analysis_jobs_endpoint = analysis_jobs_endpoint
+        self.modify_job_endpoint = modify_job_endpoint
         # file naming / types
         self.consensus_file_suffix = consensus_file_suffix
         self.chromosome_major_file_suffix = chromosome_major_file_suffix
@@ -612,4 +614,42 @@ class ENAUploader:
             f"************** Resending COINFECTIONS analysis jobs and files for {len(self.data_for_analysis_upload)} queued uploads ***************"
         )
         self.upload_analysis_loop()
+
+    def modify_jobs_resubmit_crams(
+        self,
+        *,
+        job_to_cram: Dict[int, str],
+        template: str = "default",
+    ) -> None:
+        """
+        For each (job_id -> cram_path), POST /ena/api/jobs/<job_id>/modify/
+        with payload that re-submits that CRAM file.
+        """
+        if not job_to_cram:
+            logger.warning("modify_jobs_resubmit_crams: no job_to_cram provided")
+            return
+
+        for job_id, cram_path in job_to_cram.items():
+            if not cram_path:
+                logger.error(f"Job {job_id}: empty CRAM path, skipping")
+                continue
+            url = self.modify_job_endpoint.replace("<job_id>", str(job_id))
+            payload = {
+                "template": template,
+                "data": {"run": {}},
+                "ignore": [],
+                "files": [cram_path],
+            }
+            logger.info(f"Modifying job {job_id}: resubmitting CRAM {cram_path}")
+            response = handle_http_request(
+                url,
+                payload=payload,
+                method="post",
+                message=f"Modify submitted for job {job_id}",
+                headers=self.headers,
+            )
+            if not response:
+                logger.error(
+                    f"Modify failed for job {job_id} (cram={cram_path})"
+                )
 

@@ -11,7 +11,7 @@ python manage.py ena_upload --type study
 
 2) Upload SER + ANALYSIS for specific samples (live run)
 --------------------------------------------------------
-python manage.py ena_upload --type ser_and_analysis --samples RyXauM 375EUk ABC123
+python manage.py ena_upload --type ser_and_analysis --samples RyXauM 375EUk ABC123 m2-3wTS9S
 
 3) Upload SER + ANALYSIS for samples from a text file
 -----------------------------------------------------
@@ -30,7 +30,7 @@ python manage.py ena_upload --type ser_and_analysis --no-analysis --samples XXXX
 ---------------------------------------------------------------------
 python manage.py ena_upload --type ser_and_analysis --influenza-only --samples XXXX XXXX
 # example for test-run:
-# python manage.py ena_upload --type ser_and_analysis --influenza-only --test-run --samples m2-NESNdH
+# python manage.py ena_upload --type ser_and_analysis --influenza-only --test-run --samples m2-468ARL
 python manage.py ena_upload --type ser_and_analysis --influenza-only --samples-file
 
 6) Upload SER (no analysis) for INFLUENZA samples only
@@ -73,6 +73,7 @@ from helpers.color_log import logger
 from core.ena_uploader import ENAUploader  # adjust import path to where ENAUploader lives
 
 
+
 class Command(BaseCommand):
     help = "Upload study/SER/analysis data to ENA or resend analysis jobs."
 
@@ -95,7 +96,7 @@ class Command(BaseCommand):
             "-r",
             "--task",
             type=str,
-            choices=["resend_analysis_jobs", "resend_coinfections_analysis_jobs"],
+            choices=["resend_analysis_jobs", "resend_coinfections_analysis_jobs", "modify_jobs"],
             help=(
                 "Optional task to perform instead of --type.\n"
                 "Currently supported: 'resend_analysis_jobs' to recreate analysis jobs "
@@ -154,11 +155,51 @@ class Command(BaseCommand):
                 "sample.test_analysis_job_id instead of the real fields."
             ),
         )
+        # ReSUBMITTING CRAM FILES _ MODIFY EXISTING JOBS IN PLACE (no new SER)
 
+        # MODIFY: resubmit CRAM per job id (repeatable)
+        parser.add_argument(
+            "--modify",
+            action="append",
+            default=[],
+            help=(
+                "Pair job_id=cram_path for modify endpoint. Repeatable.\n"
+                "Example:\n"
+                "  --modify 155=/data/.../a.cram --modify 156=/data/.../b.cram"
+            ),
+        )
 
     # ------------------------------------------------------------------ #
     # Helpers
     # ------------------------------------------------------------------ #
+
+    def _parse_modify_pairs(self, pairs: list[str]) -> dict[int, str]:
+        """
+        Parse --modify arguments in form job_id=/path/to/file.cram
+        """
+        job_to_cram: dict[int, str] = {}
+        for item in pairs:
+            if "=" not in item:
+                raise CommandError(
+                    f"Invalid --modify value '{item}'. Use job_id=/path/to/file.cram"
+                )
+            job_str, path = item.split("=", 1)
+            job_str = job_str.strip()
+            path = path.strip()
+
+            if not job_str.isdigit():
+                raise CommandError(
+                    f"Invalid job_id in --modify '{item}'. Must be an integer."
+                )
+            job_id = int(job_str)
+            if job_id in job_to_cram:
+                raise CommandError(f"Duplicate job_id {job_id} in --modify arguments.")
+
+            if not path:
+                raise CommandError(f"Empty path for job_id {job_id} in --modify '{item}'.")
+            job_to_cram[job_id] = path
+
+        return job_to_cram
 
     def _load_samples_from_file(self, path_str: str) -> List[str]:
         """
@@ -260,6 +301,21 @@ class Command(BaseCommand):
             uploader.resend_coinfections_analysis_jobs(
                 pseudonymized_ids=pseudonymized_ids,
             )
+            return
+        if task == "modify_jobs":
+            pairs = options.get("modify") or []
+            if not pairs:
+                raise CommandError(
+                    "modify_jobs requires at least one --modify job_id=/path/to/file.cram pair."
+                )
+
+            job_to_cram = self._parse_modify_pairs(pairs)
+
+            logger.info(
+                f"Modifying {len(job_to_cram)} job(s) by resubmitting CRAM file(s) (test_run={test_run})."
+            )
+
+            uploader.modify_jobs_resubmit_crams(job_to_cram=job_to_cram)
             return
 
         # ----------------------- TYPE: study / ser --------------------------- #
