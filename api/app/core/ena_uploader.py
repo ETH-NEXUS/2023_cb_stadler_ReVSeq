@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, TypedDict
 from helpers.color_log import logger
 from .utils import handle_http_request, Defaults, build_ser_payload, select_analysis_files_for_sample, extract_basename
 from core.models import Sample, SampleCount, File, Metadata
@@ -8,6 +8,11 @@ import time
 ANALYSIS_KIND_STANDARD = "standard"
 ANALYSIS_KIND_COINF_MAJOR = "coinf_major"
 ANALYSIS_KIND_COINF_MINOR = "coinf_minor"
+
+
+class ModifyRunSpec(TypedDict):
+    accession: str
+    cram_path: str
 
 class ENAUploader:
     def __init__(
@@ -616,31 +621,46 @@ class ENAUploader:
         self.upload_analysis_loop()
 
     def modify_jobs_resubmit_crams(
-        self,
-        *,
-        job_to_cram: Dict[int, str],
-        template: str = "default",
+            self,
+            *,
+            job_to_run: Dict[int, ModifyRunSpec],
+            template: str = "default",
     ) -> None:
         """
-        For each (job_id -> cram_path), POST /ena/api/jobs/<job_id>/modify/
-        with payload that re-submits that CRAM file.
+        For each job_id:
+          - POST /ena/api/jobs/<job_id>/modify/
+          - include run accession + CRAM file path
         """
-        if not job_to_cram:
-            logger.warning("modify_jobs_resubmit_crams: no job_to_cram provided")
+        if not job_to_run:
+            logger.warning("modify_jobs_resubmit_crams: no job_to_run provided")
             return
 
-        for job_id, cram_path in job_to_cram.items():
+        for job_id, spec in job_to_run.items():
+            accession = (spec.get("accession") or "").strip()
+            cram_path = (spec.get("cram_path") or "").strip()
+
+            if not accession:
+                logger.error(f"Job {job_id}: empty run accession, skipping")
+                continue
             if not cram_path:
                 logger.error(f"Job {job_id}: empty CRAM path, skipping")
                 continue
+
             url = self.modify_job_endpoint.replace("<job_id>", str(job_id))
+
             payload = {
                 "template": template,
-                "data": {"run": {}},
+                "data": {
+                    "run": {
+                        "accession": accession,
+                    }
+                },
                 "ignore": [],
                 "files": [cram_path],
             }
-            logger.info(f"Modifying job {job_id}: resubmitting CRAM {cram_path}")
+
+            logger.info(f"Modifying job {job_id}: accession={accession}, cram={cram_path}")
+
             response = handle_http_request(
                 url,
                 payload=payload,
@@ -648,8 +668,7 @@ class ENAUploader:
                 message=f"Modify submitted for job {job_id}",
                 headers=self.headers,
             )
+
             if not response:
-                logger.error(
-                    f"Modify failed for job {job_id} (cram={cram_path})"
-                )
+                logger.error(f"Modify failed for job {job_id} (accession={accession}, cram={cram_path})")
 

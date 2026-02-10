@@ -163,9 +163,10 @@ class Command(BaseCommand):
             action="append",
             default=[],
             help=(
-                "Pair job_id=cram_path for modify endpoint. Repeatable.\n"
+                "Pair job_id=RUN_ACCESSION:/path/to/file.cram (repeatable)\n"
                 "Example:\n"
-                "  --modify 155=/data/.../a.cram --modify 156=/data/.../b.cram"
+                "  --modify 155=ERR15968455:/data/.../a.cram\n"
+                "  --modify 156=ERR15968456:/data/.../b.cram"
             ),
         )
 
@@ -173,33 +174,47 @@ class Command(BaseCommand):
     # Helpers
     # ------------------------------------------------------------------ #
 
-    def _parse_modify_pairs(self, pairs: list[str]) -> dict[int, str]:
+    def _parse_modify_pairs(self, pairs: list[str]) -> dict[int, dict]:
         """
-        Parse --modify arguments in form job_id=/path/to/file.cram
+        Parse --modify arguments in form:
+          job_id=RUN_ACCESSION:/path/to/file.cram
         """
-        job_to_cram: dict[int, str] = {}
+        job_to_run: dict[int, dict] = {}
+
         for item in pairs:
             if "=" not in item:
                 raise CommandError(
-                    f"Invalid --modify value '{item}'. Use job_id=/path/to/file.cram"
+                    f"Invalid --modify value '{item}'. Use job_id=RUN_ACCESSION:/path/to/file.cram"
                 )
-            job_str, path = item.split("=", 1)
+
+            job_str, rest = item.split("=", 1)
             job_str = job_str.strip()
-            path = path.strip()
+            rest = rest.strip()
 
             if not job_str.isdigit():
+                raise CommandError(f"Invalid job_id in --modify '{item}'. Must be an integer.")
+
+            if ":" not in rest:
                 raise CommandError(
-                    f"Invalid job_id in --modify '{item}'. Must be an integer."
+                    f"Invalid --modify value '{item}'. Use job_id=RUN_ACCESSION:/path/to/file.cram"
                 )
+
+            accession, cram_path = rest.split(":", 1)
+            accession = accession.strip()
+            cram_path = cram_path.strip()
+
             job_id = int(job_str)
-            if job_id in job_to_cram:
+
+            if job_id in job_to_run:
                 raise CommandError(f"Duplicate job_id {job_id} in --modify arguments.")
-
-            if not path:
+            if not accession:
+                raise CommandError(f"Empty RUN_ACCESSION for job_id {job_id} in --modify '{item}'.")
+            if not cram_path:
                 raise CommandError(f"Empty path for job_id {job_id} in --modify '{item}'.")
-            job_to_cram[job_id] = path
 
-        return job_to_cram
+            job_to_run[job_id] = {"accession": accession, "cram_path": cram_path}
+
+        return job_to_run
 
     def _load_samples_from_file(self, path_str: str) -> List[str]:
         """
@@ -306,16 +321,16 @@ class Command(BaseCommand):
             pairs = options.get("modify") or []
             if not pairs:
                 raise CommandError(
-                    "modify_jobs requires at least one --modify job_id=/path/to/file.cram pair."
+                    "modify_jobs requires at least one --modify job_id=RUN_ACCESSION:/path/to/file.cram pair."
                 )
 
-            job_to_cram = self._parse_modify_pairs(pairs)
+            job_to_run = self._parse_modify_pairs(pairs)
 
             logger.info(
-                f"Modifying {len(job_to_cram)} job(s) by resubmitting CRAM file(s) (test_run={test_run})."
+                f"Modifying {len(job_to_run)} job(s) by resubmitting CRAM file(s) (test_run={test_run})."
             )
 
-            uploader.modify_jobs_resubmit_crams(job_to_cram=job_to_cram)
+            uploader.modify_jobs_resubmit_crams(job_to_run=job_to_run)
             return
 
         # ----------------------- TYPE: study / ser --------------------------- #
