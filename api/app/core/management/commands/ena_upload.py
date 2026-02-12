@@ -67,11 +67,8 @@ NOTE:
 10) MODIFY EXISTING JOBS IN PLACE by resubmitting CRAM files (no new SER)
 -----------------------------------------------------------------
 
-python manage.py ena_upload --task modify_jobs --modify 242=revseq_experiment_m2-boLTAg_20251128120250877381:/data/filter_cram/renamed/m2-boLTAg.cram
-
+python manage.py ena_upload --task modify_jobs --modify 242=/data/filter_cram/renamed/m2-boLTAg.cram
 """
-
-
 
 from pathlib import Path
 from typing import List, Set
@@ -172,9 +169,10 @@ class Command(BaseCommand):
             action="append",
             default=[],
             help=(
-                "Pair job_id=EXPERIMENT_ALIAS:/path/to/file.cram (repeatable)\n"
+                "Pair job_id=/path/to/file.cram (repeatable)\n"
                 "Example:\n"
-                "  --modify 155=revseq_experiment_m2-468ARL_20251128113345398290:/data/.../a.cram"
+                "  --modify 155=/data/.../a.cram\n"
+                "  --modify 156=/data/.../b.cram"
             ),
         )
 
@@ -185,42 +183,31 @@ class Command(BaseCommand):
     def _parse_modify_pairs(self, pairs: list[str]) -> dict[int, dict]:
         """
         Parse --modify arguments in form:
-          job_id=EXPERIMENT_ALIAS:/path/to/file.cram
+          job_id=/path/to/file.cram
         """
         job_to_run: dict[int, dict] = {}
 
         for item in pairs:
             if "=" not in item:
                 raise CommandError(
-                    f"Invalid --modify value '{item}'. Use job_id=EXPERIMENT_ALIAS:/path/to/file.cram"
+                    f"Invalid --modify value '{item}'. Use job_id=/path/to/file.cram"
                 )
 
-            job_str, rest = item.split("=", 1)
+            job_str, cram_path = item.split("=", 1)
             job_str = job_str.strip()
-            rest = rest.strip()
+            cram_path = cram_path.strip()
 
             if not job_str.isdigit():
                 raise CommandError(f"Invalid job_id in --modify '{item}'. Must be an integer.")
-
-            if ":" not in rest:
-                raise CommandError(
-                    f"Invalid --modify value '{item}'. Use job_id=EXPERIMENT_ALIAS:/path/to/file.cram"
-                )
-
-            experiment_alias, cram_path = rest.split(":", 1)
-            experiment_alias = experiment_alias.strip()
-            cram_path = cram_path.strip()
 
             job_id = int(job_str)
 
             if job_id in job_to_run:
                 raise CommandError(f"Duplicate job_id {job_id} in --modify arguments.")
-            if not experiment_alias:
-                raise CommandError(f"Empty EXPERIMENT_ALIAS for job_id {job_id} in --modify '{item}'.")
             if not cram_path:
                 raise CommandError(f"Empty path for job_id {job_id} in --modify '{item}'.")
 
-            job_to_run[job_id] = {"experiment_alias": experiment_alias, "cram_path": cram_path}
+            job_to_run[job_id] = {"cram_path": cram_path}
 
         return job_to_run
 
@@ -329,11 +316,9 @@ class Command(BaseCommand):
             pairs = options.get("modify") or []
             if not pairs:
                 raise CommandError(
-                    "modify_jobs requires at least one --modify job_id=EXPERIMENT_ALIAS:/path/to/file.cram pair."
+                    "modify_jobs requires at least one --modify job_id=/path/to/file.cram pair."
                 )
-
             job_to_run = self._parse_modify_pairs(pairs)
-
             logger.info(
                 f"Modifying {len(job_to_run)} job(s) by resubmitting CRAM file(s) (test_run={test_run})."
             )

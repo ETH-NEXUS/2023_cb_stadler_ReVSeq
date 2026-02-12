@@ -11,7 +11,6 @@ ANALYSIS_KIND_COINF_MINOR = "coinf_minor"
 
 
 class ModifyRunSpec(TypedDict):
-    experiment_alias: str
     cram_path: str
 
 class ENAUploader:
@@ -626,17 +625,18 @@ class ENAUploader:
             job_to_run: Dict[int, ModifyRunSpec],
             template: str = "default",
     ) -> None:
+        """
+        For each job_id:
+          - POST /ena/api/jobs/<job_id>/modify/
+          - resubmit CRAM file (files-only)
+        """
         if not job_to_run:
             logger.warning("modify_jobs_resubmit_crams: no job_to_run provided")
             return
 
         for job_id, spec in job_to_run.items():
-            experiment_alias = (spec.get("experiment_alias") or "").strip()
             cram_path = (spec.get("cram_path") or "").strip()
 
-            if not experiment_alias:
-                logger.error(f"Job {job_id}: empty experiment_alias, skipping")
-                continue
             if not cram_path:
                 logger.error(f"Job {job_id}: empty CRAM path, skipping")
                 continue
@@ -644,15 +644,14 @@ class ENAUploader:
             url = self.modify_job_endpoint.replace("<job_id>", str(job_id))
 
             payload = {
-                "data": {
-                    "run": {
-                        "experiment_alias": experiment_alias,
-                    }
-                },
+                "template": template,
                 "files": [cram_path],
+                "data": {
+                    "run": {}
+                },
             }
 
-            logger.info(f"Modifying job {job_id}: experiment_alias={experiment_alias}, cram={cram_path}")
+            logger.info(f"Modifying job {job_id}: resubmitting CRAM {cram_path}")
 
             response = handle_http_request(
                 url,
@@ -663,5 +662,5 @@ class ENAUploader:
             )
 
             if not response:
-                logger.error(f"Modify failed for job {job_id} (experiment_alias={experiment_alias}, cram={cram_path})")
+                logger.error(f"Modify failed for job {job_id} (cram={cram_path})")
 
