@@ -649,10 +649,11 @@ class ENAUploader:
             url = self.modify_job_endpoint.replace("<job_id>", str(job_id))
 
             payload = {
-                "template": template,
+                #"template": template,
+                "template": "",
                 "data": {
                     "run": {
-                        "accession": accession,
+                       # "accession": accession,
                     }
                 },
                 "ignore": [],

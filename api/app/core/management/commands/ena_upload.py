@@ -39,7 +39,8 @@ python manage.py ena_upload --type ser_and_analysis --no-analysis --influenza-on
 
 7) TEST RUN - use it if you upload to the dev instance of ENA
 -------------------------------------------------------------
-python manage.py ena_upload --type ser_and_analysis --test-run --samples RyXauM 375EUk
+python manage.py ena_upload --type ser_and_analysis --test-run --samples m2-boLTAg
+
 
 8) RESEND ANALYSIS JOBS for existing SER jobs
 ---------------------------------------------
@@ -62,7 +63,14 @@ NOTE:
 - You must always specify samples (via --samples and/or --samples-file)
   for SER upload and resend_analysis_jobs.
 - There is intentionally NO default "all samples with job_id is null" as it was before
+
+10) MODIFY EXISTING JOBS IN PLACE by resubmitting CRAM files (no new SER)
+-----------------------------------------------------------------
+python manage.py ena_upload --task modify_jobs --modify 155=ERR15968455:/data/.../a.cram --modify 156=ERR15968456:/data/.../b.cram
+python manage.py ena_upload --task modify_jobs --modify 242=ERR15974028:/data/filter_cram/renamed/m2-boLTAg.cram
 """
+
+
 
 from pathlib import Path
 from typing import List, Set
