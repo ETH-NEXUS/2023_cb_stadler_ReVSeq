@@ -257,7 +257,7 @@ class Command(BaseCommand):
             new_ids = []
 
             for item in data:
-                experiment_id = item.get("report", {}).get("id"
+                experiment_id = item.get("report", {}).get("id")
                 if experiment_id and experiment_id not in seen_ids:
                     seen_ids.add(experiment_id)
                     experiment_ids.append(experiment_id)
