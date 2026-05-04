@@ -67,7 +67,15 @@ NOTE:
 10) MODIFY EXISTING JOBS IN PLACE by resubmitting CRAM files (no new SER)
 -----------------------------------------------------------------
 
-python manage.py ena_upload --task modify_jobs --modify 242=/data/filter_cram/renamed/m2-boLTAg.cram
+
+1488 m2-boLTAg
+python manage.py ena_upload --task modify_jobs --modify 1488=/data/filter_cram/renamed/m2-boLTAg.cram
+1475 m2-yLHwrL
+python manage.py ena_upload --task modify_jobs --modify 1475=/data/filter_cram/renamed/m2-yLHwrL.cram
+1436 m2-3wTS9S
+python manage.py ena_upload --task modify_jobs --modify 1436=/data/filter_cram/renamed/m2-3wTS9S.cram
+1405 m2-468ARL
+python manage.py ena_upload --task modify_jobs --modify 1405=/data/filter_cram/renamed/m2-468ARL.cram
 """
 
 from pathlib import Path
