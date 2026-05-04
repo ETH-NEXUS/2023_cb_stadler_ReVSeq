@@ -122,17 +122,11 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR("ENA modify submission may have failed. Check receipt."))
 
     def fetch_experiment_ids(
-
             self,
-
             *,
-
             ena_report_url: str,
-
             webin_user: str,
-
             webin_pass: str,
-
             old_study: str,
 
     ) -> List[str]:
@@ -145,10 +139,10 @@ class Command(BaseCommand):
             params = {
                 "study_accession": old_study,
                 "format": "json",
-                "maxresults": str(limit),
+                "limit": str(limit),
                 "offset": str(offset),
             }
-            self.stdout.write(f"Fetching offset={offset}")
+            self.stdout.write(f"Fetching offset={offset} limit={limit}")
             response = requests.get(
                 url,
                 params=params,
@@ -168,6 +162,9 @@ class Command(BaseCommand):
                     new_ids.append(experiment_id)
             if not new_ids:
                 self.stdout.write("No new experiments found → stopping pagination")
+                break
+            if len(data) < limit:
+                self.stdout.write("Last page reached")
                 break
             offset += limit
         return experiment_ids
