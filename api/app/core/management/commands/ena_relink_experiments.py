@@ -136,24 +136,19 @@ class Command(BaseCommand):
             old_study: str,
 
     ) -> List[str]:
-        """
-        Fetch all public experiment IDs from the old study.
-        ENA seems to return only 100 records per request,
-        so we fetch results page by page using offset.
-        """
         url = f"{ena_report_url}/experiments"
         experiment_ids = []
+        seen_ids = set()
         limit = 100
         offset = 0
         while True:
             params = {
                 "study_accession": old_study,
-                "status": "PUBLIC",
                 "format": "json",
                 "maxresults": str(limit),
                 "offset": str(offset),
             }
-            self.stdout.write(f"Fetching experiments offset={offset} limit={limit}")
+            self.stdout.write(f"Fetching offset={offset}")
             response = requests.get(
                 url,
                 params=params,
@@ -164,22 +159,18 @@ class Command(BaseCommand):
             data = response.json()
             if not data:
                 break
+            new_ids = []
             for item in data:
-                report = item.get("report", {})
-                experiment_id = report.get("id")
-                if experiment_id:
+                experiment_id = item.get("report", {}).get("id")
+                if experiment_id and experiment_id not in seen_ids:
+                    seen_ids.add(experiment_id)
                     experiment_ids.append(experiment_id)
-            if len(data) < limit:
+                    new_ids.append(experiment_id)
+            if not new_ids:
+                self.stdout.write("No new experiments found → stopping pagination")
                 break
             offset += limit
-        # Remove duplicates while preserving order.
-        unique_ids = []
-        seen_ids = set()
-        for experiment_id in experiment_ids:
-            if experiment_id not in seen_ids:
-                seen_ids.add(experiment_id)
-                unique_ids.append(experiment_id)
-        return unique_ids
+        return experiment_ids
 
     def fetch_experiment_xml(
             self,
