@@ -122,26 +122,39 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR("ENA modify submission may have failed. Check receipt."))
 
     def fetch_experiment_ids(
+
             self,
+
             *,
+
             ena_report_url: str,
+
             webin_user: str,
+
             webin_pass: str,
+
             old_study: str,
+
     ) -> List[str]:
+
+        """
+        Fetch all public experiment IDs from the old study.
+        ENA may return only a limited number of results per request,
+        so we ask for a larger page size here.
+        """
         url = f"{ena_report_url}/experiments"
         params = {
             "study_accession": old_study,
             "status": "PUBLIC",
             "format": "json",
-            "maxresults": "1000",
+            "maxresults": "5000",
+
         }
         response = requests.get(
             url,
             params=params,
             auth=(webin_user, webin_pass),
             timeout=60,
-
         )
         response.raise_for_status()
         data = response.json()
