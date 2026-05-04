@@ -3,7 +3,8 @@ center_name: ETH Zurich
 laboratory: Computational Evolution group
 
 analysis:
-  name: analysis_secondary
+  # These will be filled from payload (analysis_payload)
+  name: analysis_primary
   assembly_type: clone
   coverage: 3.7
   program: BCFtools

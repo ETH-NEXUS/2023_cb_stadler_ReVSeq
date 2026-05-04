@@ -8,10 +8,9 @@ import time
 ANALYSIS_KIND_STANDARD = "standard"
 ANALYSIS_KIND_COINF_MAJOR = "coinf_major"
 ANALYSIS_KIND_COINF_MINOR = "coinf_minor"
-ANALYSIS_TEMPLATE_DEFAULT = "default"
+ANALYSIS_TEMPLATE_DEFAULT = "analysis_primary"
 
 ANALYSIS_TEMPLATE_SECONDARY_INFECTION = "analysis_secondary"
-
 
 
 
@@ -309,6 +308,7 @@ class ENAUploader:
         if major_consensus is not None:
             major_payload = deepcopy(analysis_payload)
             major_payload["name"] = f"{base_name}_major"
+            major_payload["study"] = "revseq_study"
 
 
 
@@ -335,6 +335,7 @@ class ENAUploader:
         if minor_consensus is not None:
             minor_payload = deepcopy(analysis_payload)
             minor_payload["name"] = f"{base_name}_minor"
+            minor_payload["study"] = "revseq_secondary_infection_study"
 
 
 
