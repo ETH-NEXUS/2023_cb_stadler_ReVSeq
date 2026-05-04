@@ -311,6 +311,7 @@ class ENAUploader:
             major_payload["name"] = f"{base_name}_major"
 
 
+
             major_files: list[File] = [major_consensus]
             if major_chr is not None:
                 major_files.append(major_chr)
@@ -334,6 +335,7 @@ class ENAUploader:
         if minor_consensus is not None:
             minor_payload = deepcopy(analysis_payload)
             minor_payload["name"] = f"{base_name}_minor"
+
 
 
             minor_files: list[File] = [minor_consensus]
