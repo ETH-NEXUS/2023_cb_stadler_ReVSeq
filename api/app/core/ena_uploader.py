@@ -8,6 +8,11 @@ import time
 ANALYSIS_KIND_STANDARD = "standard"
 ANALYSIS_KIND_COINF_MAJOR = "coinf_major"
 ANALYSIS_KIND_COINF_MINOR = "coinf_minor"
+ANALYSIS_TEMPLATE_DEFAULT = "default"
+
+ANALYSIS_TEMPLATE_SECONDARY_INFECTION = "secondary_infection"
+
+
 
 
 class ModifyRunSpec(TypedDict):
@@ -80,6 +85,24 @@ class ENAUploader:
         self.job_ids: list[int] = []
         self.job_analysis_ids: list[int] = []
         self.data_for_analysis_upload: list[tuple] = []
+
+    def get_analysis_template_name(self, kind: str) -> str:
+
+        """
+        Choose which ENA template to use for an analysis job.
+        The template provides the STUDY line in the manifest.
+        Therefore we must NOT also put "study" into analysis_payload,
+        otherwise Webin CLI gets duplicate STUDY fields.
+        Major / standard analyses use the default template:
+          study.alias = revseq_study
+        Minor co-infection analyses use the secondary infection template:
+          study.alias = revseq_secondary_infection_study
+
+        """
+
+        if kind == ANALYSIS_KIND_COINF_MINOR:
+            return ANALYSIS_TEMPLATE_SECONDARY_INFECTION
+        return ANALYSIS_TEMPLATE_DEFAULT
 
 
     def upload_study(self):
@@ -286,7 +309,7 @@ class ENAUploader:
         if major_consensus is not None:
             major_payload = deepcopy(analysis_payload)
             major_payload["name"] = f"{base_name}_major"
-            major_payload["study"] = "revseq_study"
+
 
             major_files: list[File] = [major_consensus]
             if major_chr is not None:
@@ -311,7 +334,7 @@ class ENAUploader:
         if minor_consensus is not None:
             minor_payload = deepcopy(analysis_payload)
             minor_payload["name"] = f"{base_name}_minor"
-            minor_payload["study"] = "revseq_secondary_infection_study"
+
 
             minor_files: list[File] = [minor_consensus]
             if minor_chr is not None:
@@ -339,7 +362,12 @@ class ENAUploader:
             time.sleep(20)
 
     def _upload_analysis_job_and_files(self, job_id, sample, analysis_files, analysis_payload, kind: str) -> None:
-        payload = {'template': 'default', 'data': analysis_payload, 'job': job_id}
+        template_name = self.get_analysis_template_name(kind)
+        payload = {
+            "template": template_name,
+            "data": analysis_payload,
+            "job": job_id,
+        }
         logger.info(f'Uploading analysis payload job for {sample}')
         logger.debug(f'Analysis payload: {payload}')
         logger.info(f'Files for analysis upload: {[file.path for file in analysis_files]}')

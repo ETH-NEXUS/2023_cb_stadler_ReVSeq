@@ -1,0 +1,6 @@
+study:
+  alias: revseq_secondary_infection_study
+  title: Respiratory Virus Sequencing - Secondary Infections
+  study_type: RNASeq
+  study_abstract: Respiratory Virus Sequencing - Secondary Infections
+  pubmed_id:
