@@ -306,7 +306,11 @@ class ENAUploader:
 
         # ---- MAJOR ----
         if major_consensus is not None:
+            major_payload = deepcopy(analysis_payload)
             major_payload["name"] = f"{base_name}_major"
+            major_payload["study"] = "revseq_study"
+
+
 
 
             major_files: list[File] = [major_consensus]
@@ -330,7 +334,9 @@ class ENAUploader:
 
         # ---- MINOR ----
         if minor_consensus is not None:
+            minor_payload = deepcopy(analysis_payload)
             minor_payload["name"] = f"{base_name}_minor"
+            minor_payload["study"] = "revseq_secondary_infection_study"
 
             minor_files: list[File] = [minor_consensus]
             if minor_chr is not None:
