@@ -136,35 +136,50 @@ class Command(BaseCommand):
             old_study: str,
 
     ) -> List[str]:
-
         """
         Fetch all public experiment IDs from the old study.
-        ENA may return only a limited number of results per request,
-        so we ask for a larger page size here.
+        ENA seems to return only 100 records per request,
+        so we fetch results page by page using offset.
         """
         url = f"{ena_report_url}/experiments"
-        params = {
-            "study_accession": old_study,
-            "status": "PUBLIC",
-            "format": "json",
-            "maxresults": "5000",
-
-        }
-        response = requests.get(
-            url,
-            params=params,
-            auth=(webin_user, webin_pass),
-            timeout=60,
-        )
-        response.raise_for_status()
-        data = response.json()
         experiment_ids = []
-        for item in data:
-            report = item.get("report", {})
-            experiment_id = report.get("id")
-            if experiment_id:
-                experiment_ids.append(experiment_id)
-        return experiment_ids
+        limit = 100
+        offset = 0
+        while True:
+            params = {
+                "study_accession": old_study,
+                "status": "PUBLIC",
+                "format": "json",
+                "maxresults": str(limit),
+                "offset": str(offset),
+            }
+            self.stdout.write(f"Fetching experiments offset={offset} limit={limit}")
+            response = requests.get(
+                url,
+                params=params,
+                auth=(webin_user, webin_pass),
+                timeout=60,
+            )
+            response.raise_for_status()
+            data = response.json()
+            if not data:
+                break
+            for item in data:
+                report = item.get("report", {})
+                experiment_id = report.get("id")
+                if experiment_id:
+                    experiment_ids.append(experiment_id)
+            if len(data) < limit:
+                break
+            offset += limit
+        # Remove duplicates while preserving order.
+        unique_ids = []
+        seen_ids = set()
+        for experiment_id in experiment_ids:
+            if experiment_id not in seen_ids:
+                seen_ids.add(experiment_id)
+                unique_ids.append(experiment_id)
+        return unique_ids
 
     def fetch_experiment_xml(
             self,
