@@ -76,7 +76,32 @@ python manage.py ena_upload --task modify_jobs --modify 1475=/data/filter_cram/r
 python manage.py ena_upload --task modify_jobs --modify 1436=/data/filter_cram/renamed/m2-3wTS9S.cram
 1405 m2-468ARL
 python manage.py ena_upload --task modify_jobs --modify 1405=/data/filter_cram/renamed/m2-468ARL.cram
+
+11) RELEASE CO-INFECTION ANALYSIS JOBS (no re-upload, just release existing)
+
+----------------------------------------------------------------------------
+
+# Uses existing analysis_job_id fields from DB:
+#   - coinfections_major_analysis_job_id
+#   - coinfections_minor_analysis_job_id
+# (or test_* variants if --test-run is used)
+
+python manage.py ena_upload --task release_coinfections_analysis_jobs --samples m2-XHdiUs
+
+# From file:
+python manage.py ena_upload --task release_coinfections_analysis_jobs --samples-file /path/to/coinfection_samples.txt
+# Example:
+python manage.py ena_upload --task release_coinfections_analysis_jobs --samples m2-F2HifQ m2-9eyPAv m2-SrqwxQ
+
+NOTE:
+- This does NOT create or resend analysis jobs.
+- It only releases already submitted analysis jobs.
+- Make sure analysis_job_id fields are populated in the database.
+- Use --test-run if you want to release test analysis jobs instead of production ones.
+
 """
+
+
 
 from pathlib import Path
 from typing import List, Set
@@ -110,7 +135,13 @@ class Command(BaseCommand):
             "-r",
             "--task",
             type=str,
-            choices=["resend_analysis_jobs", "resend_coinfections_analysis_jobs", "modify_jobs"],
+            choices=[
+                "resend_analysis_jobs",
+                "resend_coinfections_analysis_jobs",
+                "release_coinfections_analysis_jobs",
+                "modify_jobs",
+
+            ],
             help=(
                 "Optional task to perform instead of --type.\n"
                 "Currently supported: 'resend_analysis_jobs' to recreate analysis jobs "
@@ -281,15 +312,12 @@ class Command(BaseCommand):
 
         # Combine samples from arguments and file
         pseudonymized_ids = self._combine_samples(samples_arg, samples_file)
-
         if task and op_type:
             raise CommandError(
                 "You cannot specify both --task and --type at the same time. "
                 "Choose one."
             )
-
         uploader = ENAUploader(test_run=test_run)
-
         # --------------------- TASK: resend_analysis_jobs --------------------- #
         if task == "resend_analysis_jobs":
             if not pseudonymized_ids:
@@ -301,6 +329,21 @@ class Command(BaseCommand):
             uploader.resend_analysis_jobs(
                 pseudonymized_ids=pseudonymized_ids,
                 influenza_only=influenza_only,
+            )
+            return
+        if task == "release_coinfections_analysis_jobs":
+            if not pseudonymized_ids:
+                raise CommandError(
+                    "release_coinfections_analysis_jobs requires at least one sample ID "
+                    "(use --samples and/or --samples-file)."
+                )
+            logger.info(
+                "Releasing COINFECTIONS analysis jobs for %s samples (test_run=%s).",
+                len(pseudonymized_ids),
+                test_run,
+            )
+            uploader.release_coinfections_analysis_jobs(
+                pseudonymized_ids=pseudonymized_ids,
             )
             return
 
