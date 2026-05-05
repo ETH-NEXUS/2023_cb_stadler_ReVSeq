@@ -648,57 +648,6 @@ class ENAUploader:
         )
         self.upload_analysis_loop()
 
-    def release_coinfections_analysis_jobs(
-            self,
-            *,
-            pseudonymized_ids: List[str],
-
-    ) -> None:
-
-        """
-        Release already-created co-infection analysis jobs.
-        Uses:
-          - sample.coinfections_major_analysis_job_id
-          - sample.coinfections_minor_analysis_job_id
-
-        If test_run=True, uses:
-          - sample.test_coinfections_major_analysis_job_id
-          - sample.test_coinfections_minor_analysis_job_id
-
-        """
-        if not pseudonymized_ids:
-            logger.warning("No pseudonymized IDs provided for release_coinfections_analysis_jobs")
-            return
-        samples = Sample.objects.filter(pseudonymized_id__in=pseudonymized_ids)
-
-        if not samples.exists():
-            logger.warning(f"No samples found for the given pseudonymized IDs: {pseudonymized_ids}")
-            return
-        for sample in samples:
-            if self.test_run:
-                major_analysis_job_id = sample.test_coinfections_major_analysis_job_id
-                minor_analysis_job_id = sample.test_coinfections_minor_analysis_job_id
-            else:
-                major_analysis_job_id = sample.coinfections_major_analysis_job_id
-                minor_analysis_job_id = sample.coinfections_minor_analysis_job_id
-            analysis_job_ids = [
-                major_analysis_job_id,
-                minor_analysis_job_id,
-            ]
-            for analysis_job_id in analysis_job_ids:
-                if analysis_job_id is None:
-                    logger.warning(
-                        f"Sample {sample}: missing analysis job id; skipping one analysis release."
-                    )
-                    continue
-                logger.info(
-                    f"Releasing analysis job {analysis_job_id} for sample {sample}"
-                )
-                self._release_job(
-                    self.release_analysis_job_endpoint,
-                    analysis_job_id,
-
-                )
 
     def modify_jobs_resubmit_crams(
             self,

@@ -138,7 +138,6 @@ class Command(BaseCommand):
             choices=[
                 "resend_analysis_jobs",
                 "resend_coinfections_analysis_jobs",
-                "release_coinfections_analysis_jobs",
                 "modify_jobs",
 
             ],
@@ -331,21 +330,7 @@ class Command(BaseCommand):
                 influenza_only=influenza_only,
             )
             return
-        if task == "release_coinfections_analysis_jobs":
-            if not pseudonymized_ids:
-                raise CommandError(
-                    "release_coinfections_analysis_jobs requires at least one sample ID "
-                    "(use --samples and/or --samples-file)."
-                )
-            logger.info(
-                "Releasing COINFECTIONS analysis jobs for %s samples (test_run=%s).",
-                len(pseudonymized_ids),
-                test_run,
-            )
-            uploader.release_coinfections_analysis_jobs(
-                pseudonymized_ids=pseudonymized_ids,
-            )
-            return
+
 
         if task == "resend_coinfections_analysis_jobs":
             if not pseudonymized_ids:
