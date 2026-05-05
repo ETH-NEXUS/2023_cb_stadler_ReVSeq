@@ -310,9 +310,6 @@ class ENAUploader:
             major_payload["name"] = f"{base_name}_major"
             major_payload["study"] = "revseq_study"
 
-
-
-
             major_files: list[File] = [major_consensus]
             if major_chr is not None:
                 major_files.append(major_chr)
