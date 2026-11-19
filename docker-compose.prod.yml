@@ -2,17 +2,24 @@ volumes:
   smnrp-data:
 services:
   ws:
-    image: ethnexus/smnrp:2.6.2
+    image: ethnexus/smnrpx:2.9.4@sha256:8551d5378715ac99579abf2ab69e75717d8ef7baaeb19ce95884b4a0a4673004
     volumes:
-      - web_root:/web_root
+      # smnrpx serves /web_root/<domain>, so the ui build goes there
+      - web_root:/web_root/revseq.nexus.ethz.ch
       - smnrp-data:/etc/letsencrypt
       - ./api/static:/vol/web/static:z
       - ./api/media:/vol/web/media:z
+      - ./smnrp.yml:/run/configs/smnrp.yml:ro,z
     ports:
       - "80:80"
       - "443:443"
     env_file: .env
     restart: unless-stopped
+    healthcheck:
+      test: service nginx status || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
     depends_on:
       - api
   api:

@@ -1,0 +1,36 @@
+# smnrpx configuration of the ws proxy (converted from the smnrp 2.6.2 SMNRP_* settings in .env).
+# TLS 1.2 stays allowed as before; / serves the ui build from the web_root volume, with index.html for client side routes.
+domains:
+  revseq.nexus.ethz.ch:
+    allow_tls1.2: true
+    upstreams:
+      api:
+        - api:5000
+      ena:
+        - ena:5000
+    locations:
+      - proxy:
+          uri: /api/
+          proto: http
+          upstream: api
+          path: /api/
+      - alias:
+          uri: /static/
+          path: /vol/web/static/
+      - alias:
+          uri: /media/
+          path: /vol/web/media/
+      - proxy:
+          uri: /admin/
+          proto: http
+          upstream: api
+          path: /admin/
+      - proxy:
+          uri: /ena/
+          proto: http
+          upstream: ena
+          path: /ena/
+      - alias:
+          uri: /
+          path: /web_root/revseq.nexus.ethz.ch/
+          try_files: true
