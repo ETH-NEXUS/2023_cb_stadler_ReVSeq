@@ -12,6 +12,8 @@ RUN mkdir /home/appuser/.ssh
 RUN chown -R appuser:appgroup /home/appuser/.ssh
 RUN chown -R appuser:appgroup /opt/conda
 
+# Debian 11 (bullseye) is end of life: its packages moved to archive.debian.org
+RUN sed -i 's|http://deb.debian.org|http://archive.debian.org|g' /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get install -y ssh lftp wget
 
